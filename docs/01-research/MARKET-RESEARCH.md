@@ -1,5 +1,5 @@
-# ShiftSleep Market Research Report
-**Date: April 7, 2026**
+# Исследование рынка — ShiftRest
+**Дата: 13 апреля 2026**
 
 ---
 
@@ -90,7 +90,7 @@ Interest in shift work sleep solutions is **growing steadily**, driven by:
 | **Downloads** | ~2.7M installs Jan-May 2025; ~200K/month recently |
 | **Revenue** | ~$3.7M+ in-app revenue Jan-May 2025 |
 | **Key Complaints** | Does not work for non-standard schedules; pricing transparency issues; assumes regular circadian rhythm |
-| **Opportunity for ShiftSleep** | RISE explicitly fails shift workers. This is a gap ShiftSleep fills directly. |
+| **Opportunity for ShiftRest** | RISE explicitly fails shift workers. This is a gap ShiftRest fills directly. |
 
 **Sources:** [RISE App Store](https://apps.apple.com/us/app/rise-sleep-tracker/id1453884781), [Similarweb](https://www.similarweb.com/blog/insights/ecommerce-news/rise-sleep-app-awakes-to-digital-100-win/), [Sleepopolis Review](https://sleepopolis.com/sleep-accessories/rise-sleep-and-energy-app-review/)
 
@@ -103,7 +103,7 @@ Interest in shift work sleep solutions is **growing steadily**, driven by:
 | **Ratings** | 4.7 stars (iOS) |
 | **Downloads** | 40M+ total downloads; 3M+ active users |
 | **Key Complaints** | Price increases; no shift work adaptation; alarm limited to traditional sleep windows |
-| **Opportunity for ShiftSleep** | Massive user base but zero shift work support. ShiftSleep can capture underserved Sleep Cycle users. |
+| **Opportunity for ShiftRest** | Massive user base but zero shift work support. ShiftRest can capture underserved Sleep Cycle users. |
 
 **Sources:** [Sleep Cycle App Store](https://apps.apple.com/us/app/sleep-cycle-tracker-sounds/id320606217), [Trustpilot](https://www.trustpilot.com/review/www.sleepcycle.com)
 
@@ -395,7 +395,7 @@ Key search terms with demand but weak competition:
   - Employer reimbursement potential
   - Clinical urgency of their problem
 
-### 7.3 Recommended Pricing Strategy for ShiftSleep
+### 7.3 Recommended Pricing Strategy for ShiftRest
 - **Freemium tier:** Basic shift schedule entry + simple sleep window suggestions
 - **Premium tier:** $7.99/mo or $59.99/yr
   - Full personalized sleep plans
@@ -488,29 +488,87 @@ B2B addition (employer-funded):
 
 ---
 
-## 9. Strategic Recommendations for ShiftSleep
+## 9. Temporal Window — Почему именно сейчас?
 
-### 9.1 Key Differentiators to Build
+### 9.1 Технологические факторы
+- **AI-персонализация** стала доступной: OpenAI API и аналоги позволяют генерировать персонализированные планы сна в реальном времени по себестоимости ~$0.01-0.05/запрос
+- **Expo SDK 55 + React Native** — кросс-платформенная разработка за 3-6 месяцев одним разработчиком (раньше требовались отдельные iOS/Android команды)
+- **Wearable-интеграция** — Apple HealthKit и Google Health Connect позволяют читать данные сна без собственного трекера
+
+### 9.2 Рыночные факторы
+- **Конкуренты умирают или буксуют:** Sleep Aid (1.0 звезда), Arcashift (крашится), Timeshifter (баги при обновлении расписания). Окно возможностей пока качественного продукта нет
+- **Новые entrants подтверждают спрос:** OffShift (Dec 2025), Riseo (2026) — рынок привлекает новых игроков, но ни один не закрепился
+- **Sleep app рынок растёт на 14.2% CAGR** — с $2.9B (2025) до $9.6B (2034)
+- **B2B wellness бюджеты утроились** с 2010 ($8B рынок), больницы и пожарные депо активно ищут wellness-решения
+
+### 9.3 Социальные и регуляторные факторы
+- **Пост-пандемийное осознание:** интерес к sleep health на рекордных уровнях (Google Trends: +58% с COVID)
+- **Циркадная медицина** становится мейнстримом — Нобелевская премия 2017 за открытие молекулярных механизмов циркадных ритмов привлекла массовое внимание
+- **Кризис кадров в здравоохранении:** burnout медсестёр — национальная проблема, работодатели вынуждены инвестировать в well-being
+- **FDA в 2023-2024 выпустила обновлённые гайдлайны** по digital health, clarifying что wellness-приложения (не диагностика) не требуют одобрения FDA
+
+### 9.4 Вывод по Temporal Window
+**Окно открыто и начинает закрываться.** Спрос подтверждён (22M+ shift workers в US, 26.5% с SWSD), но ни один продукт не занял позицию лидера. Появление OffShift и Riseo в конце 2025–2026 сигнализирует, что другие видят ту же возможность. У первого качественного продукта есть 12-18 месяцев преимущества.
+
+---
+
+## 10. Conclusions
+
+### 10.1 Ключевые находки
+1. **Рынок огромен и растёт:** 22M shift workers в US, 700M+ глобально, sleep app рынок $2.9B → $9.6B к 2034
+2. **Конкуренция практически отсутствует:** менее 10 shift-work sleep приложений в App Store, ни одно не имеет 10,000+ отзывов
+3. **Боль реальна и измерима:** 26.5% shift workers с клиническим SWSD, $136.4B потерь от усталости ежегодно
+4. **Готовность платить подтверждена:** 37% взрослых готовы платить за sleep coaching, shift workers — сегмент с повышенной WTP
+5. **Никто не решает главную проблему:** переход между типами смен — #1 запрос, и ни одно приложение не делает это хорошо
+
+### 10.2 Scoring
+
+| Критерий | Оценка | Обоснование |
+|----------|--------|-------------|
+| Размер рынка | 9/10 | 22M US + 29M EU + B2B, TAM $435M-$1.9B |
+| Рост рынка | 9/10 | Sleep apps CAGR 14.2%, пост-пандемийный рост |
+| Конкуренция (10 = мало) | 9/10 | <10 приложений, ни одно не доминирует |
+| Ясность проблемы | 10/10 | Конкретная, измеримая, подтверждённая исследованиями |
+| Монетизация | 8/10 | Subscription + B2B, benchmarks $40-70/год |
+| Техническая сложность (10 = просто) | 7/10 | AI-персонализация + циркадные алгоритмы нетривиальны |
+| Уникальность | 8/10 | Schedule-first подход + transition planning уникальны |
+| **Итого** | **8.6/10** | |
+
+### 10.3 Verdict: **GO** ✓
+
+**Обоснование:** Редкое сочетание большого рынка, почти пустой конкуренции, подтверждённого спроса и чёткой монетизации. Окно возможностей открыто, но начинает закрываться с появлением новых entrants.
+
+**Условия:**
+1. Запуск MVP за 4-6 месяцев (пока нет доминирующего игрока)
+2. Фокус на медсёстрах как primary persona (700K+ в r/nursing, самое активное сообщество)
+3. "Transition planning" как killer feature (уникальная ценность, которой нет ни у кого)
+4. Не заявлять медицинские функции — позиционирование как wellness/lifestyle app
+
+---
+
+## 11. Strategic Recommendations for ShiftRest
+
+### 11.1 Key Differentiators to Build
 1. **Schedule-first approach:** Input your rotating schedule, get a personalized sleep plan (not tracking, planning)
 2. **Transition intelligence:** The killer feature no one else does well -- how to shift from nights to days
 3. **Non-judgmental design:** Never penalize daytime sleep; celebrate shift-appropriate sleep patterns
 4. **Profession-specific templates:** Pre-built schedule templates for nurses (12-hr rotations), firefighters (24/48), factory workers (8-hr continental)
 5. **Light & caffeine timing:** Actionable advice on when to seek/avoid light and caffeine based on next shift
 
-### 9.2 Go-to-Market Priority
+### 11.2 Go-to-Market Priority
 1. **Phase 1:** US nurses (largest, most vocal, most online community -- r/nursing has 700K+ members)
 2. **Phase 2:** US firefighters, EMS, police
 3. **Phase 3:** Factory/manufacturing workers, hospitality
 4. **Phase 4:** B2B enterprise (hospital systems, fire departments)
 5. **Phase 5:** International expansion (UK, Australia, EU)
 
-### 9.3 Competitive Moat Opportunities
+### 11.3 Competitive Moat Opportunities
 - **Community-driven development:** Build in r/nightshift, r/nursing -- these communities are hungry for solutions
 - **Clinical validation:** Partner with a sleep research center (like SleepSync did with Monash) for credibility
 - **B2B lock-in:** Enterprise contracts create switching costs
 - **Data network effects:** More users = better schedule templates = better recommendations
 
-### 9.4 Risks
+### 11.4 Risks
 - Timeshifter could improve UX and dominate with their scientific credibility
 - Wearable companies (Ultrahuman, Oura) could build better app-side features
 - Apple or Google could add shift work features to native health platforms
@@ -519,7 +577,7 @@ B2B addition (employer-funded):
 
 ---
 
-## 10. Key Data Sources & References
+## 12. Key Data Sources & References
 
 - [BLS Job Flexibilities and Work Schedules](https://www.bls.gov/news.release/flex2.nr0.htm)
 - [Eurofound European Working Conditions Survey](https://www.eurofound.europa.eu/en/surveys-and-data/surveys/european-working-conditions-survey)
