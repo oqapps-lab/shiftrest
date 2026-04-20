@@ -6,8 +6,11 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "shiftrest",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#FCF9F6"
+    },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.gazetastreet.shiftrest"
@@ -16,12 +19,14 @@
       "package": "com.gazetastreet.shiftrest",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#FCF9F6"
       }
     },
     "plugins": [
       "expo-router",
-      "expo-haptics"
+      "expo-haptics",
+      "expo-font",
+      "expo-splash-screen"
     ],
     "experiments": {
       "typedRoutes": true
