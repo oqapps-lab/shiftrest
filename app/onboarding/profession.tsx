@@ -33,7 +33,7 @@ export default function Profession() {
           variant="primary"
           label="Continue"
           disabled={!selected}
-          onPress={() => router.push('/onboarding/loading')}
+          onPress={() => router.push('/onboarding/schedule')}
         />
       }
     >

@@ -20,3 +20,12 @@ export { AtmosphericBackground } from './AtmosphericBackground';
 export { OrbField } from './OrbField';
 export { Screen } from './Screen';
 export { FloatingTabBar } from './FloatingTabBar';
+
+// Form primitives (added in Stage 5 batch #2)
+export { Toggle } from './Toggle';
+export { Slider } from './Slider';
+export { TextField } from './TextField';
+export { SegmentedControl } from './SegmentedControl';
+export type { SegmentOption } from './SegmentedControl';
+export { Stepper } from './Stepper';
+export { OptionCard } from './OptionCard';

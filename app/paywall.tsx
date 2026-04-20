@@ -39,9 +39,9 @@ export default function Paywall() {
       footerClearance={180}
       floatingFooter={
         <>
-          <PillCTA variant="primary" label="Start 7-day trial" onPress={() => router.replace('/(tabs)')} />
+          <PillCTA variant="primary" label="Start 7-day trial" onPress={() => router.replace('/onboarding/notifications')} />
           <Pressable
-            onPress={() => router.replace('/(tabs)')}
+            onPress={() => router.replace('/onboarding/notifications')}
             hitSlop={12}
             style={{ alignSelf: 'center', marginTop: spacing.md }}
           >

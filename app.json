@@ -4,7 +4,6 @@
     "slug": "shiftrest",
     "version": "0.1.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
     "scheme": "shiftrest",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
@@ -18,7 +17,6 @@
     "android": {
       "package": "com.gazetastreet.shiftrest",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#FCF9F6"
       }
     },
