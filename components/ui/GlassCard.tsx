@@ -6,7 +6,7 @@
  */
 
 import React, { ReactNode } from 'react';
-import { Platform, StyleSheet, View, ViewStyle, ViewProps } from 'react-native';
+import { Platform, StyleSheet, StyleProp, View, ViewStyle, ViewProps } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
@@ -27,12 +27,12 @@ type Variant =
   | 'dusk'
   | 'sunrise';
 
-interface Props extends ViewProps {
+interface Props extends Omit<ViewProps, 'style'> {
   variant?: Variant;
   padding?: SpacingToken;
   radius?: keyof typeof radii;
   children?: ReactNode;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }
 
 const fillMap: Record<Variant, string | 'glass'> = {

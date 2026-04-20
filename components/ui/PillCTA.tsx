@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { Platform, StyleSheet, View, ViewStyle, Pressable, ActivityIndicator } from 'react-native';
+import { Platform, StyleSheet, StyleProp, View, ViewStyle, Pressable, ActivityIndicator } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import Animated, {
   useAnimatedStyle,
@@ -38,7 +38,7 @@ interface Props {
   iconRight?: React.ReactNode;
   loading?: boolean;
   disabled?: boolean;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   fullWidth?: boolean;
 }
 

@@ -1,10 +1,11 @@
 /**
- * <ProgressDots> — row of dots, active dot sage-filled and 1.4× size.
- * Used for onboarding progress, pager indicators, streak heatmaps.
+ * <ProgressDots> — row of dots for progress / pager indicators.
+ * Past dots: primaryContainer (mint trail). Active: primary (or accent) filled, 1.4× size.
+ * Future: inkGhost faint.
  */
 
 import React from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleSheet, View, ViewStyle, StyleProp } from 'react-native';
 import { colors, spacing } from '../../constants/tokens';
 
 interface Props {
@@ -12,7 +13,7 @@ interface Props {
   active: number;
   variant?: 'primary' | 'sunrise' | 'dusk';
   size?: 8 | 10 | 12;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }
 
 const activeColorMap = {
@@ -33,7 +34,13 @@ export function ProgressDots({
     <View style={[styles.row, style]}>
       {Array.from({ length: count }).map((_, i) => {
         const isActive = i === active;
+        const isPast = i < active;
         const dotSize = isActive ? size * 1.4 : size;
+        const bg = isActive
+          ? activeColor
+          : isPast
+          ? colors.primaryContainer
+          : colors.inkGhost;
         return (
           <View
             key={i}
@@ -41,9 +48,9 @@ export function ProgressDots({
               width: dotSize,
               height: dotSize,
               borderRadius: dotSize / 2,
-              backgroundColor: isActive ? activeColor : colors.inkGhost,
+              backgroundColor: bg,
               marginHorizontal: 4,
-              opacity: isActive ? 1 : 0.55,
+              opacity: isActive ? 1 : isPast ? 1 : 0.75,
             }}
           />
         );

@@ -38,7 +38,20 @@ const dotColor: Record<Kind, string> = {
 
 export default function Schedule() {
   return (
-    <Screen orbs="subtle" scroll>
+    <Screen
+      orbs="subtle"
+      scroll
+      floatingFooter={
+        <PillCTA
+          variant="primary"
+          label="+ Add shift"
+          onPress={() => {
+            /* TODO: S31 */
+          }}
+          iconLeft={<Glyph name="plus" size={18} color="onPrimary" />}
+        />
+      }
+    >
       <View style={styles.headerRow}>
         <Pressable hitSlop={12}>
           <Glyph name="chevronLeft" size={24} color="inkMuted" />
@@ -114,18 +127,6 @@ export default function Schedule() {
         ))}
       </GlassCard>
 
-      <View style={{ height: 180 }} />
-
-      <View style={styles.floating}>
-        <PillCTA
-          variant="primary"
-          label="+ Add shift"
-          onPress={() => {
-            /* TODO: S31 */
-          }}
-          iconLeft={<Glyph name="plus" size={18} color="onPrimary" />}
-        />
-      </View>
     </Screen>
   );
 }
@@ -169,11 +170,5 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 6,
     marginRight: spacing.md,
-  },
-  floating: {
-    position: 'absolute',
-    left: spacing.xxl,
-    right: spacing.xxl,
-    bottom: 96,
   },
 });

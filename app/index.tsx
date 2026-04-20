@@ -6,7 +6,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Screen,
   BreathingOrb,
@@ -15,13 +14,31 @@ import {
   PillCTA,
   Eyebrow,
 } from '../components/ui';
-import { colors, spacing } from '../constants/tokens';
+import { spacing } from '../constants/tokens';
 
 export default function Welcome() {
-  const insets = useSafeAreaInsets();
-
   return (
-    <Screen scroll={false} tabBarClearance={false} orbs="strong">
+    <Screen
+      scroll={false}
+      tabBarClearance={false}
+      orbs="strong"
+      floatingFooter={
+        <>
+          <PillCTA
+            variant="primary"
+            label="Create my plan"
+            onPress={() => router.push('/onboarding/profession')}
+          />
+          <View style={{ height: spacing.sm }} />
+          <PillCTA
+            variant="glass"
+            size="md"
+            label="I already have an account"
+            onPress={() => router.replace('/(tabs)')}
+          />
+        </>
+      }
+    >
       <View style={styles.body}>
         <Eyebrow>SHIFTREST</Eyebrow>
 
@@ -41,21 +58,6 @@ export default function Welcome() {
           </Text>
         </View>
       </View>
-
-      <View style={[styles.floating, { paddingBottom: insets.bottom + spacing.lg }]}>
-        <PillCTA
-          variant="primary"
-          label="Create my plan"
-          onPress={() => router.push('/onboarding/profession')}
-        />
-        <View style={{ height: spacing.sm }} />
-        <PillCTA
-          variant="glass"
-          size="md"
-          label="I already have an account"
-          onPress={() => router.replace('/(tabs)')}
-        />
-      </View>
     </Screen>
   );
 }
@@ -74,12 +76,5 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     paddingHorizontal: spacing.md,
-  },
-  floating: {
-    position: 'absolute',
-    left: spacing.xxl,
-    right: spacing.xxl,
-    bottom: 0,
-    backgroundColor: 'transparent',
   },
 });

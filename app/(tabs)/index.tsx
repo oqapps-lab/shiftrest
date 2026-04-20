@@ -122,7 +122,7 @@ export default function Home() {
       >
         <GlassCard variant="dusk" padding="xxl">
           <View style={styles.eventRow}>
-            <View style={[styles.eventIcon, { backgroundColor: '#C4AEC2' }]}>
+            <View style={[styles.eventIcon, { backgroundColor: colors.duskGlow }]}>
               <Glyph name="sparkle" size={22} color="duskDim" />
             </View>
             <View style={{ flex: 1 }}>

@@ -13,6 +13,7 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+import { colors } from '../../constants/tokens';
 
 interface Props {
   size?: number;
@@ -21,7 +22,7 @@ interface Props {
   style?: ViewStyle;
 }
 
-export function BreathingOrb({ size = 220, pulse = true, children, style }: Props) {
+export function BreathingOrb({ size = 280, pulse = true, children, style }: Props) {
   const scale = useSharedValue(1);
 
   useEffect(() => {
@@ -51,14 +52,29 @@ export function BreathingOrb({ size = 220, pulse = true, children, style }: Prop
       <Animated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
         <Svg width={size} height={size}>
           <Defs>
-            <RadialGradient id="breath" cx="50%" cy="50%" r="50%">
-              <Stop offset="0%" stopColor="#C7EAE1" stopOpacity={0.9} />
-              <Stop offset="45%" stopColor="#C7EAE1" stopOpacity={0.45} />
-              <Stop offset="70%" stopColor="#C7EAE1" stopOpacity={0.18} />
-              <Stop offset="100%" stopColor="#C7EAE1" stopOpacity={0} />
+            {/* Outer halo — wide mint bloom */}
+            <RadialGradient id="breathHalo" cx="50%" cy="50%" r="50%">
+              <Stop offset="0%" stopColor={colors.primaryContainer} stopOpacity={1} />
+              <Stop offset="30%" stopColor={colors.primaryContainer} stopOpacity={0.85} />
+              <Stop offset="65%" stopColor={colors.primaryContainer} stopOpacity={0.35} />
+              <Stop offset="100%" stopColor={colors.primaryContainer} stopOpacity={0} />
+            </RadialGradient>
+            {/* Mid ring — sage warmth for depth */}
+            <RadialGradient id="breathMid" cx="50%" cy="50%" r="50%">
+              <Stop offset="0%" stopColor={colors.primaryBright} stopOpacity={0.65} />
+              <Stop offset="55%" stopColor={colors.primaryBright} stopOpacity={0.25} />
+              <Stop offset="100%" stopColor={colors.primaryBright} stopOpacity={0} />
+            </RadialGradient>
+            {/* Inner core — deep sage dot for solid anchor */}
+            <RadialGradient id="breathCore" cx="50%" cy="50%" r="50%">
+              <Stop offset="0%" stopColor={colors.primary} stopOpacity={0.55} />
+              <Stop offset="60%" stopColor={colors.primary} stopOpacity={0.22} />
+              <Stop offset="100%" stopColor={colors.primary} stopOpacity={0} />
             </RadialGradient>
           </Defs>
-          <Circle cx={size / 2} cy={size / 2} r={size / 2} fill="url(#breath)" />
+          <Circle cx={size / 2} cy={size / 2} r={size / 2} fill="url(#breathHalo)" />
+          <Circle cx={size / 2} cy={size / 2} r={size / 2.5} fill="url(#breathMid)" />
+          <Circle cx={size / 2} cy={size / 2} r={size / 4} fill="url(#breathCore)" />
         </Svg>
       </Animated.View>
       {children && <View style={styles.children}>{children}</View>}

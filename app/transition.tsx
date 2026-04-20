@@ -37,11 +37,17 @@ export default function Transition() {
   };
 
   return (
-    <Screen orbs="normal" scroll>
+    <Screen orbs="normal" scroll tabBarClearance={false}>
       <View style={styles.closeRow}>
         <Pressable
           onPress={() => {
-            router.canGoBack() ? router.back() : router.replace('/(tabs)');
+            if (router.canDismiss?.()) {
+              router.dismiss();
+            } else if (router.canGoBack()) {
+              router.back();
+            } else {
+              router.replace('/(tabs)');
+            }
           }}
           hitSlop={12}
           accessibilityRole="button"
@@ -59,6 +65,15 @@ export default function Transition() {
       {days.map((d, dayIdx) => {
         const done = d.steps.filter((s) => s.done).length;
         const total = d.steps.length;
+        const status =
+          done === 0 ? 'PENDING' : done === total ? 'DONE' : 'IN PROGRESS';
+        const chipBg =
+          status === 'DONE'
+            ? colors.primaryContainer
+            : status === 'IN PROGRESS'
+            ? colors.surfaceHigh
+            : colors.surfaceLow;
+        const chipFg = status === 'DONE' ? 'onPrimaryContainer' : 'inkMuted';
         return (
           <GlassCard
             key={d.label}
@@ -77,20 +92,15 @@ export default function Transition() {
                   style={{ marginTop: 2 }}
                 />
               </View>
-              <View
-                style={[
-                  styles.progressChip,
-                  { backgroundColor: done === total ? colors.primaryContainer : colors.surfaceHigh },
-                ]}
-              >
+              <View style={[styles.progressChip, { backgroundColor: chipBg }]}>
                 <Text
                   variant="labelMd"
                   family="body"
                   weight="medium"
-                  color={done === total ? 'onPrimaryContainer' : 'inkMuted'}
+                  color={chipFg}
                   uppercase
                 >
-                  {done === total ? 'DONE' : 'IN PROGRESS'}
+                  {status}
                 </Text>
               </View>
             </View>

@@ -15,16 +15,14 @@ import { Text } from './Text';
 
 // Loose typing so we don't depend on @react-navigation/bottom-tabs being in package.json.
 // expo-router v6 passes the standard React Navigation bottom-tabs props shape.
-interface TabBarProps {
-  state: {
-    index: number;
-    routes: Array<{ key: string; name: string; params?: object }>;
-  };
-  navigation: {
-    emit: (event: { type: string; target?: string; canPreventDefault?: boolean }) => { defaultPrevented: boolean };
-    navigate: (name: string, params?: object) => void;
-  };
-}
+// We accept `any` for navigation because React Navigation's strict event-type union
+// is not worth re-exporting; runtime behaviour is unchanged.
+type TabBarProps = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  state: { index: number; routes: Array<{ key: string; name: string; params?: any }> };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  navigation: any;
+};
 
 const TAB_ICONS: Record<string, GlyphName> = {
   index: 'home',

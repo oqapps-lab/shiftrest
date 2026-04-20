@@ -6,7 +6,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Screen,
   SerifHero,
@@ -22,10 +21,19 @@ import { spacing, radii, colors } from '../../constants/tokens';
 import { mockUser, mockPlan } from '../../mock/user';
 
 export default function Aha() {
-  const insets = useSafeAreaInsets();
-
   return (
-    <Screen orbs="normal" scroll>
+    <Screen
+      orbs="normal"
+      scroll
+      tabBarClearance={false}
+      floatingFooter={
+        <PillCTA
+          variant="primary"
+          label="Get the full plan"
+          onPress={() => router.push('/paywall')}
+        />
+      }
+    >
       <Eyebrow>{mockUser.name.toUpperCase()}, YOUR PLAN IS READY</Eyebrow>
 
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
@@ -86,13 +94,6 @@ export default function Aha() {
         </View>
       </GlassCard>
 
-      <View style={[styles.floating, { paddingBottom: insets.bottom + spacing.lg }]}>
-        <PillCTA
-          variant="primary"
-          label="Get the full plan"
-          onPress={() => router.push('/paywall')}
-        />
-      </View>
     </Screen>
   );
 }
@@ -109,11 +110,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: spacing.lg,
-  },
-  floating: {
-    position: 'absolute',
-    left: spacing.xxl,
-    right: spacing.xxl,
-    bottom: 0,
   },
 });

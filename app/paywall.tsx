@@ -7,7 +7,6 @@ import React, { useState } from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Screen,
   SerifHero,
@@ -31,13 +30,40 @@ const VALUE_BULLETS = [
 
 export default function Paywall() {
   const [plan, setPlan] = useState<'month' | 'year'>('year');
-  const insets = useSafeAreaInsets();
 
   return (
-    <Screen orbs="normal" scroll>
+    <Screen
+      orbs="normal"
+      scroll
+      tabBarClearance={false}
+      footerClearance={180}
+      floatingFooter={
+        <>
+          <PillCTA variant="primary" label="Start 7-day trial" onPress={() => router.replace('/(tabs)')} />
+          <Pressable
+            onPress={() => router.replace('/(tabs)')}
+            hitSlop={12}
+            style={{ alignSelf: 'center', marginTop: spacing.md }}
+          >
+            <Text variant="bodyMd" color="inkMuted">
+              Maybe later
+            </Text>
+          </Pressable>
+        </>
+      }
+    >
       <View style={styles.closeRow}>
         <Pressable
-          onPress={() => router.back()}
+          onPress={() => {
+            // modals: prefer dismiss(); fall back to canGoBack/replace for deep-link entries
+            if (router.canDismiss?.()) {
+              router.dismiss();
+            } else if (router.canGoBack()) {
+              router.back();
+            } else {
+              router.replace('/(tabs)');
+            }
+          }}
           hitSlop={12}
           accessibilityRole="button"
           accessibilityLabel="Close paywall"
@@ -145,16 +171,6 @@ export default function Paywall() {
         <ProgressDots count={7} active={0} size={8} />
       </View>
 
-      <View style={{ height: 160 }} />
-
-      <View style={[styles.floating, { paddingBottom: insets.bottom + spacing.lg }]}>
-        <PillCTA variant="primary" label="Start 7-day trial" onPress={() => router.replace('/(tabs)')} />
-        <Pressable onPress={() => router.replace('/(tabs)')} hitSlop={12} style={{ alignSelf: 'center', marginTop: spacing.md }}>
-          <Text variant="bodyMd" color="inkMuted">
-            Maybe later
-          </Text>
-        </Pressable>
-      </View>
     </Screen>
   );
 }
@@ -203,11 +219,5 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
     backgroundColor: colors.primary,
-  },
-  floating: {
-    position: 'absolute',
-    left: spacing.xxl,
-    right: spacing.xxl,
-    bottom: 0,
   },
 });

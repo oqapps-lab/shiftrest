@@ -4,15 +4,15 @@
  */
 
 import React from 'react';
-import { TextStyle } from 'react-native';
+import { StyleProp, TextStyle } from 'react-native';
 import { Text } from './Text';
 import { colors } from '../../constants/tokens';
 
 interface Props {
-  children: string;
+  children: React.ReactNode;
   color?: keyof typeof colors;
   size?: 'lg' | 'md';
-  style?: TextStyle;
+  style?: StyleProp<TextStyle>;
 }
 
 export function Eyebrow({ children, color = 'inkMuted', size = 'lg', style }: Props) {

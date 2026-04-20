@@ -14,7 +14,7 @@ import Svg, {
   Path,
   G,
 } from 'react-native-svg';
-import { colors } from '../../constants/tokens';
+import { colors, gradients } from '../../constants/tokens';
 import { Text } from './Text';
 import { Eyebrow } from './Eyebrow';
 
@@ -80,12 +80,12 @@ export function TimelineRing({
       <Svg width={size} height={size}>
         <Defs>
           <SvgLinearGradient id="sleepGrad" x1="0" y1="0" x2="1" y2="1">
-            <Stop offset="0%" stopColor="#6E5D84" />
-            <Stop offset="100%" stopColor="#9B7A9A" />
+            <Stop offset="0%" stopColor={gradients.sleepArc[0]} />
+            <Stop offset="100%" stopColor={gradients.sleepArc[1]} />
           </SvgLinearGradient>
           <SvgLinearGradient id="shiftGrad" x1="0" y1="0" x2="1" y2="1">
-            <Stop offset="0%" stopColor="#84A59D" />
-            <Stop offset="100%" stopColor="#45645E" />
+            <Stop offset="0%" stopColor={colors.primaryBright} />
+            <Stop offset="100%" stopColor={colors.primary} />
           </SvgLinearGradient>
         </Defs>
 

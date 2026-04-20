@@ -57,18 +57,18 @@ export default function Profile() {
       <View style={{ height: spacing.huge }} />
 
       <View style={styles.statsRow}>
-        <GlassCard variant="glass" padding="xl" style={styles.stat}>
+        <GlassCard variant="glass" padding="lg" style={styles.stat}>
           <Eyebrow size="md">DAYS</Eyebrow>
           <HeroNumber value={mockUser.daysInApp} size="md" />
         </GlassCard>
         <View style={{ width: spacing.sm }} />
-        <GlassCard variant="glass" padding="xl" style={styles.stat}>
-          <Eyebrow size="md">TRANSITIONS</Eyebrow>
+        <GlassCard variant="glass" padding="lg" style={styles.stat}>
+          <Eyebrow size="md">PLANS</Eyebrow>
           <HeroNumber value={mockUser.transitionsCompleted} size="md" />
         </GlassCard>
         <View style={{ width: spacing.sm }} />
-        <GlassCard variant="glass" padding="xl" style={styles.stat}>
-          <Eyebrow size="md">ADHERENCE</Eyebrow>
+        <GlassCard variant="glass" padding="lg" style={styles.stat}>
+          <Eyebrow size="md">ON PLAN</Eyebrow>
           <HeroNumber value={mockUser.adherence} size="md" unit="%" />
         </GlassCard>
       </View>

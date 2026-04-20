@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleSheet, StyleProp, View, ViewStyle } from 'react-native';
 import { Text } from './Text';
 import { Eyebrow } from './Eyebrow';
 import { colors } from '../../constants/tokens';
@@ -18,7 +18,7 @@ interface Props {
   labelPosition?: 'above' | 'below';
   align?: 'left' | 'center' | 'right';
   color?: keyof typeof colors;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   unit?: string;
 }
 

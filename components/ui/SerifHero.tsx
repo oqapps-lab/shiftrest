@@ -4,19 +4,19 @@
  */
 
 import React from 'react';
-import { TextStyle } from 'react-native';
+import { StyleProp, TextStyle } from 'react-native';
 import { Text } from './Text';
 import { colors } from '../../constants/tokens';
 
 interface Props {
-  children: string;
+  children: React.ReactNode;
   align?: 'left' | 'center' | 'right';
   color?: keyof typeof colors;
-  style?: TextStyle;
+  style?: StyleProp<TextStyle>;
 }
 
 export function SerifHero({ children, align = 'left', color = 'ink', style }: Props) {
-  if (__DEV__ && children.length > 60) {
+  if (__DEV__ && typeof children === 'string' && children.length > 60) {
     // eslint-disable-next-line no-console
     console.warn(`<SerifHero> content is ${children.length} chars — keep under 60. "${children}"`);
   }

@@ -7,7 +7,6 @@ import React, { useState } from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Screen,
   GlassCard,
@@ -23,10 +22,21 @@ import { mockProfessions } from '../../mock/user';
 
 export default function Profession() {
   const [selected, setSelected] = useState<string | null>(null);
-  const insets = useSafeAreaInsets();
 
   return (
-    <Screen orbs="subtle" scroll>
+    <Screen
+      orbs="subtle"
+      scroll
+      tabBarClearance={false}
+      floatingFooter={
+        <PillCTA
+          variant="primary"
+          label="Continue"
+          disabled={!selected}
+          onPress={() => router.push('/onboarding/loading')}
+        />
+      }
+    >
       <Eyebrow>STEP 1 OF 10</Eyebrow>
       <ProgressDots count={10} active={0} style={{ marginVertical: spacing.sm, justifyContent: 'flex-start' }} />
 
@@ -86,14 +96,6 @@ export default function Profession() {
         );
       })}
 
-      <View style={[styles.floating, { paddingBottom: insets.bottom + spacing.lg }]}>
-        <PillCTA
-          variant="primary"
-          label="Continue"
-          disabled={!selected}
-          onPress={() => router.push('/onboarding/loading')}
-        />
-      </View>
     </Screen>
   );
 }
@@ -124,11 +126,5 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
     backgroundColor: colors.primary,
-  },
-  floating: {
-    position: 'absolute',
-    left: spacing.xxl,
-    right: spacing.xxl,
-    bottom: 0,
   },
 });
