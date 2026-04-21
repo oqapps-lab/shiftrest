@@ -15,6 +15,7 @@ import {
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockUser } from '../../mock/user';
+import { formatTrialRemaining } from '../../lib/derive';
 
 const STREAK_LENGTH = 14;
 const STREAK_DOTS = Array.from({ length: STREAK_LENGTH }).map((_, i) => {
@@ -22,14 +23,20 @@ const STREAK_DOTS = Array.from({ length: STREAK_LENGTH }).map((_, i) => {
   return { opacity: 0.25 + ratio * 0.75 };
 });
 
-const SETTINGS = [
-  { glyph: 'gear' as const, label: 'Sleep preferences', subtitle: 'Chronotype · caffeine · melatonin' },
-  { glyph: 'bell' as const, label: 'Notifications', subtitle: 'Reminder timing & types' },
-  { glyph: 'sparkle' as const, label: 'Subscription', subtitle: 'Trial · 6 days left' },
-  { glyph: 'user' as const, label: 'About & support', subtitle: 'FAQ · contact · sources' },
-];
-
 export default function Profile() {
+  const subscriptionSubtitle =
+    mockUser.subscription === 'trial'
+      ? `Trial · ${formatTrialRemaining(mockUser.trialEndsAt)}`
+      : mockUser.subscription === 'premium'
+      ? 'Premium · active'
+      : 'Free tier';
+
+  const SETTINGS = [
+    { glyph: 'gear' as const, label: 'Sleep preferences', subtitle: 'Chronotype · caffeine · melatonin' },
+    { glyph: 'bell' as const, label: 'Notifications', subtitle: 'Reminder timing & types' },
+    { glyph: 'sparkle' as const, label: 'Subscription', subtitle: subscriptionSubtitle },
+    { glyph: 'user' as const, label: 'About & support', subtitle: 'FAQ · contact · sources' },
+  ];
   return (
     <Screen orbs="subtle" variant="dim" scroll>
       <Eyebrow>PROFILE</Eyebrow>

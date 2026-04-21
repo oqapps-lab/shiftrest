@@ -17,6 +17,7 @@ import {
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockPlan } from '../../mock/user';
+import { formatDayMonth } from '../../lib/derive';
 
 const RECS = [
   {
@@ -56,11 +57,12 @@ const RECS = [
 
 export default function Plan() {
   const [day, setDay] = useState(1); // 0=yesterday, 1=today, 2=tomorrow
+  const pagerLabels = ['YESTERDAY', `TODAY · ${formatDayMonth()}`, 'TOMORROW'];
 
   return (
     <Screen orbs="normal" scroll>
       <View style={styles.pagerRow}>
-        {['YESTERDAY', 'TODAY · 20 APR', 'TOMORROW'].map((label, i) => (
+        {pagerLabels.map((label, i) => (
           <Pressable
             key={label}
             onPress={() => setDay(i)}

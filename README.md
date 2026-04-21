@@ -28,11 +28,22 @@ shiftrest/
 ├── app/                           expo-router screens
 │   ├── _layout.tsx                root stack, fonts, splash
 │   ├── index.tsx                  S01 Welcome
-│   ├── onboarding/
+│   ├── onboarding/                full 10-step quiz + loader + aha + post-paywall notifications
 │   │   ├── _layout.tsx
-│   │   ├── profession.tsx         S02
-│   │   ├── loading.tsx            S13
-│   │   └── aha.tsx                S14
+│   │   ├── profession.tsx         S02  step 1 / 10
+│   │   ├── schedule.tsx           S03  step 2 / 10
+│   │   ├── current-shift.tsx      S04  step 3 / 10
+│   │   ├── problem.tsx            S05  step 4 / 10
+│   │   ├── social-proof-1.tsx     S06  step 5 / 10
+│   │   ├── chronotype.tsx         S07  step 6 / 10
+│   │   ├── caffeine.tsx           S08  step 7 / 10
+│   │   ├── melatonin.tsx          S09  step 8 / 10
+│   │   ├── family.tsx             S10  step 9 / 10
+│   │   ├── name.tsx               S11  step 10 / 10
+│   │   ├── social-proof-2.tsx     S12  (filler before loader)
+│   │   ├── loading.tsx            S13  (4-step analysis animation)
+│   │   ├── aha.tsx                S14  (plan preview)
+│   │   └── notifications.tsx      S16  (post-paywall permission)
 │   ├── (tabs)/
 │   │   ├── _layout.tsx            custom FloatingTabBar
 │   │   ├── index.tsx              S20 Home
@@ -41,6 +52,8 @@ shiftrest/
 │   │   └── profile.tsx            S50 Profile
 │   ├── paywall.tsx                S15 (modal)
 │   └── transition.tsx             S43 (modal)
+├── lib/
+│   └── derive.ts                  display-string helpers (getGreeting, formatRelativeTime, …)
 ├── components/
 │   └── ui/                        14 design-system primitives
 │       ├── Screen.tsx

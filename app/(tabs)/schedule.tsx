@@ -15,6 +15,7 @@ import {
   PillCTA,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
+import { formatMonthYear } from '../../lib/derive';
 
 // 6 weeks of mock days
 type Kind = 'day' | 'night' | 'off' | 'past' | 'empty';
@@ -44,7 +45,7 @@ export default function Schedule() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label="+ Add shift"
+          label="Add shift"
           onPress={() => {
             /* TODO: S31 */
           }}
@@ -56,7 +57,7 @@ export default function Schedule() {
         <Pressable hitSlop={12}>
           <Glyph name="chevronLeft" size={24} color="inkMuted" />
         </Pressable>
-        <Eyebrow>APRIL 2026</Eyebrow>
+        <Eyebrow>{formatMonthYear()}</Eyebrow>
         <Pressable hitSlop={12}>
           <Glyph name="chevronRight" size={24} color="inkMuted" />
         </Pressable>
@@ -79,28 +80,34 @@ export default function Schedule() {
 
       {/* Month grid */}
       <View style={styles.grid}>
-        {MONTH.map((d, i) => (
-          <View key={i} style={styles.cell}>
-            {d.kind !== 'empty' && (
-              <>
-                <View
-                  style={[
-                    styles.dot,
-                    { backgroundColor: dotColor[d.kind], opacity: d.kind === 'past' ? 0.3 : 1 },
-                  ]}
-                />
-                <Text
-                  variant="mono"
-                  family="mono"
-                  color={d.kind === 'past' ? 'inkGhost' : 'inkMuted'}
-                  style={{ marginTop: 4 }}
-                >
-                  {String(d.label).padStart(2, '0')}
-                </Text>
-              </>
-            )}
-          </View>
-        ))}
+        {MONTH.map((d, i) => {
+          const today = new Date();
+          const isToday = d.kind !== 'empty' && d.label === today.getDate();
+          return (
+            <View key={i} style={styles.cell}>
+              {d.kind !== 'empty' && (
+                <>
+                  <View
+                    style={[
+                      styles.dot,
+                      { backgroundColor: dotColor[d.kind], opacity: d.kind === 'past' ? 0.3 : 1 },
+                      isToday && styles.dotToday,
+                    ]}
+                  />
+                  <Text
+                    variant="mono"
+                    family="mono"
+                    color={isToday ? 'primary' : d.kind === 'past' ? 'inkGhost' : 'inkMuted'}
+                    weight={isToday ? 'medium' : undefined}
+                    style={{ marginTop: 4 }}
+                  >
+                    {String(d.label).padStart(2, '0')}
+                  </Text>
+                </>
+              )}
+            </View>
+          );
+        })}
       </View>
 
       <View style={{ height: spacing.huge }} />
@@ -159,6 +166,15 @@ const styles = StyleSheet.create({
     width: 14,
     height: 14,
     borderRadius: 7,
+  },
+  dotToday: {
+    shadowColor: colors.primary,
+    shadowOpacity: 0.55,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 4,
+    borderWidth: 1.5,
+    borderColor: colors.primary,
   },
   legendRow: {
     flexDirection: 'row',

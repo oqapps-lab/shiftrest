@@ -58,10 +58,13 @@ xcrun simctl terminate <UDID> host.exp.Exponent
 1. Splash screen on `#FCF9F6` cream
 2. Fonts load (first launch: ~2 s as Google Fonts download)
 3. **Welcome screen** (`app/index.tsx`) — breathing orb, "Rest catches up, gently."
-4. Tap **Create my plan** → profession picker
-5. Tap any card → **Continue** → loading (4 steps) → aha moment (with timeline ring)
-6. Tap **Get the full plan** → paywall (modal)
-7. Tap **Start 7-day trial** → replaces stack with the tab shell
+4. Tap **Create my plan** → enters the 10-step onboarding quiz:
+   1. profession → 2. schedule template → 3. current shift → 4. main problem
+   → 5. social-proof-1 (93%) → 6. chronotype quiz → 7. caffeine →
+   8. melatonin → 9. family → 10. name
+5. After name: **social-proof-2** (filler) → **loading** (4-step analysis) → **aha** (plan preview with timeline ring)
+6. Tap **Get the full plan** → paywall (modal, "7 days. Then you decide.")
+7. Tap **Start 7-day trial** → **notifications** permission screen → tap any CTA → tab shell
 
 ---
 
@@ -70,16 +73,29 @@ xcrun simctl terminate <UDID> host.exp.Exponent
 | Route | File | Purpose |
 |---|---|---|
 | `/` | `app/index.tsx` | Welcome (S01) — entry for new users |
-| `/onboarding/profession` | `app/onboarding/profession.tsx` | Profession picker (S02) |
+| `/onboarding/profession` | `app/onboarding/profession.tsx` | Profession picker (S02) — step 1 / 10 |
+| `/onboarding/schedule` | `app/onboarding/schedule.tsx` | Schedule template (S03) — step 2 / 10 |
+| `/onboarding/current-shift` | `app/onboarding/current-shift.tsx` | Current shift anchor (S04) — step 3 / 10 |
+| `/onboarding/problem` | `app/onboarding/problem.tsx` | Main problem picker (S05) — step 4 / 10 |
+| `/onboarding/social-proof-1` | `app/onboarding/social-proof-1.tsx` | 93% stat break (S06) — step 5 / 10 |
+| `/onboarding/chronotype` | `app/onboarding/chronotype.tsx` | 3-question MEQ (S07) — step 6 / 10 |
+| `/onboarding/caffeine` | `app/onboarding/caffeine.tsx` | Caffeine habits (S08) — step 7 / 10 |
+| `/onboarding/melatonin` | `app/onboarding/melatonin.tsx` | Melatonin usage (S09) — step 8 / 10 |
+| `/onboarding/family` | `app/onboarding/family.tsx` | Family commitments (S10) — step 9 / 10 |
+| `/onboarding/name` | `app/onboarding/name.tsx` | Name input (S11) — step 10 / 10 |
+| `/onboarding/social-proof-2` | `app/onboarding/social-proof-2.tsx` | Second social proof (S12) filler |
 | `/onboarding/loading` | `app/onboarding/loading.tsx` | Analysis animation (S13) |
 | `/onboarding/aha` | `app/onboarding/aha.tsx` | Plan preview (S14) |
 | `/paywall` | `app/paywall.tsx` | Primary paywall (S15), modal |
+| `/onboarding/notifications` | `app/onboarding/notifications.tsx` | Post-paywall permission ask (S16) |
 | `/(tabs)` | `app/(tabs)/_layout.tsx` | Tab shell with `FloatingTabBar` |
 | `/(tabs)` | `app/(tabs)/index.tsx` | Home / Today (S20) |
 | `/(tabs)/schedule` | `app/(tabs)/schedule.tsx` | Calendar (S30) |
 | `/(tabs)/plan` | `app/(tabs)/plan.tsx` | Daily Sleep Plan (S40) |
 | `/(tabs)/profile` | `app/(tabs)/profile.tsx` | Profile Overview (S50) |
 | `/transition` | `app/transition.tsx` | Transition Plan (S43), modal |
+
+Deep-linking: `exp://127.0.0.1:8081/--/<route>` jumps straight to any screen during review.
 
 ---
 

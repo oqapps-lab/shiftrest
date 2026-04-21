@@ -30,9 +30,16 @@ const SEGMENT_OPTIONS: SegmentOption<ShiftKind>[] = [
   { value: 'off', label: 'Off day' },
 ];
 
+const SHIFT_TIMES: Record<ShiftKind, { start: string; end: string }> = {
+  day: { start: '07:00', end: '19:00' },
+  night: { start: '19:00', end: '07:00' },
+  off: { start: '—', end: '—' },
+};
+
 export default function CurrentShift() {
   const [shift, setShift] = useState<ShiftKind>('day');
   const [commute, setCommute] = useState<number>(30);
+  const times = SHIFT_TIMES[shift];
 
   return (
     <Screen
@@ -86,7 +93,7 @@ export default function CurrentShift() {
             adjustsFontSizeToFit
             style={{ marginTop: spacing.xs }}
           >
-            07:00
+            {times.start}
           </Text>
         </GlassCard>
         <GlassCard variant="paper" padding="lg" style={styles.timeCard}>
@@ -100,7 +107,7 @@ export default function CurrentShift() {
             adjustsFontSizeToFit
             style={{ marginTop: spacing.xs }}
           >
-            19:00
+            {times.end}
           </Text>
         </GlassCard>
       </View>

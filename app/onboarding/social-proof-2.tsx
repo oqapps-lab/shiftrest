@@ -18,7 +18,8 @@ import { spacing } from '../../constants/tokens';
 import { mockTestimonials, mockSocialProofStats } from '../../mock/user';
 
 export default function SocialProof2() {
-  const testimonial = mockTestimonials.nurse;
+  // Intentional: SP1 shows `.nurse`, SP2 shows `.fire` — different voice/angle.
+  const testimonial = mockTestimonials.fire;
 
   return (
     <Screen

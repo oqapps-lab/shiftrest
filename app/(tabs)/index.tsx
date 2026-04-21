@@ -19,14 +19,15 @@ import {
   HeroNumber,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
-import { mockUser, mockPlan, mockShiftBlocks } from '../../mock/user';
+import { mockUser, mockPlan, mockShiftBlocks, mockTransition } from '../../mock/user';
+import { countCompleted, formatRelativeTime, formatStreak, getGreeting } from '../../lib/derive';
 
 const EVENTS = [
   {
     glyph: 'coffee' as const,
     label: 'CAFFEINE CUTOFF',
     time: '17:00',
-    away: '2h 30m away',
+    targetHour: 17,
     tintBg: colors.sunriseGlow,
     tintFg: 'sunriseDim' as const,
   },
@@ -34,7 +35,7 @@ const EVENTS = [
     glyph: 'moon' as const,
     label: 'MELATONIN',
     time: '22:00',
-    away: '7h 30m away',
+    targetHour: 22,
     tintBg: colors.duskGlow,
     tintFg: 'duskDim' as const,
   },
@@ -42,7 +43,7 @@ const EVENTS = [
     glyph: 'bed' as const,
     label: 'SLEEP WINDOW',
     time: '23:00',
-    away: '8h 30m away',
+    targetHour: 23,
     tintBg: colors.primaryContainer,
     tintFg: 'primary' as const,
   },
@@ -50,12 +51,14 @@ const EVENTS = [
 
 export default function Home() {
   const insets = useSafeAreaInsets();
+  const today = mockTransition.days[0];
+  const doneToday = countCompleted(today.steps);
 
   return (
     <Screen orbs="normal" scroll>
       <View style={styles.headerRow}>
         <View style={{ flex: 1 }}>
-          <Eyebrow>{`GOOD AFTERNOON, ${mockUser.name.toUpperCase()}`}</Eyebrow>
+          <Eyebrow>{`${getGreeting(mockPlan.nowHour)}, ${mockUser.name.toUpperCase()}`}</Eyebrow>
         </View>
         <View style={styles.streak}>
           <Glyph name="flame" size={16} color="sunriseDim" />
@@ -67,7 +70,7 @@ export default function Home() {
             uppercase
             style={{ marginLeft: 6 }}
           >
-            {`${mockUser.streak} DAYS`}
+            {formatStreak(mockUser.streak)}
           </Text>
         </View>
       </View>
@@ -108,10 +111,9 @@ export default function Home() {
               <Eyebrow>{e.label}</Eyebrow>
               <HeroNumber value={e.time} size="md" style={{ marginTop: 2 }} />
               <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
-                {e.away}
+                {formatRelativeTime(mockPlan.nowHour, e.targetHour)}
               </Text>
             </View>
-            <Glyph name="chevronRight" size={20} color="inkMuted" />
           </View>
         </GlassCard>
       ))}
@@ -128,7 +130,7 @@ export default function Home() {
             <View style={{ flex: 1 }}>
               <Eyebrow color="duskDim">TRANSITION IN PROGRESS</Eyebrow>
               <Text variant="titleLg" family="display" weight="light" color="ink" style={{ marginTop: 2 }}>
-                Night → Day, 2 of 4 steps today
+                {`${mockTransition.fromShift} → ${mockTransition.toShift}, ${doneToday} of ${today.steps.length} steps today`}
               </Text>
             </View>
             <Glyph name="chevronRight" size={20} color="duskDim" />
