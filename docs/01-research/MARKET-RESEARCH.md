@@ -1,5 +1,5 @@
 # Исследование рынка — ShiftRest
-**Дата: 13 апреля 2026**
+**Дата: 21 апреля 2026** *(обновлено с учётом свежих данных)*
 
 ---
 
@@ -54,25 +54,37 @@
 - Over **103 million** sleep-related searches were performed in 2019, with growth since
 - Sleep searches spiked **58%** during COVID-19 (first 5 months of 2020 vs. prior 3-year average)
 - Sleep apnea is the #1 Googled sleep condition (17M+ searches/year), followed by insomnia
+- **45% of Americans** now actively optimize their sleep through supplements, tracking, and environmental adjustments (2026 data)
+- "Sleepmaxxing" — viral sleep optimization trend — gained mainstream coverage on CNN, TikTok, and FAU in 2025-2026, signalling peak consumer interest in science-based sleep solutions
 
-### 2.2 Shift Work Sleep Search Trends
-- Direct Google Trends data for "shift work sleep" shows **sustained and growing interest** over the past 5 years
-- Key search terms with consistent volume:
-  - "night shift sleep schedule" - High and consistent search volume
-  - "shift work sleep disorder" - Moderate, growing
-  - "rotating shift sleep" - Lower but growing
-  - "shift worker app" - Low but emerging
-- Seasonal patterns: Searches peak in January (New Year's resolutions) and during DST transitions
-- Post-pandemic, interest in circadian health and sleep optimization has reached all-time highs
+### 2.2 Shift Work Sleep: 7 Key Search Queries
+
+| # | Query | Trend | Notes |
+|---|-------|-------|-------|
+| 1 | `night shift sleep schedule` | **High & consistent** | Top-result gap: Sleep Foundation blog, no dominant app |
+| 2 | `shift work sleep disorder` | **Moderate, growing** | Clinical term; searched by nurses/doctors researching their own condition |
+| 3 | `how to sleep after night shift` | **High, sustained** | #1 practical question; hundreds of Reddit threads; no app captures this intent |
+| 4 | `rotating shift sleep` | **Low, growing** | Emerging; factory/EMS workers; first-mover opportunity in ASO |
+| 5 | `nurse sleep schedule` | **Niche, low competition** | Profession-specific; r/nursing 700K+ members; highest conversion intent |
+| 6 | `circadian rhythm app` | **Growing rapidly** | Broad term boosted by Nobel Prize 2017 + mainstream media coverage 2025-2026 |
+| 7 | `shift worker app` | **Low, emerging** | Almost zero App Store competition; strong ASO opportunity |
+
+**Wider sleep search context (2026):**
+- `magnesium glycinate` — **823,000 monthly searches**, +22% YoY (confirms consumer willingness to act on sleep solutions)
+- `sleep supplements` category — **+174% growth** in 2025-2026
+- `L-theanine` — 301,000 searches, +50% YoY
+
+**Seasonal patterns:** Searches peak in January (New Year's resolutions) and during DST transitions (+30-40% spike). Post-pandemic circadian health interest remains at all-time highs.
 
 ### 2.3 Assessment
-Interest in shift work sleep solutions is **growing steadily**, driven by:
-1. Increased awareness of circadian health science
-2. Post-pandemic health consciousness
-3. Growing recognition that standard sleep apps fail shift workers
-4. Rising media coverage of shift work health risks
+Interest in shift work sleep solutions is **growing steadily and accelerating**, driven by:
+1. **Sleepmaxxing mainstream moment** — sleep optimization has entered popular culture (CNN, TikTok), bringing new users to the category
+2. Increased awareness of circadian health science (Nobel Prize 2017 → mass awareness 2024-2026)
+3. Post-pandemic health consciousness (+58% COVID spike that never fully reversed)
+4. Growing recognition that standard sleep apps fail shift workers
+5. Rising media coverage of nursing/healthcare burnout crisis
 
-**Sources:** [Amerisleep Google Searches Study](https://amerisleep.com/blog/google-searches-and-sleep/), [Medium: Sleepless America](https://medium.com/data-science-collective/sleepless-america-what-google-searches-and-public-data-reveal-about-our-3am-crisis-0ade8ccbad18), [PMC Google Trends Insomnia](https://pmc.ncbi.nlm.nih.gov/articles/PMC7853234/)
+**Sources:** [Amerisleep: 237M Google Searches](https://amerisleep.com/blog/google-searches-and-sleep/), [Medium: Sleepless America](https://medium.com/data-science-collective/sleepless-america-what-google-searches-and-public-data-reveal-about-our-3am-crisis-0ade8ccbad18), [PMC: Google Trends Insomnia COVID](https://pmc.ncbi.nlm.nih.gov/articles/PMC7853234/), [NapLab: State of Sleep 2026](https://naplab.com/guides/the-state-of-sleep-2026-sleep-trends/), [RisingTrends: Sleep Trends 2026](https://www.risingtrends.co/trends/sleep-trends-2026), [Naturepedic: 8 Sleep Trends 2026](https://www.naturepedic.com/blog/sleep-trends)
 
 ---
 
@@ -133,19 +145,22 @@ Interest in shift work sleep solutions is **growing steadily**, driven by:
 
 ### 3.2 Shift-Work Specific Apps (Direct Competitors)
 
-#### Timeshifter Shift Work
+#### Timeshifter Shift Work ⚠️ THREAT ESCALATED (April 2026)
 | Attribute | Details |
 |-----------|---------|
 | **Focus** | Circadian science-based advice for shift workers (originally jet lag only, now expanded) |
 | **Shift Work Support** | **Yes -- core product.** Personalized advice based on schedule, chronotype, sleep pattern. Practicality Filter adjusts to real-world constraints. |
 | **Pricing** | $9.99/mo or $69.99/year; 2-week free trial. B2B: Enterprise trials for up to 250 employees. |
 | **Ratings** | ~3.5-4.0 stars (mixed); limited review volume for shift work version |
+| **Users** | **1.6M globally** (as of April 2026); **~500K new accounts added in 2025 alone** |
+| **Funding** | **$1.8M new round (April 15, 2026)**, led by Skip Capital (Atlassian co-founder Scott Farquhar). **Total raised: $5.3M**. Also backed by Nico Rosberg, Michael López-Alegría, Brian Kelly. |
 | **Science** | Co-founded by Dr. Steven Lockley (Harvard, circadian rhythm authority) |
 | **Key Complaints** | Server glitches when updating shifts; deletes existing shifts; requires email before showing paywall; expensive; UX friction |
-| **Strengths** | Strong science credibility; B2B sales channel; brand recognition from jet lag app |
-| **Weaknesses** | Buggy schedule management; high price; limited organic growth; complex onboarding |
+| **Strengths** | Strong science credibility; B2B in healthcare/energy/logistics; fresh funding to fix UX; brand recognition |
+| **Weaknesses** | Still buggy schedule management; high price ($120/yr); complex onboarding; growth funded, not organic |
+| **ShiftRest Risk** | **HIGH.** New funding means they can hire engineers to fix UX. Window to beat them on product quality narrows. |
 
-**Sources:** [Timeshifter Shift Work](https://www.timeshifter.com/shift-work-app), [App Store](https://apps.apple.com/us/app/timeshifter-shift-work/id1594538527), [Google Play](https://play.google.com/store/apps/details?id=com.timeshifter.shiftwork)
+**Sources:** [Timeshifter Shift Work App](https://www.timeshifter.com/shift-work-app), [Funding Announcement PR Newswire](https://www.prnewswire.com/news-releases/timeshifter-raises-new-funding-to-scale-circadian-technology-across-travel-shift-work-and-healthcare-302743207.html), [Pulse2 Funding Coverage](https://pulse2.com/timeshifter-new-funding-round-brings-total-to-5-3-million-to-expand-circadian-technology/), [App Store](https://apps.apple.com/us/app/timeshifter-shift-work/id1594538527)
 
 #### Arcashift (by Arcascope)
 | Attribute | Details |
@@ -432,7 +447,10 @@ Key search terms with demand but weak competition:
 
 At an average of $50/user/year (blended consumer + freemium):
 - **TAM = $12.5 billion** (but realistically capped by the sleep app market ceiling)
-- Sleep app market projected at **$2.9B in 2025, growing to $9.6B by 2034** (14.2% CAGR)
+- Sleep app market: **$1.07B–$4.69B in 2025** (variation by research scope: apps-only vs. broader sleep monitoring)
+- Projected to reach **$2.79B–$24.5B by 2032–2035** depending on scope definition
+- **CAGR: 14.5–21%** (consensus: 14.5% for consumer apps only; 18.05% including wearable-integrated monitoring; 21% for total sleep tech)
+- Sleep Analysis Software (B2B/clinical) projected to **nearly double to $3.06B by 2030**
 - Shift work segment estimated at **15-20%** of sleep app market = **$435M - $1.9B by 2034**
 
 ### 8.2 Serviceable Addressable Market (SAM)
@@ -508,7 +526,16 @@ B2B addition (employer-funded):
 - **FDA в 2023-2024 выпустила обновлённые гайдлайны** по digital health, clarifying что wellness-приложения (не диагностика) не требуют одобрения FDA
 
 ### 9.4 Вывод по Temporal Window
-**Окно открыто и начинает закрываться.** Спрос подтверждён (22M+ shift workers в US, 26.5% с SWSD), но ни один продукт не занял позицию лидера. Появление OffShift и Riseo в конце 2025–2026 сигнализирует, что другие видят ту же возможность. У первого качественного продукта есть 12-18 месяцев преимущества.
+**Окно закрывается быстрее, чем ожидалось.**
+
+**15 апреля 2026** — Timeshifter закрыл раунд $1.8M (total $5.3M) с бэкингом Atlassian co-founder. Это сигнал: главный конкурент получил ресурсы на UX-фикс. У него уже 1.6M пользователей и B2B-каналы в healthcare/energy/logistics.
+
+Одновременно появились OffShift (Dec 2025) и Riseo (2026). Рынок привлекает капитал. **Реальное окно для ShiftRest — 9-12 месяцев**, не 18.
+
+**Что это меняет для стратегии:**
+- MVP нужен не за 4-6 месяцев — за 3-4 месяца
+- Ключевой дифференциатор от Timeshifter: лучший UX + меньшая цена ($49.99/год vs $69.99/год) + transition planning first
+- Timeshifter занимает B2B; ShiftRest должен выиграть consumer-рынок сначала
 
 ---
 
@@ -595,3 +622,13 @@ B2B addition (employer-funded):
 - [Global Wellness Institute: Night Shift Work](https://globalwellnessinstitute.org/global-wellness-institute-blog/2018/06/19/night-shift-work-is-on-the-rise-globally-and-its-a-new-wellness-problem/)
 - [Ergonomic Trends: Workplace Fatigue Statistics](https://ergonomictrends.com/workplace-fatigue-statistics/)
 - [Shift Work Statistics 2024](https://redline.digital/shift-work-statistics/)
+- [Coherent Market Insights: Sleep App Market 2025-2032 (CAGR 14.6%)](https://www.coherentmarketinsights.com/industry-reports/global-sleep-app-market)
+- [Global Growth Insights: Sleep Monitoring Apps Market CAGR 18.05%](https://www.globalgrowthinsights.com/market-reports/sleep-monitoring-apps-market-101086)
+- [GlobeNewswire: Sleep Analysis Software to $3.06B by 2030](https://www.globenewswire.com/news-releases/2026/03/31/3265555/28124/en/Sleep-Analysis-Software-Market-to-Nearly-Double-During-2026-2030-Reaching-USD-3.06-Billion.html)
+- [Timeshifter Raises $1.8M (April 15, 2026) — PR Newswire](https://www.prnewswire.com/news-releases/timeshifter-raises-new-funding-to-scale-circadian-technology-across-travel-shift-work-and-healthcare-302743207.html)
+- [Pulse2: Timeshifter Total Funding $5.3M](https://pulse2.com/timeshifter-new-funding-round-brings-total-to-5-3-million-to-expand-circadian-technology/)
+- [NapLab: The State of Sleep 2026](https://naplab.com/guides/the-state-of-sleep-2026-sleep-trends/)
+- [RisingTrends: Top 22 Sleep Trends 2026](https://www.risingtrends.co/trends/sleep-trends-2026)
+- [Naturepedic: 8 Sleep Trends for 2026](https://www.naturepedic.com/blog/sleep-trends)
+- [ScienceDirect: Night/Shift Work and Sleep Disorders in Nurses (2025)](https://www.sciencedirect.com/science/article/pii/S0020748925000264)
+- [PMC: Shift Workers' Experiences — Systematic Review (2025)](https://pmc.ncbi.nlm.nih.gov/articles/PMC12281556/)
