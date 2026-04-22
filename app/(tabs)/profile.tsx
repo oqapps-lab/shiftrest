@@ -109,7 +109,12 @@ export default function Profile() {
     onPress: (() => void) | undefined;
   }[] = [
     accountRow,
-    { glyph: 'gear', label: 'Sleep preferences', subtitle: 'Chronotype · caffeine · melatonin', onPress: undefined },
+    {
+      glyph: 'gear',
+      label: 'Sleep preferences',
+      subtitle: 'Chronotype · caffeine · melatonin',
+      onPress: () => router.push('/settings/sleep-preferences'),
+    },
     { glyph: 'bell', label: 'Notifications', subtitle: 'Reminder timing & types', onPress: undefined },
     { glyph: 'sparkle', label: 'Subscription', subtitle: subscriptionSubtitle, onPress: undefined },
     { glyph: 'user', label: 'About & support', subtitle: 'FAQ · contact · sources', onPress: undefined },
