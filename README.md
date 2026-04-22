@@ -52,14 +52,24 @@ shiftrest/
 │   │   └── profile.tsx            S50 Profile
 │   ├── paywall.tsx                S15 (modal)
 │   ├── transition.tsx             S43 (modal)
-│   └── auth/                      Stage-6 deferred-registration auth
+│   ├── auth/                      Stage-6 deferred-registration auth
+│   │   ├── _layout.tsx
+│   │   ├── login.tsx              S60
+│   │   ├── signup.tsx             S61
+│   │   └── forgot.tsx             S62
+│   ├── settings/                  Stage-6 settings detail screens
+│   │   ├── _layout.tsx
+│   │   ├── sleep-preferences.tsx  S51 — compound editable form
+│   │   ├── notifications.tsx      S52 — master + per-type toggles
+│   │   ├── subscription.tsx       S53 — trial countdown + manage
+│   │   └── about.tsx              S54 — version + links + disclaimer
+│   └── schedule/                  Stage-6 calendar mutations
 │       ├── _layout.tsx
-│       ├── login.tsx              S60
-│       ├── signup.tsx             S61
-│       └── forgot.tsx             S62
+│       └── add-shift.tsx          S31 (modal)
 ├── lib/
 │   ├── supabase.ts                Supabase client (graceful no-env fallback)
 │   ├── auth/store.tsx             <AuthProvider> + useAuth() hook
+│   ├── onboarding/store.tsx       <OnboardingProvider> + useOnboarding() + syncProfile()
 │   └── derive.ts                  display-string helpers (getGreeting, formatRelativeTime, …)
 ├── components/
 │   └── ui/                        14 design-system primitives
@@ -148,7 +158,12 @@ Key principles:
 - [x] Stage 3 — Practices research (onboarding, paywall, retention benchmarks)
 - [x] Stage 4 — UX (50 screens mapped, user flows, funnel)
 - [ ] **Stage 5 — Design & scaffold** ← current (primitives + 10 demo screens shipped)
-- [ ] **Stage 6 — Full screen build (remaining 40 screens) + Supabase + OpenAI integration** ← in progress (auth scaffold landed: `app/auth/{login,signup,forgot}.tsx` + `lib/supabase.ts` + `lib/auth/store.tsx`; awaits Supabase project provisioning per [docs/05-database/AUTH.md](docs/05-database/AUTH.md))
+- [ ] **Stage 6 — Full screen build (remaining 40 screens) + Supabase + OpenAI integration** ← in progress
+  - Auth scaffold ✓ — `app/auth/{login,signup,forgot}.tsx`, `lib/auth/store.tsx`, `lib/supabase.ts` (graceful no-env fallback)
+  - Onboarding state persistence ✓ — `lib/onboarding/store.tsx` (Context + AsyncStorage + `syncProfile()` Supabase upsert)
+  - 4 settings detail screens ✓ — `app/settings/{sleep-preferences,notifications,subscription,about}.tsx`
+  - Add shift modal ✓ — `app/schedule/add-shift.tsx`
+  - Awaits: Supabase project provisioning ([docs/05-database/AUTH.md](docs/05-database/AUTH.md)), `expo-notifications` scheduling, OpenAI plan-generator
 - [ ] Stage 7 — Adapty paywall integration + QA
 - [ ] Stage 8 — Deployment (App Store · Google Play)
 

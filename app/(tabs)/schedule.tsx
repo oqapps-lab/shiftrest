@@ -14,6 +14,7 @@ import {
   Glyph,
   PillCTA,
 } from '../../components/ui';
+import { router } from 'expo-router';
 import { colors, spacing } from '../../constants/tokens';
 import { formatMonthYear } from '../../lib/derive';
 
@@ -46,9 +47,7 @@ export default function Schedule() {
         <PillCTA
           variant="primary"
           label="Add shift"
-          onPress={() => {
-            /* TODO: S31 */
-          }}
+          onPress={() => router.push('/schedule/add-shift')}
           iconLeft={<Glyph name="plus" size={18} color="onPrimary" />}
         />
       }

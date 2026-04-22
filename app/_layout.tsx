@@ -47,6 +47,7 @@ export default function RootLayout() {
             <Stack.Screen name="onboarding" />
             <Stack.Screen name="auth" />
             <Stack.Screen name="settings" />
+            <Stack.Screen name="schedule" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="transition" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
             <Stack.Screen name="paywall" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />

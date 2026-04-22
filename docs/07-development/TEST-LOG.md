@@ -242,3 +242,94 @@ End-to-end smoke test via `mobilecli io tap`. Selection state, conditional revea
 - Dark mode — deferred per DESIGN-GUIDE §11.
 
 **Commits this session:** `02e20a9` (initial 14-bug batch), `5991334` (refactor + helpers), and the lint/funnel pass that follows.
+
+---
+
+# Stage-6 build session — 2026-04-22 (autonomous)
+
+Continuation of the QA pass above. After landing the bug fixes and lint cleanup, scope expanded to start Stage-6 features end-to-end while user was away.
+
+## Commits
+
+| Hash | Title |
+|---|---|
+| `02e20a9` | qa: 14 content/logic fixes from sim-verified QA pass |
+| `5991334` | refactor: Screen.keyboardAvoiding prop + all hero times derive from mockPlan |
+| `0112a85` | chore: lint clean (0 errors, 0 warnings) + TEST-LOG update |
+| `ebe8f04` | feat(auth): Stage 6 scaffold — login / signup / forgot + Supabase wiring |
+| `3e2cb94` | feat(onboarding): shared OnboardingProvider state with AsyncStorage persistence |
+| `94c8292` | feat(onboarding): propagate displayName through app + Welcome skip-if-completed |
+| `ae17588` | feat(settings): S51 Sleep preferences — compound editable form |
+| `32cd800` | feat(settings): S52 Notifications + S53 Subscription + S54 About |
+| `d152d66` | feat(onboarding): syncProfile() — Stage 6.5 hook for profiles upsert |
+| (this) | feat(schedule): S31 Add shift modal |
+
+## Architectural additions
+
+### `lib/auth/store.tsx` + `lib/supabase.ts`
+
+- React Context AuthProvider exposing `{ session, user, loading, configured, signInWithPassword, signUpWithPassword, resetPassword, signOut }`.
+- Supabase client with AsyncStorage adapter; gracefully exports `null` when env vars are absent so all auth screens render in **DEMO MODE** with a clear banner instead of crashing.
+- 3 auth screens: `app/auth/{login,signup,forgot}.tsx` — all use the new `Screen.keyboardAvoiding` prop. Welcome's "I already have an account" routes here.
+
+### `lib/onboarding/store.tsx`
+
+- React Context OnboardingProvider with full state shape (10 quiz answers + `completed` flag).
+- Persists to AsyncStorage @ `shiftrest:onboarding:v1` with hydrate-then-write pattern.
+- All 10 quiz screens migrated from local `useState` to `useOnboarding().update({...})`.
+- Profile / Home / Aha / Paywall greeting derives from `state.displayName` with fallback chain `displayName → user_metadata.display_name → email local part → mockUser.name`.
+- Welcome screen `useEffect`-redirects to `/(tabs)` when `state.completed` (no flash thanks to `hydrated` guard).
+- `syncProfile()` method maps state → `profiles` table row and upserts via Supabase. Auto-runs on `(hydrated && auth.user && state.completed)`. Fingerprint cache prevents redundant network calls. No-ops with `{ skipped }` reason in DEMO MODE.
+
+### Settings detail screens
+
+- `app/settings/sleep-preferences.tsx` (S51) — every quiz answer in one editable form, auto-saves on each interaction. Includes a destructive "Reset all answers" card.
+- `app/settings/notifications.tsx` (S52) — master toggle + 3 reminder rows + lead-time SegmentedControl on bed-time. Persists to its own AsyncStorage namespace.
+- `app/settings/subscription.tsx` (S53) — TRIAL/Free/Premium card driven by `mockUser.subscription` + `formatTrialRemaining`. Manage opens App Store subscriptions URL.
+- `app/settings/about.tsx` (S54) — version from `Constants.expoConfig.version`, 5 deeplink rows, medical disclaimer.
+- All 5 Profile rows now navigate; previously 4 of 5 had `onPress: undefined`.
+
+### `app/schedule/add-shift.tsx` (S31)
+
+- Modal opens from Schedule tab "Add shift" CTA (was a TODO).
+- 7-day chip picker, day/night/off SegmentedControl, 8 hour-presets for start + end, optional Notes TextField. Summary card at bottom.
+- Save button currently fires a confirmation Alert; `shifts.insert` lands when Supabase is wired.
+
+## Helpers added to `lib/derive.ts`
+
+- `formatHour(14.5)` → "14:30"
+- `formatHourRange(23, 7)` → "23:00 — 07:00"
+- `hoursBetween(17, 23)` → 6 (wraps midnight)
+
+These let Aha / Plan / Home all derive their hero times from `mockPlan` instead of literals — eliminates the cross-surface drift class that B4 was a symptom of.
+
+## Verification (sim — iPhone 17 / A20FE3AE)
+
+- `npm run lint` — 0 errors, 0 warnings (after fixing 9 `react/no-unescaped-entities` errors via `{"..."}` wrapping + cleaning unused imports).
+- `npx tsc --noEmit` — clean across all 11 commits.
+- Full funnel walkthrough Welcome → … → tabs: 16 hops, no crashes, every screen renders, B16 keyboard fix lifts Continue above keyboard on Name screen, B1 transition counter shows "3 of 4 steps today" derived from mock.
+- Auth screens: render with DEMO MODE banner; routing wired (Welcome→Login, Login↔Signup, Login→Forgot, Profile→Save your account); validation correct (email contains @, password ≥ 6).
+- Sleep preferences: scroll top→bottom shows every section; toggles reveal conditional sub-controls.
+- All settings detail screens render and back-chevron returns to Profile.
+- Add shift modal: WHEN/SHIFT TYPE/START/END/NOTES all interactive; Save fires confirmation Alert.
+
+## Provider order in `app/_layout.tsx`
+
+```
+GestureHandlerRootView
+  SafeAreaProvider
+    AuthProvider              ← session lives here
+      OnboardingProvider      ← consumes useAuth() for syncProfile
+        Stack
+          [index, onboarding, auth, settings, schedule (modal), (tabs), transition (modal), paywall (modal)]
+```
+
+## Still owed (next session)
+
+- **Real Supabase project** — fill `.env` and the auth + sync paths light up.
+- **`expo-notifications` scheduling** — S52 toggles persist preferences but no `scheduleNotificationAsync` calls yet (tracked TODO at bottom of the file).
+- **OpenAI plan generator** — Plan tab recommendations are still hardcoded to mockPlan; Stage 6.6.
+- **OAuth (Apple / Google)** — `signInWithOAuth` paths not wired in `useAuth`.
+- **Email-confirm deeplink callback** — `shiftrest://auth/callback` is registered in `app.json` but no in-app handler reads the access_token yet.
+- **Stage 7 — Adapty** for real subscriptions instead of `mockUser.subscription`.
+- Spacing polish observations from earlier session still open (short-form screens, segmented unselected contrast, stepper +/- gap).
