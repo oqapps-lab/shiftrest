@@ -2,13 +2,12 @@
  * Root stack — loads fonts, wires safe-area + gesture handler, applies base canvas.
  */
 
-import 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { Stack } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { View } from 'react-native';
 import { useAppFonts } from '../hooks/useAppFonts';
 import { colors } from '../constants/tokens';

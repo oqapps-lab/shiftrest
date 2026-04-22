@@ -145,3 +145,100 @@ Additional polish during fix pass:
 - **Source:** 14 primitives in `components/ui/` + 10 screens in `app/` + tokens + font hook + mock
 
 **Commit hash:** to be updated by final commit message.
+
+---
+
+# QA Pass — 2026-04-22
+
+**Sim:** iPhone 17 (iOS 26.3), UDID `A20FE3AE-F8A9-4CE1-8834-98D7CD5A0270`
+**Tester:** Claude Code (mac host) via mobilecli + native `simctl io screenshot`
+**Stack:** Expo SDK 55, RN 0.83.4, React 19.2, TS strict — all verified clean (`npm run lint`, `npx tsc --noEmit`).
+
+## Bug audit — 17 issues found, 14 fixed
+
+The full onboarding chain (now grown from 3 declared screens to 14) and 4 tab screens were re-walked with the protocol from `~/.claude/skills/ui-qa/SKILL.md`. 17 distinct bugs surfaced, 14 fixed in two commits (`02e20a9`, `5991334`).
+
+### Fixed (commits `02e20a9` + `5991334`)
+
+| # | Class | Bug | Fix | File |
+|---|---|---|---|---|
+| B1 | Cross-surface counter | Home transition teaser hardcoded "2 of 4" while modal said "3 of 4" | `countCompleted(mockTransition.days[0].steps)` → "3 of 4" | `app/(tabs)/index.tsx` |
+| B2 | Stale literal | Plan pager "TODAY · 20 APR" frozen at April 20 | `formatDayMonth()` → "22 APR" today | `app/(tabs)/plan.tsx` |
+| B3 | Stale literal | Home greeting "GOOD AFTERNOON" regardless of time | `getGreeting(mockPlan.nowHour)` | `app/(tabs)/index.tsx` |
+| B4 | Stale literal | Home event "Xh Ym away" hardcoded | `formatRelativeTime(nowHour, e.hour)` | `app/(tabs)/index.tsx` |
+| B5 | Stale literal | Schedule "APRIL 2026" hardcoded | `formatMonthYear()` | `app/(tabs)/schedule.tsx` |
+| B6 | Router | `onboarding/_layout` declared 3 of 14 Stack.Screens | All 14 declared | `app/onboarding/_layout.tsx` |
+| B7 | UX | "+ Add shift" double plus (icon + label both prefixed) | label → "Add shift" | `app/(tabs)/schedule.tsx` |
+| B8 | Docs drift | README + RUN-LOCAL listed only 3 onboarding screens / 7-step funnel | Synced to 14 screens / 15-step funnel + deep-link tip | `README.md`, `docs/07-development/RUN-LOCAL.md` |
+| B9 | Stale literal | Profile "Trial · 6 days left" hardcoded | `formatTrialRemaining(mockUser.trialEndsAt)` → "5 days left" today | `app/(tabs)/profile.tsx` |
+| B10 | Personalization | Both social-proof screens used `mockTestimonials.nurse` (duplicate quote) | SP2 → `.fire` (Marcus, firefighter) | `app/onboarding/social-proof-2.tsx` |
+| B11 | UX | No "today" indicator on Schedule calendar | day 22 highlighted with sage ring + glow + primary mono text | `app/(tabs)/schedule.tsx` |
+| B14 | Pluralization | Home streak "14 DAYS" template ignored singular | `formatStreak(streak)` returns "1 DAY" / "N DAYS" | `app/(tabs)/index.tsx` |
+| B15 | Form interactivity | Current-shift START/END frozen at 07:00/19:00 regardless of segmented control | `SHIFT_TIMES` map: day 07-19 / night 19-07 / off — — | `app/onboarding/current-shift.tsx` |
+| B16 | Form a11y | Name screen Continue button hidden by keyboard | `<Screen keyboardAvoiding>` (KAV behavior=height; floating footer lifts) | `components/ui/Screen.tsx`, `app/onboarding/name.tsx`, `app/onboarding/family.tsx` |
+| B17 | UX | Home event cards rendered chevronRight icons but had no Pressable wrapper | chevrons removed (transition card kept its chevron — it IS tappable) | `app/(tabs)/index.tsx` |
+
+### Confirmed design intent (not bugs)
+
+- **B12** Frosted tab bar overlap with content — DESIGN-GUIDE §3 "weightless sanctuary" 3-layer rule.
+- **B13** "MARINA, YOUR PLAN IS READY" eyebrow on both Aha (S14) and Paywall (S15) — DESIGN-GUIDE §5.7 explicit example.
+
+### Architectural improvements landed alongside fixes
+
+- New `lib/derive.ts` — single source of truth for display strings: `getGreeting`, `formatRelativeTime`, `formatTrialRemaining`, `formatMonthYear`, `formatDayMonth`, `formatStreak`, `formatHour`, `formatHourRange`, `hoursBetween`, `countCompleted`. All hero times on Aha / Plan / Home now flow through these helpers from `mockPlan`, eliminating the cross-surface drift class entirely.
+- `Screen` primitive gains `keyboardAvoiding?: boolean` prop (uses KAV `behavior="height"` so absolute-positioned footer participates). Removes need for per-screen wrappers; will scale to all S6 form screens.
+
+## Full funnel — Welcome to tabs (16 hops)
+
+End-to-end smoke test via `mobilecli io tap`. Selection state, conditional reveals, keyboard avoidance, modal nav all verified. No crashes, no broken nav, no Metro errors.
+
+| Hop | Route | Verified |
+|---|---|---|
+| 1 | `/` Welcome | breathing orb, 2 CTAs |
+| 2 | tap Create my plan → `/onboarding/profession` | step 1/10, 4 cards |
+| 3 | tap Nurse + Continue → `/onboarding/schedule` | step 2/10, 5 templates |
+| 4 | pick 3×12 + Continue → `/onboarding/current-shift` | step 3/10, segmented + slider |
+| 5 | Day shift + Continue → `/onboarding/problem` | step 4/10, 4 problem cards |
+| 6 | Falling asleep + Continue → `/onboarding/social-proof-1` | step 5/10, 93% hero + Sara nurse testimonial |
+| 7 | Next → `/onboarding/chronotype` | step 6/10, 3 questions × 4 options |
+| 8 | answer Q1+Q2+Q3 + Continue → `/onboarding/caffeine` | step 7/10, stepper + type + sensitivity |
+| 9 | Coffee + Normal + Continue → `/onboarding/melatonin` | step 8/10, conditional reveal verified earlier |
+| 10 | Continue (toggle off) → `/onboarding/family` | step 9/10, conditional reveal verified earlier |
+| 11 | Continue (toggle off) → `/onboarding/name` | step 10/10, KAV lifted Continue above keyboard |
+| 12 | tap field, type "Marina", Continue → `/onboarding/social-proof-2` | Marcus firefighter testimonial (B10 fix in flight) |
+| 13 | Show my plan → `/onboarding/loading` | 4-message orb animation auto-advances ~3.6s |
+| 14 | auto → `/onboarding/aha` | "MARINA, YOUR PLAN IS READY" + derived 14:30 / 23:00—07:00 / 17:00 |
+| 15 | Get the full plan → `/paywall` | modal slides up, year plan default |
+| 16 | Start 7-day trial → `/onboarding/notifications` → tap Allow → `/(tabs)` | Home shows GOOD AFTERNOON, MARINA + 14 DAYS streak + 3 next-event cards (no chevrons), transition card "3 of 4 steps today" |
+
+## Lint + type check
+
+- `npm run lint` (eslint 9 + eslint-config-expo 55) — **0 errors, 0 warnings** after cleanup pass:
+  - 9 `react/no-unescaped-entities` errors fixed by wrapping apostrophe-containing strings in `{"..."}` literals (8 onboarding/index files).
+  - 9 unused-import warnings cleaned (removed `useSafeAreaInsets` from Home, `HeroNumber` + `ProgressDots` from Plan, `radii` from Schedule/Slider/Stepper, `PillCTA` from Transition, `View` from Toggle).
+  - 1 useMemo deps warning resolved by inlining `snap` into `panResponder` factory.
+- `npx tsc --noEmit` — clean.
+
+## Coverage that's still skipped (with reason)
+
+- **Width variance** — every booted simulator besides A20FE3AE belongs to another active project (freshcheck, Vitaminico, SugarQuit, deskcare, break_up, family-app per `~/.claude/CLAUDE.md` ownership table). Tested only @402pt logical width.
+- **Cold-start AsyncStorage wipe** — Stage 5 has no persistence, so cold-start vs warm-start are identical right now. Will become critical when Supabase session persists in S6.
+- **Haptics** — mobile-mcp doesn't expose haptic events; verified by code-read (`Haptics.impactAsync` on every Pressable).
+- **Android** — no Android sim available; iOS-only.
+
+## Bumps observed but not actioned (design-level, awaits product call)
+
+- Short-form screens (`melatonin` toggle off, `family` toggle off, `current-shift`, `name` empty) carry 30–50% empty space between content and floating CTA. Aesthetic ("weightless sanctuary") but flirts with "thin/unfinished" feel; supportive copy or a small visual could fill it.
+- Segmented control unselected segments are bare text — discoverability marginal vs the filled segment.
+- Caffeine stepper +/- buttons sit far apart from the central value (114pt gap each side) — visually loose.
+- Light + Optional Nap on Plan tab still hardcode times not present in `mockPlan` (no `lightStart` / `napTime` fields). Acceptable for Stage 5.
+
+## Not yet started
+
+- Stage 6 — Supabase auth + login/signup screens.
+- Stage 6 — OpenAI plan-generator hookup.
+- Stage 6 — `expo-notifications` actual scheduling (current `notifications` screen only requests permission UI; no `Notifications.scheduleNotificationAsync` calls yet).
+- Stage 7 — Adapty paywall integration (current paywall is UI-only mock).
+- Dark mode — deferred per DESIGN-GUIDE §11.
+
+**Commits this session:** `02e20a9` (initial 14-bug batch), `5991334` (refactor + helpers), and the lint/funnel pass that follows.

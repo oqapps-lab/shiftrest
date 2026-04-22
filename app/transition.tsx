@@ -14,7 +14,6 @@ import {
   HeroNumber,
   Text,
   Glyph,
-  PillCTA,
 } from '../components/ui';
 import { colors, spacing, radii } from '../constants/tokens';
 import { mockTransition } from '../mock/user';

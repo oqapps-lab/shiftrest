@@ -64,7 +64,7 @@ export default function Melatonin() {
         color="inkSubtle"
         style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
       >
-        If yes, we'll tune the timing to your rotation.
+        {"If yes, we'll tune the timing to your rotation."}
       </Text>
 
       <View style={styles.toggleRow}>

@@ -53,7 +53,7 @@ export default function Name() {
         color="inkSubtle"
         style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
       >
-        We'll greet you with it.
+        {"We'll greet you with it."}
       </Text>
 
       <TextField

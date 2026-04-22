@@ -52,7 +52,7 @@ export default function Schedule() {
         color="inkSubtle"
         style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
       >
-        We tune sleep windows to your rotation's rhythm.
+        {"We tune sleep windows to your rotation's rhythm."}
       </Text>
 
       {mockScheduleTemplates.map((s) => (

@@ -54,11 +54,11 @@ export default function SocialProof1() {
         color="inkSubtle"
         style={{ marginTop: spacing.lg }}
       >
-        of shift workers don't get enough sleep.
+        {"of shift workers don't get enough sleep."}
       </Text>
 
       <SerifHero align="center" style={{ marginTop: spacing.xl }}>
-        You're not alone.
+        {"You're not alone."}
       </SerifHero>
 
       <GlassCard

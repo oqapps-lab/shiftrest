@@ -54,7 +54,7 @@ export default function Welcome() {
             align="center"
             style={{ marginTop: spacing.md }}
           >
-            The only sleep plan for shift workers that doesn't punish you for sleeping at noon.
+            {"The only sleep plan for shift workers that doesn't punish you for sleeping at noon."}
           </Text>
         </View>
       </View>

@@ -52,7 +52,7 @@ export default function Problem() {
         color="inkSubtle"
         style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
       >
-        We'll prioritise it in your plan.
+        {"We'll prioritise it in your plan."}
       </Text>
 
       {mockMainProblems.map((p) => (

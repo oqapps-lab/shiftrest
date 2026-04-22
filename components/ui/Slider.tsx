@@ -6,7 +6,7 @@
 import React from 'react';
 import { StyleSheet, View, ViewStyle, StyleProp, PanResponder, LayoutChangeEvent } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { colors, radii } from '../../constants/tokens';
+import { colors } from '../../constants/tokens';
 
 interface Props {
   value: number;
@@ -34,15 +34,16 @@ export function Slider({
   const lastStepRef = React.useRef(value);
 
   const clamp = (v: number) => Math.min(max, Math.max(min, v));
-  const snap = (v: number) => {
-    const snapped = Math.round((v - min) / step) * step + min;
-    return clamp(snapped);
-  };
   const fraction = (v: number) => (max === min ? 0 : (clamp(v) - min) / (max - min));
 
   const panResponder = React.useMemo(
-    () =>
-      PanResponder.create({
+    () => {
+      const clampLocal = (v: number) => Math.min(max, Math.max(min, v));
+      const snap = (v: number) => {
+        const snapped = Math.round((v - min) / step) * step + min;
+        return clampLocal(snapped);
+      };
+      return PanResponder.create({
         onStartShouldSetPanResponder: () => true,
         onMoveShouldSetPanResponder: () => true,
         onPanResponderGrant: (evt) => {
@@ -62,7 +63,8 @@ export function Slider({
             onChange(v);
           }
         },
-      }),
+      });
+    },
     [width, min, max, step, onChange],
   );
 

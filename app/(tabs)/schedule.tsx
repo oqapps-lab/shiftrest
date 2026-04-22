@@ -14,7 +14,7 @@ import {
   Glyph,
   PillCTA,
 } from '../../components/ui';
-import { colors, spacing, radii } from '../../constants/tokens';
+import { colors, spacing } from '../../constants/tokens';
 import { formatMonthYear } from '../../lib/derive';
 
 // 6 weeks of mock days

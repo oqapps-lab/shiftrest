@@ -6,7 +6,6 @@
 import React from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { router } from 'expo-router';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Screen,
   Eyebrow,
@@ -49,7 +48,6 @@ const EVENTS = [
 ];
 
 export default function Home() {
-  const insets = useSafeAreaInsets();
   const today = mockTransition.days[0];
   const doneToday = countCompleted(today.steps);
 

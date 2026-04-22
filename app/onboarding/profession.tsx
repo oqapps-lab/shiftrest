@@ -47,7 +47,7 @@ export default function Profession() {
       />
 
       <Text variant="bodyLg" color="inkSubtle" style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}>
-        We tune every recommendation to your profession's rotation pattern.
+        {"We tune every recommendation to your profession's rotation pattern."}
       </Text>
 
       {mockProfessions.map((p) => {

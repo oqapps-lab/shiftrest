@@ -17,7 +17,7 @@ interface Props {
 
 export function SerifHero({ children, align = 'left', color = 'ink', style }: Props) {
   if (__DEV__ && typeof children === 'string' && children.length > 60) {
-    // eslint-disable-next-line no-console
+     
     console.warn(`<SerifHero> content is ${children.length} chars — keep under 60. "${children}"`);
   }
   return (

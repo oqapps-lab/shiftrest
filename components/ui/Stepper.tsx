@@ -6,7 +6,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, View, ViewStyle, StyleProp } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { colors, radii } from '../../constants/tokens';
+import { colors } from '../../constants/tokens';
 import { Text } from './Text';
 import { Glyph } from './Glyph';
 

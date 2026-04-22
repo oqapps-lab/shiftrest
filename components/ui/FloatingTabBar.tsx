@@ -18,9 +18,9 @@ import { Text } from './Text';
 // We accept `any` for navigation because React Navigation's strict event-type union
 // is not worth re-exporting; runtime behaviour is unchanged.
 type TabBarProps = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  state: { index: number; routes: Array<{ key: string; name: string; params?: any }> };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
+  state: { index: number; routes: { key: string; name: string; params?: any }[] };
+   
   navigation: any;
 };
 

@@ -35,7 +35,7 @@ export default function SocialProof2() {
       }
     >
       <View style={styles.headWrap}>
-        <Eyebrow>YOU'RE IN GOOD COMPANY</Eyebrow>
+        <Eyebrow>{"YOU'RE IN GOOD COMPANY"}</Eyebrow>
         <View style={{ marginTop: spacing.md }}>
           <SerifHero align="center">
             {`From ${mockSocialProofStats.totalUsers.toLocaleString()} shift workers`}

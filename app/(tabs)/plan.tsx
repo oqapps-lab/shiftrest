@@ -10,10 +10,8 @@ import {
   SerifHero,
   TimelineRing,
   GlassCard,
-  HeroNumber,
   Text,
   Glyph,
-  ProgressDots,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockPlan } from '../../mock/user';
