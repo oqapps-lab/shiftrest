@@ -51,8 +51,15 @@ shiftrest/
 │   │   ├── plan.tsx               S40 Daily Sleep Plan
 │   │   └── profile.tsx            S50 Profile
 │   ├── paywall.tsx                S15 (modal)
-│   └── transition.tsx             S43 (modal)
+│   ├── transition.tsx             S43 (modal)
+│   └── auth/                      Stage-6 deferred-registration auth
+│       ├── _layout.tsx
+│       ├── login.tsx              S60
+│       ├── signup.tsx             S61
+│       └── forgot.tsx             S62
 ├── lib/
+│   ├── supabase.ts                Supabase client (graceful no-env fallback)
+│   ├── auth/store.tsx             <AuthProvider> + useAuth() hook
 │   └── derive.ts                  display-string helpers (getGreeting, formatRelativeTime, …)
 ├── components/
 │   └── ui/                        14 design-system primitives
@@ -141,7 +148,7 @@ Key principles:
 - [x] Stage 3 — Practices research (onboarding, paywall, retention benchmarks)
 - [x] Stage 4 — UX (50 screens mapped, user flows, funnel)
 - [ ] **Stage 5 — Design & scaffold** ← current (primitives + 10 demo screens shipped)
-- [ ] Stage 6 — Full screen build (remaining 40 screens) + Supabase + OpenAI integration
+- [ ] **Stage 6 — Full screen build (remaining 40 screens) + Supabase + OpenAI integration** ← in progress (auth scaffold landed: `app/auth/{login,signup,forgot}.tsx` + `lib/supabase.ts` + `lib/auth/store.tsx`; awaits Supabase project provisioning per [docs/05-database/AUTH.md](docs/05-database/AUTH.md))
 - [ ] Stage 7 — Adapty paywall integration + QA
 - [ ] Stage 8 — Deployment (App Store · Google Play)
 

@@ -94,8 +94,24 @@ xcrun simctl terminate <UDID> host.exp.Exponent
 | `/(tabs)/plan` | `app/(tabs)/plan.tsx` | Daily Sleep Plan (S40) |
 | `/(tabs)/profile` | `app/(tabs)/profile.tsx` | Profile Overview (S50) |
 | `/transition` | `app/transition.tsx` | Transition Plan (S43), modal |
+| `/auth/login` | `app/auth/login.tsx` | Sign in (S60) |
+| `/auth/signup` | `app/auth/signup.tsx` | Create account (S61) |
+| `/auth/forgot` | `app/auth/forgot.tsx` | Reset password (S62) |
 
 Deep-linking: `exp://127.0.0.1:8081/--/<route>` jumps straight to any screen during review.
+
+---
+
+## Auth setup
+
+The auth flow ships in scaffold form (UI complete, Supabase client wired, helpers ready). To turn it on against a real backend:
+
+```bash
+cp .env.example .env
+# fill in EXPO_PUBLIC_SUPABASE_URL and EXPO_PUBLIC_SUPABASE_ANON_KEY
+```
+
+Without `.env` the auth screens render in a clearly labelled **DEMO MODE** — UI is reviewable, but submit returns a friendly error rather than a network call. See `docs/05-database/AUTH.md` for the full Supabase project provisioning checklist.
 
 ---
 

@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Alert } from 'react-native';
+import { router } from 'expo-router';
 import {
   Screen,
   Eyebrow,
@@ -16,6 +17,7 @@ import {
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockUser } from '../../mock/user';
 import { formatTrialRemaining } from '../../lib/derive';
+import { useAuth } from '../../lib/auth/store';
 
 const STREAK_LENGTH = 14;
 const STREAK_DOTS = Array.from({ length: STREAK_LENGTH }).map((_, i) => {
@@ -24,6 +26,14 @@ const STREAK_DOTS = Array.from({ length: STREAK_LENGTH }).map((_, i) => {
 });
 
 export default function Profile() {
+  const { user, signOut } = useAuth();
+
+  // Display name preference: real auth user_metadata → email local part → mockUser
+  const displayName =
+    (user?.user_metadata as { display_name?: string } | undefined)?.display_name ??
+    user?.email?.split('@')[0] ??
+    mockUser.name;
+
   const subscriptionSubtitle =
     mockUser.subscription === 'trial'
       ? `Trial · ${formatTrialRemaining(mockUser.trialEndsAt)}`
@@ -31,17 +41,43 @@ export default function Profile() {
       ? 'Premium · active'
       : 'Free tier';
 
+  const accountRow = user
+    ? {
+        glyph: 'user' as const,
+        label: 'Account',
+        subtitle: user.email ?? 'Signed in',
+        onPress: () => {
+          Alert.alert('Sign out?', 'You can sign back in any time.', [
+            { text: 'Cancel', style: 'cancel' },
+            {
+              text: 'Sign out',
+              style: 'destructive',
+              onPress: async () => {
+                await signOut();
+              },
+            },
+          ]);
+        },
+      }
+    : {
+        glyph: 'sparkle' as const,
+        label: 'Save your account',
+        subtitle: 'Sync your plan, never lose your streak',
+        onPress: () => router.push('/auth/signup'),
+      };
+
   const SETTINGS = [
-    { glyph: 'gear' as const, label: 'Sleep preferences', subtitle: 'Chronotype · caffeine · melatonin' },
-    { glyph: 'bell' as const, label: 'Notifications', subtitle: 'Reminder timing & types' },
-    { glyph: 'sparkle' as const, label: 'Subscription', subtitle: subscriptionSubtitle },
-    { glyph: 'user' as const, label: 'About & support', subtitle: 'FAQ · contact · sources' },
+    accountRow,
+    { glyph: 'gear' as const, label: 'Sleep preferences', subtitle: 'Chronotype · caffeine · melatonin', onPress: undefined },
+    { glyph: 'bell' as const, label: 'Notifications', subtitle: 'Reminder timing & types', onPress: undefined },
+    { glyph: 'sparkle' as const, label: 'Subscription', subtitle: subscriptionSubtitle, onPress: undefined },
+    { glyph: 'user' as const, label: 'About & support', subtitle: 'FAQ · contact · sources', onPress: undefined },
   ];
   return (
     <Screen orbs="subtle" variant="dim" scroll>
       <Eyebrow>PROFILE</Eyebrow>
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
-        <SerifHero>{`${mockUser.name} · ${mockUser.profession}.`}</SerifHero>
+        <SerifHero>{`${displayName} · ${mockUser.profession}.`}</SerifHero>
       </View>
 
       <Eyebrow>{`${mockUser.streak}-DAY STREAK`}</Eyebrow>
@@ -86,7 +122,12 @@ export default function Profile() {
       <View style={{ height: spacing.md }} />
 
       {SETTINGS.map((row) => (
-        <Pressable key={row.label} style={{ marginBottom: spacing.sm }}>
+        <Pressable
+          key={row.label}
+          onPress={row.onPress}
+          disabled={!row.onPress}
+          style={{ marginBottom: spacing.sm }}
+        >
           <GlassCard variant="whisper" padding="xl">
             <View style={styles.settingsRow}>
               <View style={styles.settingsIcon}>
@@ -100,11 +141,20 @@ export default function Profile() {
                   {row.subtitle}
                 </Text>
               </View>
-              <Glyph name="chevronRight" size={18} color="inkMuted" />
+              {row.onPress && <Glyph name="chevronRight" size={18} color="inkMuted" />}
             </View>
           </GlassCard>
         </Pressable>
       ))}
+
+      {/* Hint when in demo mode (no Supabase keys) */}
+      {!user && (
+        <View style={{ marginTop: spacing.md }}>
+          <Text variant="bodyMd" color="inkMuted" align="center">
+            {"Anonymous mode — your data lives only on this device until you save an account."}
+          </Text>
+        </View>
+      )}
     </Screen>
   );
 }

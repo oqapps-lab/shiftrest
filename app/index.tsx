@@ -34,7 +34,7 @@ export default function Welcome() {
             variant="glass"
             size="md"
             label="I already have an account"
-            onPress={() => router.replace('/(tabs)')}
+            onPress={() => router.push('/auth/login')}
           />
         </>
       }
