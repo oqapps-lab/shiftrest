@@ -20,30 +20,29 @@ import {
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockUser, mockPlan, mockShiftBlocks, mockTransition } from '../../mock/user';
-import { countCompleted, formatRelativeTime, formatStreak, getGreeting } from '../../lib/derive';
+import { countCompleted, formatHour, formatRelativeTime, formatStreak, getGreeting } from '../../lib/derive';
 
+// Event times come from mockPlan as floats → formatted once, distance
+// computed from the same source so they can never drift apart.
 const EVENTS = [
   {
     glyph: 'coffee' as const,
     label: 'CAFFEINE CUTOFF',
-    time: '17:00',
-    targetHour: 17,
+    hour: Number(mockPlan.caffeineCutoff.split(':')[0]),
     tintBg: colors.sunriseGlow,
     tintFg: 'sunriseDim' as const,
   },
   {
     glyph: 'moon' as const,
     label: 'MELATONIN',
-    time: '22:00',
-    targetHour: 22,
+    hour: Number(mockPlan.melatoninTime.split(':')[0]),
     tintBg: colors.duskGlow,
     tintFg: 'duskDim' as const,
   },
   {
     glyph: 'bed' as const,
     label: 'SLEEP WINDOW',
-    time: '23:00',
-    targetHour: 23,
+    hour: mockPlan.sleepStart,
     tintBg: colors.primaryContainer,
     tintFg: 'primary' as const,
   },
@@ -88,7 +87,7 @@ export default function Home() {
           shiftEnd={mockPlan.shiftEnd}
           size={260}
           label="TODAY"
-          centerLabel="14:30"
+          centerLabel={formatHour(mockPlan.nowHour)}
         />
       </View>
 
@@ -109,9 +108,9 @@ export default function Home() {
             </View>
             <View style={{ flex: 1 }}>
               <Eyebrow>{e.label}</Eyebrow>
-              <HeroNumber value={e.time} size="md" style={{ marginTop: 2 }} />
+              <HeroNumber value={formatHour(e.hour)} size="md" style={{ marginTop: 2 }} />
               <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
-                {formatRelativeTime(mockPlan.nowHour, e.targetHour)}
+                {formatRelativeTime(mockPlan.nowHour, e.hour)}
               </Text>
             </View>
           </View>

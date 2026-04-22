@@ -17,21 +17,24 @@ import {
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockPlan } from '../../mock/user';
-import { formatDayMonth } from '../../lib/derive';
+import { formatDayMonth, formatHour, hoursBetween } from '../../lib/derive';
+
+const caffeineHour = Number(mockPlan.caffeineCutoff.split(':')[0]);
+const hoursBeforeSleep = hoursBetween(caffeineHour, mockPlan.sleepStart);
 
 const RECS = [
   {
     glyph: 'coffee' as const,
     eyebrow: 'CAFFEINE',
-    hero: 'Last cup by 17:00',
-    body: '6 h before sleep window. Your sensitivity is moderate.',
+    hero: `Last cup by ${mockPlan.caffeineCutoff}`,
+    body: `${hoursBeforeSleep} h before sleep window. Your sensitivity is moderate.`,
     tintBg: colors.sunriseGlow,
     tintFg: 'sunriseDim' as const,
   },
   {
     glyph: 'moon' as const,
     eyebrow: 'MELATONIN · PREMIUM',
-    hero: '0.5 mg at 22:00',
+    hero: `0.5 mg at ${mockPlan.melatoninTime}`,
     body: 'Phase advance dose · timed for today\'s day shift.',
     tintBg: colors.duskGlow,
     tintFg: 'duskDim' as const,
@@ -96,7 +99,7 @@ export default function Plan() {
           shiftEnd={mockPlan.shiftEnd}
           size={280}
           label="NOW"
-          centerLabel="14:30"
+          centerLabel={formatHour(mockPlan.nowHour)}
         />
       </View>
 

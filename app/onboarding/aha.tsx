@@ -19,8 +19,12 @@ import {
 } from '../../components/ui';
 import { spacing, radii, colors } from '../../constants/tokens';
 import { mockUser, mockPlan } from '../../mock/user';
+import { formatHour, formatHourRange, hoursBetween } from '../../lib/derive';
 
 export default function Aha() {
+  const caffeineHour = Number(mockPlan.caffeineCutoff.split(':')[0]);
+  const hoursBeforeSleep = hoursBetween(caffeineHour, mockPlan.sleepStart);
+
   return (
     <Screen
       orbs="normal"
@@ -49,7 +53,7 @@ export default function Aha() {
           shiftEnd={mockPlan.shiftEnd}
           size={280}
           label="TODAY"
-          centerLabel="14:30"
+          centerLabel={formatHour(mockPlan.nowHour)}
         />
       </View>
 
@@ -60,7 +64,7 @@ export default function Aha() {
           </View>
           <View style={{ flex: 1 }}>
             <Eyebrow>SLEEP WINDOW</Eyebrow>
-            <HeroNumber value="23:00 — 07:00" size="md" style={{ marginTop: 2 }} />
+            <HeroNumber value={formatHourRange(mockPlan.sleepStart, mockPlan.sleepEnd)} size="md" style={{ marginTop: 2 }} />
           </View>
         </View>
       </GlassCard>
@@ -72,9 +76,9 @@ export default function Aha() {
           </View>
           <View style={{ flex: 1 }}>
             <Eyebrow>CAFFEINE CUTOFF</Eyebrow>
-            <HeroNumber value="17:00" size="md" style={{ marginTop: 2 }} />
+            <HeroNumber value={mockPlan.caffeineCutoff} size="md" style={{ marginTop: 2 }} />
             <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 4 }}>
-              6 hours before sleep · gentle on sensitive types
+              {`${hoursBeforeSleep} hours before sleep · gentle on sensitive types`}
             </Text>
           </View>
         </View>

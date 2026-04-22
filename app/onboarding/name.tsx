@@ -4,7 +4,6 @@
  */
 
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, Platform } from 'react-native';
 import { router } from 'expo-router';
 import {
   Screen,
@@ -22,14 +21,11 @@ export default function Name() {
   const canContinue = name.trim().length >= 2;
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
     <Screen
       orbs="subtle"
       scroll
       tabBarClearance={false}
+      keyboardAvoiding
       floatingFooter={
         <PillCTA
           variant="primary"
@@ -70,6 +66,5 @@ export default function Name() {
         returnKeyType="done"
       />
     </Screen>
-    </KeyboardAvoidingView>
   );
 }

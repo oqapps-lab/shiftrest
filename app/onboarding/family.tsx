@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import {
   Screen,
@@ -34,14 +34,11 @@ export default function Family() {
   const [other, setOther] = useState('');
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
     <Screen
       orbs="subtle"
       scroll
       tabBarClearance={false}
+      keyboardAvoiding
       floatingFooter={
         <PillCTA
           variant="primary"
@@ -103,7 +100,6 @@ export default function Family() {
         </View>
       )}
     </Screen>
-    </KeyboardAvoidingView>
   );
 }
 

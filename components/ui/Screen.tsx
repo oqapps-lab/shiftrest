@@ -11,7 +11,15 @@
  */
 
 import React, { ReactNode } from 'react';
-import { ScrollView, StyleSheet, View, ViewStyle, StyleProp, ScrollViewProps } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  View,
+  ViewStyle,
+  StyleProp,
+  ScrollViewProps,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AtmosphericBackground } from './AtmosphericBackground';
@@ -36,6 +44,11 @@ interface Props extends Omit<ScrollViewProps, 'style'> {
   footerClearance?: number;
   /** Disable the soft canvas-to-transparent fade gradient under the footer. */
   footerFade?: boolean;
+  /**
+   * Wrap content in KeyboardAvoidingView so the floating footer (and content)
+   * lifts above the keyboard. Enable on any screen with a TextField.
+   */
+  keyboardAvoiding?: boolean;
 }
 
 export function Screen({
@@ -50,6 +63,7 @@ export function Screen({
   floatingFooter,
   footerClearance = 140,
   footerFade = true,
+  keyboardAvoiding = false,
   ...scrollProps
 }: Props) {
   const insets = useSafeAreaInsets();
@@ -73,8 +87,8 @@ export function Screen({
   // Canvas-tint for fade. Use canvasDim when variant=dim, canvas otherwise.
   const fadeColor = variant === 'dim' ? colors.canvasDim : colors.canvas;
 
-  return (
-    <View style={[styles.root, style]}>
+  const body = (
+    <>
       <AtmosphericBackground variant={variant === 'dim' ? 'dim' : 'warm'} />
       {orbs !== 'off' && <OrbField intensity={orbs} />}
 
@@ -121,8 +135,24 @@ export function Screen({
           {floatingFooter}
         </View>
       )}
-    </View>
+    </>
   );
+
+  if (keyboardAvoiding) {
+    // `height` behavior shrinks the KAV when the keyboard opens so
+    // absolute-positioned floatingFooter (bottom:0) lifts above the keyboard.
+    // `padding` only shifts in-flow content and leaves the footer hidden.
+    return (
+      <KeyboardAvoidingView
+        style={[styles.root, style]}
+        behavior="height"
+      >
+        {body}
+      </KeyboardAvoidingView>
+    );
+  }
+
+  return <View style={[styles.root, style]}>{body}</View>;
 }
 
 const styles = StyleSheet.create({

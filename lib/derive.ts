@@ -72,3 +72,22 @@ export function formatStreak(streak: number): string {
 export function countCompleted<T extends { done: boolean }>(steps: readonly T[]): number {
   return steps.filter((s) => s.done).length;
 }
+
+/** Float hour → "HH:MM" (14.5 → "14:30", 23 → "23:00"). */
+export function formatHour(h: number): string {
+  const whole = Math.floor(h);
+  const mins = Math.round((h - whole) * 60);
+  return `${String(whole).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
+}
+
+/** Float hour range → "HH:MM — HH:MM" with em-dash. Wraps across midnight. */
+export function formatHourRange(start: number, end: number): string {
+  return `${formatHour(start)} — ${formatHour(end)}`;
+}
+
+/** Hours between two 0-24 floats, wrapping across midnight. */
+export function hoursBetween(from: number, to: number): number {
+  let diff = to - from;
+  if (diff < 0) diff += 24;
+  return diff;
+}
