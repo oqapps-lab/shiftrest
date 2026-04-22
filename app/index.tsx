@@ -1,9 +1,13 @@
 /**
  * S01 — Welcome. The entry point when app opens without a session.
  * Breathing orb + soft hero line + two CTAs.
+ *
+ * Redirect rule: if the user already completed onboarding in a previous
+ * session (persisted via OnboardingProvider → AsyncStorage), skip Welcome
+ * and land on /(tabs). Wait for hydration so we don't flash Welcome first.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import {
@@ -15,8 +19,22 @@ import {
   Eyebrow,
 } from '../components/ui';
 import { spacing } from '../constants/tokens';
+import { useOnboarding } from '../lib/onboarding/store';
 
 export default function Welcome() {
+  const { state, hydrated } = useOnboarding();
+
+  useEffect(() => {
+    if (hydrated && state.completed) {
+      router.replace('/(tabs)');
+    }
+  }, [hydrated, state.completed]);
+
+  // Avoid flashing Welcome before hydration finishes.
+  if (!hydrated || state.completed) {
+    return <View style={{ flex: 1 }} />;
+  }
+
   return (
     <Screen
       scroll={false}

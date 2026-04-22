@@ -20,6 +20,7 @@ import {
 } from '../components/ui';
 import { colors, spacing, radii } from '../constants/tokens';
 import { mockUser } from '../mock/user';
+import { useOnboarding } from '../lib/onboarding/store';
 
 const VALUE_BULLETS = [
   { glyph: 'bed' as const, text: 'Sleep window tuned to your rotation' },
@@ -30,6 +31,8 @@ const VALUE_BULLETS = [
 
 export default function Paywall() {
   const [plan, setPlan] = useState<'month' | 'year'>('year');
+  const { state: onboarding } = useOnboarding();
+  const displayName = (onboarding.displayName?.trim() || mockUser.name).toUpperCase();
 
   return (
     <Screen
@@ -72,7 +75,7 @@ export default function Paywall() {
         </Pressable>
       </View>
 
-      <Eyebrow>{mockUser.name.toUpperCase()}, YOUR PLAN IS READY</Eyebrow>
+      <Eyebrow>{`${displayName}, YOUR PLAN IS READY`}</Eyebrow>
       <View style={{ marginTop: spacing.md, marginBottom: spacing.huge }}>
         <SerifHero>7 days. Then you decide.</SerifHero>
       </View>

@@ -20,6 +20,7 @@ import {
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockUser, mockPlan, mockShiftBlocks, mockTransition } from '../../mock/user';
 import { countCompleted, formatHour, formatRelativeTime, formatStreak, getGreeting } from '../../lib/derive';
+import { useOnboarding } from '../../lib/onboarding/store';
 
 // Event times come from mockPlan as floats → formatted once, distance
 // computed from the same source so they can never drift apart.
@@ -48,14 +49,16 @@ const EVENTS = [
 ];
 
 export default function Home() {
+  const { state: onboarding } = useOnboarding();
   const today = mockTransition.days[0];
   const doneToday = countCompleted(today.steps);
+  const displayName = (onboarding.displayName?.trim() || mockUser.name).toUpperCase();
 
   return (
     <Screen orbs="normal" scroll>
       <View style={styles.headerRow}>
         <View style={{ flex: 1 }}>
-          <Eyebrow>{`${getGreeting(mockPlan.nowHour)}, ${mockUser.name.toUpperCase()}`}</Eyebrow>
+          <Eyebrow>{`${getGreeting(mockPlan.nowHour)}, ${displayName}`}</Eyebrow>
         </View>
         <View style={styles.streak}>
           <Glyph name="flame" size={16} color="sunriseDim" />

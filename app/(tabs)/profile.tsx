@@ -102,12 +102,12 @@ export default function Profile() {
     },
   };
 
-  const SETTINGS: Array<{
+  const SETTINGS: {
     glyph: 'gear' | 'bell' | 'sparkle' | 'user';
     label: string;
     subtitle: string;
     onPress: (() => void) | undefined;
-  }> = [
+  }[] = [
     accountRow,
     { glyph: 'gear', label: 'Sleep preferences', subtitle: 'Chronotype · caffeine · melatonin', onPress: undefined },
     { glyph: 'bell', label: 'Notifications', subtitle: 'Reminder timing & types', onPress: undefined },

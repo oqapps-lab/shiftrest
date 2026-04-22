@@ -20,10 +20,13 @@ import {
 import { spacing, radii, colors } from '../../constants/tokens';
 import { mockUser, mockPlan } from '../../mock/user';
 import { formatHour, formatHourRange, hoursBetween } from '../../lib/derive';
+import { useOnboarding } from '../../lib/onboarding/store';
 
 export default function Aha() {
+  const { state: onboarding } = useOnboarding();
   const caffeineHour = Number(mockPlan.caffeineCutoff.split(':')[0]);
   const hoursBeforeSleep = hoursBetween(caffeineHour, mockPlan.sleepStart);
+  const displayName = (onboarding.displayName?.trim() || mockUser.name).toUpperCase();
 
   return (
     <Screen
@@ -38,7 +41,7 @@ export default function Aha() {
         />
       }
     >
-      <Eyebrow>{mockUser.name.toUpperCase()}, YOUR PLAN IS READY</Eyebrow>
+      <Eyebrow>{`${displayName}, YOUR PLAN IS READY`}</Eyebrow>
 
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
         <SerifHero>Sleep catches up tonight.</SerifHero>
