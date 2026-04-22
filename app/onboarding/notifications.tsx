@@ -6,6 +6,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
+import { useOnboarding } from '../../lib/onboarding/store';
 import {
   Screen,
   SerifHero,
@@ -19,6 +20,13 @@ import { colors, radii, spacing } from '../../constants/tokens';
 import { mockNotificationTypes } from '../../mock/user';
 
 export default function Notifications() {
+  const { markCompleted } = useOnboarding();
+
+  const finish = () => {
+    markCompleted();
+    router.replace('/(tabs)');
+  };
+
   return (
     <Screen
       orbs="normal"
@@ -29,13 +37,13 @@ export default function Notifications() {
           <PillCTA
             variant="primary"
             label="Allow notifications"
-            onPress={() => router.replace('/(tabs)')}
+            onPress={finish}
           />
           <PillCTA
             variant="glass"
             size="md"
             label="Maybe later"
-            onPress={() => router.replace('/(tabs)')}
+            onPress={finish}
           />
         </View>
       }

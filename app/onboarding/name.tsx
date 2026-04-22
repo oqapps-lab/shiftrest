@@ -3,8 +3,9 @@
  * Simple text field; Continue unlocks at >= 2 chars trimmed.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { router } from 'expo-router';
+import { useOnboarding } from '../../lib/onboarding/store';
 import {
   Screen,
   HeroNumber,
@@ -17,7 +18,8 @@ import {
 import { spacing } from '../../constants/tokens';
 
 export default function Name() {
-  const [name, setName] = useState('');
+  const { state, update } = useOnboarding();
+  const name = state.displayName;
   const canContinue = name.trim().length >= 2;
 
   return (
@@ -62,7 +64,7 @@ export default function Name() {
         autoCapitalize="words"
         autoCorrect={false}
         value={name}
-        onChangeText={setName}
+        onChangeText={(v) => update({ displayName: v })}
         returnKeyType="done"
       />
     </Screen>

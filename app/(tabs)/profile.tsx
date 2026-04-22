@@ -15,9 +15,10 @@ import {
   Glyph,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
-import { mockUser } from '../../mock/user';
+import { mockUser, mockProfessions } from '../../mock/user';
 import { formatTrialRemaining } from '../../lib/derive';
 import { useAuth } from '../../lib/auth/store';
+import { useOnboarding } from '../../lib/onboarding/store';
 
 const STREAK_LENGTH = 14;
 const STREAK_DOTS = Array.from({ length: STREAK_LENGTH }).map((_, i) => {
@@ -27,12 +28,24 @@ const STREAK_DOTS = Array.from({ length: STREAK_LENGTH }).map((_, i) => {
 
 export default function Profile() {
   const { user, signOut } = useAuth();
+  const { state: onboarding, reset: resetOnboarding } = useOnboarding();
 
-  // Display name preference: real auth user_metadata → email local part → mockUser
+  // Display name preference:
+  //   onboarding.displayName (set in S11) →
+  //   real auth user_metadata.display_name →
+  //   email local part →
+  //   mockUser.name (fallback so Stage-5 demo data still shows)
   const displayName =
-    (user?.user_metadata as { display_name?: string } | undefined)?.display_name ??
-    user?.email?.split('@')[0] ??
-    mockUser.name;
+    (onboarding.displayName?.trim() ||
+      (user?.user_metadata as { display_name?: string } | undefined)?.display_name ||
+      user?.email?.split('@')[0] ||
+      mockUser.name);
+
+  // Profession label preference: pick from mockProfessions catalogue when
+  // user picked one in S02, else fall back to mockUser.profession label.
+  const professionLabel =
+    mockProfessions.find((p) => p.id === onboarding.profession)?.title ??
+    mockUser.profession;
 
   const subscriptionSubtitle =
     mockUser.subscription === 'trial'
@@ -66,18 +79,47 @@ export default function Profile() {
         onPress: () => router.push('/auth/signup'),
       };
 
-  const SETTINGS = [
+  const restartOnboardingRow = {
+    glyph: 'sparkle' as const,
+    label: 'Restart onboarding (dev)',
+    subtitle: 'Wipe quiz answers and replay from S02',
+    onPress: () => {
+      Alert.alert(
+        'Restart onboarding?',
+        'Wipes saved quiz answers. Useful for demo / QA.',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Restart',
+            style: 'destructive',
+            onPress: () => {
+              resetOnboarding();
+              router.replace('/onboarding/profession');
+            },
+          },
+        ],
+      );
+    },
+  };
+
+  const SETTINGS: Array<{
+    glyph: 'gear' | 'bell' | 'sparkle' | 'user';
+    label: string;
+    subtitle: string;
+    onPress: (() => void) | undefined;
+  }> = [
     accountRow,
-    { glyph: 'gear' as const, label: 'Sleep preferences', subtitle: 'Chronotype · caffeine · melatonin', onPress: undefined },
-    { glyph: 'bell' as const, label: 'Notifications', subtitle: 'Reminder timing & types', onPress: undefined },
-    { glyph: 'sparkle' as const, label: 'Subscription', subtitle: subscriptionSubtitle, onPress: undefined },
-    { glyph: 'user' as const, label: 'About & support', subtitle: 'FAQ · contact · sources', onPress: undefined },
+    { glyph: 'gear', label: 'Sleep preferences', subtitle: 'Chronotype · caffeine · melatonin', onPress: undefined },
+    { glyph: 'bell', label: 'Notifications', subtitle: 'Reminder timing & types', onPress: undefined },
+    { glyph: 'sparkle', label: 'Subscription', subtitle: subscriptionSubtitle, onPress: undefined },
+    { glyph: 'user', label: 'About & support', subtitle: 'FAQ · contact · sources', onPress: undefined },
+    restartOnboardingRow,
   ];
   return (
     <Screen orbs="subtle" variant="dim" scroll>
       <Eyebrow>PROFILE</Eyebrow>
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
-        <SerifHero>{`${displayName} · ${mockUser.profession}.`}</SerifHero>
+        <SerifHero>{`${displayName} · ${professionLabel}.`}</SerifHero>
       </View>
 
       <Eyebrow>{`${mockUser.streak}-DAY STREAK`}</Eyebrow>

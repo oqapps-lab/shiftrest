@@ -3,7 +3,7 @@
  * Iterates mockMainProblems and renders OptionCard rows.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { router } from 'expo-router';
 import {
   Screen,
@@ -16,9 +16,11 @@ import {
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
 import { mockMainProblems } from '../../mock/user';
+import { useOnboarding, type MainProblem } from '../../lib/onboarding/store';
 
 export default function Problem() {
-  const [selected, setSelected] = useState<string | null>(null);
+  const { state, update } = useOnboarding();
+  const selected = state.mainProblem;
 
   return (
     <Screen
@@ -62,7 +64,7 @@ export default function Problem() {
           subtitle={p.subtitle}
           glyph={p.glyph}
           selected={selected === p.id}
-          onPress={() => setSelected(p.id)}
+          onPress={() => update({ mainProblem: p.id as MainProblem })}
           accessibilityLabel={p.title}
         />
       ))}

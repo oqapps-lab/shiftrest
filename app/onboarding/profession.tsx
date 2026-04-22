@@ -3,7 +3,7 @@
  * 4 glass cards, one selected at a time, haptic on select.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
@@ -19,9 +19,11 @@ import {
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockProfessions } from '../../mock/user';
+import { useOnboarding, type Profession as ProfessionType } from '../../lib/onboarding/store';
 
 export default function Profession() {
-  const [selected, setSelected] = useState<string | null>(null);
+  const { state, update } = useOnboarding();
+  const selected = state.profession;
 
   return (
     <Screen
@@ -57,7 +59,7 @@ export default function Profession() {
             key={p.id}
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              setSelected(p.id);
+              update({ profession: p.id as ProfessionType });
             }}
             accessibilityRole="button"
             accessibilityLabel={p.title}

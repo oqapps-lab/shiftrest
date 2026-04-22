@@ -3,9 +3,10 @@
  * Stepper for cups/day + type picker + sensitivity picker.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { router } from 'expo-router';
+import { useOnboarding, type CaffeineType, type CaffeineSensitivity } from '../../lib/onboarding/store';
 import {
   Screen,
   HeroNumber,
@@ -20,9 +21,10 @@ import { spacing } from '../../constants/tokens';
 import { mockCaffeineTypes, mockCaffeineSensitivities } from '../../mock/user';
 
 export default function Caffeine() {
-  const [cups, setCups] = useState(2);
-  const [type, setType] = useState<string | null>(null);
-  const [sensitivity, setSensitivity] = useState<string | null>(null);
+  const { state, update } = useOnboarding();
+  const cups = state.caffeineCupsPerDay;
+  const type = state.caffeineType;
+  const sensitivity = state.caffeineSensitivity;
 
   const canContinue = !!type && !!sensitivity;
 
@@ -68,7 +70,7 @@ export default function Caffeine() {
           max={8}
           step={1}
           unit="cups/day"
-          onChange={setCups}
+          onChange={(v) => update({ caffeineCupsPerDay: v })}
           accessibilityLabel="Cups per day"
         />
       </View>
@@ -80,7 +82,7 @@ export default function Caffeine() {
           title={t.label}
           glyph={t.glyph}
           selected={type === t.id}
-          onPress={() => setType(t.id)}
+          onPress={() => update({ caffeineType: t.id as CaffeineType })}
           accessibilityLabel={t.label}
         />
       ))}
@@ -94,7 +96,7 @@ export default function Caffeine() {
           title={s.label}
           subtitle={s.subtitle}
           selected={sensitivity === s.id}
-          onPress={() => setSensitivity(s.id)}
+          onPress={() => update({ caffeineSensitivity: s.id as CaffeineSensitivity })}
           accessibilityLabel={s.label}
         />
       ))}

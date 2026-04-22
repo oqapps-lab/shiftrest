@@ -12,6 +12,7 @@ import { View } from 'react-native';
 import { useAppFonts } from '../hooks/useAppFonts';
 import { colors } from '../constants/tokens';
 import { AuthProvider } from '../lib/auth/store';
+import { OnboardingProvider } from '../lib/onboarding/store';
 
 SplashScreen.preventAutoHideAsync().catch(() => null);
 
@@ -33,6 +34,7 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.canvas }}>
       <SafeAreaProvider>
         <AuthProvider>
+          <OnboardingProvider>
           <StatusBar style="dark" />
           <Stack
             screenOptions={{
@@ -48,6 +50,7 @@ export default function RootLayout() {
             <Stack.Screen name="transition" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
             <Stack.Screen name="paywall" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
           </Stack>
+          </OnboardingProvider>
         </AuthProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

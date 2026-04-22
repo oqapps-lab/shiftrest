@@ -4,9 +4,10 @@
  * Continue enabled only when all three answered.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { router } from 'expo-router';
+import { useOnboarding } from '../../lib/onboarding/store';
 import {
   Screen,
   HeroNumber,
@@ -20,7 +21,8 @@ import { spacing } from '../../constants/tokens';
 import { mockChronotypeQuestions } from '../../mock/user';
 
 export default function Chronotype() {
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const { state, update } = useOnboarding();
+  const answers = state.chronotypeAnswers;
 
   const canContinue =
     Object.keys(answers).length === mockChronotypeQuestions.length;
@@ -86,7 +88,7 @@ export default function Chronotype() {
               title={opt.label}
               selected={answers[q.id] === opt.id}
               onPress={() =>
-                setAnswers((prev) => ({ ...prev, [q.id]: opt.id }))
+                update({ chronotypeAnswers: { ...answers, [q.id]: opt.id } })
               }
               accessibilityLabel={`${q.question} — ${opt.label}`}
             />

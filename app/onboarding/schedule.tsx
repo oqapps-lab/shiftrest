@@ -3,7 +3,7 @@
  * Iterates mockScheduleTemplates and renders OptionCard rows.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { router } from 'expo-router';
 import {
   Screen,
@@ -16,9 +16,11 @@ import {
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
 import { mockScheduleTemplates } from '../../mock/user';
+import { useOnboarding, type ScheduleId } from '../../lib/onboarding/store';
 
 export default function Schedule() {
-  const [selected, setSelected] = useState<string | null>(null);
+  const { state, update } = useOnboarding();
+  const selected = state.scheduleId;
 
   return (
     <Screen
@@ -62,7 +64,7 @@ export default function Schedule() {
           subtitle={s.subtitle}
           glyph={s.glyph}
           selected={selected === s.id}
-          onPress={() => setSelected(s.id)}
+          onPress={() => update({ scheduleId: s.id as ScheduleId })}
           accessibilityLabel={s.title}
         />
       ))}

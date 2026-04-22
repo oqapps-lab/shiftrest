@@ -3,9 +3,10 @@
  * Toggle for kids-at-home with conditional pickup time + free-text reveal.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
+import { useOnboarding, type PickupTime } from '../../lib/onboarding/store';
 import {
   Screen,
   HeroNumber,
@@ -19,9 +20,7 @@ import {
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
 
-type PickupValue = '14' | '15' | '16' | '17';
-
-const PICKUP_OPTIONS: { value: PickupValue; label: string }[] = [
+const PICKUP_OPTIONS: { value: PickupTime; label: string }[] = [
   { value: '14', label: '14:00' },
   { value: '15', label: '15:00' },
   { value: '16', label: '16:00' },
@@ -29,9 +28,10 @@ const PICKUP_OPTIONS: { value: PickupValue; label: string }[] = [
 ];
 
 export default function Family() {
-  const [hasKids, setHasKids] = useState(false);
-  const [pickup, setPickup] = useState<PickupValue>('15');
-  const [other, setOther] = useState('');
+  const { state, update } = useOnboarding();
+  const hasKids = state.hasChildren;
+  const pickup = state.pickupTime;
+  const other = state.otherCommitments;
 
   return (
     <Screen
@@ -74,7 +74,7 @@ export default function Family() {
         </Text>
         <Toggle
           value={hasKids}
-          onChange={setHasKids}
+          onChange={(v) => update({ hasChildren: v })}
           accessibilityLabel="Have kids at home"
         />
       </View>
@@ -82,10 +82,10 @@ export default function Family() {
       {hasKids && (
         <View style={{ marginTop: spacing.xl }}>
           <Eyebrow style={{ marginBottom: spacing.md }}>PICKUP TIME</Eyebrow>
-          <SegmentedControl<PickupValue>
+          <SegmentedControl<PickupTime>
             options={PICKUP_OPTIONS}
             value={pickup}
-            onChange={setPickup}
+            onChange={(v) => update({ pickupTime: v })}
           />
 
           <Eyebrow style={{ marginTop: spacing.xl, marginBottom: spacing.md }}>
@@ -94,7 +94,7 @@ export default function Family() {
           <TextField
             placeholder="e.g. yoga Tue/Thu 18:00"
             value={other}
-            onChangeText={setOther}
+            onChangeText={(v) => update({ otherCommitments: v })}
             autoCapitalize="sentences"
           />
         </View>

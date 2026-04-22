@@ -5,9 +5,10 @@
  * so we render read-only display cards. Replace with picker when primitive lands.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
+import { useOnboarding } from '../../lib/onboarding/store';
 import {
   Screen,
   GlassCard,
@@ -37,8 +38,9 @@ const SHIFT_TIMES: Record<ShiftKind, { start: string; end: string }> = {
 };
 
 export default function CurrentShift() {
-  const [shift, setShift] = useState<ShiftKind>('day');
-  const [commute, setCommute] = useState<number>(30);
+  const { state, update } = useOnboarding();
+  const shift = state.currentShift;
+  const commute = state.commuteMinutes;
   const times = SHIFT_TIMES[shift];
 
   return (
@@ -78,7 +80,7 @@ export default function CurrentShift() {
       <SegmentedControl<ShiftKind>
         options={SEGMENT_OPTIONS}
         value={shift}
-        onChange={setShift}
+        onChange={(v) => update({ currentShift: v })}
       />
 
       <View style={styles.timeRow}>
@@ -124,7 +126,7 @@ export default function CurrentShift() {
           max={90}
           step={5}
           value={commute}
-          onChange={setCommute}
+          onChange={(v) => update({ commuteMinutes: v })}
           accessibilityLabel="Commute time in minutes"
           style={{ marginTop: spacing.sm }}
         />

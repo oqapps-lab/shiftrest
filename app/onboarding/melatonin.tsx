@@ -3,10 +3,11 @@
  * Toggle with conditional dose + time reveal.
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
+import { useOnboarding, type MelatoninTime } from '../../lib/onboarding/store';
 import {
   Screen,
   HeroNumber,
@@ -20,18 +21,17 @@ import {
 import { colors, radii, spacing } from '../../constants/tokens';
 import { mockMelatoninDoses } from '../../mock/user';
 
-type TimeValue = '20' | '22' | '00';
-
-const TIME_OPTIONS: { value: TimeValue; label: string }[] = [
+const TIME_OPTIONS: { value: MelatoninTime; label: string }[] = [
   { value: '20', label: '20:00' },
   { value: '22', label: '22:00' },
   { value: '00', label: '00:00' },
 ];
 
 export default function Melatonin() {
-  const [takes, setTakes] = useState(false);
-  const [dose, setDose] = useState<string | null>(null);
-  const [time, setTime] = useState<TimeValue>('22');
+  const { state, update } = useOnboarding();
+  const takes = state.takesMelatonin;
+  const dose = state.melatoninDoseMg;
+  const time = state.melatoninTime;
 
   return (
     <Screen
@@ -73,7 +73,7 @@ export default function Melatonin() {
         </Text>
         <Toggle
           value={takes}
-          onChange={setTakes}
+          onChange={(v) => update({ takesMelatonin: v })}
           accessibilityLabel="Take melatonin"
         />
       </View>
@@ -89,7 +89,7 @@ export default function Melatonin() {
                   key={d}
                   onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    setDose(d);
+                    update({ melatoninDoseMg: d });
                   }}
                   accessibilityRole="button"
                   accessibilityState={{ selected: active }}
@@ -119,10 +119,10 @@ export default function Melatonin() {
           <Eyebrow style={{ marginTop: spacing.xl, marginBottom: spacing.md }}>
             USUAL TIME TAKEN
           </Eyebrow>
-          <SegmentedControl<TimeValue>
+          <SegmentedControl<MelatoninTime>
             options={TIME_OPTIONS}
             value={time}
-            onChange={setTime}
+            onChange={(v) => update({ melatoninTime: v })}
           />
         </View>
       )}
