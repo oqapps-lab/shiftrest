@@ -10,6 +10,9 @@ export default function SettingsLayout() {
       }}
     >
       <Stack.Screen name="sleep-preferences" />
+      <Stack.Screen name="notifications" />
+      <Stack.Screen name="subscription" />
+      <Stack.Screen name="about" />
     </Stack>
   );
 }
