@@ -109,9 +109,42 @@ All methods return a uniform `{ error: AuthError | Error | null }` shape so call
 
 ---
 
+## Onboarding profile sync (landed 2026-04-22)
+
+The `OnboardingProvider` exposes `syncProfile()` and auto-runs it whenever both `auth.user` exists and `state.completed === true`. The mapping is in `lib/onboarding/store.tsx` → `mapToProfileRow(state, userId)`:
+
+| Profile column | Source |
+|---|---|
+| `id` | `auth.user.id` |
+| `display_name` | `state.displayName` (trimmed, null if empty) |
+| `profession` | `state.profession` |
+| `chronotype_score` | `computeChronotypeScore(answers)` — sum of MEQ-lite values 3-12 |
+| `chronotype` | `chronotypeBucket(score)` — ≤5 lark, 6-8 intermediate, ≥9 owl |
+| `caffeine_cups_per_day` | `state.caffeineCupsPerDay` |
+| `caffeine_type` | `state.caffeineType` |
+| `caffeine_sensitivity` | `state.caffeineSensitivity` |
+| `uses_melatonin` | `state.takesMelatonin` |
+| `melatonin_dose_mg` | `Number(state.melatoninDoseMg)` |
+| `has_children` | `state.hasChildren` |
+| `family_commitments` | jsonb array; school-pickup row when `hasChildren`, plus the freeform `otherCommitments` line |
+| `commute_minutes` | `state.commuteMinutes` |
+| `main_problem` | `state.mainProblem` |
+| `onboarding_completed` | `state.completed` |
+| `updated_at` | now() |
+
+Behaviour:
+
+- **No env / no user** → returns `{ error: null, skipped: 'no_supabase' | 'no_user' }`. Silent no-op so DEMO MODE doesn't throw.
+- **Same payload as last call** → returns `{ error: null }` without hitting the network (fingerprint cache via `useRef`).
+- **New / changed payload** → `supabase.from('profiles').upsert(row)`; the cache is updated only on success so transient failures are retried on the next state change.
+
+The auto-sync `useEffect` watches `(hydrated, auth.user?.id, state, syncProfile)`. So:
+- Sign in after onboarding completed → first sync.
+- Sign out → next sign in re-syncs.
+- Edit any field on Sleep preferences while signed in → re-sync.
+
 ## What's still owed
 
 - **Email confirm callback handling** — `shiftrest://auth/callback` is registered but no in-app handler reads the `access_token` from the deep link yet. Add `Linking.addEventListener` in `_layout.tsx` once a real Supabase project is connected.
 - **OAuth (Apple / Google)** — the `signInWithOAuth({ provider })` paths aren't wired in `useAuth`. Adding them later is a pure addition to `lib/auth/store.tsx`.
-- **Onboarding profile sync** — when a user completes the 10-step quiz, we should `upsert` their answers into `profiles` (table is specced in `DATABASE-SCHEMA.md`). For now, all answers live in component state and are lost on sign-out. Stage 6.5.
 - **Adapty linkage** — Subscription tier currently reads from `mockUser.subscription`. Once Adapty is wired (Stage 7), the `subscriptions` table becomes the source of truth and Profile's "Subscription" row reads from there.

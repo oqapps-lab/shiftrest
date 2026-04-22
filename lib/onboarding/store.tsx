@@ -20,10 +20,14 @@ import React, {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { mockChronotypeQuestions } from '../../mock/user';
+import { supabase, isSupabaseConfigured } from '../supabase';
+import { useAuth } from '../auth/store';
 
 const STORAGE_KEY = 'shiftrest:onboarding:v1';
 
@@ -95,12 +99,83 @@ const INITIAL: OnboardingState = {
   completed: false,
 };
 
+// ─── Profile-row mapping ────────────────────────────────────────────────────
+// Mirrors docs/05-database/DATABASE-SCHEMA.md — profiles table.
+
+const CHRONOTYPE_VALUE_SCORE: Record<string, number> = {
+  morning: 1,
+  mid: 2,
+  evening: 3,
+  strong_evening: 4,
+};
+
+/** Sum of the chosen options' values across the 3 MEQ-lite questions (3-12). */
+export function computeChronotypeScore(answers: Record<string, string>): number | null {
+  let score = 0;
+  let answered = 0;
+  for (const q of mockChronotypeQuestions) {
+    const optId = answers[q.id];
+    if (!optId) continue;
+    const opt = q.options.find((o) => o.id === optId);
+    if (!opt) continue;
+    score += CHRONOTYPE_VALUE_SCORE[opt.value] ?? 0;
+    answered++;
+  }
+  return answered === mockChronotypeQuestions.length ? score : null;
+}
+
+/** Bucket the 3-12 score: ≤5 lark, 6-8 intermediate, ≥9 owl. */
+export function chronotypeBucket(score: number | null): 'lark' | 'intermediate' | 'owl' | null {
+  if (score == null) return null;
+  if (score <= 5) return 'lark';
+  if (score <= 8) return 'intermediate';
+  return 'owl';
+}
+
+/** Shape a row for `supabase.from('profiles').upsert(...)`. */
+export function mapToProfileRow(state: OnboardingState, userId: string) {
+  const score = computeChronotypeScore(state.chronotypeAnswers);
+  const familyCommitments: { time: string; description: string }[] = [];
+  if (state.hasChildren) {
+    familyCommitments.push({
+      time: `${state.pickupTime}:00`,
+      description: 'School pickup',
+    });
+  }
+  if (state.otherCommitments.trim()) {
+    familyCommitments.push({
+      time: '',
+      description: state.otherCommitments.trim(),
+    });
+  }
+  return {
+    id: userId,
+    display_name: state.displayName.trim() || null,
+    profession: state.profession,
+    chronotype_score: score,
+    chronotype: chronotypeBucket(score),
+    caffeine_cups_per_day: state.caffeineCupsPerDay,
+    caffeine_type: state.caffeineType,
+    caffeine_sensitivity: state.caffeineSensitivity,
+    uses_melatonin: state.takesMelatonin,
+    melatonin_dose_mg: state.melatoninDoseMg ? Number(state.melatoninDoseMg) : null,
+    has_children: state.hasChildren,
+    family_commitments: familyCommitments,
+    commute_minutes: state.commuteMinutes,
+    main_problem: state.mainProblem,
+    onboarding_completed: state.completed,
+    updated_at: new Date().toISOString(),
+  };
+}
+
 interface OnboardingContextValue {
   state: OnboardingState;
   hydrated: boolean;
   update: (patch: Partial<OnboardingState>) => void;
   markCompleted: () => void;
   reset: () => void;
+  /** Push current onboarding state to `profiles` table. No-op without env or session. */
+  syncProfile: () => Promise<{ error: Error | null; skipped?: 'no_supabase' | 'no_user' }>;
 }
 
 const OnboardingContext = createContext<OnboardingContextValue | null>(null);
@@ -108,6 +183,8 @@ const OnboardingContext = createContext<OnboardingContextValue | null>(null);
 export function OnboardingProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<OnboardingState>(INITIAL);
   const [hydrated, setHydrated] = useState(false);
+  const auth = useAuth();
+  const lastSyncedRef = useRef<string>(''); // payload hash, prevents redundant upserts
 
   // Hydrate from AsyncStorage on mount.
   useEffect(() => {
@@ -149,12 +226,38 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
 
   const reset = useCallback(() => {
     setState(INITIAL);
+    lastSyncedRef.current = '';
     AsyncStorage.removeItem(STORAGE_KEY).catch(() => null);
   }, []);
 
+  const syncProfile = useCallback(async () => {
+    if (!isSupabaseConfigured || !supabase) {
+      return { error: null, skipped: 'no_supabase' as const };
+    }
+    if (!auth.user?.id) {
+      return { error: null, skipped: 'no_user' as const };
+    }
+    const row = mapToProfileRow(state, auth.user.id);
+    const fingerprint = JSON.stringify(row);
+    if (fingerprint === lastSyncedRef.current) {
+      return { error: null }; // already up-to-date
+    }
+    const { error } = await supabase.from('profiles').upsert(row);
+    if (!error) lastSyncedRef.current = fingerprint;
+    return { error: error as Error | null };
+  }, [auth.user?.id, state]);
+
+  // Auto-sync when (a) the user signs in, (b) onboarding is marked completed,
+  // or (c) any quiz answer changes after both conditions hold.
+  useEffect(() => {
+    if (!hydrated) return;
+    if (!auth.user?.id || !state.completed) return;
+    syncProfile().catch(() => null);
+  }, [hydrated, auth.user?.id, state, syncProfile]);
+
   const value = useMemo<OnboardingContextValue>(
-    () => ({ state, hydrated, update, markCompleted, reset }),
-    [state, hydrated, update, markCompleted, reset],
+    () => ({ state, hydrated, update, markCompleted, reset, syncProfile }),
+    [state, hydrated, update, markCompleted, reset, syncProfile],
   );
 
   return (
