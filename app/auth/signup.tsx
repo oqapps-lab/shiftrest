@@ -192,7 +192,12 @@ export default function Signup() {
         <Text variant="bodyMd" color="inkSubtle">
           Already registered?
         </Text>
-        <Pressable onPress={() => router.replace('/auth/login')} hitSlop={8}>
+        <Pressable
+          onPress={() => router.replace('/auth/login')}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel="Sign in"
+        >
           <Text variant="bodyMd" color="primary" weight="medium" style={{ marginLeft: 6 }}>
             Sign in
           </Text>

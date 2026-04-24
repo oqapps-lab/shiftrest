@@ -140,6 +140,8 @@ export default function Login() {
         onPress={() => router.push('/auth/forgot')}
         hitSlop={12}
         style={styles.linkRow}
+        accessibilityRole="button"
+        accessibilityLabel="Forgot password"
       >
         <Text variant="bodyMd" color="primary" weight="medium">
           Forgot password?
@@ -150,7 +152,12 @@ export default function Login() {
         <Text variant="bodyMd" color="inkSubtle">
           New to ShiftRest?
         </Text>
-        <Pressable onPress={() => router.replace('/auth/signup')} hitSlop={8}>
+        <Pressable
+          onPress={() => router.replace('/auth/signup')}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel="Create account"
+        >
           <Text variant="bodyMd" color="primary" weight="medium" style={{ marginLeft: 6 }}>
             Create account
           </Text>
