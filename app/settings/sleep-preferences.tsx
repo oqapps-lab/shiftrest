@@ -52,6 +52,7 @@ import {
   type MelatoninTime,
   type PickupTime,
 } from '../../lib/onboarding/store';
+import { safeBack } from '../../lib/nav';
 
 const SHIFT_OPTIONS: SegmentOption<ShiftKind>[] = [
   { value: 'day', label: 'Day shift' },
@@ -109,7 +110,7 @@ export default function SleepPreferences() {
   return (
     <Screen orbs="subtle" scroll keyboardAvoiding tabBarClearance={false}>
       <Pressable
-        onPress={() => router.back()}
+        onPress={() => safeBack('/(tabs)/profile')}
         hitSlop={12}
         accessibilityRole="button"
         accessibilityLabel="Back"

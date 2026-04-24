@@ -6,7 +6,6 @@
 
 import React from 'react';
 import { View, Pressable, StyleSheet, Linking, Alert } from 'react-native';
-import { router } from 'expo-router';
 import Constants from 'expo-constants';
 import {
   Screen,
@@ -17,6 +16,7 @@ import {
   Glyph,
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
+import { safeBack } from '../../lib/nav';
 
 const SUPPORT_EMAIL = 'hello@shiftrest.app';
 
@@ -74,7 +74,7 @@ export default function About() {
   return (
     <Screen orbs="subtle" scroll tabBarClearance={false}>
       <Pressable
-        onPress={() => router.back()}
+        onPress={() => safeBack('/(tabs)/profile')}
         hitSlop={12}
         accessibilityRole="button"
         accessibilityLabel="Back"

@@ -19,6 +19,7 @@ import {
 import { colors, radii, spacing } from '../../constants/tokens';
 import { mockUser } from '../../mock/user';
 import { formatTrialRemaining } from '../../lib/derive';
+import { safeBack } from '../../lib/nav';
 
 export default function Subscription() {
   const status = mockUser.subscription;
@@ -63,7 +64,7 @@ export default function Subscription() {
       }
     >
       <Pressable
-        onPress={() => router.back()}
+        onPress={() => safeBack('/(tabs)/profile')}
         hitSlop={12}
         accessibilityRole="button"
         accessibilityLabel="Back"

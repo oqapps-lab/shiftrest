@@ -20,6 +20,7 @@ import {
 } from '../../components/ui';
 import { colors, spacing } from '../../constants/tokens';
 import { useAuth } from '../../lib/auth/store';
+import { safeBack } from '../../lib/nav';
 
 export default function Forgot() {
   const { resetPassword, configured } = useAuth();
@@ -86,7 +87,7 @@ export default function Forgot() {
       }
     >
       <Pressable
-        onPress={() => router.back()}
+        onPress={() => safeBack('/auth/login')}
         hitSlop={12}
         accessibilityRole="button"
         accessibilityLabel="Back"

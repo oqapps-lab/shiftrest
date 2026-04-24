@@ -9,7 +9,6 @@
 
 import React, { useState } from 'react';
 import { View, Pressable, StyleSheet, Alert } from 'react-native';
-import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import {
   Screen,
@@ -25,6 +24,7 @@ import {
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
 import { formatDayMonth, formatHour } from '../../lib/derive';
+import { safeDismiss } from '../../lib/nav';
 
 type Kind = 'day' | 'night' | 'off';
 
@@ -39,8 +39,18 @@ const KIND_OPTIONS: SegmentOption<Kind>[] = [
 const HOUR_PRESETS: number[] = [6, 7, 8, 12, 18, 19, 20, 22];
 
 interface DayOption {
-  iso: string;
+  /** Local YYYY-MM-DD; do NOT use Date.toISOString here — UTC pulls the
+   * day back by one for any timezone east of UTC. */
+  key: string;
+  date: Date;
   label: string;
+}
+
+function localDateKey(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
 }
 
 function nextSevenDays(): DayOption[] {
@@ -49,7 +59,8 @@ function nextSevenDays(): DayOption[] {
   for (let i = 0; i < 7; i++) {
     const d = new Date(base.getFullYear(), base.getMonth(), base.getDate() + i);
     out.push({
-      iso: d.toISOString().slice(0, 10),
+      key: localDateKey(d),
+      date: d,
       label: i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : formatDayMonth(d),
     });
   }
@@ -58,21 +69,22 @@ function nextSevenDays(): DayOption[] {
 
 export default function AddShift() {
   const days = nextSevenDays();
-  const [dateIso, setDateIso] = useState<string>(days[0].iso);
+  const [dateKey, setDateKey] = useState<string>(days[0].key);
   const [kind, setKind] = useState<Kind>('day');
   const [startHour, setStartHour] = useState<number>(7);
   const [endHour, setEndHour] = useState<number>(19);
   const [notes, setNotes] = useState<string>('');
 
+  const selectedDay = days.find((d) => d.key === dateKey) ?? days[0];
   const isOff = kind === 'off';
-  const canSave = !!dateIso && (isOff || startHour !== endHour);
+  const canSave = !!dateKey && (isOff || startHour !== endHour);
 
   const onSave = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     Alert.alert(
       'Shift saved',
-      `${formatDayMonth(new Date(dateIso))} · ${kind === 'off' ? 'Off day' : `${kind} ${formatHour(startHour)}–${formatHour(endHour)}`}${notes.trim() ? '\n\nNote: ' + notes.trim() : ''}`,
-      [{ text: 'OK', onPress: () => router.back() }],
+      `${formatDayMonth(selectedDay.date)} · ${kind === 'off' ? 'Off day' : `${kind} ${formatHour(startHour)}–${formatHour(endHour)}`}${notes.trim() ? '\n\nNote: ' + notes.trim() : ''}`,
+      [{ text: 'OK', onPress: () => safeDismiss('/(tabs)/schedule') }],
     );
   };
 
@@ -95,7 +107,7 @@ export default function AddShift() {
         <View style={{ width: 22 }} />
         <Eyebrow>NEW SHIFT</Eyebrow>
         <Pressable
-          onPress={() => router.back()}
+          onPress={() => safeDismiss('/(tabs)/schedule')}
           hitSlop={12}
           accessibilityRole="button"
           accessibilityLabel="Close"
@@ -118,13 +130,13 @@ export default function AddShift() {
         <Eyebrow>WHEN</Eyebrow>
         <View style={[styles.dayRow, { marginTop: spacing.md }]}>
           {days.map((d) => {
-            const active = d.iso === dateIso;
+            const active = d.key === dateKey;
             return (
               <Pressable
-                key={d.iso}
+                key={d.key}
                 onPress={() => {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                  setDateIso(d.iso);
+                  setDateKey(d.key);
                 }}
                 style={[
                   styles.dayChip,
@@ -237,7 +249,7 @@ export default function AddShift() {
           color="ink"
           style={{ marginTop: spacing.sm }}
         >
-          {`${formatDayMonth(new Date(dateIso))} · ${
+          {`${formatDayMonth(selectedDay.date)} · ${
             kind === 'off' ? 'Off day' : `${kind} shift ${formatHour(startHour)}–${formatHour(endHour)}`
           }`}
         </Text>

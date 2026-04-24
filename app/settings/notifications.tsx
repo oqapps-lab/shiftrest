@@ -9,7 +9,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
-import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -25,6 +24,7 @@ import {
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
 import { mockNotificationTypes } from '../../mock/user';
+import { safeBack } from '../../lib/nav';
 
 const STORAGE_KEY = 'shiftrest:notification-settings:v1';
 
@@ -87,7 +87,7 @@ export default function NotificationsSettings() {
   return (
     <Screen orbs="subtle" scroll tabBarClearance={false}>
       <Pressable
-        onPress={() => router.back()}
+        onPress={() => safeBack('/(tabs)/profile')}
         hitSlop={12}
         accessibilityRole="button"
         accessibilityLabel="Back"

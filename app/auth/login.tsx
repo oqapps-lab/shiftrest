@@ -21,6 +21,7 @@ import {
 } from '../../components/ui';
 import { colors, spacing } from '../../constants/tokens';
 import { useAuth } from '../../lib/auth/store';
+import { safeBack } from '../../lib/nav';
 
 export default function Login() {
   const { signInWithPassword, configured } = useAuth();
@@ -62,7 +63,7 @@ export default function Login() {
       }
     >
       <Pressable
-        onPress={() => router.back()}
+        onPress={() => safeBack('/')}
         hitSlop={12}
         accessibilityRole="button"
         accessibilityLabel="Back"
