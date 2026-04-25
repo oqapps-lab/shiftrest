@@ -132,6 +132,22 @@ export function chronotypeBucket(score: number | null): 'lark' | 'intermediate' 
   return 'owl';
 }
 
+// App-side IDs (used in mock + UI selection state) → DB CHECK values
+// (declared in supabase/migrations/20260425000002_base_tables.sql).
+// Keep these here so changes to either side are obvious to reviewers.
+const CAFFEINE_TYPE_TO_DB: Record<CaffeineType, string> = {
+  coffee: 'coffee',
+  tea: 'tea',
+  energy: 'energy_drink',
+};
+
+const MAIN_PROBLEM_TO_DB: Record<MainProblem, string> = {
+  'falling-asleep': 'cant_sleep',
+  transitions: 'transition',
+  fatigue: 'fatigue',
+  caffeine: 'caffeine',
+};
+
 /** Shape a row for `supabase.from('profiles').upsert(...)`. */
 export function mapToProfileRow(state: OnboardingState, userId: string) {
   const score = computeChronotypeScore(state.chronotypeAnswers);
@@ -155,14 +171,14 @@ export function mapToProfileRow(state: OnboardingState, userId: string) {
     chronotype_score: score,
     chronotype: chronotypeBucket(score),
     caffeine_cups_per_day: state.caffeineCupsPerDay,
-    caffeine_type: state.caffeineType,
+    caffeine_type: state.caffeineType ? CAFFEINE_TYPE_TO_DB[state.caffeineType] : null,
     caffeine_sensitivity: state.caffeineSensitivity,
     uses_melatonin: state.takesMelatonin,
     melatonin_dose_mg: state.melatoninDoseMg ? Number(state.melatoninDoseMg) : null,
     has_children: state.hasChildren,
     family_commitments: familyCommitments,
     commute_minutes: state.commuteMinutes,
-    main_problem: state.mainProblem,
+    main_problem: state.mainProblem ? MAIN_PROBLEM_TO_DB[state.mainProblem] : null,
     onboarding_completed: state.completed,
     updated_at: new Date().toISOString(),
   };

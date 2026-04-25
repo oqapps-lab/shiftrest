@@ -25,6 +25,8 @@ import {
 import { colors, radii, spacing } from '../../constants/tokens';
 import { formatDayMonth, formatHour } from '../../lib/derive';
 import { safeDismiss } from '../../lib/nav';
+import { supabase, isSupabaseConfigured } from '../../lib/supabase';
+import { useAuth } from '../../lib/auth/store';
 
 type Kind = 'day' | 'night' | 'off';
 
@@ -69,23 +71,69 @@ function nextSevenDays(): DayOption[] {
 
 export default function AddShift() {
   const days = nextSevenDays();
+  const { user } = useAuth();
   const [dateKey, setDateKey] = useState<string>(days[0].key);
   const [kind, setKind] = useState<Kind>('day');
   const [startHour, setStartHour] = useState<number>(7);
   const [endHour, setEndHour] = useState<number>(19);
   const [notes, setNotes] = useState<string>('');
+  const [submitting, setSubmitting] = useState(false);
 
   const selectedDay = days.find((d) => d.key === dateKey) ?? days[0];
   const isOff = kind === 'off';
   const canSave = !!dateKey && (isOff || startHour !== endHour);
 
-  const onSave = () => {
+  const summaryLine = `${formatDayMonth(selectedDay.date)} · ${
+    kind === 'off' ? 'Off day' : `${kind} ${formatHour(startHour)}–${formatHour(endHour)}`
+  }${notes.trim() ? '\n\nNote: ' + notes.trim() : ''}`;
+
+  const onSave = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    Alert.alert(
-      'Shift saved',
-      `${formatDayMonth(selectedDay.date)} · ${kind === 'off' ? 'Off day' : `${kind} ${formatHour(startHour)}–${formatHour(endHour)}`}${notes.trim() ? '\n\nNote: ' + notes.trim() : ''}`,
-      [{ text: 'OK', onPress: () => safeDismiss('/(tabs)/schedule') }],
-    );
+
+    // Off-day means "no shift today" — we don't insert a row for that yet
+    // (the schema's shifts table only stores active day/night entries with
+    // start_time and end_time). When we add an `off_days` table or a
+    // shift_type='off' enum value, this branch will INSERT instead of
+    // showing the local-only confirmation.
+    if (kind === 'off' || !isSupabaseConfigured || !supabase || !user?.id) {
+      Alert.alert('Shift saved', summaryLine, [
+        { text: 'OK', onPress: () => safeDismiss('/(tabs)/schedule') },
+      ]);
+      return;
+    }
+
+    setSubmitting(true);
+    // Build start/end timestamps from selectedDay + start/endHour. End-hour
+    // smaller than start-hour means the shift wraps midnight, so we add
+    // one day to the end.
+    const startAt = new Date(selectedDay.date);
+    startAt.setHours(startHour, 0, 0, 0);
+    const endAt = new Date(selectedDay.date);
+    endAt.setHours(endHour, 0, 0, 0);
+    if (endAt <= startAt) endAt.setDate(endAt.getDate() + 1);
+
+    const dateIso = `${selectedDay.date.getFullYear()}-${String(
+      selectedDay.date.getMonth() + 1,
+    ).padStart(2, '0')}-${String(selectedDay.date.getDate()).padStart(2, '0')}`;
+
+    const { error } = await supabase.from('shifts').insert({
+      user_id: user.id,
+      date: dateIso,
+      start_time: startAt.toISOString(),
+      end_time: endAt.toISOString(),
+      shift_type: kind,
+      is_manual: true,
+      notes: notes.trim() || null,
+    });
+    setSubmitting(false);
+
+    if (error) {
+      Alert.alert('Could not save shift', error.message, [{ text: 'OK' }]);
+      return;
+    }
+    Alert.alert('Shift saved', summaryLine, [
+      { text: 'OK', onPress: () => safeDismiss('/(tabs)/schedule') },
+    ]);
   };
 
   return (
@@ -97,8 +145,8 @@ export default function AddShift() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label="Save shift"
-          disabled={!canSave}
+          label={submitting ? 'Saving…' : 'Save shift'}
+          disabled={!canSave || submitting}
           onPress={onSave}
         />
       }
