@@ -195,6 +195,8 @@ export default function Profile() {
           key={row.label}
           onPress={row.onPress}
           disabled={!row.onPress}
+          accessibilityRole="button"
+          accessibilityLabel={row.label}
           style={{ marginBottom: spacing.sm }}
         >
           <GlassCard variant="whisper" padding="xl">
