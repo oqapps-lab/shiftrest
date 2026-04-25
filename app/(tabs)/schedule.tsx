@@ -1,6 +1,9 @@
 /**
  * S30 — Calendar View. Month grid as dots (not squares).
  * Color-coded: sage = day shift, dusk = night, mint = off.
+ *
+ * Reads from public.shifts via useShifts(). Falls back to a hard-coded
+ * Stage-5 cycle when no auth.user / no rows so the demo still renders.
  */
 
 import React from 'react';
@@ -17,18 +20,16 @@ import {
 import { router } from 'expo-router';
 import { colors, spacing } from '../../constants/tokens';
 import { formatMonthYear } from '../../lib/derive';
+import { useShifts } from '../../lib/queries';
+import { useAuth } from '../../lib/auth/store';
 
-// 6 weeks of mock days
 type Kind = 'day' | 'night' | 'off' | 'past' | 'empty';
-const MONTH: { label: number | ''; kind: Kind }[] = [
-  ...Array.from({ length: 2 }).map(() => ({ label: '' as const, kind: 'empty' as Kind })),
-  ...Array.from({ length: 30 }).map((_, i): { label: number; kind: Kind } => {
-    const day = i + 1;
-    if (day < 20) return { label: day, kind: 'past' };
-    const cycle = ['day', 'day', 'day', 'off', 'off', 'night', 'night', 'night', 'off', 'off', 'day', 'day'] as Kind[];
-    return { label: day, kind: cycle[(day - 20) % cycle.length] };
-  }),
-];
+
+interface Cell {
+  label: number | '';
+  kind: Kind;
+  iso?: string;
+}
 
 const dotColor: Record<Kind, string> = {
   day: colors.primary,
@@ -38,7 +39,102 @@ const dotColor: Record<Kind, string> = {
   empty: 'transparent',
 };
 
+function localIso(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+/**
+ * Build a 6-week (42 cell) grid for the given month, Monday-first.
+ * Empty cells fill the leading offset; remaining cells get the date.
+ * shiftByIso lets us paint each cell from real data.
+ */
+function buildMonthGrid(year: number, month: number, shiftByIso: Map<string, 'day' | 'night'>): Cell[] {
+  const firstOfMonth = new Date(year, month, 1);
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  // Monday-first offset: getDay() returns 0=Sun..6=Sat → shift to 0=Mon..6=Sun
+  const offset = (firstOfMonth.getDay() + 6) % 7;
+
+  const today = new Date();
+  const todayIso = localIso(today);
+
+  const cells: Cell[] = [];
+  for (let i = 0; i < offset; i++) cells.push({ label: '', kind: 'empty' });
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(year, month, d);
+    const iso = localIso(date);
+    const realKind = shiftByIso.get(iso);
+    let kind: Kind;
+    if (realKind) {
+      kind = realKind;
+    } else if (iso < todayIso) {
+      kind = 'past';
+    } else {
+      kind = 'off';
+    }
+    cells.push({ label: d, kind, iso });
+  }
+
+  // Pad to multiple of 7 so rows align (max 6 weeks = 42 cells).
+  while (cells.length % 7 !== 0) cells.push({ label: '', kind: 'empty' });
+  return cells;
+}
+
+// Stage-5 fallback so unauthenticated demo screens still tell the story.
+function buildMockGrid(year: number, month: number): Cell[] {
+  const firstOfMonth = new Date(year, month, 1);
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const offset = (firstOfMonth.getDay() + 6) % 7;
+  const today = new Date();
+  const todayIso = localIso(today);
+  const cycle: ('day' | 'night' | 'off')[] = [
+    'day', 'day', 'day', 'off', 'off', 'night', 'night',
+    'night', 'off', 'off', 'day', 'day',
+  ];
+  const cells: Cell[] = [];
+  for (let i = 0; i < offset; i++) cells.push({ label: '', kind: 'empty' });
+  for (let d = 1; d <= daysInMonth; d++) {
+    const iso = localIso(new Date(year, month, d));
+    if (iso < todayIso) {
+      cells.push({ label: d, kind: 'past', iso });
+      continue;
+    }
+    cells.push({ label: d, kind: cycle[(d - today.getDate()) % cycle.length] ?? 'off', iso });
+  }
+  while (cells.length % 7 !== 0) cells.push({ label: '', kind: 'empty' });
+  return cells;
+}
+
 export default function Schedule() {
+  const { user } = useAuth();
+
+  // Render the current month. Stage 6.7 will add prev/next chevrons that
+  // shift `viewYear` / `viewMonth` state.
+  const today = new Date();
+  const viewYear = today.getFullYear();
+  const viewMonth = today.getMonth();
+
+  const monthStart = localIso(new Date(viewYear, viewMonth, 1));
+  const monthEnd = localIso(new Date(viewYear, viewMonth + 1, 0));
+
+  const { data: shiftRows } = useShifts(monthStart, monthEnd);
+
+  const shiftByIso = React.useMemo(() => {
+    const map = new Map<string, 'day' | 'night'>();
+    for (const r of shiftRows) map.set(r.date, r.shift_type);
+    return map;
+  }, [shiftRows]);
+
+  const grid = React.useMemo(
+    () => (user ? buildMonthGrid(viewYear, viewMonth, shiftByIso) : buildMockGrid(viewYear, viewMonth)),
+    [user, viewYear, viewMonth, shiftByIso],
+  );
+
+  const todayIso = localIso(today);
+
   return (
     <Screen
       orbs="subtle"
@@ -56,7 +152,7 @@ export default function Schedule() {
         <Pressable hitSlop={12}>
           <Glyph name="chevronLeft" size={24} color="inkMuted" />
         </Pressable>
-        <Eyebrow>{formatMonthYear()}</Eyebrow>
+        <Eyebrow>{formatMonthYear(today)}</Eyebrow>
         <Pressable hitSlop={12}>
           <Glyph name="chevronRight" size={24} color="inkMuted" />
         </Pressable>
@@ -79,9 +175,8 @@ export default function Schedule() {
 
       {/* Month grid */}
       <View style={styles.grid}>
-        {MONTH.map((d, i) => {
-          const today = new Date();
-          const isToday = d.kind !== 'empty' && d.label === today.getDate();
+        {grid.map((d, i) => {
+          const isToday = d.kind !== 'empty' && d.iso === todayIso;
           return (
             <View key={i} style={styles.cell}>
               {d.kind !== 'empty' && (

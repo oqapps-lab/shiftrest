@@ -27,6 +27,7 @@ import { formatDayMonth, formatHour } from '../../lib/derive';
 import { safeDismiss } from '../../lib/nav';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth/store';
+import { emitChange, EVENTS } from '../../lib/queries';
 
 type Kind = 'day' | 'night' | 'off';
 
@@ -131,6 +132,8 @@ export default function AddShift() {
       Alert.alert('Could not save shift', error.message, [{ text: 'OK' }]);
       return;
     }
+    // Notify any subscribed `useShifts(...)` so the calendar refetches.
+    emitChange(EVENTS.shiftsChanged);
     Alert.alert('Shift saved', summaryLine, [
       { text: 'OK', onPress: () => safeDismiss('/(tabs)/schedule') },
     ]);

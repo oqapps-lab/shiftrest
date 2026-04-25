@@ -21,6 +21,7 @@ import { colors, spacing, radii } from '../../constants/tokens';
 import { mockUser, mockPlan, mockShiftBlocks, mockTransition } from '../../mock/user';
 import { countCompleted, formatHour, formatRelativeTime, formatStreak, getGreeting } from '../../lib/derive';
 import { useOnboarding } from '../../lib/onboarding/store';
+import { useStreak, useActiveTransitionPlan } from '../../lib/queries';
 
 // Event times come from mockPlan as floats → formatted once, distance
 // computed from the same source so they can never drift apart.
@@ -50,8 +51,26 @@ const EVENTS = [
 
 export default function Home() {
   const { state: onboarding } = useOnboarding();
-  const today = mockTransition.days[0];
-  const doneToday = countCompleted(today.steps);
+  const { data: streak } = useStreak();
+  const { data: livePlan } = useActiveTransitionPlan();
+
+  // Streak: real DB row when signed-in user has one, else mockUser.streak.
+  const streakValue = streak?.current_streak ?? mockUser.streak;
+
+  // Transition teaser: when a live plan exists pull its day-1 step counts;
+  // else fall back to the mockTransition fixture so the demo still reads.
+  const todayMock = mockTransition.days[0];
+  const liveDay1Steps = livePlan?.steps.filter((s) => s.day_number === 1) ?? [];
+  const liveDoneToday = liveDay1Steps.filter((s) => s.is_completed).length;
+  const fromLabel = livePlan
+    ? livePlan.transition_type === 'night_to_day' ? 'Night' : 'Day'
+    : mockTransition.fromShift;
+  const toLabel = livePlan
+    ? livePlan.transition_type === 'night_to_day' ? 'Day' : 'Night'
+    : mockTransition.toShift;
+  const doneToday = livePlan ? liveDoneToday : countCompleted(todayMock.steps);
+  const totalToday = livePlan ? liveDay1Steps.length : todayMock.steps.length;
+
   const displayName = (onboarding.displayName?.trim() || mockUser.name).toUpperCase();
 
   return (
@@ -70,7 +89,7 @@ export default function Home() {
             uppercase
             style={{ marginLeft: 6 }}
           >
-            {formatStreak(mockUser.streak)}
+            {formatStreak(streakValue)}
           </Text>
         </View>
       </View>
@@ -130,7 +149,7 @@ export default function Home() {
             <View style={{ flex: 1 }}>
               <Eyebrow color="duskDim">TRANSITION IN PROGRESS</Eyebrow>
               <Text variant="titleLg" family="display" weight="light" color="ink" style={{ marginTop: 2 }}>
-                {`${mockTransition.fromShift} → ${mockTransition.toShift}, ${doneToday} of ${today.steps.length} steps today`}
+                {`${fromLabel} → ${toLabel}, ${doneToday} of ${totalToday} steps today`}
               </Text>
             </View>
             <Glyph name="chevronRight" size={20} color="duskDim" />

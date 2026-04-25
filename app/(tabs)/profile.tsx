@@ -19,6 +19,7 @@ import { mockUser, mockProfessions } from '../../mock/user';
 import { formatTrialRemaining } from '../../lib/derive';
 import { useAuth } from '../../lib/auth/store';
 import { useOnboarding } from '../../lib/onboarding/store';
+import { useStreak } from '../../lib/queries';
 
 const STREAK_LENGTH = 14;
 const STREAK_DOTS = Array.from({ length: STREAK_LENGTH }).map((_, i) => {
@@ -29,6 +30,8 @@ const STREAK_DOTS = Array.from({ length: STREAK_LENGTH }).map((_, i) => {
 export default function Profile() {
   const { user, signOut } = useAuth();
   const { state: onboarding, reset: resetOnboarding } = useOnboarding();
+  const { data: streak } = useStreak();
+  const streakValue = streak?.current_streak ?? mockUser.streak;
 
   // Display name preference:
   //   onboarding.displayName (set in S11) →
@@ -142,7 +145,7 @@ export default function Profile() {
         <SerifHero>{`${displayName} · ${professionLabel}.`}</SerifHero>
       </View>
 
-      <Eyebrow>{`${mockUser.streak}-DAY STREAK`}</Eyebrow>
+      <Eyebrow>{`${streakValue}-DAY STREAK`}</Eyebrow>
       <View style={styles.streakRow}>
         {STREAK_DOTS.map((d, i) => (
           <View
