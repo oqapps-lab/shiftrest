@@ -22,6 +22,7 @@ import { mockUser, mockPlan, mockShiftBlocks, mockTransition } from '../../mock/
 import { countCompleted, formatHour, formatRelativeTime, formatStreak, getGreeting } from '../../lib/derive';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useActiveTransitionPlan } from '../../lib/queries';
+import { useAuth } from '../../lib/auth/store';
 
 // Event times come from mockPlan as floats → formatted once, distance
 // computed from the same source so they can never drift apart.
@@ -51,6 +52,7 @@ const EVENTS = [
 
 export default function Home() {
   const { state: onboarding } = useOnboarding();
+  const { user } = useAuth();
   const { data: streak } = useStreak();
   const { data: livePlan } = useActiveTransitionPlan();
 
@@ -71,7 +73,14 @@ export default function Home() {
   const doneToday = livePlan ? liveDoneToday : countCompleted(todayMock.steps);
   const totalToday = livePlan ? liveDay1Steps.length : todayMock.steps.length;
 
-  const displayName = (onboarding.displayName?.trim() || mockUser.name).toUpperCase();
+  // Mirror Profile's fallback chain so the greeting never says "MARINA"
+  // when the real signed-in user has a different display_name.
+  const displayName = (
+    onboarding.displayName?.trim() ||
+    (user?.user_metadata as { display_name?: string } | undefined)?.display_name ||
+    user?.email?.split('@')[0] ||
+    mockUser.name
+  ).toUpperCase();
 
   return (
     <Screen orbs="normal" scroll>

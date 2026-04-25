@@ -2,7 +2,7 @@
  * S43 — Transition Plan (modal). 2-day checklist: Night → Day.
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
@@ -17,9 +17,87 @@ import {
 } from '../components/ui';
 import { colors, spacing, radii } from '../constants/tokens';
 import { mockTransition } from '../mock/user';
+import { useActiveTransitionPlan } from '../lib/queries';
+
+interface UiStep {
+  id: string;
+  time: string;
+  action: string;
+  tip: string;
+  done: boolean;
+}
+interface UiDay {
+  label: string;
+  steps: UiStep[];
+}
+
+const WEEKDAY_SHORT = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'] as const;
+
+function formatHourMinute(iso: string): string {
+  const d = new Date(iso);
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+}
+
+function dayLabel(dateIso: string): string {
+  const d = new Date(dateIso + 'T00:00:00');
+  return `${WEEKDAY_SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')}`;
+}
 
 export default function Transition() {
-  const [days, setDays] = useState(mockTransition.days);
+  const { data: livePlan } = useActiveTransitionPlan();
+
+  // Build UiDay[] from either the live plan or mockTransition fallback.
+  const initialDays = useMemo<UiDay[]>(() => {
+    if (livePlan && livePlan.steps.length > 0) {
+      const byDay = new Map<number, UiStep[]>();
+      for (const s of livePlan.steps) {
+        const arr = byDay.get(s.day_number) ?? [];
+        arr.push({
+          id: s.id,
+          time: formatHourMinute(s.scheduled_time),
+          action: s.title,
+          tip: s.description ?? '',
+          done: s.is_completed,
+        });
+        byDay.set(s.day_number, arr);
+      }
+      // start_date for day 1, +1 for day 2, etc.
+      const start = new Date(livePlan.start_date + 'T00:00:00');
+      return Array.from(byDay.entries())
+        .sort(([a], [b]) => a - b)
+        .map(([n, steps]) => {
+          const d = new Date(start);
+          d.setDate(start.getDate() + (n - 1));
+          const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+          return { label: dayLabel(iso), steps };
+        });
+    }
+    // Fallback: hardcoded mock so the demo + signed-out UX still tells a story.
+    return mockTransition.days.map((d) => ({
+      label: d.label,
+      steps: d.steps.map((s, i) => ({
+        id: `mock-${d.label}-${i}`,
+        time: s.time,
+        action: s.action,
+        tip: s.tip,
+        done: s.done,
+      })),
+    }));
+  }, [livePlan]);
+
+  const [days, setDays] = useState<UiDay[]>(initialDays);
+
+  // Re-seed when live plan arrives (e.g. opened modal before query resolved).
+  useEffect(() => {
+    setDays(initialDays);
+  }, [initialDays]);
+
+  const fromShift = livePlan
+    ? livePlan.transition_type === 'night_to_day' ? 'Night' : 'Day'
+    : mockTransition.fromShift;
+  const toShift = livePlan
+    ? livePlan.transition_type === 'night_to_day' ? 'Day' : 'Night'
+    : mockTransition.toShift;
 
   const toggleStep = (dayIdx: number, stepIdx: number) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -56,7 +134,7 @@ export default function Transition() {
         </Pressable>
       </View>
 
-      <Eyebrow>{`TRANSITION · ${mockTransition.fromShift.toUpperCase()} → ${mockTransition.toShift.toUpperCase()}`}</Eyebrow>
+      <Eyebrow>{`TRANSITION · ${fromShift.toUpperCase()} → ${toShift.toUpperCase()}`}</Eyebrow>
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
         <SerifHero>Two quiet days ahead.</SerifHero>
       </View>

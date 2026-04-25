@@ -50,12 +50,16 @@ export default function Profile() {
     mockProfessions.find((p) => p.id === onboarding.profession)?.title ??
     mockUser.profession;
 
-  const subscriptionSubtitle =
-    mockUser.subscription === 'trial'
-      ? `Trial · ${formatTrialRemaining(mockUser.trialEndsAt)}`
-      : mockUser.subscription === 'premium'
-      ? 'Premium · active'
-      : 'Free tier';
+  // Anonymous users never have a trial — they're on the free tier
+  // until they sign up. Once signed in, we still read mockUser until
+  // Adapty (Stage 7) provides the real subscription state.
+  const subscriptionSubtitle = !user
+    ? 'Free tier'
+    : mockUser.subscription === 'trial'
+    ? `Trial · ${formatTrialRemaining(mockUser.trialEndsAt)}`
+    : mockUser.subscription === 'premium'
+    ? 'Premium · active'
+    : 'Free tier';
 
   const accountRow = user
     ? {
