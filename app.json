@@ -12,7 +12,8 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.gazetastreet.shiftrest"
+      "bundleIdentifier": "com.gazetastreet.shiftrest",
+      "usesAppleSignIn": true
     },
     "android": {
       "package": "com.gazetastreet.shiftrest",
