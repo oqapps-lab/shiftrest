@@ -148,6 +148,77 @@ const MAIN_PROBLEM_TO_DB: Record<MainProblem, string> = {
   caffeine: 'caffeine',
 };
 
+// Reverse maps for hydrating local state FROM a profiles row.
+const CAFFEINE_TYPE_FROM_DB: Record<string, CaffeineType> = {
+  coffee: 'coffee',
+  tea: 'tea',
+  energy_drink: 'energy',
+};
+
+const MAIN_PROBLEM_FROM_DB: Record<string, MainProblem> = {
+  cant_sleep: 'falling-asleep',
+  transition: 'transitions',
+  fatigue: 'fatigue',
+  caffeine: 'caffeine',
+};
+
+interface ProfileRow {
+  display_name: string | null;
+  profession: string | null;
+  caffeine_cups_per_day: number | null;
+  caffeine_type: string | null;
+  caffeine_sensitivity: string | null;
+  uses_melatonin: boolean | null;
+  melatonin_dose_mg: number | null;
+  has_children: boolean | null;
+  family_commitments: { time: string; description: string }[] | null;
+  commute_minutes: number | null;
+  main_problem: string | null;
+  onboarding_completed: boolean | null;
+}
+
+/** Translate a `profiles` row back into a partial OnboardingState patch. */
+export function mapFromProfileRow(row: ProfileRow): Partial<OnboardingState> {
+  const patch: Partial<OnboardingState> = {};
+  if (row.display_name) patch.displayName = row.display_name;
+  if (row.profession && ['nurse', 'firefighter', 'factory', 'other'].includes(row.profession)) {
+    patch.profession = row.profession as Profession;
+  }
+  if (typeof row.caffeine_cups_per_day === 'number') {
+    patch.caffeineCupsPerDay = row.caffeine_cups_per_day;
+  }
+  if (row.caffeine_type && CAFFEINE_TYPE_FROM_DB[row.caffeine_type]) {
+    patch.caffeineType = CAFFEINE_TYPE_FROM_DB[row.caffeine_type];
+  }
+  if (row.caffeine_sensitivity && ['normal', 'slow', 'unknown'].includes(row.caffeine_sensitivity)) {
+    patch.caffeineSensitivity = row.caffeine_sensitivity as CaffeineSensitivity;
+  }
+  if (typeof row.uses_melatonin === 'boolean') patch.takesMelatonin = row.uses_melatonin;
+  if (typeof row.melatonin_dose_mg === 'number') patch.melatoninDoseMg = String(row.melatonin_dose_mg);
+  if (typeof row.has_children === 'boolean') patch.hasChildren = row.has_children;
+  if (typeof row.commute_minutes === 'number') patch.commuteMinutes = row.commute_minutes;
+  if (row.main_problem && MAIN_PROBLEM_FROM_DB[row.main_problem]) {
+    patch.mainProblem = MAIN_PROBLEM_FROM_DB[row.main_problem];
+  }
+  if (row.onboarding_completed) patch.completed = true;
+
+  // Family commitments → split back into pickup time + free-text "other".
+  if (Array.isArray(row.family_commitments)) {
+    for (const fc of row.family_commitments) {
+      if (fc.description === 'School pickup' && fc.time) {
+        const hour = fc.time.slice(0, 2);
+        if (['14', '15', '16', '17'].includes(hour)) {
+          patch.pickupTime = hour as PickupTime;
+        }
+      } else if (fc.description) {
+        patch.otherCommitments = fc.description;
+      }
+    }
+  }
+
+  return patch;
+}
+
 /** Shape a row for `supabase.from('profiles').upsert(...)`. */
 export function mapToProfileRow(state: OnboardingState, userId: string) {
   const score = computeChronotypeScore(state.chronotypeAnswers);
@@ -270,6 +341,52 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     if (!auth.user?.id || !state.completed) return;
     syncProfile().catch(() => null);
   }, [hydrated, auth.user?.id, state, syncProfile]);
+
+  // Reverse-sync: when the user signs in fresh (e.g. on a new device or
+  // after sign-out), hydrate the local store from their `profiles` row.
+  // Only runs when local state is essentially blank (no profession set
+  // and not yet completed) — never overwrites a populated local store
+  // because their device-state may have unsaved progress.
+  const reverseHydratedRef = useRef<string>('');
+  useEffect(() => {
+    if (!hydrated) return;
+    if (!isSupabaseConfigured || !supabase) return;
+    const userId = auth.user?.id;
+    if (!userId) return;
+    if (reverseHydratedRef.current === userId) return;
+
+    // Skip if local state already has populated answers.
+    if (state.profession || state.completed || state.displayName) {
+      reverseHydratedRef.current = userId;
+      return;
+    }
+
+    let alive = true;
+    (async () => {
+      const { data: row, error } = await supabase!
+        .from('profiles')
+        .select(
+          'display_name, profession, caffeine_cups_per_day, caffeine_type, caffeine_sensitivity, uses_melatonin, melatonin_dose_mg, has_children, family_commitments, commute_minutes, main_problem, onboarding_completed',
+        )
+        .eq('id', userId)
+        .maybeSingle();
+      if (!alive) return;
+      if (error || !row) {
+        reverseHydratedRef.current = userId;
+        return;
+      }
+      const patch = mapFromProfileRow(row as ProfileRow);
+      if (Object.keys(patch).length > 0) {
+        setState((prev) => ({ ...prev, ...patch }));
+      }
+      reverseHydratedRef.current = userId;
+    })();
+
+    return () => {
+      alive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated, auth.user?.id]);
 
   const value = useMemo<OnboardingContextValue>(
     () => ({ state, hydrated, update, markCompleted, reset, syncProfile }),
