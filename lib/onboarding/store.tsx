@@ -270,8 +270,10 @@ const OnboardingContext = createContext<OnboardingContextValue | null>(null);
 export function OnboardingProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<OnboardingState>(INITIAL);
   const [hydrated, setHydrated] = useState(false);
+  const [reverseHydrateTick, setReverseHydrateTick] = useState(0);
   const auth = useAuth();
   const lastSyncedRef = useRef<string>(''); // payload hash, prevents redundant upserts
+  const reverseHydratedRef = useRef<string>(''); // userId we've already reverse-hydrated for
 
   // Hydrate from AsyncStorage on mount.
   useEffect(() => {
@@ -314,7 +316,12 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const reset = useCallback(() => {
     setState(INITIAL);
     lastSyncedRef.current = '';
+    reverseHydratedRef.current = '';
     AsyncStorage.removeItem(STORAGE_KEY).catch(() => null);
+    // Re-arm the reverse-hydrate effect — without this it would not
+    // re-fire (its deps haven't changed) and the user would stay on
+    // a blank store after a dev reset.
+    setReverseHydrateTick((t) => t + 1);
   }, []);
 
   const syncProfile = useCallback(async () => {
@@ -347,7 +354,6 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   // Only runs when local state is essentially blank (no profession set
   // and not yet completed) — never overwrites a populated local store
   // because their device-state may have unsaved progress.
-  const reverseHydratedRef = useRef<string>('');
   useEffect(() => {
     if (!hydrated) return;
     if (!isSupabaseConfigured || !supabase) return;
@@ -386,7 +392,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       alive = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hydrated, auth.user?.id]);
+  }, [hydrated, auth.user?.id, reverseHydrateTick]);
 
   const value = useMemo<OnboardingContextValue>(
     () => ({ state, hydrated, update, markCompleted, reset, syncProfile }),
