@@ -19,14 +19,14 @@ import {
 } from '../../components/ui';
 import { spacing, radii, colors } from '../../constants/tokens';
 import { mockUser, mockPlan } from '../../mock/user';
-import { formatHour, formatHourRange, hoursBetween } from '../../lib/derive';
+import { formatHour, formatHourRange, hoursBetween, firstName } from '../../lib/derive';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useGeneratedPlan, planHourAsFloat, formatPlanHour } from '../../lib/queries/plan';
 
 export default function Aha() {
   const { state: onboarding } = useOnboarding();
   const { data: livePlan } = useGeneratedPlan();
-  const displayName = (onboarding.displayName?.trim() || mockUser.name).toUpperCase();
+  const displayName = firstName(onboarding.displayName?.trim() || mockUser.name).toUpperCase();
 
   // Prefer live plan times when present, fall back to mockPlan.
   const sleepStartHour = planHourAsFloat(livePlan?.sleep_start) ?? mockPlan.sleepStart;

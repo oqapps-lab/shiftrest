@@ -20,6 +20,7 @@ import {
 } from '../components/ui';
 import { colors, spacing, radii } from '../constants/tokens';
 import { mockUser } from '../mock/user';
+import { firstName } from '../lib/derive';
 import { useOnboarding } from '../lib/onboarding/store';
 import { useAuth } from '../lib/auth/store';
 import { startTrial, emitChange, EVENTS } from '../lib/queries';
@@ -37,7 +38,7 @@ export default function Paywall() {
   const [submitting, setSubmitting] = useState(false);
   const { state: onboarding } = useOnboarding();
   const { user } = useAuth();
-  const displayName = (onboarding.displayName?.trim() || mockUser.name).toUpperCase();
+  const displayName = firstName(onboarding.displayName?.trim() || mockUser.name).toUpperCase();
 
   const onStartTrial = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
