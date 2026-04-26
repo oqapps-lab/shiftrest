@@ -19,6 +19,7 @@ export const EVENTS = {
   shiftsChanged: 'shifts:changed',
   streakChanged: 'streak:changed',
   transitionChanged: 'transition:changed',
+  profileStatsChanged: 'profile-stats:changed',
 } as const;
 
 export function emitChange(event: (typeof EVENTS)[keyof typeof EVENTS]) {
@@ -240,6 +241,106 @@ export function useActiveTransitionPlan(): QueryResult<TransitionPlanWithSteps |
   useEffect(() => {
     const sub = DeviceEventEmitter.addListener(EVENTS.transitionChanged, refetch);
     return () => sub.remove();
+  }, [refetch]);
+
+  return { data, loading, error, refetch };
+}
+
+// ─── Profile stats (DAYS / PLANS / ON PLAN) ─────────────────────────────────
+
+export interface ProfileStats {
+  /** Days since auth.users.created_at, floored. */
+  daysInApp: number;
+  /** Count of transition_plans rows with status='completed'. */
+  plansCompleted: number;
+  /** 0–100 % adherence on the active plan (completed_steps / total_steps). */
+  onPlanPct: number | null;
+}
+
+export function useProfileStats(): QueryResult<ProfileStats | null> {
+  const { user } = useAuth();
+  const [data, setData] = useState<ProfileStats | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [tick, setTick] = useState(0);
+
+  const refetch = useCallback(() => setTick((t) => t + 1), []);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase || !user?.id) {
+      setData(null);
+      return;
+    }
+    let alive = true;
+    setLoading(true);
+
+    (async () => {
+      try {
+        const created = user.created_at ? new Date(user.created_at).getTime() : Date.now();
+        const daysInApp = Math.max(0, Math.floor((Date.now() - created) / 86_400_000));
+
+        const { count: plansCount, error: countErr } = await supabase!
+          .from('transition_plans')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', user.id)
+          .eq('status', 'completed')
+          .is('deleted_at', null);
+
+        if (!alive) return;
+        if (countErr) {
+          setError(countErr);
+          setLoading(false);
+          return;
+        }
+
+        const { data: activePlan, error: planErr } = await supabase!
+          .from('transition_plans')
+          .select('total_steps, completed_steps')
+          .eq('user_id', user.id)
+          .eq('status', 'active')
+          .is('deleted_at', null)
+          .order('start_date', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (!alive) return;
+        if (planErr) {
+          setError(planErr);
+          setLoading(false);
+          return;
+        }
+
+        const onPlanPct =
+          activePlan && activePlan.total_steps > 0
+            ? Math.round((activePlan.completed_steps / activePlan.total_steps) * 100)
+            : null;
+
+        setData({
+          daysInApp,
+          plansCompleted: plansCount ?? 0,
+          onPlanPct,
+        });
+        setError(null);
+        setLoading(false);
+      } catch (e: unknown) {
+        if (!alive) return;
+        setError(e instanceof Error ? e : new Error(String(e)));
+        setLoading(false);
+      }
+    })();
+
+    return () => {
+      alive = false;
+    };
+  }, [user?.id, user?.created_at, tick]);
+
+  useEffect(() => {
+    const subA = DeviceEventEmitter.addListener(EVENTS.transitionChanged, refetch);
+    const subB = DeviceEventEmitter.addListener(EVENTS.profileStatsChanged, refetch);
+    return () => {
+      subA.remove();
+      subB.remove();
+    };
   }, [refetch]);
 
   return { data, loading, error, refetch };

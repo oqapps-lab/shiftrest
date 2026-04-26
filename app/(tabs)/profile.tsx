@@ -19,7 +19,7 @@ import { mockUser, mockProfessions } from '../../mock/user';
 import { formatTrialRemaining } from '../../lib/derive';
 import { useAuth } from '../../lib/auth/store';
 import { useOnboarding } from '../../lib/onboarding/store';
-import { useStreak } from '../../lib/queries';
+import { useStreak, useProfileStats } from '../../lib/queries';
 
 const STREAK_LENGTH = 14;
 const STREAK_DOTS = Array.from({ length: STREAK_LENGTH }).map((_, i) => {
@@ -31,7 +31,15 @@ export default function Profile() {
   const { user, signOut } = useAuth();
   const { state: onboarding, reset: resetOnboarding } = useOnboarding();
   const { data: streak } = useStreak();
+  const { data: stats } = useProfileStats();
   const streakValue = streak?.current_streak ?? mockUser.streak;
+
+  // For signed-in users always show their real numbers (0 is honest).
+  // Anonymous demo mode falls through to mockUser so the screen tells a
+  // story without any backend.
+  const daysInApp = user ? (stats?.daysInApp ?? 0) : mockUser.daysInApp;
+  const plansCompleted = user ? (stats?.plansCompleted ?? 0) : mockUser.transitionsCompleted;
+  const adherencePct = user ? (stats?.onPlanPct ?? 0) : mockUser.adherence;
 
   // Display name preference:
   //   onboarding.displayName (set in S11) →
@@ -171,17 +179,17 @@ export default function Profile() {
       <View style={styles.statsRow}>
         <GlassCard variant="glass" padding="lg" style={styles.stat}>
           <Eyebrow size="md">DAYS</Eyebrow>
-          <HeroNumber value={mockUser.daysInApp} size="md" />
+          <HeroNumber value={daysInApp} size="md" />
         </GlassCard>
         <View style={{ width: spacing.sm }} />
         <GlassCard variant="glass" padding="lg" style={styles.stat}>
           <Eyebrow size="md">PLANS</Eyebrow>
-          <HeroNumber value={mockUser.transitionsCompleted} size="md" />
+          <HeroNumber value={plansCompleted} size="md" />
         </GlassCard>
         <View style={{ width: spacing.sm }} />
         <GlassCard variant="glass" padding="lg" style={styles.stat}>
           <Eyebrow size="md">ON PLAN</Eyebrow>
-          <HeroNumber value={mockUser.adherence} size="md" unit="%" />
+          <HeroNumber value={adherencePct} size="md" unit="%" />
         </GlassCard>
       </View>
 
