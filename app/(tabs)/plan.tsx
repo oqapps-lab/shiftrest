@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Alert } from 'react-native';
 import {
   Screen,
   Eyebrow,
@@ -173,7 +173,17 @@ export default function Plan() {
         </GlassCard>
       ))}
 
-      <Pressable style={{ marginTop: spacing.xl, alignSelf: 'center' }}>
+      <Pressable
+        style={{ marginTop: spacing.xl, alignSelf: 'center' }}
+        accessibilityRole="button"
+        accessibilityLabel="Why these times"
+        onPress={() => {
+          const explanation =
+            livePlan?.explanation?.trim() ||
+            "We anchor your sleep window to your shift end so the longest unbroken block lands when you're already winding down. Caffeine cutoff is set 6 hours before bed because that's roughly half-life. Melatonin (when used) goes 1–2 hours before sleep — early enough to nudge your circadian phase, not so late that you sleep through it.";
+          Alert.alert('Why these times?', explanation);
+        }}
+      >
         <Text variant="bodyMd" color="primary" weight="medium">
           Why these times?  →
         </Text>
