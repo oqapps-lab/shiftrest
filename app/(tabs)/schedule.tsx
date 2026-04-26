@@ -215,7 +215,7 @@ export default function Schedule() {
                   <View
                     style={[
                       styles.dot,
-                      { backgroundColor: dotColor[d.kind], opacity: d.kind === 'past' ? 0.3 : 1 },
+                      { backgroundColor: dotColor[d.kind], opacity: d.kind === 'past' ? 0.5 : 1 },
                       isToday && styles.dotToday,
                     ]}
                   />
