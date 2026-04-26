@@ -23,8 +23,15 @@ import {
   type SegmentOption,
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
-import { mockNotificationTypes } from '../../mock/user';
+import { mockNotificationTypes, mockPlan } from '../../mock/user';
 import { safeBack } from '../../lib/nav';
+import {
+  rescheduleNotifications,
+  requestPermissions,
+  type NotifPrefs,
+  type PlanTimes,
+} from '../../lib/notifications';
+import { useGeneratedPlan, formatPlanHour } from '../../lib/queries/plan';
 
 const STORAGE_KEY = 'shiftrest:notification-settings:v1';
 
@@ -55,6 +62,8 @@ const LEAD_OPTIONS: SegmentOption<LeadMinutes>[] = [
 export default function NotificationsSettings() {
   const [state, setState] = useState<NotifState>(DEFAULTS);
   const [hydrated, setHydrated] = useState(false);
+  const [scheduledCount, setScheduledCount] = useState<number | null>(null);
+  const { data: livePlan } = useGeneratedPlan();
 
   useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEY)
@@ -76,9 +85,55 @@ export default function NotificationsSettings() {
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => null);
   }, [state, hydrated]);
 
+  // Build PlanTimes from the live plan (when present) or mockPlan.
+  // Local "HH:MM" strings — what rescheduleNotifications() expects.
+  const planTimes: PlanTimes = {
+    sleep_start: formatPlanHour(livePlan?.sleep_start) || mockPlan.sleepStart
+      ? formatPlanHour(livePlan?.sleep_start) || `${String(mockPlan.sleepStart).padStart(2, '0')}:00`
+      : null,
+    caffeine_cutoff: formatPlanHour(livePlan?.caffeine_cutoff_at) || mockPlan.caffeineCutoff,
+    melatonin_at: formatPlanHour(livePlan?.melatonin_at) || (mockPlan.melatoninTime ?? null),
+  };
+
+  // After hydration, re-schedule whenever (state, planTimes) changes.
+  // If master is ON but permission hasn't been granted yet, request it
+  // proactively — handles both "first flip" and "first visit with master
+  // already on (default state)".
+  useEffect(() => {
+    if (!hydrated) return;
+    let cancelled = false;
+    (async () => {
+      if (state.master) {
+        await requestPermissions().catch(() => null);
+      }
+      const res = await rescheduleNotifications(state as NotifPrefs, planTimes);
+      if (cancelled) return;
+      setScheduledCount(res.scheduledCount);
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    hydrated,
+    state.master,
+    state.bedReminder,
+    state.bedReminderLead,
+    state.caffeineReminder,
+    state.melatoninReminder,
+    planTimes.sleep_start,
+    planTimes.caffeine_cutoff,
+    planTimes.melatonin_at,
+  ]);
+
   const update = (patch: Partial<NotifState>) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setState((prev) => ({ ...prev, ...patch }));
+
+    // First time master flips ON — prompt for permission.
+    if (patch.master === true && !state.master) {
+      requestPermissions().catch(() => null);
+    }
   };
 
   // When master is OFF, individual toggles render but disabled-looking.
@@ -211,11 +266,11 @@ export default function NotificationsSettings() {
         {"Reminders are scheduled locally and never leave the device."}
       </Text>
 
-      {/* TODO Stage 6.6: wire to expo-notifications.
-          - Notifications.requestPermissionsAsync() once when master flips ON
-          - Cancel + reschedule on every (state, mockPlan) change
-          - Use Notifications.scheduleNotificationAsync({ content, trigger })
-          - Persist scheduled identifiers to clear on re-open */}
+      {scheduledCount !== null && state.master && scheduledCount > 0 && (
+        <Text variant="bodyMd" color="primary" weight="medium" style={{ marginTop: spacing.sm }}>
+          {`${scheduledCount} reminder${scheduledCount === 1 ? '' : 's'} scheduled`}
+        </Text>
+      )}
     </Screen>
   );
 }
