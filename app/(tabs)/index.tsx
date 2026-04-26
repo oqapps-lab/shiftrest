@@ -22,39 +22,37 @@ import { mockUser, mockPlan, mockShiftBlocks, mockTransition } from '../../mock/
 import { countCompleted, formatHour, formatRelativeTime, formatStreak, getGreeting } from '../../lib/derive';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useActiveTransitionPlan } from '../../lib/queries';
+import { useGeneratedPlan, planHourAsFloat } from '../../lib/queries/plan';
 import { useAuth } from '../../lib/auth/store';
 
-// Event times come from mockPlan as floats → formatted once, distance
-// computed from the same source so they can never drift apart.
-const EVENTS = [
-  {
-    glyph: 'coffee' as const,
-    label: 'CAFFEINE CUTOFF',
-    hour: Number(mockPlan.caffeineCutoff.split(':')[0]),
-    tintBg: colors.sunriseGlow,
-    tintFg: 'sunriseDim' as const,
-  },
-  {
-    glyph: 'moon' as const,
-    label: 'MELATONIN',
-    hour: Number(mockPlan.melatoninTime.split(':')[0]),
-    tintBg: colors.duskGlow,
-    tintFg: 'duskDim' as const,
-  },
-  {
-    glyph: 'bed' as const,
-    label: 'SLEEP WINDOW',
-    hour: mockPlan.sleepStart,
-    tintBg: colors.primaryContainer,
-    tintFg: 'primary' as const,
-  },
-];
+// Event styles per slot. The "hour" for each slot comes from the live
+// plan when available, else mockPlan. Computed inside the component so
+// it tracks plan changes.
+const EVENT_STYLES = {
+  caffeine: { glyph: 'coffee' as const, label: 'CAFFEINE CUTOFF', tintBg: colors.sunriseGlow,    tintFg: 'sunriseDim' as const },
+  melatonin:{ glyph: 'moon'   as const, label: 'MELATONIN',       tintBg: colors.duskGlow,       tintFg: 'duskDim'    as const },
+  sleep:    { glyph: 'bed'    as const, label: 'SLEEP WINDOW',    tintBg: colors.primaryContainer, tintFg: 'primary'  as const },
+};
 
 export default function Home() {
   const { state: onboarding } = useOnboarding();
   const { user } = useAuth();
   const { data: streak } = useStreak();
   const { data: livePlan } = useActiveTransitionPlan();
+  const { data: generatedPlan } = useGeneratedPlan();
+
+  // Event hours: prefer live plan, fall back to mockPlan.
+  const caffeineHour = planHourAsFloat(generatedPlan?.caffeine_cutoff_at)
+    ?? Number(mockPlan.caffeineCutoff.split(':')[0]);
+  const melatoninHour = planHourAsFloat(generatedPlan?.melatonin_at)
+    ?? Number(mockPlan.melatoninTime.split(':')[0]);
+  const sleepStartHour = planHourAsFloat(generatedPlan?.sleep_start) ?? mockPlan.sleepStart;
+
+  const events = [
+    { ...EVENT_STYLES.caffeine,  hour: caffeineHour },
+    { ...EVENT_STYLES.melatonin, hour: melatoninHour },
+    { ...EVENT_STYLES.sleep,     hour: sleepStartHour },
+  ];
 
   // Streak: real DB row when signed-in user has one, else mockUser.streak.
   const streakValue = streak?.current_streak ?? mockUser.streak;
@@ -129,7 +127,7 @@ export default function Home() {
       <Eyebrow>NEXT</Eyebrow>
       <View style={{ height: spacing.md }} />
 
-      {EVENTS.map((e) => (
+      {events.map((e) => (
         <GlassCard key={e.label} variant="glass" padding="xxl" style={{ marginBottom: spacing.md }}>
           <View style={styles.eventRow}>
             <View style={[styles.eventIcon, { backgroundColor: e.tintBg }]}>

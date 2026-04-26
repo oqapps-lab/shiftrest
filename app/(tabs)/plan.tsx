@@ -16,49 +16,91 @@ import {
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockPlan } from '../../mock/user';
 import { formatDayMonth, formatHour, hoursBetween } from '../../lib/derive';
+import { useGeneratedPlan, planHourAsFloat, type PlanRecommendation } from '../../lib/queries/plan';
+import type { GlyphName } from '../../components/ui';
 
 const caffeineHour = Number(mockPlan.caffeineCutoff.split(':')[0]);
 const hoursBeforeSleep = hoursBetween(caffeineHour, mockPlan.sleepStart);
 
-const RECS = [
+interface UiRec {
+  glyph: GlyphName;
+  eyebrow: string;
+  hero: string;
+  body: string;
+  tintBg: string;
+  tintFg: 'sunriseDim' | 'duskDim' | 'primary';
+  locked?: boolean;
+}
+
+const FALLBACK_RECS: UiRec[] = [
   {
-    glyph: 'coffee' as const,
+    glyph: 'coffee',
     eyebrow: 'CAFFEINE',
     hero: `Last cup by ${mockPlan.caffeineCutoff}`,
     body: `${hoursBeforeSleep} h before sleep window. Your sensitivity is moderate.`,
     tintBg: colors.sunriseGlow,
-    tintFg: 'sunriseDim' as const,
+    tintFg: 'sunriseDim',
   },
   {
-    glyph: 'moon' as const,
+    glyph: 'moon',
     eyebrow: 'MELATONIN · PREMIUM',
     hero: `0.5 mg at ${mockPlan.melatoninTime}`,
     body: 'Phase advance dose · timed for today\'s day shift.',
     tintBg: colors.duskGlow,
-    tintFg: 'duskDim' as const,
+    tintFg: 'duskDim',
     locked: true,
   },
   {
-    glyph: 'sun' as const,
+    glyph: 'sun',
     eyebrow: 'LIGHT',
     hero: 'Seek 07:30 – 08:30',
     body: 'Bright outdoor light locks your circadian rhythm.',
     tintBg: colors.sunriseGlow,
-    tintFg: 'sunriseDim' as const,
+    tintFg: 'sunriseDim',
   },
   {
-    glyph: 'bed' as const,
+    glyph: 'bed',
     eyebrow: 'OPTIONAL NAP',
     hero: '20 min at 14:00',
     body: 'Cap at 20 min to avoid sleep-inertia fog.',
     tintBg: colors.primaryContainer,
-    tintFg: 'primary' as const,
+    tintFg: 'primary',
   },
 ];
+
+// Map LLM recommendation type → UI tint + glyph.
+const REC_STYLE: Record<PlanRecommendation['type'], { glyph: GlyphName; tintBg: string; tintFg: 'sunriseDim' | 'duskDim' | 'primary' }> = {
+  caffeine:    { glyph: 'coffee',  tintBg: colors.sunriseGlow,     tintFg: 'sunriseDim' },
+  melatonin:   { glyph: 'moon',    tintBg: colors.duskGlow,        tintFg: 'duskDim'    },
+  light:       { glyph: 'sun',     tintBg: colors.sunriseGlow,     tintFg: 'sunriseDim' },
+  nap:         { glyph: 'bed',     tintBg: colors.primaryContainer, tintFg: 'primary'   },
+  sleep_window:{ glyph: 'bed',     tintBg: colors.primaryContainer, tintFg: 'primary'   },
+  wind_down:   { glyph: 'sparkle', tintBg: colors.duskGlow,        tintFg: 'duskDim'    },
+};
 
 export default function Plan() {
   const [day, setDay] = useState(1); // 0=yesterday, 1=today, 2=tomorrow
   const pagerLabels = ['YESTERDAY', `TODAY · ${formatDayMonth()}`, 'TOMORROW'];
+  const { data: livePlan } = useGeneratedPlan();
+
+  // RECS: prefer live plan recommendations, fallback to mocks.
+  const liveRecs = livePlan?.metadata?.recommendations ?? null;
+  const recs: UiRec[] = liveRecs && liveRecs.length > 0
+    ? liveRecs.map((r) => ({
+        ...REC_STYLE[r.type],
+        eyebrow: r.locked ? `${r.eyebrow} · PREMIUM` : r.eyebrow,
+        hero: r.hero,
+        body: r.body,
+        locked: r.locked,
+      }))
+    : FALLBACK_RECS;
+
+  // Timeline values: derive from live plan if present.
+  const sleepStartHour =
+    planHourAsFloat(livePlan?.sleep_start) ?? mockPlan.sleepStart;
+  const sleepEndHour =
+    planHourAsFloat(livePlan?.sleep_end) ?? mockPlan.sleepEnd;
+  const nowHour = mockPlan.nowHour;
 
   return (
     <Screen orbs="normal" scroll>
@@ -90,18 +132,18 @@ export default function Plan() {
 
       <View style={{ alignItems: 'center', marginBottom: spacing.huge }}>
         <TimelineRing
-          nowHour={mockPlan.nowHour}
-          sleepStart={mockPlan.sleepStart}
-          sleepEnd={mockPlan.sleepEnd}
+          nowHour={nowHour}
+          sleepStart={sleepStartHour}
+          sleepEnd={sleepEndHour}
           shiftStart={mockPlan.shiftStart}
           shiftEnd={mockPlan.shiftEnd}
           size={280}
           label="NOW"
-          centerLabel={formatHour(mockPlan.nowHour)}
+          centerLabel={formatHour(nowHour)}
         />
       </View>
 
-      {RECS.map((r) => (
+      {recs.map((r) => (
         <GlassCard
           key={r.hero}
           variant="glass"

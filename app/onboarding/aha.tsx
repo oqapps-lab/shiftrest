@@ -21,12 +21,19 @@ import { spacing, radii, colors } from '../../constants/tokens';
 import { mockUser, mockPlan } from '../../mock/user';
 import { formatHour, formatHourRange, hoursBetween } from '../../lib/derive';
 import { useOnboarding } from '../../lib/onboarding/store';
+import { useGeneratedPlan, planHourAsFloat, formatPlanHour } from '../../lib/queries/plan';
 
 export default function Aha() {
   const { state: onboarding } = useOnboarding();
-  const caffeineHour = Number(mockPlan.caffeineCutoff.split(':')[0]);
-  const hoursBeforeSleep = hoursBetween(caffeineHour, mockPlan.sleepStart);
+  const { data: livePlan } = useGeneratedPlan();
   const displayName = (onboarding.displayName?.trim() || mockUser.name).toUpperCase();
+
+  // Prefer live plan times when present, fall back to mockPlan.
+  const sleepStartHour = planHourAsFloat(livePlan?.sleep_start) ?? mockPlan.sleepStart;
+  const sleepEndHour = planHourAsFloat(livePlan?.sleep_end) ?? mockPlan.sleepEnd;
+  const caffeineCutoffStr = formatPlanHour(livePlan?.caffeine_cutoff_at) || mockPlan.caffeineCutoff;
+  const caffeineHourValue = Number(caffeineCutoffStr.split(':')[0]);
+  const hoursBeforeSleep = hoursBetween(caffeineHourValue, sleepStartHour);
 
   return (
     <Screen
@@ -50,8 +57,8 @@ export default function Aha() {
       <View style={{ alignItems: 'center', marginBottom: spacing.huge }}>
         <TimelineRing
           nowHour={mockPlan.nowHour}
-          sleepStart={mockPlan.sleepStart}
-          sleepEnd={mockPlan.sleepEnd}
+          sleepStart={sleepStartHour}
+          sleepEnd={sleepEndHour}
           shiftStart={mockPlan.shiftStart}
           shiftEnd={mockPlan.shiftEnd}
           size={280}
@@ -67,7 +74,7 @@ export default function Aha() {
           </View>
           <View style={{ flex: 1 }}>
             <Eyebrow>SLEEP WINDOW</Eyebrow>
-            <HeroNumber value={formatHourRange(mockPlan.sleepStart, mockPlan.sleepEnd)} size="md" style={{ marginTop: 2 }} />
+            <HeroNumber value={formatHourRange(sleepStartHour, sleepEndHour)} size="md" style={{ marginTop: 2 }} />
           </View>
         </View>
       </GlassCard>
@@ -79,7 +86,7 @@ export default function Aha() {
           </View>
           <View style={{ flex: 1 }}>
             <Eyebrow>CAFFEINE CUTOFF</Eyebrow>
-            <HeroNumber value={mockPlan.caffeineCutoff} size="md" style={{ marginTop: 2 }} />
+            <HeroNumber value={caffeineCutoffStr} size="md" style={{ marginTop: 2 }} />
             <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 4 }}>
               {`${hoursBeforeSleep} hours before sleep · gentle on sensitive types`}
             </Text>
