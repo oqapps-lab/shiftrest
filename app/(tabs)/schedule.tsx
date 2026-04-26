@@ -8,6 +8,7 @@
 
 import React from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import {
   Screen,
   Eyebrow,
@@ -111,12 +112,29 @@ function buildMockGrid(year: number, month: number): Cell[] {
 export default function Schedule() {
   const { user } = useAuth();
 
-  // Render the current month. Stage 6.7 will add prev/next chevrons that
-  // shift `viewYear` / `viewMonth` state.
-  const today = new Date();
-  const viewYear = today.getFullYear();
-  const viewMonth = today.getMonth();
+  const today = React.useMemo(() => new Date(), []);
+  const [viewYear, setViewYear] = React.useState(today.getFullYear());
+  const [viewMonth, setViewMonth] = React.useState(today.getMonth());
 
+  // ±1 month with year rollover at Dec/Jan.
+  const shiftMonth = React.useCallback((delta: 1 | -1) => {
+    Haptics.selectionAsync();
+    setViewYear((y) => {
+      const flat = y * 12 + viewMonth + delta;
+      return Math.floor(flat / 12);
+    });
+    setViewMonth((m) => ((m + delta + 12) % 12));
+  }, [viewMonth]);
+
+  const isCurrentMonth = viewYear === today.getFullYear() && viewMonth === today.getMonth();
+  const goToToday = React.useCallback(() => {
+    if (isCurrentMonth) return;
+    Haptics.selectionAsync();
+    setViewYear(today.getFullYear());
+    setViewMonth(today.getMonth());
+  }, [isCurrentMonth, today]);
+
+  const viewedDate = React.useMemo(() => new Date(viewYear, viewMonth, 1), [viewYear, viewMonth]);
   const monthStart = localIso(new Date(viewYear, viewMonth, 1));
   const monthEnd = localIso(new Date(viewYear, viewMonth + 1, 0));
 
@@ -149,17 +167,29 @@ export default function Schedule() {
       }
     >
       <View style={styles.headerRow}>
-        <Pressable hitSlop={12}>
+        <Pressable
+          hitSlop={12}
+          onPress={() => shiftMonth(-1)}
+          accessibilityRole="button"
+          accessibilityLabel="Previous month"
+        >
           <Glyph name="chevronLeft" size={24} color="inkMuted" />
         </Pressable>
-        <Eyebrow>{formatMonthYear(today)}</Eyebrow>
-        <Pressable hitSlop={12}>
+        <Pressable onPress={goToToday} hitSlop={8} accessibilityRole="button" accessibilityLabel={`Viewing ${formatMonthYear(viewedDate)}, tap to jump to today`}>
+          <Eyebrow>{formatMonthYear(viewedDate)}</Eyebrow>
+        </Pressable>
+        <Pressable
+          hitSlop={12}
+          onPress={() => shiftMonth(1)}
+          accessibilityRole="button"
+          accessibilityLabel="Next month"
+        >
           <Glyph name="chevronRight" size={24} color="inkMuted" />
         </Pressable>
       </View>
 
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.xxxl }}>
-        <SerifHero>Your next four weeks.</SerifHero>
+        <SerifHero>{isCurrentMonth ? 'Your next four weeks.' : formatMonthYear(viewedDate) + '.'}</SerifHero>
       </View>
 
       {/* Weekday header */}
