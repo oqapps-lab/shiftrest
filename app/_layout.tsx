@@ -8,7 +8,18 @@ import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { Stack } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { View } from 'react-native';
+import { View, LogBox } from 'react-native';
+
+// Silence the dev-mode red toast for transient network failures during
+// Edge Function cold starts. The hooks already fall back to mock data;
+// the toast was confusing in QA. Filter ONLY the specific message —
+// other network errors still surface.
+if (__DEV__) {
+  LogBox.ignoreLogs([
+    'Network request failed',
+    /TypeError:\s*Network request failed/,
+  ]);
+}
 import { useAppFonts } from '../hooks/useAppFonts';
 import { colors } from '../constants/tokens';
 import { AuthProvider } from '../lib/auth/store';

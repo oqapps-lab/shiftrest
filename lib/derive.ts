@@ -73,6 +73,35 @@ export function formatStreak(streak: number): string {
   return `${streak} DAY${streak === 1 ? '' : 'S'}`;
 }
 
+/**
+ * Clamp a display name to fit comfortably in headers / greetings.
+ * Defaults to 24 chars, breaking at the nearest space when possible to
+ * avoid mid-word ellipsis. Returns the trimmed source if it already fits.
+ */
+export function clampDisplayName(raw: string | null | undefined, max = 24): string {
+  if (!raw) return '';
+  const s = raw.trim();
+  if (s.length <= max) return s;
+  // Prefer breaking at a space within the budget.
+  const slice = s.slice(0, max);
+  const lastSpace = slice.lastIndexOf(' ');
+  if (lastSpace > max * 0.6) return `${slice.slice(0, lastSpace).trimEnd()}…`;
+  return `${slice.trimEnd()}…`;
+}
+
+/**
+ * Reduce a multi-word display name to its first word (typical: first
+ * name) and optionally clamp. Useful in tight greeting eyebrows.
+ *   "ALEKSANDRA KONSTANTINOPOLUVSKAYA …" → "ALEKSANDRA"
+ *   "Marina"                              → "Marina"
+ *   "Mary-Anne O'Connor"                  → "Mary-Anne"  (hyphen kept)
+ */
+export function firstName(raw: string | null | undefined, max = 16): string {
+  if (!raw) return '';
+  const first = raw.trim().split(/\s+/)[0] ?? '';
+  return clampDisplayName(first, max);
+}
+
 /** Count `done: true` across a day's steps. */
 export function countCompleted<T extends { done: boolean }>(steps: readonly T[]): number {
   return steps.filter((s) => s.done).length;

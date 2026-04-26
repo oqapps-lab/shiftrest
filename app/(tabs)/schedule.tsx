@@ -157,6 +157,7 @@ export default function Schedule() {
     <Screen
       orbs="subtle"
       scroll
+      footerClearance={200}
       floatingFooter={
         <PillCTA
           variant="primary"

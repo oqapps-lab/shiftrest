@@ -16,7 +16,7 @@ import {
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockUser, mockProfessions } from '../../mock/user';
-import { formatTrialRemaining } from '../../lib/derive';
+import { formatTrialRemaining, clampDisplayName } from '../../lib/derive';
 import { useAuth } from '../../lib/auth/store';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useProfileStats, useSubscription } from '../../lib/queries';
@@ -47,11 +47,13 @@ export default function Profile() {
   //   real auth user_metadata.display_name →
   //   email local part →
   //   mockUser.name (fallback so Stage-5 demo data still shows)
-  const displayName =
-    (onboarding.displayName?.trim() ||
+  // Clamp to 24 chars so the SerifHero stays on ≤2 lines.
+  const displayName = clampDisplayName(
+    onboarding.displayName?.trim() ||
       (user?.user_metadata as { display_name?: string } | undefined)?.display_name ||
       user?.email?.split('@')[0] ||
-      mockUser.name);
+      mockUser.name,
+  );
 
   // Profession label preference: pick from mockProfessions catalogue when
   // user picked one in S02, else fall back to mockUser.profession label.

@@ -112,17 +112,29 @@ export function useGeneratedPlan(date: string = todayLocalIso()): QueryResult<Sl
           return;
         }
 
-        // 2. No cache → invoke generator.
-        const { data: invokeData, error: invokeErr } = await supabase!.functions.invoke(
-          'plan-generator',
-          { body: { date } },
-        );
+        // 2. No cache → invoke generator. Wrap in try/catch separately
+        // so a transient network failure (cold start, offline) doesn't
+        // bubble up to LogBox; consumers gracefully fall back to mock.
+        let invokeData: { plan?: SleepPlanRow } | undefined;
+        let invokeErr: unknown = null;
+        try {
+          const result = await supabase!.functions.invoke('plan-generator', {
+            body: { date },
+          });
+          invokeData = result.data as { plan?: SleepPlanRow } | undefined;
+          invokeErr = result.error;
+        } catch (e) {
+          invokeErr = e;
+        }
 
         if (!alive) return;
         if (invokeErr) {
-          // Common case during Stage 6.6 rollout: function not yet deployed.
-          // Surface error but let consumer fall back to mockPlan.
-          setError(invokeErr instanceof Error ? invokeErr : new Error(String(invokeErr)));
+          // Don't promote network errors to React state — they fire LogBox
+          // toasts in dev. Just log to console and fall back silently.
+          if (__DEV__) {
+            // eslint-disable-next-line no-console
+            console.warn('[plan-generator] invoke failed, using fallback', invokeErr);
+          }
           setData(null);
           setLoading(false);
           return;

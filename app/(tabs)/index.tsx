@@ -19,7 +19,7 @@ import {
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockUser, mockPlan, mockShiftBlocks, mockTransition } from '../../mock/user';
-import { countCompleted, formatHour, formatRelativeTime, formatStreak, getGreeting } from '../../lib/derive';
+import { countCompleted, formatHour, formatRelativeTime, formatStreak, getGreeting, firstName } from '../../lib/derive';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useActiveTransitionPlan } from '../../lib/queries';
 import { useGeneratedPlan, planHourAsFloat } from '../../lib/queries/plan';
@@ -72,12 +72,14 @@ export default function Home() {
   const totalToday = livePlan ? liveDay1Steps.length : todayMock.steps.length;
 
   // Mirror Profile's fallback chain so the greeting never says "MARINA"
-  // when the real signed-in user has a different display_name.
-  const displayName = (
+  // when the real signed-in user has a different display_name. Use just
+  // the first name in the greeting eyebrow so it doesn't push the streak
+  // chip behind the decorative orb when display name is long (H3).
+  const displayName = firstName(
     onboarding.displayName?.trim() ||
-    (user?.user_metadata as { display_name?: string } | undefined)?.display_name ||
-    user?.email?.split('@')[0] ||
-    mockUser.name
+      (user?.user_metadata as { display_name?: string } | undefined)?.display_name ||
+      user?.email?.split('@')[0] ||
+      mockUser.name,
   ).toUpperCase();
 
   return (

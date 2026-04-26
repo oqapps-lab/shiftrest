@@ -1,7 +1,7 @@
 /**
  * S53 — Subscription screen. Trial countdown + plan summary + management
- * actions. Adapty wiring lands in Stage 7; for now we read from
- * mockUser.subscription + mockUser.trialEndsAt.
+ * actions. Reads from public.subscriptions via useSubscription(); falls back
+ * to mockUser only when anonymous (demo mode).
  */
 
 import React from 'react';
@@ -20,22 +20,61 @@ import { colors, radii, spacing } from '../../constants/tokens';
 import { mockUser } from '../../mock/user';
 import { formatTrialRemaining } from '../../lib/derive';
 import { safeBack } from '../../lib/nav';
+import { useAuth } from '../../lib/auth/store';
+import { useSubscription } from '../../lib/queries';
+
+type DisplayStatus = 'free' | 'trial' | 'active' | 'cancelled' | 'expired' | 'grace';
 
 export default function Subscription() {
-  const status = mockUser.subscription;
-  const trialLine = formatTrialRemaining(mockUser.trialEndsAt);
+  const { user } = useAuth();
+  const { data: sub } = useSubscription();
 
-  const headlineByStatus: Record<typeof mockUser.subscription, string> = {
+  // Map real DB row → display key. Anonymous demo mode → mock.
+  let status: DisplayStatus;
+  let subtitle: string;
+  if (!user) {
+    status = mockUser.subscription === 'premium' ? 'active' : (mockUser.subscription as DisplayStatus);
+    subtitle =
+      mockUser.subscription === 'trial'
+        ? formatTrialRemaining(mockUser.trialEndsAt)
+        : mockUser.subscription === 'premium'
+        ? 'Renews automatically'
+        : 'Unlock the full plan with a 7-day trial';
+  } else if (sub?.status === 'trial' && sub.trial_end) {
+    status = 'trial';
+    subtitle = formatTrialRemaining(sub.trial_end);
+  } else if (sub?.status === 'active') {
+    status = 'active';
+    subtitle =
+      sub.plan === 'premium_annual'
+        ? 'Premium · annual · renews automatically'
+        : 'Premium · monthly · renews automatically';
+  } else if (sub?.status === 'grace_period') {
+    status = 'grace';
+    subtitle = 'Payment retrying — keep an eye on your inbox';
+  } else if (sub?.status === 'cancelled') {
+    status = 'cancelled';
+    subtitle = sub.current_period_end
+      ? `Premium until ${new Date(sub.current_period_end).toLocaleDateString()}`
+      : 'Cancelled — you keep premium until period end';
+  } else if (sub?.status === 'expired') {
+    status = 'expired';
+    subtitle = 'Resubscribe to keep your insights';
+  } else {
+    status = 'free';
+    subtitle = 'Unlock the full plan with a 7-day trial';
+  }
+
+  const headlineByStatus: Record<DisplayStatus, string> = {
     free: 'Free tier',
     trial: 'Trial in progress',
-    premium: 'Premium · active',
-  } as const;
+    active: 'Premium · active',
+    grace: 'Payment retrying',
+    cancelled: 'Cancelled',
+    expired: 'Premium expired',
+  };
 
-  const subtitleByStatus: Record<typeof mockUser.subscription, string> = {
-    free: 'Unlock the full plan with a 7-day trial',
-    trial: trialLine,
-    premium: 'Renews automatically',
-  } as const;
+  const isPremiumLike = status === 'active' || status === 'trial' || status === 'grace';
 
   return (
     <Screen
@@ -43,10 +82,10 @@ export default function Subscription() {
       scroll
       tabBarClearance={false}
       floatingFooter={
-        status === 'free' ? (
+        !isPremiumLike ? (
           <PillCTA
             variant="primary"
-            label="Start 7-day trial"
+            label={status === 'free' ? 'Start 7-day trial' : 'Resubscribe'}
             onPress={() => router.push('/paywall')}
           />
         ) : (
@@ -85,7 +124,7 @@ export default function Subscription() {
         padding="xxl"
         style={{ marginTop: spacing.huge }}
       >
-        <Eyebrow color={status === 'premium' ? 'primary' : 'inkMuted'}>
+        <Eyebrow color={isPremiumLike ? 'primary' : 'inkMuted'}>
           {headlineByStatus[status].toUpperCase()}
         </Eyebrow>
         <Text
@@ -95,7 +134,7 @@ export default function Subscription() {
           color="ink"
           style={{ marginTop: spacing.sm }}
         >
-          {subtitleByStatus[status]}
+          {subtitle}
         </Text>
       </GlassCard>
 
