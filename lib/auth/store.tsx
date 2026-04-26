@@ -85,7 +85,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: displayName ? { data: { display_name: displayName } } : undefined,
+        options: {
+          emailRedirectTo: 'shiftrest://auth/confirm',
+          ...(displayName ? { data: { display_name: displayName } } : {}),
+        },
       });
       return { error };
     },
@@ -94,7 +97,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const resetPassword = useCallback(async (email: string): Promise<AuthResult> => {
     if (!supabase) return NOT_CONFIGURED;
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'shiftrest://auth/confirm',
+    });
     return { error };
   }, []);
 
