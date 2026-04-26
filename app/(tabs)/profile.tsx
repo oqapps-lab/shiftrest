@@ -19,7 +19,7 @@ import { mockUser, mockProfessions } from '../../mock/user';
 import { formatTrialRemaining } from '../../lib/derive';
 import { useAuth } from '../../lib/auth/store';
 import { useOnboarding } from '../../lib/onboarding/store';
-import { useStreak, useProfileStats } from '../../lib/queries';
+import { useStreak, useProfileStats, useSubscription } from '../../lib/queries';
 
 const STREAK_LENGTH = 14;
 const STREAK_DOTS = Array.from({ length: STREAK_LENGTH }).map((_, i) => {
@@ -32,6 +32,7 @@ export default function Profile() {
   const { state: onboarding, reset: resetOnboarding } = useOnboarding();
   const { data: streak } = useStreak();
   const { data: stats } = useProfileStats();
+  const { data: subscription } = useSubscription();
   const streakValue = streak?.current_streak ?? mockUser.streak;
 
   // For signed-in users always show their real numbers (0 is honest).
@@ -58,16 +59,23 @@ export default function Profile() {
     mockProfessions.find((p) => p.id === onboarding.profession)?.title ??
     mockUser.profession;
 
-  // Anonymous users never have a trial — they're on the free tier
-  // until they sign up. Once signed in, we still read mockUser until
-  // Adapty (Stage 7) provides the real subscription state.
-  const subscriptionSubtitle = !user
-    ? 'Free tier'
-    : mockUser.subscription === 'trial'
-    ? `Trial · ${formatTrialRemaining(mockUser.trialEndsAt)}`
-    : mockUser.subscription === 'premium'
-    ? 'Premium · active'
-    : 'Free tier';
+  // Subscription subtitle: prefer real DB row over mock. Anonymous users
+  // are always on the free tier until signup (mockUser irrelevant).
+  let subscriptionSubtitle: string;
+  if (!user) {
+    subscriptionSubtitle = 'Free tier';
+  } else if (subscription?.status === 'trial' && subscription.trial_end) {
+    subscriptionSubtitle = `Trial · ${formatTrialRemaining(subscription.trial_end)}`;
+  } else if (subscription?.status === 'active') {
+    subscriptionSubtitle =
+      subscription.plan === 'premium_annual' ? 'Premium · annual' : 'Premium · monthly';
+  } else if (subscription?.status === 'grace_period') {
+    subscriptionSubtitle = 'Premium · payment retrying';
+  } else if (subscription?.status === 'cancelled' || subscription?.status === 'expired') {
+    subscriptionSubtitle = 'Free tier · upgrade to keep insights';
+  } else {
+    subscriptionSubtitle = 'Free tier';
+  }
 
   const accountRow = user
     ? {

@@ -246,6 +246,54 @@ export function useActiveTransitionPlan(): QueryResult<TransitionPlanWithSteps |
   return { data, loading, error, refetch };
 }
 
+// ─── Subscription state ────────────────────────────────────────────────────
+
+export type SubscriptionStatus = 'free' | 'trial' | 'active' | 'expired' | 'cancelled' | 'grace_period';
+export type SubscriptionPlan = 'free' | 'premium_monthly' | 'premium_annual';
+
+export interface SubscriptionRow {
+  status: SubscriptionStatus;
+  plan: SubscriptionPlan;
+  trial_start: string | null;
+  trial_end: string | null;
+  current_period_end: string | null;
+}
+
+export function useSubscription(): QueryResult<SubscriptionRow | null> {
+  const { user } = useAuth();
+  const [data, setData] = useState<SubscriptionRow | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [tick, setTick] = useState(0);
+
+  const refetch = useCallback(() => setTick((t) => t + 1), []);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase || !user?.id) {
+      setData(null);
+      return;
+    }
+    let alive = true;
+    setLoading(true);
+    supabase
+      .from('subscriptions')
+      .select('status, plan, trial_start, trial_end, current_period_end')
+      .eq('user_id', user.id)
+      .maybeSingle()
+      .then(({ data: row, error: err }) => {
+        if (!alive) return;
+        setData((row as SubscriptionRow | null) ?? null);
+        setError(err ?? null);
+        setLoading(false);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [user?.id, tick]);
+
+  return { data, loading, error, refetch };
+}
+
 // ─── Profile stats (DAYS / PLANS / ON PLAN) ─────────────────────────────────
 
 export interface ProfileStats {
