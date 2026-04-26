@@ -95,7 +95,7 @@ export function ShiftBar({ blocks, height = 14, showHourTicks = true, style }: P
         <View style={styles.ticks}>
           {[0, 6, 12, 18, 24].map((h) => (
             <Text key={h} variant="mono" family="mono" color="inkMuted">
-              {h === 24 ? '00' : String(h).padStart(2, '0')}
+              {String(h).padStart(2, '0')}
             </Text>
           ))}
         </View>
