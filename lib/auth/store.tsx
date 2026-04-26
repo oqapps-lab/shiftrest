@@ -22,6 +22,7 @@ import { Platform } from 'react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import type { Session, User, AuthError } from '@supabase/supabase-js';
 import { supabase, isSupabaseConfigured } from '../supabase';
+import { logEvent } from '../events';
 
 type AuthResult = { error: AuthError | Error | null };
 
@@ -77,6 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     async (email: string, password: string): Promise<AuthResult> => {
       if (!supabase) return NOT_CONFIGURED;
       const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (!error) logEvent('signed_in', { provider: 'password' });
       return { error };
     },
     [],
@@ -93,6 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           ...(displayName ? { data: { display_name: displayName } } : {}),
         },
       });
+      if (!error) logEvent('signed_up', { provider: 'password' });
       return { error };
     },
     [],
@@ -135,6 +138,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         token: credential.identityToken,
         ...(fullName ? { options: { data: { display_name: fullName } } } : {}),
       } as Parameters<typeof supabase.auth.signInWithIdToken>[0]);
+      if (!error) logEvent('signed_in', { provider: 'apple' });
       return { error };
     } catch (e) {
       // User cancelled the sheet — silent no-op so we don't show a scary error.
@@ -156,6 +160,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(async (): Promise<AuthResult> => {
     if (!supabase) return NOT_CONFIGURED;
+    // Log first — after signOut() the session is gone and RLS rejects the insert.
+    await logEvent('signed_out');
     const { error } = await supabase.auth.signOut();
     return { error };
   }, []);

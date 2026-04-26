@@ -8,9 +8,10 @@
  */
 
 import React, { useState } from 'react';
-import { View, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet, Platform } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
+import * as AppleAuthentication from 'expo-apple-authentication';
 import {
   Screen,
   HeroNumber,
@@ -25,13 +26,26 @@ import { useAuth } from '../../lib/auth/store';
 import { safeBack } from '../../lib/nav';
 
 export default function Signup() {
-  const { signUpWithPassword, configured } = useAuth();
+  const { signUpWithPassword, signInWithApple, configured } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState<null | 'session' | 'check_email'>(null);
+
+  const onApple = async () => {
+    setError(null);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    const { error: err } = await signInWithApple();
+    if (err) {
+      setError(err.message);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      return;
+    }
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    router.replace('/(tabs)');
+  };
 
   const canSubmit = email.includes('@') && password.length >= 6 && !loading;
 
@@ -121,6 +135,25 @@ export default function Signup() {
       >
         {"Sync your plan across devices and never lose your streak."}
       </Text>
+
+      {Platform.OS === 'ios' && configured && (
+        <View style={{ marginBottom: spacing.xxxl }}>
+          <AppleAuthentication.AppleAuthenticationButton
+            buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_UP}
+            buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+            cornerRadius={28}
+            style={styles.appleBtn}
+            onPress={onApple}
+          />
+          <View style={styles.divider}>
+            <View style={styles.dividerLine} />
+            <Text variant="labelMd" color="inkMuted" uppercase weight="medium" style={{ marginHorizontal: spacing.md }}>
+              OR
+            </Text>
+            <View style={styles.dividerLine} />
+          </View>
+        </View>
+      )}
 
       <TextField
         label="NAME (OPTIONAL)"
@@ -230,5 +263,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: spacing.huge,
+  },
+  appleBtn: {
+    width: '100%',
+    height: 56,
+  },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: spacing.lg,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: colors.surfaceLow,
   },
 });

@@ -15,6 +15,7 @@ import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logEvent } from './events';
 
 const TRACKED_IDS_KEY = 'shiftrest:notif-scheduled-ids:v1';
 
@@ -71,6 +72,11 @@ export async function requestPermissions(): Promise<boolean> {
       allowSound: true,
     },
   });
+  if (status === 'granted') {
+    logEvent('notif_permission_granted');
+  } else {
+    logEvent('notif_permission_denied', { status });
+  }
   return status === 'granted';
 }
 
@@ -213,6 +219,7 @@ export async function rescheduleNotifications(
   }
 
   await saveTrackedIds(newIds);
+  logEvent('notifs_scheduled', { count: newIds.length });
   return { granted: true, scheduledCount: newIds.length };
 }
 
