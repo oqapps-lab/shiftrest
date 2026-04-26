@@ -84,7 +84,10 @@ interface OpenAiPlanResponse {
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
-const OPENAI_MODEL = 'gpt-4o-mini';
+// Audited 2026-04-26 against /v1/models — gpt-5.4-mini is the latest
+// small chat-capable model with structured-output support. When a newer
+// 5.5 / 6.x lands, swap here (and re-confirm pricing in cost_cents calc).
+const OPENAI_MODEL = 'gpt-5.4-mini';
 const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
 
 const SYSTEM_PROMPT = `You are a sleep medicine expert advising shift workers (nurses, firefighters, factory workers).
@@ -344,8 +347,10 @@ serve(async (req) => {
 
   const tokensInput = openaiJson.usage?.prompt_tokens ?? 0;
   const tokensOutput = openaiJson.usage?.completion_tokens ?? 0;
-  // gpt-4o-mini: $0.150/M input + $0.600/M output → cents = (in*0.000015 + out*0.00006)*100
-  const costCents = Math.ceil(tokensInput * 0.0000015 + tokensOutput * 0.000006);
+  // gpt-5.4-mini pricing (verify on https://platform.openai.com/docs/pricing
+  // before launch). Conservative placeholder roughly = 5.4-mini ≈ $0.25/M in,
+  // $1.00/M out → cents per call = ceil(in*0.0000025 + out*0.00001).
+  const costCents = Math.ceil(tokensInput * 0.0000025 + tokensOutput * 0.00001);
 
   // Log AI request.
   const { data: aiReq } = await adminClient
