@@ -22,10 +22,6 @@ import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useProfileStats, useSubscription } from '../../lib/queries';
 
 const STREAK_LENGTH = 14;
-const STREAK_DOTS = Array.from({ length: STREAK_LENGTH }).map((_, i) => {
-  const ratio = (i + 1) / STREAK_LENGTH;
-  return { opacity: 0.25 + ratio * 0.75 };
-});
 
 export default function Profile() {
   const { user, signOut } = useAuth();
@@ -169,19 +165,27 @@ export default function Profile() {
 
       <Eyebrow>{`${streakValue}-DAY STREAK`}</Eyebrow>
       <View style={styles.streakRow}>
-        {STREAK_DOTS.map((d, i) => (
-          <View
-            key={i}
-            style={[
-              styles.streakDot,
-              {
-                backgroundColor: colors.primary,
-                opacity: d.opacity,
-              },
-              i === STREAK_DOTS.length - 1 && styles.streakDotActive,
-            ]}
-          />
-        ))}
+        {Array.from({ length: STREAK_LENGTH }).map((_, i) => {
+          // Right-most dot = today; earliest = STREAK_LENGTH days ago.
+          // Filled when within current streak; outlined otherwise.
+          const dayIndex = STREAK_LENGTH - 1 - i;
+          const filled = dayIndex < streakValue;
+          const isToday = i === STREAK_LENGTH - 1;
+          // Subtle gradient on filled dots so they read as "history" not flat.
+          const opacity = filled ? 0.5 + (i / STREAK_LENGTH) * 0.5 : 1;
+          return (
+            <View
+              key={i}
+              style={[
+                styles.streakDot,
+                filled
+                  ? { backgroundColor: colors.primary, opacity }
+                  : styles.streakDotEmpty,
+                filled && isToday && styles.streakDotActive,
+              ]}
+            />
+          );
+        })}
       </View>
 
       <View style={{ height: spacing.huge }} />
@@ -258,6 +262,11 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 8,
+  },
+  streakDotEmpty: {
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: colors.inkGhost,
   },
   streakDotActive: {
     shadowColor: colors.primary,
