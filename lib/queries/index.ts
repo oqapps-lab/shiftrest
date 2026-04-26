@@ -20,6 +20,7 @@ export const EVENTS = {
   streakChanged: 'streak:changed',
   transitionChanged: 'transition:changed',
   profileStatsChanged: 'profile-stats:changed',
+  subscriptionChanged: 'subscription:changed',
 } as const;
 
 export function emitChange(event: (typeof EVENTS)[keyof typeof EVENTS]) {
@@ -259,6 +260,29 @@ export interface SubscriptionRow {
   current_period_end: string | null;
 }
 
+/**
+ * Activate a self-service 7-day trial via RPC. Stage 6 placeholder until
+ * Adapty (Stage 7) replaces this with a real purchase flow.
+ *
+ * The RPC `public.activate_self_service_trial` runs SECURITY DEFINER and
+ * only flips the row when current status='free' — prevents abuse
+ * (re-arming after expiry, jumping to 'active') without service_role.
+ *
+ * Callers should `emitChange(EVENTS.subscriptionChanged)` after success
+ * so the UI updates without waiting for the next refetch tick.
+ */
+export async function startTrial(plan: SubscriptionPlan = 'premium_monthly'): Promise<{ error: Error | null }> {
+  if (!isSupabaseConfigured || !supabase) {
+    return { error: new Error('Supabase is not configured.') };
+  }
+  if (plan === 'free') {
+    return { error: new Error('free is not a trial plan') };
+  }
+
+  const { error } = await supabase.rpc('activate_self_service_trial', { target_plan: plan });
+  return { error };
+}
+
 export function useSubscription(): QueryResult<SubscriptionRow | null> {
   const { user } = useAuth();
   const [data, setData] = useState<SubscriptionRow | null>(null);
@@ -290,6 +314,11 @@ export function useSubscription(): QueryResult<SubscriptionRow | null> {
       alive = false;
     };
   }, [user?.id, tick]);
+
+  useEffect(() => {
+    const sub = DeviceEventEmitter.addListener(EVENTS.subscriptionChanged, refetch);
+    return () => sub.remove();
+  }, [refetch]);
 
   return { data, loading, error, refetch };
 }

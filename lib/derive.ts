@@ -31,12 +31,17 @@ export function formatRelativeTime(nowHour: number, targetHour: number): string 
 }
 
 /**
- * "6 days left", "1 day left", "today", "expired" — from ISO date string.
+ * "6 days left", "1 day left", "today", "expired".
+ * Accepts both 'YYYY-MM-DD' (legacy mock) and full ISO timestamps
+ * ('2026-05-03T07:41:05.357Z' — what the DB stores).
  */
 export function formatTrialRemaining(trialEndsAt: string, today: Date = new Date()): string {
-  const end = new Date(trialEndsAt + 'T00:00:00');
+  const isoLike = trialEndsAt.includes('T') ? trialEndsAt : `${trialEndsAt}T00:00:00`;
+  const end = new Date(isoLike);
+  if (Number.isNaN(end.getTime())) return 'expired';
+
   const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  const days = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+  const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
   if (days < 0) return 'expired';
   if (days === 0) return 'ends today';
   if (days === 1) return '1 day left';

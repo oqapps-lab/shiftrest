@@ -21,6 +21,9 @@ import {
 import { colors, spacing, radii } from '../constants/tokens';
 import { mockUser } from '../mock/user';
 import { useOnboarding } from '../lib/onboarding/store';
+import { useAuth } from '../lib/auth/store';
+import { startTrial, emitChange, EVENTS } from '../lib/queries';
+import { logEvent } from '../lib/events';
 
 const VALUE_BULLETS = [
   { glyph: 'bed' as const, text: 'Sleep window tuned to your rotation' },
@@ -31,8 +34,34 @@ const VALUE_BULLETS = [
 
 export default function Paywall() {
   const [plan, setPlan] = useState<'month' | 'year'>('year');
+  const [submitting, setSubmitting] = useState(false);
   const { state: onboarding } = useOnboarding();
+  const { user } = useAuth();
   const displayName = (onboarding.displayName?.trim() || mockUser.name).toUpperCase();
+
+  const onStartTrial = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    // Anonymous user: skip the DB write. Onboarding flow gates the trial
+    // upgrade behind a future signup; for now keep them moving.
+    if (!user) {
+      router.replace('/onboarding/notifications');
+      return;
+    }
+    setSubmitting(true);
+    const planValue = plan === 'year' ? 'premium_annual' : 'premium_monthly';
+    const { error } = await startTrial(planValue);
+    setSubmitting(false);
+    if (error) {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+      // Don't block — still send them onward; subscription state will catch up.
+      logEvent('trial_start_failed', { reason: error.message, plan: planValue });
+    } else {
+      logEvent('trial_started', { plan: planValue });
+      emitChange(EVENTS.subscriptionChanged);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    }
+    router.replace('/onboarding/notifications');
+  };
 
   return (
     <Screen
@@ -42,7 +71,12 @@ export default function Paywall() {
       footerClearance={180}
       floatingFooter={
         <>
-          <PillCTA variant="primary" label="Start 7-day trial" onPress={() => router.replace('/onboarding/notifications')} />
+          <PillCTA
+            variant="primary"
+            label={submitting ? 'Starting trial…' : 'Start 7-day trial'}
+            disabled={submitting}
+            onPress={onStartTrial}
+          />
           <Pressable
             onPress={() => router.replace('/onboarding/notifications')}
             hitSlop={12}
