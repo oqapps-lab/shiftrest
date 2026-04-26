@@ -33,6 +33,29 @@ interface UiDay {
 
 const WEEKDAY_SHORT = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'] as const;
 
+const NUMBER_WORDS = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven'] as const;
+
+/**
+ * Headline copy that adapts to plan progress. Reads how many steps are
+ * left across all days and picks a phrase that matches state — avoids
+ * a stale "Two quiet days ahead." after the plan is half done.
+ */
+function transitionHeadline(days: UiDay[]): string {
+  const allSteps = days.flatMap((d) => d.steps);
+  const total = allSteps.length;
+  const done = allSteps.filter((s) => s.done).length;
+  const remaining = total - done;
+
+  if (total === 0) return 'Your plan is being prepared.';
+  if (done === total) return 'Plan complete — well done.';
+  if (done === 0) {
+    const dayWord = NUMBER_WORDS[Math.min(days.length, 7)] ?? `${days.length}`;
+    return `${dayWord} quiet day${days.length === 1 ? '' : 's'} ahead.`;
+  }
+  if (remaining === 1) return 'One more step to go.';
+  return `${remaining} steps to go.`;
+}
+
 function formatHourMinute(iso: string): string {
   const d = new Date(iso);
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
@@ -136,7 +159,7 @@ export default function Transition() {
 
       <Eyebrow>{`TRANSITION · ${fromShift.toUpperCase()} → ${toShift.toUpperCase()}`}</Eyebrow>
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
-        <SerifHero>Two quiet days ahead.</SerifHero>
+        <SerifHero>{transitionHeadline(days)}</SerifHero>
       </View>
 
       {days.map((d, dayIdx) => {
