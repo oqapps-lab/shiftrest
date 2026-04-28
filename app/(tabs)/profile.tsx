@@ -160,7 +160,16 @@ export default function Profile() {
     <Screen orbs="subtle" variant="dim" scroll>
       <Eyebrow>PROFILE</Eyebrow>
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
-        <SerifHero>{`${displayName} · ${professionLabel}.`}</SerifHero>
+        <SerifHero>{displayName}</SerifHero>
+        <Text
+          variant="titleLg"
+          family="display"
+          weight="light"
+          color="inkSubtle"
+          style={{ marginTop: spacing.xs }}
+        >
+          {`${professionLabel}.`}
+        </Text>
       </View>
 
       <Eyebrow>{`${streakValue}-DAY STREAK`}</Eyebrow>
