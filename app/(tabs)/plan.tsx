@@ -130,7 +130,13 @@ export default function Plan() {
       </View>
 
       <View style={{ marginTop: spacing.xxl, marginBottom: spacing.xxl }}>
-        <SerifHero>A gentle plan for today.</SerifHero>
+        <SerifHero>
+          {day === 0
+            ? "Yesterday's plan."
+            : day === 2
+            ? "Tomorrow's plan."
+            : 'A gentle plan for today.'}
+        </SerifHero>
       </View>
 
       <View style={{ alignItems: 'center', marginBottom: spacing.huge }}>
@@ -141,8 +147,8 @@ export default function Plan() {
           shiftStart={mockPlan.shiftStart}
           shiftEnd={mockPlan.shiftEnd}
           size={280}
-          label="NOW"
-          centerLabel={formatHour(nowHour)}
+          label={day === 0 ? 'YESTERDAY' : day === 2 ? 'TOMORROW' : 'NOW'}
+          centerLabel={day === 1 ? formatHour(nowHour) : formatHour(sleepStartHour)}
         />
       </View>
 
