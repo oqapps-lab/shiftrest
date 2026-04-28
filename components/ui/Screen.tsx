@@ -119,6 +119,25 @@ export function Screen({
         />
       )}
 
+      {/* When the screen has the floating tab bar but no floatingFooter, a soft
+          fade still helps signal that content scrolls *under* the tab bar
+          (rather than being clipped). Without it, settings rows tucked
+          behind the tab bar look broken instead of scrollable. */}
+      {!floatingFooter && tabBarClearance && footerFade && (
+        <LinearGradient
+          colors={asGradient([`${fadeColor}00`, `${fadeColor}E6`, `${fadeColor}FF`])}
+          locations={[0, 0.6, 1]}
+          pointerEvents="none"
+          style={[
+            styles.footerFade,
+            {
+              bottom: 0,
+              height: TAB_BAR_HEIGHT + insets.bottom + spacing.lg,
+            },
+          ]}
+        />
+      )}
+
       {floatingFooter && (
         <View
           style={[
