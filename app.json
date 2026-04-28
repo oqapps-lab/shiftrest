@@ -6,32 +6,53 @@
     "orientation": "portrait",
     "scheme": "shiftrest",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+    "icon": "./assets/icon.png",
     "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
       "backgroundColor": "#FCF9F6"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
     },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.gazetastreet.shiftrest",
-      "usesAppleSignIn": true
+      "buildNumber": "1",
+      "usesAppleSignIn": true,
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.gazetastreet.shiftrest",
+      "versionCode": 1,
       "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FCF9F6"
       }
     },
     "plugins": [
       "expo-router",
       "expo-font",
-      "expo-splash-screen",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "backgroundColor": "#FCF9F6",
+          "resizeMode": "contain"
+        }
+      ],
       [
         "expo-notifications",
         {
+          "icon": "./assets/adaptive-icon.png",
           "color": "#FCF9F6",
           "defaultChannel": "default"
         }
-      ]
+      ],
+      "expo-apple-authentication"
     ],
     "experiments": {
       "typedRoutes": true
