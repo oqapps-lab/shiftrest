@@ -157,7 +157,7 @@ export default function Signup() {
 
       <TextField
         label="NAME (OPTIONAL)"
-        placeholder="Marina"
+        placeholder="Your name"
         autoCapitalize="words"
         autoCorrect={false}
         autoComplete="name"
