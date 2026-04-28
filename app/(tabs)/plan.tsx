@@ -100,7 +100,10 @@ export default function Plan() {
     planHourAsFloat(livePlan?.sleep_start) ?? mockPlan.sleepStart;
   const sleepEndHour =
     planHourAsFloat(livePlan?.sleep_end) ?? mockPlan.sleepEnd;
-  const nowHour = mockPlan.nowHour;
+  // Real wall-clock so the ring center reflects when the user is looking
+  // at the screen, not the mockPlan demo's fixed 14:30.
+  const now = new Date();
+  const nowHour = now.getHours() + now.getMinutes() / 60;
 
   return (
     <Screen orbs="normal" scroll>
