@@ -104,6 +104,22 @@ export function Screen({
         <View style={[styles.nonScroll, contentContainer, contentStyle]}>{children}</View>
       )}
 
+      {scroll && (
+        // Top fade so text scrolling behind the status bar / dynamic island
+        // dissolves into the canvas instead of overlapping the system clock
+        // and signal icons. Only needed for scroll screens — non-scroll
+        // content can't move under the bar.
+        <LinearGradient
+          colors={asGradient([`${fadeColor}FF`, `${fadeColor}E6`, `${fadeColor}00`])}
+          locations={[0, 0.55, 1]}
+          pointerEvents="none"
+          style={[
+            styles.topFade,
+            { height: insets.top + spacing.lg },
+          ]}
+        />
+      )}
+
       {floatingFooter && footerFade && (
         <LinearGradient
           colors={asGradient([`${fadeColor}00`, `${fadeColor}F2`, `${fadeColor}FF`])}
@@ -184,6 +200,12 @@ const styles = StyleSheet.create({
   },
   footerFade: {
     position: 'absolute',
+    left: 0,
+    right: 0,
+  },
+  topFade: {
+    position: 'absolute',
+    top: 0,
     left: 0,
     right: 0,
   },
