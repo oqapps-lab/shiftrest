@@ -71,6 +71,13 @@ export default function Home() {
   const doneToday = livePlan ? liveDoneToday : countCompleted(todayMock.steps);
   const totalToday = livePlan ? liveDay1Steps.length : todayMock.steps.length;
 
+  // Real local time, expressed as fractional hours (e.g. 14.5 = 14:30) so
+  // the TimelineRing's nowHour, the greeting, and the "in N hours" copy
+  // all reflect what the user is actually looking at — instead of the
+  // demo-fixed 14:30 from mockPlan.
+  const now = new Date();
+  const nowHour = now.getHours() + now.getMinutes() / 60;
+
   // Mirror Profile's fallback chain so the greeting never says "MARINA"
   // when the real signed-in user has a different display_name. Use just
   // the first name in the greeting eyebrow so it doesn't push the streak
@@ -86,7 +93,7 @@ export default function Home() {
     <Screen orbs="normal" scroll>
       <View style={styles.headerRow}>
         <View style={{ flex: 1 }}>
-          <Eyebrow>{`${getGreeting(mockPlan.nowHour)}, ${displayName}`}</Eyebrow>
+          <Eyebrow>{`${getGreeting(nowHour)}, ${displayName}`}</Eyebrow>
         </View>
         <View style={styles.streak}>
           <Glyph name="flame" size={16} color="sunriseDim" />
@@ -109,14 +116,14 @@ export default function Home() {
 
       <View style={{ alignItems: 'center', marginBottom: spacing.huge }}>
         <TimelineRing
-          nowHour={mockPlan.nowHour}
+          nowHour={nowHour}
           sleepStart={mockPlan.sleepStart}
           sleepEnd={mockPlan.sleepEnd}
           shiftStart={mockPlan.shiftStart}
           shiftEnd={mockPlan.shiftEnd}
           size={260}
           label="TODAY"
-          centerLabel={formatHour(mockPlan.nowHour)}
+          centerLabel={formatHour(nowHour)}
         />
       </View>
 
@@ -139,7 +146,7 @@ export default function Home() {
               <Eyebrow>{e.label}</Eyebrow>
               <HeroNumber value={formatHour(e.hour)} size="md" style={{ marginTop: 2 }} />
               <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
-                {formatRelativeTime(mockPlan.nowHour, e.hour)}
+                {formatRelativeTime(nowHour, e.hour)}
               </Text>
             </View>
           </View>
