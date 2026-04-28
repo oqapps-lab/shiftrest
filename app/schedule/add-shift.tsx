@@ -145,6 +145,7 @@ export default function AddShift() {
       scroll
       tabBarClearance={false}
       keyboardAvoiding
+      footerClearance={200}
       floatingFooter={
         <PillCTA
           variant="primary"
