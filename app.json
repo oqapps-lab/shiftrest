@@ -21,7 +21,8 @@
       "buildNumber": "1",
       "usesAppleSignIn": true,
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSUserNotificationsUsageDescription": "ShiftRest schedules local reminders for caffeine cutoff, melatonin time, and bed-time so your sleep plan actually fires."
       }
     },
     "android": {
