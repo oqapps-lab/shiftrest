@@ -258,6 +258,13 @@ export function mapToProfileRow(state: OnboardingState, userId: string) {
 interface OnboardingContextValue {
   state: OnboardingState;
   hydrated: boolean;
+  /**
+   * True while a reverse-sync (server `profiles` row → local store) is in
+   * flight after first session-restore on a fresh AsyncStorage. Welcome
+   * screen reads this to avoid flashing for users who have a server-side
+   * onboarded profile but an empty device cache (e.g. after reinstall).
+   */
+  reverseSyncing: boolean;
   update: (patch: Partial<OnboardingState>) => void;
   markCompleted: () => void;
   reset: () => void;
@@ -270,6 +277,7 @@ const OnboardingContext = createContext<OnboardingContextValue | null>(null);
 export function OnboardingProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<OnboardingState>(INITIAL);
   const [hydrated, setHydrated] = useState(false);
+  const [reverseSyncing, setReverseSyncing] = useState(false);
   const [reverseHydrateTick, setReverseHydrateTick] = useState(0);
   const auth = useAuth();
   const lastSyncedRef = useRef<string>(''); // payload hash, prevents redundant upserts
@@ -368,6 +376,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     }
 
     let alive = true;
+    setReverseSyncing(true);
     (async () => {
       const { data: row, error } = await supabase!
         .from('profiles')
@@ -379,6 +388,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       if (!alive) return;
       if (error || !row) {
         reverseHydratedRef.current = userId;
+        setReverseSyncing(false);
         return;
       }
       const patch = mapFromProfileRow(row as ProfileRow);
@@ -386,6 +396,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         setState((prev) => ({ ...prev, ...patch }));
       }
       reverseHydratedRef.current = userId;
+      setReverseSyncing(false);
     })();
 
     return () => {
@@ -395,8 +406,8 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   }, [hydrated, auth.user?.id, reverseHydrateTick]);
 
   const value = useMemo<OnboardingContextValue>(
-    () => ({ state, hydrated, update, markCompleted, reset, syncProfile }),
-    [state, hydrated, update, markCompleted, reset, syncProfile],
+    () => ({ state, hydrated, reverseSyncing, update, markCompleted, reset, syncProfile }),
+    [state, hydrated, reverseSyncing, update, markCompleted, reset, syncProfile],
   );
 
   return (

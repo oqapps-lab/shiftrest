@@ -5,6 +5,13 @@
  * Redirect rule: if the user already completed onboarding in a previous
  * session (persisted via OnboardingProvider → AsyncStorage), skip Welcome
  * and land on /(tabs). Wait for hydration so we don't flash Welcome first.
+ *
+ * Cold-start race: on a fresh install with a restored Keychain session
+ * (Supabase token survives app delete), AsyncStorage is empty and
+ * `state.completed` is false until the reverse-sync useEffect inside
+ * the onboarding store fetches `profiles.onboarding_completed` from
+ * Supabase. Show a blank canvas while `reverseSyncing` is true to
+ * avoid flashing Welcome at returning users.
  */
 
 import React, { useEffect } from 'react';
@@ -20,9 +27,11 @@ import {
 } from '../components/ui';
 import { spacing } from '../constants/tokens';
 import { useOnboarding } from '../lib/onboarding/store';
+import { useAuth } from '../lib/auth/store';
 
 export default function Welcome() {
-  const { state, hydrated } = useOnboarding();
+  const { state, hydrated, reverseSyncing } = useOnboarding();
+  const { loading: authLoading, user } = useAuth();
 
   useEffect(() => {
     if (hydrated && state.completed) {
@@ -30,8 +39,15 @@ export default function Welcome() {
     }
   }, [hydrated, state.completed]);
 
-  // Avoid flashing Welcome before hydration finishes.
-  if (!hydrated || state.completed) {
+  // Avoid flashing Welcome at returning users:
+  // - while AsyncStorage hydration in flight (`!hydrated`)
+  // - while auth session is being restored (`authLoading`)
+  // - while reverse-sync fetches the server profile after a session restore
+  //   on an empty AsyncStorage (`reverseSyncing` — typical post-reinstall path)
+  // - once we know onboarding is completed (`state.completed`) — the redirect
+  //   above will fire on the next tick
+  const sessionRestoreInFlight = authLoading || (user && !state.completed && reverseSyncing);
+  if (!hydrated || state.completed || sessionRestoreInFlight) {
     return <View style={{ flex: 1 }} />;
   }
 

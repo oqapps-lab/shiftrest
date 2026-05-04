@@ -10,6 +10,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
+  interpolateColor,
   Easing,
 } from 'react-native-reanimated';
 import { colors } from '../../constants/tokens';
@@ -38,7 +39,13 @@ export function Toggle({ value, onChange, disabled, accessibilityLabel, style }:
   }, [value, progress]);
 
   const trackStyle = useAnimatedStyle(() => ({
-    backgroundColor: progress.value > 0.5 ? colors.primary : colors.surfaceHigh,
+    // Smooth color interpolation instead of a binary flip at 0.5 — kills
+    // the quarter-frame snap that was visible during the 180ms toggle.
+    backgroundColor: interpolateColor(
+      progress.value,
+      [0, 1],
+      [colors.surfaceHigh, colors.primary],
+    ),
   }));
   const knobStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: progress.value * (WIDTH - KNOB - PAD * 2) }],
