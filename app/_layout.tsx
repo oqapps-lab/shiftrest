@@ -24,6 +24,8 @@ import { useAppFonts } from '../hooks/useAppFonts';
 import { colors } from '../constants/tokens';
 import { AuthProvider } from '../lib/auth/store';
 import { OnboardingProvider } from '../lib/onboarding/store';
+import { ensureAdaptyActivated } from '../lib/adapty';
+import { ensureAppsFlyerInit } from '../lib/appsflyer';
 
 SplashScreen.preventAutoHideAsync().catch(() => null);
 
@@ -35,6 +37,13 @@ export default function RootLayout() {
       SplashScreen.hideAsync().catch(() => null);
     }
   }, [fontsLoaded]);
+
+  // Activate third-party SDKs once on launch. Both no-op when their key is
+  // not in the env (dev mode without the .env entries works fine).
+  useEffect(() => {
+    ensureAdaptyActivated().catch(() => null);
+    ensureAppsFlyerInit().catch(() => null);
+  }, []);
 
   if (!fontsLoaded) {
     // Splash screen still visible; render nothing under it

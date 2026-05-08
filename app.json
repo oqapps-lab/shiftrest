@@ -53,7 +53,8 @@
           "defaultChannel": "default"
         }
       ],
-      "expo-apple-authentication"
+      "expo-apple-authentication",
+      "react-native-adapty"
     ],
     "experiments": {
       "typedRoutes": true
