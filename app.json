@@ -58,6 +58,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "47c828fd-ff11-478c-8c97-a1bf6794d048"
+      }
+    },
+    "owner": "gazetastreet"
   }
 }
