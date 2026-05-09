@@ -18,11 +18,12 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.gazetastreet.shiftrest",
-      "buildNumber": "1",
       "usesAppleSignIn": true,
+      "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSUserNotificationsUsageDescription": "ShiftRest schedules local reminders for caffeine cutoff, melatonin time, and bed-time so your sleep plan actually fires."
+        "NSUserNotificationsUsageDescription": "ShiftRest schedules local reminders for caffeine cutoff, melatonin time, and bed-time so your sleep plan actually fires.",
+        "UIBackgroundModes": ["remote-notification"]
       }
     },
     "android": {
@@ -54,7 +55,18 @@
         }
       ],
       "expo-apple-authentication",
-      "react-native-adapty"
+      "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ],
+      "react-native-adapty",
+      "./plugins/with-modular-headers-fix.js"
     ],
     "experiments": {
       "typedRoutes": true
