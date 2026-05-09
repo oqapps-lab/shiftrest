@@ -60,7 +60,7 @@ export default function Name() {
 
       <TextField
         label="NAME"
-        placeholder="Marina"
+        placeholder="Your name"
         autoCapitalize="words"
         autoCorrect={false}
         value={name}

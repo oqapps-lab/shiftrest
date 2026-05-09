@@ -38,7 +38,11 @@ export default function Paywall() {
   const [submitting, setSubmitting] = useState(false);
   const { state: onboarding } = useOnboarding();
   const { user } = useAuth();
-  const displayName = firstName(onboarding.displayName?.trim() || mockUser.name).toUpperCase();
+  // Only show the user's name in the eyebrow when we have a real one — never
+  // leak mockUser.name ("Marina") in cold-start, which felt like demo-data on
+  // App Store Review screenshots.
+  const userName = onboarding.displayName?.trim();
+  const displayName = userName ? firstName(userName).toUpperCase() : '';
 
   const onStartTrial = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -110,7 +114,7 @@ export default function Paywall() {
         </Pressable>
       </View>
 
-      <Eyebrow>{`${displayName}, YOUR PLAN IS READY`}</Eyebrow>
+      <Eyebrow>{displayName ? `${displayName}, YOUR PLAN IS READY` : 'YOUR PLAN IS READY'}</Eyebrow>
       <View style={{ marginTop: spacing.md, marginBottom: spacing.huge }}>
         <SerifHero>7 days. Then you decide.</SerifHero>
       </View>

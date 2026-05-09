@@ -18,7 +18,7 @@ import {
 import { colors, radii, spacing } from '../../constants/tokens';
 import { safeBack } from '../../lib/nav';
 
-const SUPPORT_EMAIL = 'hello@shiftrest.app';
+const SUPPORT_EMAIL = 'support@oqapps.pro';
 
 interface Row {
   glyph: 'sparkle' | 'bell' | 'user' | 'leaf';
@@ -42,7 +42,7 @@ export default function About() {
       glyph: 'leaf',
       label: 'FAQ',
       subtitle: 'Common questions about shift sleep',
-      onPress: () => openExternal('https://shiftrest.app/faq'),
+      onPress: () => openExternal('https://oqapps.pro/legal/shiftsleep/support#faq'),
     },
     {
       glyph: 'user',
@@ -62,12 +62,12 @@ export default function About() {
     {
       glyph: 'bell',
       label: 'Privacy Policy',
-      onPress: () => openExternal('https://shiftrest.app/privacy'),
+      onPress: () => openExternal('https://oqapps.pro/legal/shiftsleep/privacy'),
     },
     {
       glyph: 'bell',
       label: 'Terms of Use',
-      onPress: () => openExternal('https://shiftrest.app/terms'),
+      onPress: () => openExternal('https://oqapps.pro/legal/shiftsleep/terms'),
     },
   ];
 

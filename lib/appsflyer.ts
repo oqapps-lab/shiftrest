@@ -13,12 +13,24 @@
  * (one across all 9 OQapps). Apple App ID is the numeric ASC id.
  */
 
-import { Platform } from 'react-native';
+import { Platform, NativeModules } from 'react-native';
 
 let initialized = false;
 
 export async function ensureAppsFlyerInit(): Promise<void> {
   if (initialized) return;
+
+  // Native module unavailable (Expo Go, web, simulator without dev build) →
+  // bail BEFORE any require() so the Expo Go red-overlay error path never
+  // fires. NativeModules.RNAppsFlyer is the iOS native bridge — present
+  // only in dev/preview/production EAS builds.
+  if (!NativeModules.RNAppsFlyer) {
+    if (__DEV__) {
+      console.log('[appsflyer] native module unavailable (Expo Go?) — skipping init');
+    }
+    return;
+  }
+
   const devKey = process.env.EXPO_PUBLIC_APPSFLYER_DEV_KEY;
   const appId = process.env.EXPO_PUBLIC_APPSFLYER_APP_ID;
   if (!devKey) {
@@ -28,16 +40,14 @@ export async function ensureAppsFlyerInit(): Promise<void> {
     return;
   }
 
-  // Lazy-require the SDK. In Expo Go the native module isn't bundled and
-  // require() will throw a friendly "module not found" error — catch it so
-  // the app keeps working during development.
+  // Lazy-require the SDK only after Expo Go gate above.
   let appsFlyer: any;
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     appsFlyer = require('react-native-appsflyer').default;
   } catch (err) {
     if (__DEV__) {
-      console.log('[appsflyer] native module not bundled (Expo Go?) — skipping init');
+      console.log('[appsflyer] native module not bundled — skipping init');
     }
     return;
   }

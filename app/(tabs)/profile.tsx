@@ -42,13 +42,14 @@ export default function Profile() {
   //   onboarding.displayName (set in S11) →
   //   real auth user_metadata.display_name →
   //   email local part →
-  //   mockUser.name (fallback so Stage-5 demo data still shows)
+  //   "Friend" generic placeholder (NOT mockUser.name — that leaks "Marina"
+  //   on cold-start which felt like demo data on App Store Review)
   // Clamp to 24 chars so the SerifHero stays on ≤2 lines.
   const displayName = clampDisplayName(
     onboarding.displayName?.trim() ||
       (user?.user_metadata as { display_name?: string } | undefined)?.display_name ||
       user?.email?.split('@')[0] ||
-      mockUser.name,
+      'Friend',
   );
 
   // Profession label preference: pick from mockProfessions catalogue when

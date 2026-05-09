@@ -29,20 +29,38 @@ export default function Subscription() {
   const { user } = useAuth();
   const { data: sub } = useSubscription();
 
+  // Trial is "in progress" only while trial_end is still in the future. Once
+  // it lapses, formatTrialRemaining returns "expired" — we need to switch the
+  // headline to match (otherwise UI shows "TRIAL IN PROGRESS · expired").
+  const trialIsExpired = (trialEnd: string | null | undefined): boolean => {
+    if (!trialEnd) return false;
+    return formatTrialRemaining(trialEnd) === 'expired';
+  };
+
   // Map real DB row → display key. Anonymous demo mode → mock.
   let status: DisplayStatus;
   let subtitle: string;
   if (!user) {
-    status = mockUser.subscription === 'premium' ? 'active' : (mockUser.subscription as DisplayStatus);
-    subtitle =
-      mockUser.subscription === 'trial'
-        ? formatTrialRemaining(mockUser.trialEndsAt)
-        : mockUser.subscription === 'premium'
-        ? 'Renews automatically'
-        : 'Unlock the full plan with a 7-day trial';
+    if (mockUser.subscription === 'trial' && trialIsExpired(mockUser.trialEndsAt)) {
+      status = 'expired';
+      subtitle = 'Resubscribe to keep your insights';
+    } else {
+      status = mockUser.subscription === 'premium' ? 'active' : (mockUser.subscription as DisplayStatus);
+      subtitle =
+        mockUser.subscription === 'trial'
+          ? formatTrialRemaining(mockUser.trialEndsAt)
+          : mockUser.subscription === 'premium'
+          ? 'Renews automatically'
+          : 'Unlock the full plan with a 7-day trial';
+    }
   } else if (sub?.status === 'trial' && sub.trial_end) {
-    status = 'trial';
-    subtitle = formatTrialRemaining(sub.trial_end);
+    if (trialIsExpired(sub.trial_end)) {
+      status = 'expired';
+      subtitle = 'Resubscribe to keep your insights';
+    } else {
+      status = 'trial';
+      subtitle = formatTrialRemaining(sub.trial_end);
+    }
   } else if (sub?.status === 'active') {
     status = 'active';
     subtitle =

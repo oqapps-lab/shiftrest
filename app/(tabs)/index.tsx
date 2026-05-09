@@ -82,18 +82,20 @@ export default function Home() {
   // when the real signed-in user has a different display_name. Use just
   // the first name in the greeting eyebrow so it doesn't push the streak
   // chip behind the decorative orb when display name is long (H3).
-  const displayName = firstName(
+  // No mockUser.name fallback — drop the name fragment in cold-start rather
+  // than greeting "Good afternoon, MARINA" on a fresh device with no profile.
+  const rawName =
     onboarding.displayName?.trim() ||
-      (user?.user_metadata as { display_name?: string } | undefined)?.display_name ||
-      user?.email?.split('@')[0] ||
-      mockUser.name,
-  ).toUpperCase();
+    (user?.user_metadata as { display_name?: string } | undefined)?.display_name ||
+    user?.email?.split('@')[0] ||
+    '';
+  const displayName = rawName ? firstName(rawName).toUpperCase() : '';
 
   return (
     <Screen orbs="normal" scroll>
       <View style={styles.headerRow}>
         <View style={{ flex: 1 }}>
-          <Eyebrow>{`${getGreeting(nowHour)}, ${displayName}`}</Eyebrow>
+          <Eyebrow>{displayName ? `${getGreeting(nowHour)}, ${displayName}` : getGreeting(nowHour)}</Eyebrow>
         </View>
         <View style={styles.streak}>
           <Glyph name="flame" size={16} color="sunriseDim" />

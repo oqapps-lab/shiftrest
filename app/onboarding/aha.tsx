@@ -26,7 +26,10 @@ import { useGeneratedPlan, planHourAsFloat, formatPlanHour } from '../../lib/que
 export default function Aha() {
   const { state: onboarding } = useOnboarding();
   const { data: livePlan } = useGeneratedPlan();
-  const displayName = firstName(onboarding.displayName?.trim() || mockUser.name).toUpperCase();
+  // No mockUser.name fallback — eyebrow drops the name fragment in cold-start
+  // rather than greeting "Marina, your plan is ready" on a fresh device.
+  const userName = onboarding.displayName?.trim();
+  const displayName = userName ? firstName(userName).toUpperCase() : '';
 
   // Prefer live plan times when present, fall back to mockPlan.
   const sleepStartHour = planHourAsFloat(livePlan?.sleep_start) ?? mockPlan.sleepStart;
@@ -34,6 +37,11 @@ export default function Aha() {
   const caffeineCutoffStr = formatPlanHour(livePlan?.caffeine_cutoff_at) || mockPlan.caffeineCutoff;
   const caffeineHourValue = Number(caffeineCutoffStr.split(':')[0]);
   const hoursBeforeSleep = hoursBetween(caffeineHourValue, sleepStartHour);
+
+  // Real wall-clock so the ring center reflects when the user is looking
+  // at the screen, not the mockPlan demo's fixed 14:30.
+  const now = new Date();
+  const nowHour = now.getHours() + now.getMinutes() / 60;
 
   return (
     <Screen
@@ -48,7 +56,7 @@ export default function Aha() {
         />
       }
     >
-      <Eyebrow>{`${displayName}, YOUR PLAN IS READY`}</Eyebrow>
+      <Eyebrow>{displayName ? `${displayName}, YOUR PLAN IS READY` : 'YOUR PLAN IS READY'}</Eyebrow>
 
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
         <SerifHero>Sleep catches up tonight.</SerifHero>
@@ -56,14 +64,14 @@ export default function Aha() {
 
       <View style={{ alignItems: 'center', marginBottom: spacing.huge }}>
         <TimelineRing
-          nowHour={mockPlan.nowHour}
+          nowHour={nowHour}
           sleepStart={sleepStartHour}
           sleepEnd={sleepEndHour}
           shiftStart={mockPlan.shiftStart}
           shiftEnd={mockPlan.shiftEnd}
           size={280}
           label="TODAY"
-          centerLabel={formatHour(mockPlan.nowHour)}
+          centerLabel={formatHour(nowHour)}
         />
       </View>
 
