@@ -67,9 +67,19 @@ workflows:
       - name: Increment build number
         script: |
           cd $CM_BUILD_DIR/ios
-          BUILD_NUMBER=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || echo "0")
+          # Use TestFlight (covers ALL uploaded builds including ones not yet
+          # attached to an App Store version), with App Store fallback for
+          # brand-new apps that have no TF history yet.
+          # Sugar Quit's playbook used get-latest-app-store-build-number which
+          # only sees attached builds — fine for fresh projects, but ShiftRest
+          # already had v5+v6 in TF from prior EAS uploads, with only v5
+          # attached to v1.0. Result: increment returned 5+1=6, collision with
+          # existing v6, ENTITY_ERROR.ATTRIBUTE.INVALID.DUPLICATE on submit.
+          TF=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || echo "0")
+          AS=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || echo "0")
+          BUILD_NUMBER=$(( TF > AS ? TF : AS ))
           NEW_NUMBER=$((BUILD_NUMBER + 1))
-          echo "Setting CFBundleVersion to $NEW_NUMBER"
+          echo "TF latest=$TF, AppStore latest=$AS, picking max+1=$NEW_NUMBER"
           agvtool new-version -all $NEW_NUMBER
       - name: Build IPA
         script: |
