@@ -50,3 +50,16 @@ expo-env.d.ts
 supabase/.temp/
 
 AF4951D7-*
+
+# Code-signing credentials — passwords + certs
+# (paranoid: *.p12 / *.mobileprovision already match cert+profile, but
+#  credentials.json itself contains the .p12 password in plaintext)
+credentials.json
+credentials/
+
+# Project-local Claude state (scheduled task locks, etc)
+.claude/
+
+# Untracked working notes / ASO drafts
+aso/
+
