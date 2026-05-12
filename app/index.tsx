@@ -28,6 +28,7 @@ import {
 import { spacing } from '../constants/tokens';
 import { useOnboarding } from '../lib/onboarding/store';
 import { useAuth } from '../lib/auth/store';
+import { t } from '../lib/i18n';
 
 export default function Welcome() {
   const { state, hydrated, reverseSyncing } = useOnboarding();
@@ -60,35 +61,35 @@ export default function Welcome() {
         <>
           <PillCTA
             variant="primary"
-            label="Create my plan"
+            label={t('welcome.cta_primary')}
             onPress={() => router.push('/onboarding/profession')}
           />
           <View style={{ height: spacing.sm }} />
           <PillCTA
             variant="glass"
             size="md"
-            label="I already have an account"
+            label={t('welcome.cta_secondary')}
             onPress={() => router.push('/auth/login')}
           />
         </>
       }
     >
       <View style={styles.body}>
-        <Eyebrow>SHIFTREST</Eyebrow>
+        <Eyebrow>{t('welcome.eyebrow')}</Eyebrow>
 
         <View style={styles.orbWrap}>
           <BreathingOrb size={280} pulse />
         </View>
 
         <View style={styles.copy}>
-          <SerifHero align="center">Rest catches up, gently.</SerifHero>
+          <SerifHero align="center">{t('welcome.hero')}</SerifHero>
           <Text
             variant="bodyLg"
             color="inkSubtle"
             align="center"
             style={{ marginTop: spacing.md }}
           >
-            {"The only sleep plan for shift workers that doesn't punish you for sleeping at noon."}
+            {t('welcome.subhead')}
           </Text>
         </View>
       </View>

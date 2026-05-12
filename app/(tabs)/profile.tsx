@@ -49,7 +49,7 @@ export default function Profile() {
     onboarding.displayName?.trim() ||
       (user?.user_metadata as { display_name?: string } | undefined)?.display_name ||
       user?.email?.split('@')[0] ||
-      'Friend',
+      t('profile.fallback_name'),
   );
 
   // Profession label preference: pick from mockProfessions catalogue when
@@ -96,8 +96,8 @@ export default function Profile() {
       }
     : {
         glyph: 'sparkle' as const,
-        label: 'Save your account',
-        subtitle: 'Sync your plan, never lose your streak',
+        label: t('profile.rows.save_account'),
+        subtitle: t('profile.rows.save_account_sub'),
         onPress: () => router.push('/auth/signup'),
       };
 
@@ -133,14 +133,14 @@ export default function Profile() {
     accountRow,
     {
       glyph: 'gear',
-      label: 'Sleep preferences',
-      subtitle: 'Chronotype · caffeine · melatonin',
+      label: t('profile.rows.sleep_prefs'),
+      subtitle: t('profile.rows.sleep_prefs_sub'),
       onPress: () => router.push('/settings/sleep-preferences'),
     },
     {
       glyph: 'bell',
-      label: 'Notifications',
-      subtitle: 'Reminder timing & types',
+      label: t('profile.rows.notifications'),
+      subtitle: t('profile.rows.notifications_sub'),
       onPress: () => router.push('/settings/notifications'),
     },
     {
@@ -159,7 +159,7 @@ export default function Profile() {
   ];
   return (
     <Screen orbs="subtle" variant="dim" scroll>
-      <Eyebrow>PROFILE</Eyebrow>
+      <Eyebrow>{t('profile.eyebrow')}</Eyebrow>
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
         <SerifHero>{displayName}</SerifHero>
         <Text
@@ -202,24 +202,24 @@ export default function Profile() {
 
       <View style={styles.statsRow}>
         <GlassCard variant="glass" padding="lg" style={styles.stat}>
-          <Eyebrow size="md">DAYS</Eyebrow>
+          <Eyebrow size="md">{t('profile.stat_days')}</Eyebrow>
           <HeroNumber value={daysInApp} size="md" />
         </GlassCard>
         <View style={{ width: spacing.sm }} />
         <GlassCard variant="glass" padding="lg" style={styles.stat}>
-          <Eyebrow size="md">PLANS</Eyebrow>
+          <Eyebrow size="md">{t('profile.stat_plans')}</Eyebrow>
           <HeroNumber value={plansCompleted} size="md" />
         </GlassCard>
         <View style={{ width: spacing.sm }} />
         <GlassCard variant="glass" padding="lg" style={styles.stat}>
-          <Eyebrow size="md">ON PLAN</Eyebrow>
+          <Eyebrow size="md">{t('profile.stat_on_plan')}</Eyebrow>
           <HeroNumber value={adherencePct} size="md" unit="%" />
         </GlassCard>
       </View>
 
       <View style={{ height: spacing.huge }} />
 
-      <Eyebrow>SETTINGS</Eyebrow>
+      <Eyebrow>{t('profile.settings')}</Eyebrow>
       <View style={{ height: spacing.md }} />
 
       {SETTINGS.map((row) => (

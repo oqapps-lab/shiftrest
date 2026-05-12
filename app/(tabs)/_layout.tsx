@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { FloatingTabBar } from '../../components/ui';
+import { t } from '../../lib/i18n';
 
 export default function TabsLayout() {
   return (
@@ -10,10 +11,10 @@ export default function TabsLayout() {
         headerShown: false,
       }}
     >
-      <Tabs.Screen name="index" options={{ title: 'Today' }} />
-      <Tabs.Screen name="schedule" options={{ title: 'Schedule' }} />
-      <Tabs.Screen name="plan" options={{ title: 'Sleep Plan' }} />
-      <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
+      <Tabs.Screen name="index" options={{ title: t('tabs.today') }} />
+      <Tabs.Screen name="schedule" options={{ title: t('tabs.schedule') }} />
+      <Tabs.Screen name="plan" options={{ title: t('tabs.plan') }} />
+      <Tabs.Screen name="profile" options={{ title: t('tabs.profile') }} />
     </Tabs>
   );
 }

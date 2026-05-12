@@ -119,9 +119,9 @@ export default function SleepPreferences() {
         <Glyph name="chevronLeft" size={22} color="inkMuted" />
       </Pressable>
 
-      <Eyebrow>SETTINGS</Eyebrow>
+      <Eyebrow>{t('sleep_prefs.eyebrow')}</Eyebrow>
       <HeroNumber
-        value="Sleep preferences"
+        value={t('sleep_prefs.title')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
@@ -130,7 +130,7 @@ export default function SleepPreferences() {
         color="inkSubtle"
         style={{ marginTop: spacing.md }}
       >
-        {"Tweak any answer — your plan updates instantly."}
+        {t('sleep_prefs.subtitle')}
       </Text>
 
       {/* Profession */}

@@ -4,6 +4,8 @@
 
 import type { GlyphName } from '../components/ui';
 
+import { t } from '../lib/i18n';
+
 export const mockUser = {
   name: 'Marina',
   profession: 'Nurse · 3×12',
@@ -16,6 +18,8 @@ export const mockUser = {
   trialEndsAt: '2026-04-27',
 };
 
+import { t } from '../lib/i18n';
+
 export const mockPlan = {
   nowHour: 14.5, // 14:30
   sleepStart: 23,
@@ -27,6 +31,8 @@ export const mockPlan = {
   windDownStart: '21:30',
 };
 
+import { t } from '../lib/i18n';
+
 export const mockShiftBlocks = [
   { start: 7, end: 7.75, kind: 'commute' as const, label: 'Commute' },
   { start: 7.75, end: 19, kind: 'shift' as const, label: 'Shift' },
@@ -36,6 +42,8 @@ export const mockShiftBlocks = [
   { start: 23, end: 7, kind: 'sleep' as const, label: 'Sleep' },
 ];
 
+import { t } from '../lib/i18n';
+
 export const mockTransition = {
   fromShift: 'Night',
   toShift: 'Day',
@@ -43,32 +51,36 @@ export const mockTransition = {
     {
       label: 'Wed 22',
       steps: [
-        { time: '06:00', action: 'Seek bright light for 30 min', done: true, tip: 'Walk outside if possible' },
-        { time: '09:00', action: 'Melatonin 0.5mg', done: true, tip: 'Phase advance dose' },
-        { time: '13:00', action: 'Caffeine cutoff', done: true, tip: 'Last cup by 13:00 today' },
-        { time: '21:00', action: 'Wind down, dim lights', done: false, tip: 'Dark glasses on' },
+        { time: '06:00', action: t('transition.steps.bright_light'), done: true, tip: t('transition.steps.walk_outside') },
+        { time: '09:00', action: t('transition.steps.melatonin_05'), done: true, tip: t('transition.steps.phase_advance') },
+        { time: '13:00', action: t('transition.steps.caffeine_cutoff'), done: true, tip: t('transition.steps.last_cup_13') },
+        { time: '21:00', action: t('transition.steps.wind_down'), done: false, tip: t('transition.steps.dark_glasses') },
       ],
     },
     {
       label: 'Thu 23',
       steps: [
         { time: '05:30', action: 'Wake + bright light', done: false, tip: '10 min at window' },
-        { time: '08:30', action: 'Melatonin 0.5mg', done: false, tip: '' },
-        { time: '13:00', action: 'Caffeine cutoff', done: false, tip: '' },
+        { time: '08:30', action: t('transition.steps.melatonin_05'), done: false, tip: '' },
+        { time: '13:00', action: t('transition.steps.caffeine_cutoff'), done: false, tip: '' },
         { time: '21:30', action: 'Bed', done: false, tip: 'Target: 22:30 asleep' },
       ],
     },
   ],
 };
 
+import { t } from '../lib/i18n';
+
 export const mockProfessions = [
-  { id: 'nurse', title: 'Nurse · 3×12', subtitle: 'Rotating day/night twelves', glyph: 'pulse' as GlyphName },
-  { id: 'fire', title: 'Firefighter / EMT', subtitle: '24 on, 48 off', glyph: 'flame' as GlyphName },
-  { id: 'factory', title: 'Factory worker', subtitle: 'Continental 2/2/4 shifts', glyph: 'gear' as GlyphName },
+  { id: 'nurse', title: t('professions.nurse'), subtitle: t('professions.nurse_sub'), glyph: 'pulse' as GlyphName },
+  { id: 'fire', title: t('professions.firefighter'), subtitle: t('professions.firefighter_sub'), glyph: 'flame' as GlyphName },
+  { id: 'factory', title: t('professions.factory'), subtitle: t('professions.factory_sub'), glyph: 'gear' as GlyphName },
   { id: 'other', title: 'Something else', subtitle: 'Tell us your rotation', glyph: 'sparkle' as GlyphName },
 ];
 
 // ─── S03 Schedule templates ─────────────────────────────────────────────────
+
+import { t } from '../lib/i18n';
 
 export const mockScheduleTemplates = [
   {
@@ -111,6 +123,8 @@ export const mockScheduleTemplates = [
 
 // ─── S05 Main problems ──────────────────────────────────────────────────────
 
+import { t } from '../lib/i18n';
+
 export const mockMainProblems = [
   { id: 'falling-asleep', title: "I can't fall asleep after nights", subtitle: 'Body clock says day, bed says night', glyph: 'moon' as GlyphName },
   { id: 'transitions', title: 'Night → day transitions are brutal', subtitle: 'I feel like a zombie on my day off', glyph: 'sparkle' as GlyphName },
@@ -119,6 +133,8 @@ export const mockMainProblems = [
 ];
 
 // ─── S07 Chronotype (simplified 3-question MEQ) ─────────────────────────────
+
+import { t } from '../lib/i18n';
 
 export const mockChronotypeQuestions = [
   {
@@ -155,11 +171,15 @@ export const mockChronotypeQuestions = [
 
 // ─── S08 Caffeine ───────────────────────────────────────────────────────────
 
+import { t } from '../lib/i18n';
+
 export const mockCaffeineTypes = [
   { id: 'coffee', label: 'Coffee', glyph: 'coffee' as GlyphName },
   { id: 'tea', label: 'Tea', glyph: 'leaf' as GlyphName },
   { id: 'energy', label: 'Energy drinks', glyph: 'pulse' as GlyphName },
 ];
+
+import { t } from '../lib/i18n';
 
 export const mockCaffeineSensitivities = [
   { id: 'normal', label: 'Normal', subtitle: "Doesn't affect my sleep much" },
@@ -169,9 +189,13 @@ export const mockCaffeineSensitivities = [
 
 // ─── S09 Melatonin ──────────────────────────────────────────────────────────
 
+import { t } from '../lib/i18n';
+
 export const mockMelatoninDoses = ['0.5', '1', '3', '5', '10'];
 
 // ─── S06 / S12 Social proof ─────────────────────────────────────────────────
+
+import { t } from '../lib/i18n';
 
 export const mockSocialProofStats = {
   percentUnderslept: 93,
@@ -179,6 +203,8 @@ export const mockSocialProofStats = {
   totalUsers: 12400,
   totalReviews: 2400,
 };
+
+import { t } from '../lib/i18n';
 
 export const mockTestimonials = {
   nurse: {
@@ -204,6 +230,8 @@ export const mockTestimonials = {
 };
 
 // ─── S16 Notification types ─────────────────────────────────────────────────
+
+import { t } from '../lib/i18n';
 
 export const mockNotificationTypes = [
   { id: 'sleep', glyph: 'bed' as GlyphName, title: 'Bed time reminder', subtitle: '30 min before your sleep window' },

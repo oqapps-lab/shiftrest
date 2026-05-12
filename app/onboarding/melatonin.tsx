@@ -46,7 +46,7 @@ export default function Melatonin() {
         />
       }
     >
-      <Eyebrow>STEP 8 OF 10</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 8, total: 10 })}</Eyebrow>
       <ProgressDots
         count={10}
         active={7}

@@ -46,14 +46,14 @@ function transitionHeadline(days: UiDay[]): string {
   const done = allSteps.filter((s) => s.done).length;
   const remaining = total - done;
 
-  if (total === 0) return 'Your plan is being prepared.';
-  if (done === total) return 'Plan complete — well done.';
+  if (total === 0) return t('transition.plan_being_prepared');
+  if (done === total) return t('transition.plan_complete');
   if (done === 0) {
     const dayWord = NUMBER_WORDS[Math.min(days.length, 7)] ?? `${days.length}`;
     return `${dayWord} quiet day${days.length === 1 ? '' : 's'} ahead.`;
   }
-  if (remaining === 1) return 'One more step to go.';
-  return `${remaining} steps to go.`;
+  if (remaining === 1) return t('transition.one_step_to_go');
+  return t('transition.steps_to_go', { n: remaining });
 }
 
 function formatHourMinute(iso: string): string {
@@ -157,7 +157,7 @@ export default function Transition() {
         </Pressable>
       </View>
 
-      <Eyebrow>{`TRANSITION · ${fromShift.toUpperCase()} → ${toShift.toUpperCase()}`}</Eyebrow>
+      <Eyebrow>{t('transition.eyebrow_template', { from: fromShift.toUpperCase(), to: toShift.toUpperCase() })}</Eyebrow>
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
         <SerifHero>{transitionHeadline(days)}</SerifHero>
       </View>
@@ -166,14 +166,14 @@ export default function Transition() {
         const done = d.steps.filter((s) => s.done).length;
         const total = d.steps.length;
         const status =
-          done === 0 ? 'PENDING' : done === total ? 'DONE' : 'IN PROGRESS';
+          done === 0 ? t('transition.status_pending') : done === total ? t('transition.status_done') : t('transition.status_in_progress');
         const chipBg =
-          status === 'DONE'
+          status === t('transition.status_done')
             ? colors.primaryContainer
-            : status === 'IN PROGRESS'
+            : status === t('transition.status_in_progress')
             ? colors.surfaceHigh
             : colors.surfaceLow;
-        const chipFg = status === 'DONE' ? 'onPrimaryContainer' : 'inkMuted';
+        const chipFg = status === t('transition.status_done') ? 'onPrimaryContainer' : 'inkMuted';
         return (
           <GlassCard
             key={d.label}
@@ -183,11 +183,11 @@ export default function Transition() {
           >
             <View style={styles.dayHeader}>
               <View>
-                <Eyebrow>{`DAY ${dayIdx + 1} · ${d.label.toUpperCase()}`}</Eyebrow>
+                <Eyebrow>{t('transition.day_label', { n: dayIdx + 1, date: d.label.toUpperCase() })}</Eyebrow>
                 <HeroNumber
-                  value={`${done} of ${total}`}
+                  value={`${done} ${t('transition.of')} ${total}`}
                   size="md"
-                  label="complete"
+                  label={t('transition.complete')}
                   labelPosition="below"
                   style={{ marginTop: 2 }}
                 />

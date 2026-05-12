@@ -161,7 +161,7 @@ export default function Schedule() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label="Add shift"
+          label={t('schedule.add_shift')}
           onPress={() => router.push('/schedule/add-shift')}
           iconLeft={<Glyph name="plus" size={18} color="onPrimary" />}
         />
@@ -190,7 +190,7 @@ export default function Schedule() {
       </View>
 
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.xxxl }}>
-        <SerifHero>{isCurrentMonth ? 'Your next four weeks.' : formatMonthYear(viewedDate) + '.'}</SerifHero>
+        <SerifHero>{isCurrentMonth ? t('schedule.hero_today') : formatMonthYear(viewedDate) + '.'}</SerifHero>
       </View>
 
       {/* Weekday header */}
@@ -238,7 +238,7 @@ export default function Schedule() {
       <View style={{ height: spacing.huge }} />
 
       <GlassCard variant="paper" padding="xxl">
-        <Eyebrow>LEGEND</Eyebrow>
+        <Eyebrow>{t('schedule.legend')}</Eyebrow>
         <View style={{ height: spacing.md }} />
         {[
           { color: colors.primary, label: 'Day shift', subtitle: '07:00 – 19:00' },

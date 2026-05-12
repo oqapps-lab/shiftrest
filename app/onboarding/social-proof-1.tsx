@@ -27,12 +27,12 @@ export default function SocialProof1() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label="Next"
+          label={t('onboarding.next')}
           onPress={() => router.push('/onboarding/chronotype')}
         />
       }
     >
-      <Eyebrow>STEP 5 OF 10</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 5, total: 10 })}</Eyebrow>
       <ProgressDots
         count={10}
         active={4}
@@ -54,11 +54,11 @@ export default function SocialProof1() {
         color="inkSubtle"
         style={{ marginTop: spacing.lg }}
       >
-        {"of shift workers don't get enough sleep."}
+        {t('onboarding.social_proof_1.sub')}
       </Text>
 
       <SerifHero align="center" style={{ marginTop: spacing.xl }}>
-        {"You're not alone."}
+        {t('onboarding.social_proof_1.hero')}
       </SerifHero>
 
       <GlassCard

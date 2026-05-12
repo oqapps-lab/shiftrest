@@ -24,14 +24,15 @@ import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useActiveTransitionPlan } from '../../lib/queries';
 import { useGeneratedPlan, planHourAsFloat } from '../../lib/queries/plan';
 import { useAuth } from '../../lib/auth/store';
+import { t } from '../../lib/i18n';
 
 // Event styles per slot. The "hour" for each slot comes from the live
 // plan when available, else mockPlan. Computed inside the component so
 // it tracks plan changes.
 const EVENT_STYLES = {
-  caffeine: { glyph: 'coffee' as const, label: 'CAFFEINE CUTOFF', tintBg: colors.sunriseGlow,    tintFg: 'sunriseDim' as const },
-  melatonin:{ glyph: 'moon'   as const, label: 'MELATONIN',       tintBg: colors.duskGlow,       tintFg: 'duskDim'    as const },
-  sleep:    { glyph: 'bed'    as const, label: 'SLEEP WINDOW',    tintBg: colors.primaryContainer, tintFg: 'primary'  as const },
+  caffeine: { glyph: 'coffee' as const, labelKey: 'today.event_caffeine' as const, tintBg: colors.sunriseGlow,    tintFg: 'sunriseDim' as const },
+  melatonin:{ glyph: 'moon'   as const, labelKey: 'today.event_melatonin' as const,       tintBg: colors.duskGlow,       tintFg: 'duskDim'    as const },
+  sleep:    { glyph: 'bed'    as const, labelKey: 'today.event_sleep' as const,    tintBg: colors.primaryContainer, tintFg: 'primary'  as const },
 };
 
 export default function Home() {
@@ -113,7 +114,7 @@ export default function Home() {
       </View>
 
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
-        <SerifHero>Rest is gathering.</SerifHero>
+        <SerifHero>{t('today.hero')}</SerifHero>
       </View>
 
       <View style={{ alignItems: 'center', marginBottom: spacing.huge }}>
@@ -124,28 +125,28 @@ export default function Home() {
           shiftStart={mockPlan.shiftStart}
           shiftEnd={mockPlan.shiftEnd}
           size={260}
-          label="TODAY"
+          label={t('today.label_today')}
           centerLabel={formatHour(nowHour)}
         />
       </View>
 
-      <Eyebrow>YOUR 24 HOURS</Eyebrow>
+      <Eyebrow>{t('today.section_24h')}</Eyebrow>
       <View style={{ height: spacing.md }} />
       <ShiftBar blocks={mockShiftBlocks} height={16} />
 
       <View style={{ height: spacing.huge }} />
 
-      <Eyebrow>NEXT</Eyebrow>
+      <Eyebrow>{t('today.section_next')}</Eyebrow>
       <View style={{ height: spacing.md }} />
 
       {events.map((e) => (
-        <GlassCard key={e.label} variant="glass" padding="xxl" style={{ marginBottom: spacing.md }}>
+        <GlassCard key={e.labelKey} variant="glass" padding="xxl" style={{ marginBottom: spacing.md }}>
           <View style={styles.eventRow}>
             <View style={[styles.eventIcon, { backgroundColor: e.tintBg }]}>
               <Glyph name={e.glyph} size={22} color={e.tintFg} />
             </View>
             <View style={{ flex: 1 }}>
-              <Eyebrow>{e.label}</Eyebrow>
+              <Eyebrow>{t(e.labelKey)}</Eyebrow>
               <HeroNumber value={formatHour(e.hour)} size="md" style={{ marginTop: 2 }} />
               <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
                 {formatRelativeTime(nowHour, e.hour)}
@@ -165,7 +166,7 @@ export default function Home() {
               <Glyph name="sparkle" size={22} color="duskDim" />
             </View>
             <View style={{ flex: 1 }}>
-              <Eyebrow color="duskDim">TRANSITION IN PROGRESS</Eyebrow>
+              <Eyebrow color="duskDim">{t('today.transition_in_progress')}</Eyebrow>
               <Text variant="titleLg" family="display" weight="light" color="ink" style={{ marginTop: 2 }}>
                 {`${fromLabel} → ${toLabel}, ${doneToday} of ${totalToday} steps today`}
               </Text>

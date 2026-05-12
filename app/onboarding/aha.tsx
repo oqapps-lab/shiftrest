@@ -51,15 +51,15 @@ export default function Aha() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label="Get the full plan"
+          label={t('aha.cta')}
           onPress={() => router.push('/paywall')}
         />
       }
     >
-      <Eyebrow>{displayName ? `${displayName}, YOUR PLAN IS READY` : 'YOUR PLAN IS READY'}</Eyebrow>
+      <Eyebrow>{displayName ? `${displayName}, ${t('aha.eyebrow')}` : t('aha.eyebrow')}</Eyebrow>
 
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
-        <SerifHero>Sleep catches up tonight.</SerifHero>
+        <SerifHero>{t('aha.hero')}</SerifHero>
       </View>
 
       <View style={{ alignItems: 'center', marginBottom: spacing.huge }}>
@@ -70,7 +70,7 @@ export default function Aha() {
           shiftStart={mockPlan.shiftStart}
           shiftEnd={mockPlan.shiftEnd}
           size={280}
-          label="TODAY"
+          label={t('today.label_today')}
           centerLabel={formatHour(nowHour)}
         />
       </View>
@@ -81,7 +81,7 @@ export default function Aha() {
             <Glyph name="bed" size={22} color="primary" />
           </View>
           <View style={{ flex: 1 }}>
-            <Eyebrow>SLEEP WINDOW</Eyebrow>
+            <Eyebrow>{t('aha.sleep_window')}</Eyebrow>
             <HeroNumber value={formatHourRange(sleepStartHour, sleepEndHour)} size="md" style={{ marginTop: 2 }} />
           </View>
         </View>
@@ -93,7 +93,7 @@ export default function Aha() {
             <Glyph name="coffee" size={22} color="sunriseDim" />
           </View>
           <View style={{ flex: 1 }}>
-            <Eyebrow>CAFFEINE CUTOFF</Eyebrow>
+            <Eyebrow>{t('aha.caffeine_cutoff')}</Eyebrow>
             <HeroNumber value={caffeineCutoffStr} size="md" style={{ marginTop: 2 }} />
             <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 4 }}>
               {`${hoursBeforeSleep} hours before sleep · gentle on sensitive types`}
@@ -108,9 +108,9 @@ export default function Aha() {
             <Glyph name="sparkle" size={22} color="duskDim" />
           </View>
           <View style={{ flex: 1 }}>
-            <Eyebrow color="duskDim">TRANSITION PLAN · PREMIUM</Eyebrow>
+            <Eyebrow color="duskDim">{t('aha.transition_premium')}</Eyebrow>
             <Text variant="titleLg" family="display" weight="light" color="ink" style={{ marginTop: 2 }}>
-              Night → Day, step by step
+              {t('aha.night_day_step')}
             </Text>
           </View>
         </View>

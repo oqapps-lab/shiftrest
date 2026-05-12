@@ -35,13 +35,13 @@ export default function Chronotype() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label="Continue"
+          label={t('onboarding.continue')}
           disabled={!canContinue}
           onPress={() => router.push('/onboarding/caffeine')}
         />
       }
     >
-      <Eyebrow>STEP 6 OF 10</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 6, total: 10 })}</Eyebrow>
       <ProgressDots
         count={10}
         active={5}
@@ -49,7 +49,7 @@ export default function Chronotype() {
       />
 
       <HeroNumber
-        value="Your natural rhythm"
+        value={t('onboarding.chronotype.hero')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />

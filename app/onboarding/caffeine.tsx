@@ -36,13 +36,13 @@ export default function Caffeine() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label="Continue"
+          label={t('onboarding.continue')}
           disabled={!canContinue}
           onPress={() => router.push('/onboarding/melatonin')}
         />
       }
     >
-      <Eyebrow>STEP 7 OF 10</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 7, total: 10 })}</Eyebrow>
       <ProgressDots
         count={10}
         active={6}
@@ -50,7 +50,7 @@ export default function Caffeine() {
       />
 
       <HeroNumber
-        value="How much caffeine?"
+        value={t('onboarding.caffeine.hero')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
@@ -75,7 +75,7 @@ export default function Caffeine() {
         />
       </View>
 
-      <Eyebrow style={{ marginBottom: spacing.md }}>USUAL TYPE</Eyebrow>
+      <Eyebrow style={{ marginBottom: spacing.md }}>{t('onboarding.caffeine.usual_type')}</Eyebrow>
       {mockCaffeineTypes.map((t) => (
         <OptionCard
           key={t.id}

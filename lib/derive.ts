@@ -8,11 +8,13 @@
  * the real date advances. Stage 6 will replace mockPlan with live state.
  */
 
+import { t } from './i18n';
+
 export function getGreeting(nowHour: number): string {
-  if (nowHour < 5) return 'GOOD NIGHT';
-  if (nowHour < 12) return 'GOOD MORNING';
-  if (nowHour < 18) return 'GOOD AFTERNOON';
-  return 'GOOD EVENING';
+  if (nowHour < 5) return t('greetings.night');
+  if (nowHour < 12) return t('greetings.morning');
+  if (nowHour < 18) return t('greetings.afternoon');
+  return t('greetings.evening');
 }
 
 /**
@@ -70,7 +72,7 @@ export function formatDayMonth(d: Date = new Date()): string {
 
 /** "14 DAYS" / "1 DAY" — streak label, handles plural. */
 export function formatStreak(streak: number): string {
-  return `${streak} DAY${streak === 1 ? '' : 'S'}`;
+  return `${streak} ${streak === 1 ? t('streak.suffix_one') : t('streak.suffix_other')}`;
 }
 
 /**

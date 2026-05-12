@@ -80,7 +80,7 @@ const REC_STYLE: Record<PlanRecommendation['type'], { glyph: GlyphName; tintBg: 
 
 export default function Plan() {
   const [day, setDay] = useState(1); // 0=yesterday, 1=today, 2=tomorrow
-  const pagerLabels = ['YESTERDAY', `TODAY · ${formatDayMonth()}`, 'TOMORROW'];
+  const pagerLabels = [t('plan.yesterday'), `${t('plan.today')} · ${formatDayMonth()}`, t('plan.tomorrow')];
   const { data: livePlan } = useGeneratedPlan();
 
   // RECS: prefer live plan recommendations, fallback to mocks.
@@ -147,7 +147,7 @@ export default function Plan() {
           shiftStart={mockPlan.shiftStart}
           shiftEnd={mockPlan.shiftEnd}
           size={280}
-          label={day === 0 ? 'YESTERDAY' : day === 2 ? 'TOMORROW' : 'NOW'}
+          label={day === 0 ? t('plan.yesterday') : day === 2 ? t('plan.tomorrow') : t('plan.now')}
           centerLabel={day === 1 ? formatHour(nowHour) : formatHour(sleepStartHour)}
         />
       </View>
