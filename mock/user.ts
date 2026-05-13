@@ -44,7 +44,7 @@ export function getMockTransition() {
     toShift: t('transition.shift.day'),
     days: [
       {
-        label: 'Wed 22',
+        label: `${(t('date.weekdays_short') as any)[3] ?? 'WED'} 22`,
         steps: [
           { time: '06:00', action: t('transition.steps.bright_light'), done: true, tip: t('transition.steps.walk_outside') },
           { time: '09:00', action: t('transition.steps.melatonin_05'), done: true, tip: t('transition.steps.phase_advance') },
@@ -53,7 +53,7 @@ export function getMockTransition() {
         ],
       },
       {
-        label: 'Thu 23',
+        label: `${(t('date.weekdays_short') as any)[4] ?? 'THU'} 23`,
         steps: [
           { time: '05:30', action: t('transition.steps.wake_bright_light'), done: false, tip: t('transition.steps.ten_min_window') },
           { time: '08:30', action: t('transition.steps.melatonin_05'), done: false, tip: '' },

@@ -135,7 +135,7 @@ export default function SleepPreferences() {
       </Text>
 
       {/* Profession */}
-      <SectionHeader label="PROFESSION" />
+      <SectionHeader label={t('sleep_prefs.section_profession')} />
       {mockProfessions.map((p) => (
         <OptionCard
           key={p.id}
@@ -152,7 +152,7 @@ export default function SleepPreferences() {
       ))}
 
       {/* Schedule template */}
-      <SectionHeader label="SCHEDULE PATTERN" />
+      <SectionHeader label={t('sleep_prefs.section_schedule')} />
       {mockScheduleTemplates.map((s) => (
         <OptionCard
           key={s.id}
@@ -192,7 +192,7 @@ export default function SleepPreferences() {
       />
 
       {/* Main problem */}
-      <SectionHeader label="WHAT BOTHERS YOU MOST" />
+      <SectionHeader label={t('sleep_prefs.section_problem')} />
       {mockMainProblems.map((p) => (
         <OptionCard
           key={p.id}
@@ -241,7 +241,7 @@ export default function SleepPreferences() {
       ))}
 
       {/* Caffeine */}
-      <SectionHeader label="CAFFEINE" />
+      <SectionHeader label={t('sleep_prefs.section_caffeine')} />
       <View style={{ marginBottom: spacing.lg }}>
         <Stepper
           value={state.caffeineCupsPerDay}
