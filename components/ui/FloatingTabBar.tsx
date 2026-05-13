@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, radii, spacing, shadows } from '../../constants/tokens';
 import { Glyph, GlyphName } from './Glyph';
 import { Text } from './Text';
+import { t } from '../../lib/i18n';
 
 // Loose typing so we don't depend on @react-navigation/bottom-tabs being in package.json.
 // expo-router v6 passes the standard React Navigation bottom-tabs props shape.
@@ -29,13 +30,6 @@ const TAB_ICONS: Record<string, GlyphName> = {
   schedule: 'calendar',
   plan: 'bed',
   profile: 'user',
-};
-
-const TAB_LABELS: Record<string, string> = {
-  index: 'Today',
-  schedule: 'Schedule',
-  plan: 'Sleep Plan',
-  profile: 'Profile',
 };
 
 export function FloatingTabBar({ state, navigation }: TabBarProps) {
@@ -67,7 +61,14 @@ export function FloatingTabBar({ state, navigation }: TabBarProps) {
         {state.routes.map((route, index) => {
           const focused = state.index === index;
           const iconName = TAB_ICONS[route.name] ?? 'sparkle';
-          const label = TAB_LABELS[route.name] ?? route.name;
+          const TAB_LABEL_KEYS: Record<string, string> = {
+            index: 'tabs.today',
+            schedule: 'tabs.schedule',
+            plan: 'tabs.plan',
+            profile: 'tabs.profile',
+          };
+          const labelKey = TAB_LABEL_KEYS[route.name];
+          const label = labelKey ? t(labelKey) : route.name;
 
           const onPress = () => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);

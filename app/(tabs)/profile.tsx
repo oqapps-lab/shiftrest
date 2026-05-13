@@ -57,7 +57,7 @@ export default function Profile() {
   // user picked one in S02, else fall back to mockUser.profession label.
   const professionLabel =
     mockProfessions.find((p) => p.id === onboarding.profession)?.title ??
-    mockUser.profession;
+    t('professions.nurse');
 
   // Subscription subtitle: prefer real DB row over mock. Anonymous users
   // are always on the free tier until signup (mockUser irrelevant).
