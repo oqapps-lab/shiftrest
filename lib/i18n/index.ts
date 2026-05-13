@@ -73,6 +73,6 @@ if (__DEV__) {
 }
 
 export const t = (key: string, opts?: Record<string, unknown>): string =>
-  i18n.t(key, opts);
+  i18n.t(key, opts) as string;
 
 export default i18n;

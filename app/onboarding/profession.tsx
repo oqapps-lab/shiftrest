@@ -20,6 +20,7 @@ import {
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockProfessions } from '../../mock/user';
 import { useOnboarding, type Profession as ProfessionType } from '../../lib/onboarding/store';
+import { t } from '../../lib/i18n';
 
 export default function Profession() {
   const { state, update } = useOnboarding();
@@ -33,7 +34,7 @@ export default function Profession() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label="Continue"
+          label={t('onboarding.continue')}
           disabled={!selected}
           onPress={() => router.push('/onboarding/schedule')}
         />

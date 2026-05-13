@@ -1,9 +1,9 @@
 /**
  * Mock user — used by demo screens until Stage 6 wires up real Supabase auth.
+ * User-facing strings route through t() so the demo respects the active locale.
  */
 
 import type { GlyphName } from '../components/ui';
-
 import { t } from '../lib/i18n';
 
 export const mockUser = {
@@ -14,14 +14,12 @@ export const mockUser = {
   daysInApp: 42,
   transitionsCompleted: 3,
   adherence: 98,
-  subscription: 'trial', // 'free' | 'trial' | 'premium'
+  subscription: 'trial' as const,
   trialEndsAt: '2026-04-27',
 };
 
-import { t } from '../lib/i18n';
-
 export const mockPlan = {
-  nowHour: 14.5, // 14:30
+  nowHour: 14.5,
   sleepStart: 23,
   sleepEnd: 7,
   shiftStart: 7,
@@ -30,8 +28,6 @@ export const mockPlan = {
   melatoninTime: '22:00',
   windDownStart: '21:30',
 };
-
-import { t } from '../lib/i18n';
 
 export const mockShiftBlocks = [
   { start: 7, end: 7.75, kind: 'commute' as const, label: 'Commute' },
@@ -42,160 +38,157 @@ export const mockShiftBlocks = [
   { start: 23, end: 7, kind: 'sleep' as const, label: 'Sleep' },
 ];
 
-import { t } from '../lib/i18n';
+export function getMockTransition() {
+  return {
+    fromShift: t('transition.shift.night'),
+    toShift: t('transition.shift.day'),
+    days: [
+      {
+        label: 'Wed 22',
+        steps: [
+          { time: '06:00', action: t('transition.steps.bright_light'), done: true, tip: t('transition.steps.walk_outside') },
+          { time: '09:00', action: t('transition.steps.melatonin_05'), done: true, tip: t('transition.steps.phase_advance') },
+          { time: '13:00', action: t('transition.steps.caffeine_cutoff'), done: true, tip: t('transition.steps.last_cup_13') },
+          { time: '21:00', action: t('transition.steps.wind_down'), done: false, tip: t('transition.steps.dark_glasses') },
+        ],
+      },
+      {
+        label: 'Thu 23',
+        steps: [
+          { time: '05:30', action: t('transition.steps.wake_bright_light'), done: false, tip: t('transition.steps.ten_min_window') },
+          { time: '08:30', action: t('transition.steps.melatonin_05'), done: false, tip: '' },
+          { time: '13:00', action: t('transition.steps.caffeine_cutoff'), done: false, tip: '' },
+          { time: '21:30', action: t('transition.steps.bed'), done: false, tip: t('transition.steps.bed_tip_2230') },
+        ],
+      },
+    ],
+  };
+}
 
-export const mockTransition = {
-  fromShift: 'Night',
-  toShift: 'Day',
-  days: [
+export const mockTransition = getMockTransition();
+
+export function getMockProfessions() {
+  return [
+    { id: 'nurse', title: t('professions.nurse'), subtitle: t('professions.nurse_sub'), glyph: 'pulse' as GlyphName },
+    { id: 'fire', title: t('professions.firefighter'), subtitle: t('professions.firefighter_sub'), glyph: 'flame' as GlyphName },
+    { id: 'factory', title: t('professions.factory'), subtitle: t('professions.factory_sub'), glyph: 'gear' as GlyphName },
+    { id: 'other', title: t('professions.other'), subtitle: t('professions.other_sub'), glyph: 'sparkle' as GlyphName },
+  ];
+}
+
+export const mockProfessions = getMockProfessions();
+
+export function getMockScheduleTemplates() {
+  return [
     {
-      label: 'Wed 22',
-      steps: [
-        { time: '06:00', action: t('transition.steps.bright_light'), done: true, tip: t('transition.steps.walk_outside') },
-        { time: '09:00', action: t('transition.steps.melatonin_05'), done: true, tip: t('transition.steps.phase_advance') },
-        { time: '13:00', action: t('transition.steps.caffeine_cutoff'), done: true, tip: t('transition.steps.last_cup_13') },
-        { time: '21:00', action: t('transition.steps.wind_down'), done: false, tip: t('transition.steps.dark_glasses') },
+      id: '3x12-day-night',
+      title: t('schedule_templates.three_x_twelve.title'),
+      subtitle: t('schedule_templates.three_x_twelve.sub'),
+      glyph: 'pulse' as GlyphName,
+      preview: ['day', 'day', 'day', 'off', 'off', 'night', 'night', 'night', 'off', 'off', 'day', 'day', 'day', 'off'] as const,
+    },
+    {
+      id: '24-48',
+      title: t('schedule_templates.twenty_four_forty_eight.title'),
+      subtitle: t('schedule_templates.twenty_four_forty_eight.sub'),
+      glyph: 'flame' as GlyphName,
+      preview: ['shift24', 'off', 'off', 'shift24', 'off', 'off', 'shift24', 'off', 'off', 'shift24', 'off', 'off', 'shift24', 'off'] as const,
+    },
+    {
+      id: '48-96',
+      title: t('schedule_templates.forty_eight_ninety_six.title'),
+      subtitle: t('schedule_templates.forty_eight_ninety_six.sub'),
+      glyph: 'flame' as GlyphName,
+      preview: ['shift48', 'shift48', 'off', 'off', 'off', 'off', 'shift48', 'shift48', 'off', 'off', 'off', 'off', 'shift48', 'shift48'] as const,
+    },
+    {
+      id: 'continental',
+      title: t('schedule_templates.continental.title'),
+      subtitle: t('schedule_templates.continental.sub'),
+      glyph: 'gear' as GlyphName,
+      preview: ['day', 'day', 'night', 'night', 'off', 'off', 'off', 'off', 'day', 'day', 'night', 'night', 'off', 'off'] as const,
+    },
+    {
+      id: 'custom',
+      title: t('schedule_templates.custom.title'),
+      subtitle: t('schedule_templates.custom.sub'),
+      glyph: 'sparkle' as GlyphName,
+      preview: [] as const,
+    },
+  ];
+}
+
+export const mockScheduleTemplates = getMockScheduleTemplates();
+
+export function getMockMainProblems() {
+  return [
+    { id: 'falling-asleep', title: t('main_problems.falling_asleep.title'), subtitle: t('main_problems.falling_asleep.sub'), glyph: 'moon' as GlyphName },
+    { id: 'transitions', title: t('main_problems.transitions.title'), subtitle: t('main_problems.transitions.sub'), glyph: 'sparkle' as GlyphName },
+    { id: 'fatigue', title: t('main_problems.fatigue.title'), subtitle: t('main_problems.fatigue.sub'), glyph: 'leaf' as GlyphName },
+    { id: 'caffeine', title: t('main_problems.caffeine.title'), subtitle: t('main_problems.caffeine.sub'), glyph: 'coffee' as GlyphName },
+  ];
+}
+
+export const mockMainProblems = getMockMainProblems();
+
+export function getMockChronotypeQuestions() {
+  return [
+    {
+      id: 'preferred_wake',
+      question: t('chronotype_q.preferred_wake'),
+      options: [
+        { id: 'early', label: '5:00 – 6:30', value: 'morning' },
+        { id: 'mid', label: '6:30 – 8:30', value: 'mid' },
+        { id: 'late', label: '8:30 – 10:30', value: 'evening' },
+        { id: 'very_late', label: t('chronotype_q.options.after_1030'), value: 'strong_evening' },
       ],
     },
     {
-      label: 'Thu 23',
-      steps: [
-        { time: '05:30', action: 'Wake + bright light', done: false, tip: '10 min at window' },
-        { time: '08:30', action: t('transition.steps.melatonin_05'), done: false, tip: '' },
-        { time: '13:00', action: t('transition.steps.caffeine_cutoff'), done: false, tip: '' },
-        { time: '21:30', action: 'Bed', done: false, tip: 'Target: 22:30 asleep' },
+      id: 'energy_peak',
+      question: t('chronotype_q.energy_peak'),
+      options: [
+        { id: 'morning', label: t('chronotype_q.options.morning'), value: 'morning' },
+        { id: 'noon', label: t('chronotype_q.options.late_morning'), value: 'mid' },
+        { id: 'afternoon', label: t('chronotype_q.options.afternoon'), value: 'mid' },
+        { id: 'night', label: t('chronotype_q.options.evening_night'), value: 'evening' },
       ],
     },
-  ],
-};
+    {
+      id: 'natural_sleep',
+      question: t('chronotype_q.natural_sleep'),
+      options: [
+        { id: 'early', label: t('chronotype_q.options.before_2200'), value: 'morning' },
+        { id: 'normal', label: '22:00 – 23:30', value: 'mid' },
+        { id: 'late', label: '23:30 – 01:00', value: 'evening' },
+        { id: 'very_late', label: t('chronotype_q.options.after_0100'), value: 'strong_evening' },
+      ],
+    },
+  ];
+}
 
-import { t } from '../lib/i18n';
+export const mockChronotypeQuestions = getMockChronotypeQuestions();
 
-export const mockProfessions = [
-  { id: 'nurse', title: t('professions.nurse'), subtitle: t('professions.nurse_sub'), glyph: 'pulse' as GlyphName },
-  { id: 'fire', title: t('professions.firefighter'), subtitle: t('professions.firefighter_sub'), glyph: 'flame' as GlyphName },
-  { id: 'factory', title: t('professions.factory'), subtitle: t('professions.factory_sub'), glyph: 'gear' as GlyphName },
-  { id: 'other', title: 'Something else', subtitle: 'Tell us your rotation', glyph: 'sparkle' as GlyphName },
-];
+export function getMockCaffeineTypes() {
+  return [
+    { id: 'coffee', label: t('caffeine_types.coffee'), glyph: 'coffee' as GlyphName },
+    { id: 'tea', label: t('caffeine_types.tea'), glyph: 'leaf' as GlyphName },
+    { id: 'energy', label: t('caffeine_types.energy'), glyph: 'pulse' as GlyphName },
+  ];
+}
 
-// ─── S03 Schedule templates ─────────────────────────────────────────────────
+export const mockCaffeineTypes = getMockCaffeineTypes();
 
-import { t } from '../lib/i18n';
+export function getMockCaffeineSensitivities() {
+  return [
+    { id: 'normal', label: t('caffeine_sensitivity.normal.label'), subtitle: t('caffeine_sensitivity.normal.sub') },
+    { id: 'slow', label: t('caffeine_sensitivity.slow.label'), subtitle: t('caffeine_sensitivity.slow.sub') },
+    { id: 'unknown', label: t('caffeine_sensitivity.unknown.label'), subtitle: t('caffeine_sensitivity.unknown.sub') },
+  ];
+}
 
-export const mockScheduleTemplates = [
-  {
-    id: '3x12-day-night',
-    title: '3×12 rotating',
-    subtitle: '3 day-shifts, 3 night-shifts, 4 off',
-    glyph: 'pulse' as GlyphName,
-    // 14-day mini-preview as array of kind: 'day' | 'night' | 'off'
-    preview: ['day', 'day', 'day', 'off', 'off', 'night', 'night', 'night', 'off', 'off', 'day', 'day', 'day', 'off'] as const,
-  },
-  {
-    id: '24-48',
-    title: '24 / 48',
-    subtitle: '24h on, 48h off (firefighter pattern)',
-    glyph: 'flame' as GlyphName,
-    preview: ['shift24', 'off', 'off', 'shift24', 'off', 'off', 'shift24', 'off', 'off', 'shift24', 'off', 'off', 'shift24', 'off'] as const,
-  },
-  {
-    id: '48-96',
-    title: '48 / 96',
-    subtitle: '48h on, 96h off (EMS, some fire depts)',
-    glyph: 'flame' as GlyphName,
-    preview: ['shift48', 'shift48', 'off', 'off', 'off', 'off', 'shift48', 'shift48', 'off', 'off', 'off', 'off', 'shift48', 'shift48'] as const,
-  },
-  {
-    id: 'continental',
-    title: 'Continental 2/2/4',
-    subtitle: '2 days, 2 nights, 4 off (factory)',
-    glyph: 'gear' as GlyphName,
-    preview: ['day', 'day', 'night', 'night', 'off', 'off', 'off', 'off', 'day', 'day', 'night', 'night', 'off', 'off'] as const,
-  },
-  {
-    id: 'custom',
-    title: 'Custom schedule',
-    subtitle: 'Build your own rotation',
-    glyph: 'sparkle' as GlyphName,
-    preview: [] as const,
-  },
-];
-
-// ─── S05 Main problems ──────────────────────────────────────────────────────
-
-import { t } from '../lib/i18n';
-
-export const mockMainProblems = [
-  { id: 'falling-asleep', title: "I can't fall asleep after nights", subtitle: 'Body clock says day, bed says night', glyph: 'moon' as GlyphName },
-  { id: 'transitions', title: 'Night → day transitions are brutal', subtitle: 'I feel like a zombie on my day off', glyph: 'sparkle' as GlyphName },
-  { id: 'fatigue', title: 'Chronic fatigue', subtitle: 'I never feel rested, no matter the hours', glyph: 'leaf' as GlyphName },
-  { id: 'caffeine', title: 'Caffeine keeps me up', subtitle: "I rely on it but it ruins my sleep", glyph: 'coffee' as GlyphName },
-];
-
-// ─── S07 Chronotype (simplified 3-question MEQ) ─────────────────────────────
-
-import { t } from '../lib/i18n';
-
-export const mockChronotypeQuestions = [
-  {
-    id: 'preferred_wake',
-    question: "If you had no obligations, when would you wake up?",
-    options: [
-      { id: 'early', label: '5:00 – 6:30', value: 'morning' },
-      { id: 'mid', label: '6:30 – 8:30', value: 'mid' },
-      { id: 'late', label: '8:30 – 10:30', value: 'evening' },
-      { id: 'very_late', label: 'After 10:30', value: 'strong_evening' },
-    ],
-  },
-  {
-    id: 'energy_peak',
-    question: "When do you feel most sharp and focused?",
-    options: [
-      { id: 'morning', label: 'Morning', value: 'morning' },
-      { id: 'noon', label: 'Late morning / noon', value: 'mid' },
-      { id: 'afternoon', label: 'Afternoon', value: 'mid' },
-      { id: 'night', label: 'Evening / night', value: 'evening' },
-    ],
-  },
-  {
-    id: 'natural_sleep',
-    question: "If completely free, when would you naturally fall asleep?",
-    options: [
-      { id: 'early', label: 'Before 22:00', value: 'morning' },
-      { id: 'normal', label: '22:00 – 23:30', value: 'mid' },
-      { id: 'late', label: '23:30 – 01:00', value: 'evening' },
-      { id: 'very_late', label: 'After 01:00', value: 'strong_evening' },
-    ],
-  },
-];
-
-// ─── S08 Caffeine ───────────────────────────────────────────────────────────
-
-import { t } from '../lib/i18n';
-
-export const mockCaffeineTypes = [
-  { id: 'coffee', label: 'Coffee', glyph: 'coffee' as GlyphName },
-  { id: 'tea', label: 'Tea', glyph: 'leaf' as GlyphName },
-  { id: 'energy', label: 'Energy drinks', glyph: 'pulse' as GlyphName },
-];
-
-import { t } from '../lib/i18n';
-
-export const mockCaffeineSensitivities = [
-  { id: 'normal', label: 'Normal', subtitle: "Doesn't affect my sleep much" },
-  { id: 'slow', label: 'Slow metaboliser', subtitle: "Even afternoon coffee keeps me up" },
-  { id: 'unknown', label: "Not sure", subtitle: "We'll start with a safe default" },
-];
-
-// ─── S09 Melatonin ──────────────────────────────────────────────────────────
-
-import { t } from '../lib/i18n';
+export const mockCaffeineSensitivities = getMockCaffeineSensitivities();
 
 export const mockMelatoninDoses = ['0.5', '1', '3', '5', '10'];
-
-// ─── S06 / S12 Social proof ─────────────────────────────────────────────────
-
-import { t } from '../lib/i18n';
 
 export const mockSocialProofStats = {
   percentUnderslept: 93,
@@ -204,37 +197,23 @@ export const mockSocialProofStats = {
   totalReviews: 2400,
 };
 
-import { t } from '../lib/i18n';
+export function getMockTestimonials() {
+  return {
+    nurse: { quote: t('testimonials.nurse.quote'), author: t('testimonials.nurse.author'), rating: 5 },
+    fire: { quote: t('testimonials.fire.quote'), author: t('testimonials.fire.author'), rating: 5 },
+    factory: { quote: t('testimonials.factory.quote'), author: t('testimonials.factory.author'), rating: 5 },
+    other: { quote: t('testimonials.other.quote'), author: t('testimonials.other.author'), rating: 5 },
+  };
+}
 
-export const mockTestimonials = {
-  nurse: {
-    quote: "After 3 night shifts I was a zombie. Now I have a transition plan — and my first day off is actually mine.",
-    author: 'Sara · ICU nurse',
-    rating: 5,
-  },
-  fire: {
-    quote: "The caffeine cutoff alone saved me. I stopped waking up three times a night on my first shift back.",
-    author: 'Marcus · firefighter / EMT',
-    rating: 5,
-  },
-  factory: {
-    quote: "Continental is rough. ShiftRest treats the 4-off like recovery, not vacation. Changed my whole week.",
-    author: 'Elena · line supervisor',
-    rating: 5,
-  },
-  other: {
-    quote: "Finally a sleep app that doesn't shame me for sleeping at noon. Feels like it was built for me.",
-    author: 'Jordan · shift worker',
-    rating: 5,
-  },
-};
+export const mockTestimonials = getMockTestimonials();
 
-// ─── S16 Notification types ─────────────────────────────────────────────────
+export function getMockNotificationTypes() {
+  return [
+    { id: 'sleep', glyph: 'bed' as GlyphName, title: t('notifications.sleep.title'), subtitle: t('notifications.sleep.sub') },
+    { id: 'caffeine', glyph: 'coffee' as GlyphName, title: t('notifications.caffeine.title'), subtitle: t('notifications.caffeine.sub') },
+    { id: 'melatonin', glyph: 'moon' as GlyphName, title: t('notifications.melatonin.title'), subtitle: t('notifications.melatonin.sub') },
+  ];
+}
 
-import { t } from '../lib/i18n';
-
-export const mockNotificationTypes = [
-  { id: 'sleep', glyph: 'bed' as GlyphName, title: 'Bed time reminder', subtitle: '30 min before your sleep window' },
-  { id: 'caffeine', glyph: 'coffee' as GlyphName, title: 'Caffeine cutoff', subtitle: 'Your last cup of coffee, timed for tonight' },
-  { id: 'melatonin', glyph: 'moon' as GlyphName, title: 'Melatonin timing', subtitle: 'Gentle nudge at the right hour' },
-];
+export const mockNotificationTypes = getMockNotificationTypes();

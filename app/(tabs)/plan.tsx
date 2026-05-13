@@ -18,9 +18,7 @@ import { mockPlan } from '../../mock/user';
 import { formatDayMonth, formatHour, hoursBetween } from '../../lib/derive';
 import { useGeneratedPlan, planHourAsFloat, type PlanRecommendation } from '../../lib/queries/plan';
 import type { GlyphName } from '../../components/ui';
-
-const caffeineHour = Number(mockPlan.caffeineCutoff.split(':')[0]);
-const hoursBeforeSleep = hoursBetween(caffeineHour, mockPlan.sleepStart);
+import { t } from '../../lib/i18n';
 
 interface UiRec {
   glyph: GlyphName;
@@ -32,43 +30,51 @@ interface UiRec {
   locked?: boolean;
 }
 
-const FALLBACK_RECS: UiRec[] = [
-  {
-    glyph: 'coffee',
-    eyebrow: 'CAFFEINE',
-    hero: `Last cup by ${mockPlan.caffeineCutoff}`,
-    body: `${hoursBeforeSleep} h before sleep window. Your sensitivity is moderate.`,
-    tintBg: colors.sunriseGlow,
-    tintFg: 'sunriseDim',
-  },
-  {
-    glyph: 'moon',
-    eyebrow: 'MELATONIN · PREMIUM',
-    hero: `0.5 mg at ${mockPlan.melatoninTime}`,
-    body: 'Phase advance dose · timed for today\'s day shift.',
-    tintBg: colors.duskGlow,
-    tintFg: 'duskDim',
-    locked: true,
-  },
-  {
-    glyph: 'sun',
-    eyebrow: 'LIGHT',
-    hero: 'Seek 07:30 – 08:30',
-    body: 'Bright outdoor light locks your circadian rhythm.',
-    tintBg: colors.sunriseGlow,
-    tintFg: 'sunriseDim',
-  },
-  {
-    glyph: 'bed',
-    eyebrow: 'OPTIONAL NAP',
-    hero: '20 min at 14:00',
-    body: 'Cap at 20 min to avoid sleep-inertia fog.',
-    tintBg: colors.primaryContainer,
-    tintFg: 'primary',
-  },
-];
+/**
+ * Fallback recommendations built at render time so t() lookups resolve
+ * against the CURRENT locale. Module-level const evaluation would freeze
+ * the strings at load time and never update across locale switches.
+ */
+function buildFallbackRecs(): UiRec[] {
+  const caffeineHour = Number(mockPlan.caffeineCutoff.split(':')[0]);
+  const hoursBeforeSleep = hoursBetween(caffeineHour, mockPlan.sleepStart);
+  return [
+    {
+      glyph: 'coffee',
+      eyebrow: t('plan.cards.caffeine.eyebrow'),
+      hero: t('plan.cards.caffeine.hero', { time: mockPlan.caffeineCutoff }),
+      body: t('plan.cards.caffeine.body', { h: hoursBeforeSleep }),
+      tintBg: colors.sunriseGlow,
+      tintFg: 'sunriseDim',
+    },
+    {
+      glyph: 'moon',
+      eyebrow: `${t('plan.cards.melatonin.eyebrow')} · ${t('plan.premium_suffix')}`,
+      hero: t('plan.cards.melatonin.hero', { time: mockPlan.melatoninTime }),
+      body: t('plan.cards.melatonin.body'),
+      tintBg: colors.duskGlow,
+      tintFg: 'duskDim',
+      locked: true,
+    },
+    {
+      glyph: 'sun',
+      eyebrow: t('plan.cards.light.eyebrow'),
+      hero: t('plan.cards.light.hero'),
+      body: t('plan.cards.light.body'),
+      tintBg: colors.sunriseGlow,
+      tintFg: 'sunriseDim',
+    },
+    {
+      glyph: 'bed',
+      eyebrow: t('plan.cards.nap.eyebrow'),
+      hero: t('plan.cards.nap.hero'),
+      body: t('plan.cards.nap.body'),
+      tintBg: colors.primaryContainer,
+      tintFg: 'primary',
+    },
+  ];
+}
 
-// Map LLM recommendation type → UI tint + glyph.
 const REC_STYLE: Record<PlanRecommendation['type'], { glyph: GlyphName; tintBg: string; tintFg: 'sunriseDim' | 'duskDim' | 'primary' }> = {
   caffeine:    { glyph: 'coffee',  tintBg: colors.sunriseGlow,     tintFg: 'sunriseDim' },
   melatonin:   { glyph: 'moon',    tintBg: colors.duskGlow,        tintFg: 'duskDim'    },
@@ -79,31 +85,30 @@ const REC_STYLE: Record<PlanRecommendation['type'], { glyph: GlyphName; tintBg: 
 };
 
 export default function Plan() {
-  const [day, setDay] = useState(1); // 0=yesterday, 1=today, 2=tomorrow
+  const [day, setDay] = useState(1);
   const pagerLabels = [t('plan.yesterday'), `${t('plan.today')} · ${formatDayMonth()}`, t('plan.tomorrow')];
   const { data: livePlan } = useGeneratedPlan();
 
-  // RECS: prefer live plan recommendations, fallback to mocks.
   const liveRecs = livePlan?.metadata?.recommendations ?? null;
   const recs: UiRec[] = liveRecs && liveRecs.length > 0
     ? liveRecs.map((r) => ({
         ...REC_STYLE[r.type],
-        eyebrow: r.locked ? `${r.eyebrow} · PREMIUM` : r.eyebrow,
+        eyebrow: r.locked ? `${r.eyebrow} · ${t('plan.premium_suffix')}` : r.eyebrow,
         hero: r.hero,
         body: r.body,
         locked: r.locked,
       }))
-    : FALLBACK_RECS;
+    : buildFallbackRecs();
 
-  // Timeline values: derive from live plan if present.
   const sleepStartHour =
     planHourAsFloat(livePlan?.sleep_start) ?? mockPlan.sleepStart;
   const sleepEndHour =
     planHourAsFloat(livePlan?.sleep_end) ?? mockPlan.sleepEnd;
-  // Real wall-clock so the ring center reflects when the user is looking
-  // at the screen, not the mockPlan demo's fixed 14:30.
   const now = new Date();
   const nowHour = now.getHours() + now.getMinutes() / 60;
+
+  const heroText = day === 0 ? t('plan.hero_yesterday') : day === 2 ? t('plan.hero_tomorrow') : t('plan.hero_today');
+  const ringLabel = day === 0 ? t('plan.yesterday') : day === 2 ? t('plan.tomorrow') : t('plan.now');
 
   return (
     <Screen orbs="normal" scroll>
@@ -130,13 +135,7 @@ export default function Plan() {
       </View>
 
       <View style={{ marginTop: spacing.xxl, marginBottom: spacing.xxl }}>
-        <SerifHero>
-          {day === 0
-            ? "Yesterday's plan."
-            : day === 2
-            ? "Tomorrow's plan."
-            : 'A gentle plan for today.'}
-        </SerifHero>
+        <SerifHero>{heroText}</SerifHero>
       </View>
 
       <View style={{ alignItems: 'center', marginBottom: spacing.huge }}>
@@ -147,7 +146,7 @@ export default function Plan() {
           shiftStart={mockPlan.shiftStart}
           shiftEnd={mockPlan.shiftEnd}
           size={280}
-          label={day === 0 ? t('plan.yesterday') : day === 2 ? t('plan.tomorrow') : t('plan.now')}
+          label={ringLabel}
           centerLabel={day === 1 ? formatHour(nowHour) : formatHour(sleepStartHour)}
         />
       </View>
@@ -185,16 +184,15 @@ export default function Plan() {
       <Pressable
         style={{ marginTop: spacing.xl, alignSelf: 'center' }}
         accessibilityRole="button"
-        accessibilityLabel="Why these times"
+        accessibilityLabel={t('plan.why_title')}
         onPress={() => {
           const explanation =
-            livePlan?.explanation?.trim() ||
-            "We anchor your sleep window to your shift end so the longest unbroken block lands when you're already winding down. Caffeine cutoff is set 6 hours before bed because that's roughly half-life. Melatonin (when used) goes 1–2 hours before sleep — early enough to nudge your circadian phase, not so late that you sleep through it.";
-          Alert.alert('Why these times?', explanation);
+            livePlan?.explanation?.trim() || t('plan.why_default');
+          Alert.alert(t('plan.why_title'), explanation);
         }}
       >
         <Text variant="bodyMd" color="primary" weight="medium">
-          Why these times?  →
+          {t('plan.why_link')}
         </Text>
       </Pressable>
     </Screen>

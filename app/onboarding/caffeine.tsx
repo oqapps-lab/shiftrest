@@ -19,6 +19,7 @@ import {
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
 import { mockCaffeineTypes, mockCaffeineSensitivities } from '../../mock/user';
+import { t } from '../../lib/i18n';
 
 export default function Caffeine() {
   const { state, update } = useOnboarding();
@@ -60,7 +61,7 @@ export default function Caffeine() {
         color="inkSubtle"
         style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
       >
-        We time your cutoff around this.
+        {t('onboarding.caffeine.sub')}
       </Text>
 
       <View style={{ marginBottom: spacing.xxxl }}>
@@ -69,26 +70,26 @@ export default function Caffeine() {
           min={0}
           max={8}
           step={1}
-          unit="cups/day"
+          unit={t('onboarding.caffeine.cups_unit_lower')}
           onChange={(v) => update({ caffeineCupsPerDay: v })}
-          accessibilityLabel="Cups per day"
+          accessibilityLabel={t('onboarding.caffeine.stepper_a11y')}
         />
       </View>
 
       <Eyebrow style={{ marginBottom: spacing.md }}>{t('onboarding.caffeine.usual_type')}</Eyebrow>
-      {mockCaffeineTypes.map((t) => (
+      {mockCaffeineTypes.map((c) => (
         <OptionCard
-          key={t.id}
-          title={t.label}
-          glyph={t.glyph}
-          selected={type === t.id}
-          onPress={() => update({ caffeineType: t.id as CaffeineType })}
-          accessibilityLabel={t.label}
+          key={c.id}
+          title={c.label}
+          glyph={c.glyph}
+          selected={type === c.id}
+          onPress={() => update({ caffeineType: c.id as CaffeineType })}
+          accessibilityLabel={c.label}
         />
       ))}
 
       <Eyebrow style={{ marginTop: spacing.lg, marginBottom: spacing.md }}>
-        SENSITIVITY
+        {t('onboarding.caffeine.sensitivity')}
       </Eyebrow>
       {mockCaffeineSensitivities.map((s) => (
         <OptionCard

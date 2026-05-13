@@ -17,6 +17,7 @@ import {
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
 import { mockTestimonials, mockSocialProofStats } from '../../mock/user';
+import { t } from '../../lib/i18n';
 
 export default function SocialProof1() {
   return (

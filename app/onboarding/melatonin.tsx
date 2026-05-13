@@ -20,6 +20,7 @@ import {
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
 import { mockMelatoninDoses } from '../../mock/user';
+import { t } from '../../lib/i18n';
 
 const TIME_OPTIONS: { value: MelatoninTime; label: string }[] = [
   { value: '20', label: '20:00' },
@@ -41,7 +42,7 @@ export default function Melatonin() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label="Continue"
+          label={t('onboarding.continue')}
           onPress={() => router.push('/onboarding/family')}
         />
       }
@@ -54,7 +55,7 @@ export default function Melatonin() {
       />
 
       <HeroNumber
-        value="Do you take melatonin?"
+        value={t('onboarding.melatonin.hero')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
@@ -64,23 +65,23 @@ export default function Melatonin() {
         color="inkSubtle"
         style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
       >
-        {"If yes, we'll tune the timing to your rotation."}
+        {t('onboarding.melatonin.sub')}
       </Text>
 
       <View style={styles.toggleRow}>
         <Text variant="titleMd" family="display" weight="medium" color="ink">
-          Yes, I take it
+          {t('onboarding.melatonin.yes_toggle')}
         </Text>
         <Toggle
           value={takes}
           onChange={(v) => update({ takesMelatonin: v })}
-          accessibilityLabel="Take melatonin"
+          accessibilityLabel={t('onboarding.melatonin.toggle_a11y')}
         />
       </View>
 
       {takes && (
         <View style={{ marginTop: spacing.xl }}>
-          <Eyebrow style={{ marginBottom: spacing.md }}>DOSE (MG)</Eyebrow>
+          <Eyebrow style={{ marginBottom: spacing.md }}>{t('onboarding.melatonin.dose_label')}</Eyebrow>
           <View style={styles.chipRow}>
             {mockMelatoninDoses.map((d) => {
               const active = dose === d;
@@ -117,7 +118,7 @@ export default function Melatonin() {
           </View>
 
           <Eyebrow style={{ marginTop: spacing.xl, marginBottom: spacing.md }}>
-            USUAL TIME TAKEN
+            {t('onboarding.melatonin.usual_time_label')}
           </Eyebrow>
           <SegmentedControl<MelatoninTime>
             options={TIME_OPTIONS}

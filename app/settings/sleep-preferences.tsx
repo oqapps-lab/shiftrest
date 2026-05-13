@@ -53,6 +53,7 @@ import {
   type PickupTime,
 } from '../../lib/onboarding/store';
 import { safeBack } from '../../lib/nav';
+import { t } from '../../lib/i18n';
 
 const SHIFT_OPTIONS: SegmentOption<ShiftKind>[] = [
   { value: 'day', label: 'Day shift' },

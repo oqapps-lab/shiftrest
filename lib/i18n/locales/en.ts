@@ -19,6 +19,7 @@ const en = {
   streak: {
     suffix_one: 'DAY',
     suffix_other: 'DAYS',
+    label_template: '{{n}}-DAY STREAK',
   },
   tabs: {
     today: 'Today',
@@ -35,6 +36,7 @@ const en = {
     event_melatonin: 'MELATONIN',
     event_sleep: 'SLEEP WINDOW',
     transition_in_progress: 'TRANSITION IN PROGRESS',
+    transition_subtitle: '{{from}} → {{to}}, {{done}} of {{total}} steps today',
   },
   plan: {
     yesterday: 'YESTERDAY',
@@ -42,6 +44,35 @@ const en = {
     tomorrow: 'TOMORROW',
     now: 'NOW',
     hero_today: 'A gentle plan for today.',
+    hero_yesterday: "Yesterday's plan.",
+    hero_tomorrow: "Tomorrow's plan.",
+    why_link: 'Why these times?  →',
+    why_title: 'Why these times?',
+    why_default:
+      "We anchor your sleep window to your shift end so the longest unbroken block lands when you're already winding down. Caffeine cutoff is set 6 hours before bed because that's roughly half-life. Melatonin (when used) goes 1–2 hours before sleep — early enough to nudge your circadian phase, not so late that you sleep through it.",
+    premium_suffix: 'PREMIUM',
+    cards: {
+      caffeine: {
+        eyebrow: 'CAFFEINE',
+        hero: 'Last cup by {{time}}',
+        body: '{{h}} h before sleep window. Your sensitivity is moderate.',
+      },
+      melatonin: {
+        eyebrow: 'MELATONIN',
+        hero: '0.5 mg at {{time}}',
+        body: "Phase advance dose · timed for today's day shift.",
+      },
+      light: {
+        eyebrow: 'LIGHT',
+        hero: 'Seek 07:30 – 08:30',
+        body: 'Bright outdoor light locks your circadian rhythm.',
+      },
+      nap: {
+        eyebrow: 'OPTIONAL NAP',
+        hero: '20 min at 14:00',
+        body: 'Cap at 20 min to avoid sleep-inertia fog.',
+      },
+    },
   },
   aha: {
     eyebrow: 'YOUR PLAN IS READY',
@@ -58,6 +89,8 @@ const en = {
     eyebrow_template: 'TRANSITION · {{from}} → {{to}}',
     steps_to_go: '{{n}} steps to go.',
     one_step_to_go: 'One more step to go.',
+    quiet_days_ahead: '{{word}} quiet days ahead.',
+    quiet_day_ahead: '{{word}} quiet day ahead.',
     plan_being_prepared: 'Your plan is being prepared.',
     plan_complete: 'Plan complete — well done.',
     day_label: 'DAY {{n}} · {{date}}',
@@ -66,6 +99,12 @@ const en = {
     status_in_progress: 'IN PROGRESS',
     status_done: 'DONE',
     complete: 'complete',
+    why_this_works: 'Why this works →',
+    close_label: 'Close transition plan',
+    shift: {
+      night: 'Night',
+      day: 'Day',
+    },
     steps: {
       bright_light: 'Seek bright light for 30 min',
       walk_outside: 'Walk outside if possible',
@@ -77,6 +116,8 @@ const en = {
       dark_glasses: 'Dark glasses on',
       bed: 'Bed',
       bed_tip_2230: 'Target: 22:30 asleep',
+      wake_bright_light: 'Wake + bright light',
+      ten_min_window: '10 min at window',
     },
   },
   profile: {
@@ -86,6 +127,27 @@ const en = {
     stat_plans: 'PLANS',
     stat_on_plan: 'ON PLAN',
     settings: 'SETTINGS',
+    subscription: {
+      free: 'Free tier',
+      trial_template: 'Trial · {{remaining}}',
+      annual: 'Premium · annual',
+      monthly: 'Premium · monthly',
+      grace: 'Premium · payment retrying',
+      lapsed: 'Free tier · upgrade to keep insights',
+    },
+    signed_in: 'Signed in',
+    signout: {
+      title: 'Sign out?',
+      body: 'You can sign back in any time.',
+      cancel: 'Cancel',
+      confirm: 'Sign out',
+    },
+    restart: {
+      title: 'Restart onboarding?',
+      body: 'Wipes saved quiz answers. Useful for demo / QA.',
+      cancel: 'Cancel',
+      confirm: 'Restart',
+    },
     rows: {
       save_account: 'Save your account',
       save_account_sub: 'Sync your plan, never lose your streak',
@@ -97,6 +159,8 @@ const en = {
       subscription: 'Subscription',
       about: 'About & support',
       about_sub: 'FAQ · contact · sources',
+      restart_dev: 'Restart onboarding (dev)',
+      restart_dev_sub: 'Wipe quiz answers and replay from S02',
     },
     anonymous_hint:
       'Anonymous mode — your data lives only on this device until you save an account.',
@@ -121,13 +185,23 @@ const en = {
       hero: 'How much caffeine?',
       sub: 'We time your cutoff around this.',
       cups_day: 'CUPS/DAY',
+      cups_unit_lower: 'cups/day',
       usual_type: 'USUAL TYPE',
       sensitivity: 'SENSITIVITY',
+      stepper_a11y: 'Cups per day',
     },
     chronotype: {
       hero: 'Your natural rhythm',
       sub: 'Three quick questions — answer from your gut.',
       q_template: 'Q{{n}} OF {{total}}',
+    },
+    melatonin: {
+      hero: 'Do you take melatonin?',
+      sub: "If yes, we'll tune the timing to your rotation.",
+      yes_toggle: 'Yes, I take it',
+      toggle_a11y: 'Take melatonin',
+      dose_label: 'DOSE (MG)',
+      usual_time_label: 'USUAL TIME TAKEN',
     },
     social_proof_1: {
       sub: "of shift workers don't get enough sleep.",
@@ -138,13 +212,39 @@ const en = {
     hero_today: 'Your next four weeks.',
     legend: 'LEGEND',
     day_shift: 'Day shift',
+    day_shift_time: '07:00 – 19:00',
     night_shift: 'Night shift',
+    night_shift_time: '19:00 – 07:00',
+    off_label: 'Off',
+    off_sub: 'Recovery window',
     add_shift: 'Add shift',
+    prev_month: 'Previous month',
+    next_month: 'Next month',
+    weekday_initials: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
   },
   caffeine_types: {
     coffee: 'Coffee',
     tea: 'Tea',
     energy: 'Energy drinks',
+  },
+  caffeine_sensitivity: {
+    normal: { label: 'Normal', sub: "Doesn't affect my sleep much" },
+    slow: { label: 'Slow metaboliser', sub: 'Even afternoon coffee keeps me up' },
+    unknown: { label: 'Not sure', sub: "We'll start with a safe default" },
+  },
+  chronotype_q: {
+    preferred_wake: 'If you had no obligations, when would you wake up?',
+    energy_peak: 'When do you feel most sharp and focused?',
+    natural_sleep: 'If completely free, when would you naturally fall asleep?',
+    options: {
+      after_1030: 'After 10:30',
+      morning: 'Morning',
+      late_morning: 'Late morning / noon',
+      afternoon: 'Afternoon',
+      evening_night: 'Evening / night',
+      before_2200: 'Before 22:00',
+      after_0100: 'After 01:00',
+    },
   },
   professions: {
     nurse: 'Nurse · 3×12',
@@ -156,6 +256,66 @@ const en = {
     other: 'Something else',
     other_sub: 'Tell us your rotation',
   },
+  schedule_templates: {
+    three_x_twelve: { title: '3×12 rotating', sub: '3 day-shifts, 3 night-shifts, 4 off' },
+    twenty_four_forty_eight: { title: '24 / 48', sub: '24h on, 48h off (firefighter pattern)' },
+    forty_eight_ninety_six: { title: '48 / 96', sub: '48h on, 96h off (EMS, some fire depts)' },
+    continental: { title: 'Continental 2/2/4', sub: '2 days, 2 nights, 4 off (factory)' },
+    custom: { title: 'Custom schedule', sub: 'Build your own rotation' },
+  },
+  main_problems: {
+    falling_asleep: { title: "I can't fall asleep after nights", sub: 'Body clock says day, bed says night' },
+    transitions: { title: 'Night → day transitions are brutal', sub: 'I feel like a zombie on my day off' },
+    fatigue: { title: 'Chronic fatigue', sub: 'I never feel rested, no matter the hours' },
+    caffeine: { title: 'Caffeine keeps me up', sub: 'I rely on it but it ruins my sleep' },
+  },
+  testimonials: {
+    nurse: {
+      quote: 'After 3 night shifts I was a zombie. Now I have a transition plan — and my first day off is actually mine.',
+      author: 'SARA · ICU NURSE',
+    },
+    fire: {
+      quote: 'The caffeine cutoff alone saved me. I stopped waking up three times a night on my first shift back.',
+      author: 'MARCUS · FIREFIGHTER / EMT',
+    },
+    factory: {
+      quote: 'Continental is rough. ShiftRest treats the 4-off like recovery, not vacation. Changed my whole week.',
+      author: 'ELENA · LINE SUPERVISOR',
+    },
+    other: {
+      quote: "Finally a sleep app that doesn't shame me for sleeping at noon. Feels like it was built for me.",
+      author: 'JORDAN · SHIFT WORKER',
+    },
+  },
+  notifications: {
+    sleep: { title: 'Bed time reminder', sub: '30 min before your sleep window' },
+    caffeine: { title: 'Caffeine cutoff', sub: 'Your last cup of coffee, timed for tonight' },
+    melatonin: { title: 'Melatonin timing', sub: 'Gentle nudge at the right hour' },
+  },
+  date: {
+    months_full: [
+      'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
+      'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER',
+    ],
+    months_short: [
+      'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
+      'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
+    ],
+    weekdays_short: ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'],
+  },
+  rel: {
+    now: 'now',
+    m_away: '{{m}}m away',
+    h_away: '{{h}}h away',
+    hm_away: '{{h}}h {{m}}m away',
+  },
+  trial: {
+    ends_today: 'ends today',
+    expired: 'expired',
+    one_day: '1 day left',
+    n_days: '{{n}} days left',
+  },
+  number_words: ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven'],
 };
 
 export default en;

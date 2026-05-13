@@ -16,6 +16,7 @@ import {
   TextField,
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
+import { t } from '../../lib/i18n';
 
 export default function Name() {
   const { state, update } = useOnboarding();
@@ -31,7 +32,7 @@ export default function Name() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label="Continue"
+          label={t('onboarding.continue')}
           disabled={!canContinue}
           onPress={() => router.push('/onboarding/social-proof-2')}
         />

@@ -16,8 +16,10 @@ import {
   Glyph,
 } from '../components/ui';
 import { colors, spacing, radii } from '../constants/tokens';
-import { mockTransition } from '../mock/user';
+import { getMockTransition } from '../mock/user';
 import { useActiveTransitionPlan } from '../lib/queries';
+import { t } from '../lib/i18n';
+import type { Translations } from '../lib/i18n/locales/en';
 
 interface UiStep {
   id: string;
@@ -30,10 +32,6 @@ interface UiDay {
   label: string;
   steps: UiStep[];
 }
-
-const WEEKDAY_SHORT = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'] as const;
-
-const NUMBER_WORDS = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven'] as const;
 
 /**
  * Headline copy that adapts to plan progress. Reads how many steps are
@@ -49,8 +47,13 @@ function transitionHeadline(days: UiDay[]): string {
   if (total === 0) return t('transition.plan_being_prepared');
   if (done === total) return t('transition.plan_complete');
   if (done === 0) {
-    const dayWord = NUMBER_WORDS[Math.min(days.length, 7)] ?? `${days.length}`;
-    return `${dayWord} quiet day${days.length === 1 ? '' : 's'} ahead.`;
+    const numberWords = (t('number_words') as unknown) as Translations['number_words'];
+    const dayWord = Array.isArray(numberWords)
+      ? numberWords[Math.min(days.length, 7)] ?? `${days.length}`
+      : `${days.length}`;
+    return days.length === 1
+      ? t('transition.quiet_day_ahead', { word: dayWord })
+      : t('transition.quiet_days_ahead', { word: dayWord });
   }
   if (remaining === 1) return t('transition.one_step_to_go');
   return t('transition.steps_to_go', { n: remaining });
@@ -63,11 +66,15 @@ function formatHourMinute(iso: string): string {
 
 function dayLabel(dateIso: string): string {
   const d = new Date(dateIso + 'T00:00:00');
-  return `${WEEKDAY_SHORT[d.getDay()]} ${String(d.getDate()).padStart(2, '0')}`;
+  const weekdays = (t('date.weekdays_short') as unknown) as Translations['date']['weekdays_short'];
+  const abbr = Array.isArray(weekdays) ? weekdays[d.getDay()] : '';
+  return `${abbr} ${String(d.getDate()).padStart(2, '0')}`;
 }
 
 export default function Transition() {
   const { data: livePlan } = useActiveTransitionPlan();
+  // Resolve at render time so locale changes between batches re-translate.
+  const mockTransition = getMockTransition();
 
   // Build UiDay[] from either the live plan or mockTransition fallback.
   const initialDays = useMemo<UiDay[]>(() => {
@@ -116,10 +123,10 @@ export default function Transition() {
   }, [initialDays]);
 
   const fromShift = livePlan
-    ? livePlan.transition_type === 'night_to_day' ? 'Night' : 'Day'
+    ? livePlan.transition_type === 'night_to_day' ? t('transition.shift.night') : t('transition.shift.day')
     : mockTransition.fromShift;
   const toShift = livePlan
-    ? livePlan.transition_type === 'night_to_day' ? 'Day' : 'Night'
+    ? livePlan.transition_type === 'night_to_day' ? t('transition.shift.day') : t('transition.shift.night')
     : mockTransition.toShift;
 
   const toggleStep = (dayIdx: number, stepIdx: number) => {
@@ -151,7 +158,7 @@ export default function Transition() {
           }}
           hitSlop={12}
           accessibilityRole="button"
-          accessibilityLabel="Close transition plan"
+          accessibilityLabel={t('transition.close_label')}
         >
           <Glyph name="close" size={22} color="inkMuted" />
         </Pressable>
@@ -263,7 +270,7 @@ export default function Transition() {
 
       <Pressable style={{ alignSelf: 'center', marginTop: spacing.lg, marginBottom: spacing.huge }}>
         <Text variant="bodyMd" color="primary" weight="medium">
-          Why this works →
+          {t('transition.why_this_works')}
         </Text>
       </Pressable>
     </Screen>

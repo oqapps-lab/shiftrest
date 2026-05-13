@@ -22,6 +22,7 @@ import {
   type SegmentOption,
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
+import { t } from '../../lib/i18n';
 
 type ShiftKind = 'day' | 'night' | 'off';
 
@@ -51,7 +52,7 @@ export default function CurrentShift() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label="Continue"
+          label={t('onboarding.continue')}
           onPress={() => router.push('/onboarding/problem')}
         />
       }

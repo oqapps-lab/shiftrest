@@ -19,6 +19,7 @@ import {
   TextField,
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
+import { t } from '../../lib/i18n';
 
 const PICKUP_OPTIONS: { value: PickupTime; label: string }[] = [
   { value: '14', label: '14:00' },
@@ -42,7 +43,7 @@ export default function Family() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label="Continue"
+          label={t('onboarding.continue')}
           onPress={() => router.push('/onboarding/name')}
         />
       }

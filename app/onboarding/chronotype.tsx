@@ -19,6 +19,7 @@ import {
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
 import { mockChronotypeQuestions } from '../../mock/user';
+import { t } from '../../lib/i18n';
 
 export default function Chronotype() {
   const { state, update } = useOnboarding();
@@ -59,7 +60,7 @@ export default function Chronotype() {
         color="inkSubtle"
         style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
       >
-        Three quick questions — answer from your gut.
+        {t('onboarding.chronotype.sub')}
       </Text>
 
       {mockChronotypeQuestions.map((q, qIdx) => (
@@ -72,7 +73,7 @@ export default function Chronotype() {
                 : spacing.huge,
           }}
         >
-          <Eyebrow>{`Q${qIdx + 1} OF ${mockChronotypeQuestions.length}`}</Eyebrow>
+          <Eyebrow>{t('onboarding.chronotype.q_template', { n: qIdx + 1, total: mockChronotypeQuestions.length })}</Eyebrow>
           <Text
             variant="titleLg"
             family="display"

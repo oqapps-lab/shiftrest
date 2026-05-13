@@ -23,6 +23,8 @@ import { colors, spacing } from '../../constants/tokens';
 import { formatMonthYear } from '../../lib/derive';
 import { useShifts } from '../../lib/queries';
 import { useAuth } from '../../lib/auth/store';
+import { t } from '../../lib/i18n';
+import type { Translations } from '../../lib/i18n/locales/en';
 
 type Kind = 'day' | 'night' | 'off' | 'past' | 'empty';
 
@@ -172,18 +174,18 @@ export default function Schedule() {
           hitSlop={12}
           onPress={() => shiftMonth(-1)}
           accessibilityRole="button"
-          accessibilityLabel="Previous month"
+          accessibilityLabel={t('schedule.prev_month')}
         >
           <Glyph name="chevronLeft" size={24} color="inkMuted" />
         </Pressable>
-        <Pressable onPress={goToToday} hitSlop={8} accessibilityRole="button" accessibilityLabel={`Viewing ${formatMonthYear(viewedDate)}, tap to jump to today`}>
+        <Pressable onPress={goToToday} hitSlop={8} accessibilityRole="button" accessibilityLabel={formatMonthYear(viewedDate)}>
           <Eyebrow>{formatMonthYear(viewedDate)}</Eyebrow>
         </Pressable>
         <Pressable
           hitSlop={12}
           onPress={() => shiftMonth(1)}
           accessibilityRole="button"
-          accessibilityLabel="Next month"
+          accessibilityLabel={t('schedule.next_month')}
         >
           <Glyph name="chevronRight" size={24} color="inkMuted" />
         </Pressable>
@@ -195,7 +197,7 @@ export default function Schedule() {
 
       {/* Weekday header */}
       <View style={styles.weekdayRow}>
-        {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => (
+        {((t('schedule.weekday_initials') as unknown) as Translations['schedule']['weekday_initials']).map((d, i) => (
           <View key={i} style={styles.weekdayCell}>
             <Text variant="labelMd" family="body" color="inkMuted" uppercase>
               {d}
@@ -241,9 +243,9 @@ export default function Schedule() {
         <Eyebrow>{t('schedule.legend')}</Eyebrow>
         <View style={{ height: spacing.md }} />
         {[
-          { color: colors.primary, label: 'Day shift', subtitle: '07:00 – 19:00' },
-          { color: colors.dusk, label: 'Night shift', subtitle: '19:00 – 07:00' },
-          { color: colors.primaryContainer, label: 'Off', subtitle: 'Recovery window' },
+          { color: colors.primary, label: t('schedule.day_shift'), subtitle: t('schedule.day_shift_time') },
+          { color: colors.dusk, label: t('schedule.night_shift'), subtitle: t('schedule.night_shift_time') },
+          { color: colors.primaryContainer, label: t('schedule.off_label'), subtitle: t('schedule.off_sub') },
         ].map((row) => (
           <View key={row.label} style={styles.legendRow}>
             <View style={[styles.legendDot, { backgroundColor: row.color }]} />

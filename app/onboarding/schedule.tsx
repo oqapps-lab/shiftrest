@@ -17,6 +17,7 @@ import {
 import { spacing } from '../../constants/tokens';
 import { mockScheduleTemplates } from '../../mock/user';
 import { useOnboarding, type ScheduleId } from '../../lib/onboarding/store';
+import { t } from '../../lib/i18n';
 
 export default function Schedule() {
   const { state, update } = useOnboarding();
@@ -30,7 +31,7 @@ export default function Schedule() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label="Continue"
+          label={t('onboarding.continue')}
           disabled={!selected}
           onPress={() => router.push('/onboarding/current-shift')}
         />

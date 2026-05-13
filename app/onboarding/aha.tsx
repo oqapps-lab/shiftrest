@@ -22,6 +22,7 @@ import { mockUser, mockPlan } from '../../mock/user';
 import { formatHour, formatHourRange, hoursBetween, firstName } from '../../lib/derive';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useGeneratedPlan, planHourAsFloat, formatPlanHour } from '../../lib/queries/plan';
+import { t } from '../../lib/i18n';
 
 export default function Aha() {
   const { state: onboarding } = useOnboarding();

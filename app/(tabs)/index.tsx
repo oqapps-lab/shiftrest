@@ -18,7 +18,7 @@ import {
   HeroNumber,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
-import { mockUser, mockPlan, mockShiftBlocks, mockTransition } from '../../mock/user';
+import { mockUser, mockPlan, mockShiftBlocks, getMockTransition } from '../../mock/user';
 import { countCompleted, formatHour, formatRelativeTime, formatStreak, getGreeting, firstName } from '../../lib/derive';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useActiveTransitionPlan } from '../../lib/queries';
@@ -60,14 +60,16 @@ export default function Home() {
 
   // Transition teaser: when a live plan exists pull its day-1 step counts;
   // else fall back to the mockTransition fixture so the demo still reads.
+  // Resolve at render time so locale changes between batches re-translate.
+  const mockTransition = getMockTransition();
   const todayMock = mockTransition.days[0];
   const liveDay1Steps = livePlan?.steps.filter((s) => s.day_number === 1) ?? [];
   const liveDoneToday = liveDay1Steps.filter((s) => s.is_completed).length;
   const fromLabel = livePlan
-    ? livePlan.transition_type === 'night_to_day' ? 'Night' : 'Day'
+    ? livePlan.transition_type === 'night_to_day' ? t('transition.shift.night') : t('transition.shift.day')
     : mockTransition.fromShift;
   const toLabel = livePlan
-    ? livePlan.transition_type === 'night_to_day' ? 'Day' : 'Night'
+    ? livePlan.transition_type === 'night_to_day' ? t('transition.shift.day') : t('transition.shift.night')
     : mockTransition.toShift;
   const doneToday = livePlan ? liveDoneToday : countCompleted(todayMock.steps);
   const totalToday = livePlan ? liveDay1Steps.length : todayMock.steps.length;
@@ -168,7 +170,7 @@ export default function Home() {
             <View style={{ flex: 1 }}>
               <Eyebrow color="duskDim">{t('today.transition_in_progress')}</Eyebrow>
               <Text variant="titleLg" family="display" weight="light" color="ink" style={{ marginTop: 2 }}>
-                {`${fromLabel} → ${toLabel}, ${doneToday} of ${totalToday} steps today`}
+                {t('today.transition_subtitle', { from: fromLabel, to: toLabel, done: doneToday, total: totalToday })}
               </Text>
             </View>
             <Glyph name="chevronRight" size={20} color="duskDim" />

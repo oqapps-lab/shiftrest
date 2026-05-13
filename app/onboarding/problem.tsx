@@ -17,6 +17,7 @@ import {
 import { spacing } from '../../constants/tokens';
 import { mockMainProblems } from '../../mock/user';
 import { useOnboarding, type MainProblem } from '../../lib/onboarding/store';
+import { t } from '../../lib/i18n';
 
 export default function Problem() {
   const { state, update } = useOnboarding();
@@ -30,7 +31,7 @@ export default function Problem() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label="Continue"
+          label={t('onboarding.continue')}
           disabled={!selected}
           onPress={() => router.push('/onboarding/social-proof-1')}
         />

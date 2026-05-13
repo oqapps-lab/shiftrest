@@ -20,6 +20,7 @@ import { formatTrialRemaining, clampDisplayName } from '../../lib/derive';
 import { useAuth } from '../../lib/auth/store';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useProfileStats, useSubscription } from '../../lib/queries';
+import { t } from '../../lib/i18n';
 
 const STREAK_LENGTH = 14;
 
@@ -62,30 +63,30 @@ export default function Profile() {
   // are always on the free tier until signup (mockUser irrelevant).
   let subscriptionSubtitle: string;
   if (!user) {
-    subscriptionSubtitle = 'Free tier';
+    subscriptionSubtitle = t('profile.subscription.free');
   } else if (subscription?.status === 'trial' && subscription.trial_end) {
-    subscriptionSubtitle = `Trial · ${formatTrialRemaining(subscription.trial_end)}`;
+    subscriptionSubtitle = t('profile.subscription.trial_template', { remaining: formatTrialRemaining(subscription.trial_end) });
   } else if (subscription?.status === 'active') {
     subscriptionSubtitle =
-      subscription.plan === 'premium_annual' ? 'Premium · annual' : 'Premium · monthly';
+      subscription.plan === 'premium_annual' ? t('profile.subscription.annual') : t('profile.subscription.monthly');
   } else if (subscription?.status === 'grace_period') {
-    subscriptionSubtitle = 'Premium · payment retrying';
+    subscriptionSubtitle = t('profile.subscription.grace');
   } else if (subscription?.status === 'cancelled' || subscription?.status === 'expired') {
-    subscriptionSubtitle = 'Free tier · upgrade to keep insights';
+    subscriptionSubtitle = t('profile.subscription.lapsed');
   } else {
-    subscriptionSubtitle = 'Free tier';
+    subscriptionSubtitle = t('profile.subscription.free');
   }
 
   const accountRow = user
     ? {
         glyph: 'user' as const,
-        label: 'Account',
-        subtitle: user.email ?? 'Signed in',
+        label: t('profile.rows.account'),
+        subtitle: user.email ?? t('profile.signed_in'),
         onPress: () => {
-          Alert.alert('Sign out?', 'You can sign back in any time.', [
-            { text: 'Cancel', style: 'cancel' },
+          Alert.alert(t('profile.signout.title'), t('profile.signout.body'), [
+            { text: t('profile.signout.cancel'), style: 'cancel' },
             {
-              text: 'Sign out',
+              text: t('profile.signout.confirm'),
               style: 'destructive',
               onPress: async () => {
                 await signOut();
@@ -103,16 +104,16 @@ export default function Profile() {
 
   const restartOnboardingRow = {
     glyph: 'sparkle' as const,
-    label: 'Restart onboarding (dev)',
-    subtitle: 'Wipe quiz answers and replay from S02',
+    label: t('profile.rows.restart_dev'),
+    subtitle: t('profile.rows.restart_dev_sub'),
     onPress: () => {
       Alert.alert(
-        'Restart onboarding?',
-        'Wipes saved quiz answers. Useful for demo / QA.',
+        t('profile.restart.title'),
+        t('profile.restart.body'),
         [
-          { text: 'Cancel', style: 'cancel' },
+          { text: t('profile.restart.cancel'), style: 'cancel' },
           {
-            text: 'Restart',
+            text: t('profile.restart.confirm'),
             style: 'destructive',
             onPress: () => {
               resetOnboarding();
@@ -145,14 +146,14 @@ export default function Profile() {
     },
     {
       glyph: 'sparkle',
-      label: 'Subscription',
+      label: t('profile.rows.subscription'),
       subtitle: subscriptionSubtitle,
       onPress: () => router.push('/settings/subscription'),
     },
     {
       glyph: 'user',
-      label: 'About & support',
-      subtitle: 'FAQ · contact · sources',
+      label: t('profile.rows.about'),
+      subtitle: t('profile.rows.about_sub'),
       onPress: () => router.push('/settings/about'),
     },
     restartOnboardingRow,
@@ -173,7 +174,7 @@ export default function Profile() {
         </Text>
       </View>
 
-      <Eyebrow>{`${streakValue}-DAY STREAK`}</Eyebrow>
+      <Eyebrow>{t('streak.label_template', { n: streakValue })}</Eyebrow>
       <View style={styles.streakRow}>
         {Array.from({ length: STREAK_LENGTH }).map((_, i) => {
           // Right-most dot = today; earliest = STREAK_LENGTH days ago.
@@ -254,7 +255,7 @@ export default function Profile() {
       {!user && (
         <View style={{ marginTop: spacing.md }}>
           <Text variant="bodyMd" color="inkMuted" align="center">
-            {"Anonymous mode — your data lives only on this device until you save an account."}
+            {t('profile.anonymous_hint')}
           </Text>
         </View>
       )}

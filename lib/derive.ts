@@ -2,13 +2,13 @@
  * Derived display strings — single source of truth for values that must
  * reflect current state (greeting, relative times, trial remaining, date labels).
  *
- * Design note: uses mockPlan.nowHour for "now" in the sleep-plan context
- * so timeline/event strings stay consistent with the demo data. Uses real
- * `new Date()` for calendar and trial math so those surfaces adapt as
- * the real date advances. Stage 6 will replace mockPlan with live state.
+ * All user-facing strings route through t() so the demo respects the active
+ * locale. Note: month/weekday arrays are pulled at call-time, not module-load,
+ * so locale switches during a screenshot batch take effect immediately.
  */
 
 import { t } from './i18n';
+import type { Translations } from './i18n/locales/en';
 
 export function getGreeting(nowHour: number): string {
   if (nowHour < 5) return t('greetings.night');
@@ -17,111 +17,84 @@ export function getGreeting(nowHour: number): string {
   return t('greetings.evening');
 }
 
-/**
- * "2h 30m away", "45m away", "12h away", "now" — distance from nowHour
- * to targetHour, wrapping across midnight. Both inputs are 0-24 floats.
- */
 export function formatRelativeTime(nowHour: number, targetHour: number): string {
   let diff = targetHour - nowHour;
   if (diff < 0) diff += 24;
-  if (diff === 0) return 'now';
+  if (diff === 0) return t('rel.now');
   const h = Math.floor(diff);
   const m = Math.round((diff - h) * 60);
-  if (h === 0) return `${m}m away`;
-  if (m === 0) return `${h}h away`;
-  return `${h}h ${m}m away`;
+  if (h === 0) return t('rel.m_away', { m });
+  if (m === 0) return t('rel.h_away', { h });
+  return t('rel.hm_away', { h, m });
 }
 
-/**
- * "6 days left", "1 day left", "today", "expired".
- * Accepts both 'YYYY-MM-DD' (legacy mock) and full ISO timestamps
- * ('2026-05-03T07:41:05.357Z' — what the DB stores).
- */
 export function formatTrialRemaining(trialEndsAt: string, today: Date = new Date()): string {
   const isoLike = trialEndsAt.includes('T') ? trialEndsAt : `${trialEndsAt}T00:00:00`;
   const end = new Date(isoLike);
-  if (Number.isNaN(end.getTime())) return 'expired';
+  if (Number.isNaN(end.getTime())) return t('trial.expired');
 
   const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-  if (days < 0) return 'expired';
-  if (days === 0) return 'ends today';
-  if (days === 1) return '1 day left';
-  return `${days} days left`;
+  if (days < 0) return t('trial.expired');
+  if (days === 0) return t('trial.ends_today');
+  if (days === 1) return t('trial.one_day');
+  return t('trial.n_days', { n: days });
 }
 
-const MONTH_FULL = [
-  'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
-  'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER',
-] as const;
+function monthsFull(): readonly string[] {
+  const m = (t('date.months_full') as unknown) as Translations['date']['months_full'];
+  return Array.isArray(m) ? m : [];
+}
 
-const MONTH_SHORT = [
-  'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN',
-  'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC',
-] as const;
+function monthsShort(): readonly string[] {
+  const m = (t('date.months_short') as unknown) as Translations['date']['months_short'];
+  return Array.isArray(m) ? m : [];
+}
 
-/** "APRIL 2026" */
 export function formatMonthYear(d: Date = new Date()): string {
-  return `${MONTH_FULL[d.getMonth()]} ${d.getFullYear()}`;
+  const months = monthsFull();
+  return `${months[d.getMonth()] ?? ''} ${d.getFullYear()}`;
 }
 
-/** "22 APR" */
 export function formatDayMonth(d: Date = new Date()): string {
-  return `${d.getDate()} ${MONTH_SHORT[d.getMonth()]}`;
+  const months = monthsShort();
+  return `${d.getDate()} ${months[d.getMonth()] ?? ''}`;
 }
 
-/** "14 DAYS" / "1 DAY" — streak label, handles plural. */
 export function formatStreak(streak: number): string {
   return `${streak} ${streak === 1 ? t('streak.suffix_one') : t('streak.suffix_other')}`;
 }
 
-/**
- * Clamp a display name to fit comfortably in headers / greetings.
- * Defaults to 24 chars, breaking at the nearest space when possible to
- * avoid mid-word ellipsis. Returns the trimmed source if it already fits.
- */
 export function clampDisplayName(raw: string | null | undefined, max = 24): string {
   if (!raw) return '';
   const s = raw.trim();
   if (s.length <= max) return s;
-  // Prefer breaking at a space within the budget.
   const slice = s.slice(0, max);
   const lastSpace = slice.lastIndexOf(' ');
   if (lastSpace > max * 0.6) return `${slice.slice(0, lastSpace).trimEnd()}…`;
   return `${slice.trimEnd()}…`;
 }
 
-/**
- * Reduce a multi-word display name to its first word (typical: first
- * name) and optionally clamp. Useful in tight greeting eyebrows.
- *   "ALEKSANDRA KONSTANTINOPOLUVSKAYA …" → "ALEKSANDRA"
- *   "Marina"                              → "Marina"
- *   "Mary-Anne O'Connor"                  → "Mary-Anne"  (hyphen kept)
- */
 export function firstName(raw: string | null | undefined, max = 16): string {
   if (!raw) return '';
   const first = raw.trim().split(/\s+/)[0] ?? '';
   return clampDisplayName(first, max);
 }
 
-/** Count `done: true` across a day's steps. */
 export function countCompleted<T extends { done: boolean }>(steps: readonly T[]): number {
   return steps.filter((s) => s.done).length;
 }
 
-/** Float hour → "HH:MM" (14.5 → "14:30", 23 → "23:00"). */
 export function formatHour(h: number): string {
   const whole = Math.floor(h);
   const mins = Math.round((h - whole) * 60);
   return `${String(whole).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
 }
 
-/** Float hour range → "HH:MM — HH:MM" with em-dash. Wraps across midnight. */
 export function formatHourRange(start: number, end: number): string {
   return `${formatHour(start)} — ${formatHour(end)}`;
 }
 
-/** Hours between two 0-24 floats, wrapping across midnight. */
 export function hoursBetween(from: number, to: number): number {
   let diff = to - from;
   if (diff < 0) diff += 24;
