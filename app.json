@@ -4,27 +4,79 @@
     "slug": "shiftrest",
     "version": "0.1.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
     "scheme": "shiftrest",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "userInterfaceStyle": "light",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FCF9F6"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.gazetastreet.shiftrest"
+      "bundleIdentifier": "com.gazetastreet.shiftrest",
+      "usesAppleSignIn": true,
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSUserNotificationsUsageDescription": "ShiftRest schedules local reminders for caffeine cutoff, melatonin time, and bed-time so your sleep plan actually fires.",
+        "UIBackgroundModes": ["remote-notification"]
+      }
     },
     "android": {
       "package": "com.gazetastreet.shiftrest",
+      "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FCF9F6"
       }
     },
     "plugins": [
       "expo-router",
-      "expo-haptics"
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "backgroundColor": "#FCF9F6",
+          "resizeMode": "contain"
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/adaptive-icon.png",
+          "color": "#FCF9F6",
+          "defaultChannel": "default"
+        }
+      ],
+      "expo-apple-authentication",
+      "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ],
+      "react-native-adapty",
+      "./plugins/with-modular-headers-fix.js"
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "47c828fd-ff11-478c-8c97-a1bf6794d048"
+      }
+    },
+    "owner": "gazetastreet"
   }
 }

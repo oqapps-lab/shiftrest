@@ -1,0 +1,142 @@
+workflows:
+  ios-production:
+    name: iOS Production
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      vars:
+        XCODE_WORKSPACE: "ios/ShiftRest.xcworkspace"
+        XCODE_SCHEME: "ShiftRest"
+        BUNDLE_ID: "com.gazetastreet.shiftrest"
+        APP_STORE_APPLE_ID: 6766302800
+        APP_STORE_CONNECT_KEY_IDENTIFIER: 787835NFD8
+        APP_STORE_CONNECT_ISSUER_ID: 2f01e90d-40ee-4f1d-9a37-651713378b40
+      node: v22.11.0
+      cocoapods: default
+      xcode: latest
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'main'
+          include: true
+      cancel_previous_builds: true
+    scripts:
+      - name: Decode signing assets from env
+        script: |
+          mkdir -p ~/.cert
+          echo "$CM_CERTIFICATE" | base64 --decode > ~/.cert/dist.p12
+          echo "$CM_PROVISIONING_PROFILE" | base64 --decode > ~/.cert/profile.mobileprovision
+          ls -la ~/.cert/
+      - name: Install npm dependencies
+        script: npm install
+      - name: Expo prebuild
+        script: npx expo prebuild --platform ios --clean --no-install
+      - name: Patch pbxproj — DEVELOPMENT_TEAM + Manual signing on ShiftRest target
+        script: |
+          # expo prebuild generates fresh pbxproj without DEVELOPMENT_TEAM. xcode-project use-profiles
+          # does not inject it on Expo-style projects. Set it explicitly before signing.
+          /usr/bin/python3 - <<'PY'
+          import re, sys
+          p = '/Users/builder/clone/ios/ShiftRest.xcodeproj/project.pbxproj'
+          src = open(p).read()
+          for setting, value in [
+              ('DEVELOPMENT_TEAM', '6Y6BFVDS4L'),
+              ('CODE_SIGN_STYLE', 'Manual'),
+          ]:
+              if setting in src:
+                  src = re.sub(rf'{setting} = [^;]+;', f'{setting} = {value};', src)
+              else:
+                  src = src.replace(
+                      'PRODUCT_BUNDLE_IDENTIFIER = "com.gazetastreet.shiftrest";',
+                      f'PRODUCT_BUNDLE_IDENTIFIER = "com.gazetastreet.shiftrest"; {setting} = {value};',
+                  )
+          open(p, 'w').write(src)
+          print("pbxproj patched")
+          PY
+      - name: Pod install
+        script: cd ios && pod install
+      - name: Set up signing keychain
+        script: |
+          keychain initialize
+          keychain add-certificates --certificate ~/.cert/dist.p12 --certificate-password "$CM_CERTIFICATE_PASSWORD"
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles/"
+          UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin <<< "$(security cms -D -i ~/.cert/profile.mobileprovision)")
+          cp ~/.cert/profile.mobileprovision "$HOME/Library/MobileDevice/Provisioning Profiles/$UUID.mobileprovision"
+          xcode-project use-profiles --verbose
+      - name: Increment build number
+        script: |
+          cd $CM_BUILD_DIR/ios
+          # Use TestFlight (covers ALL uploaded builds including ones not yet
+          # attached to an App Store version), with App Store fallback for
+          # brand-new apps that have no TF history yet.
+          # Sugar Quit's playbook used get-latest-app-store-build-number which
+          # only sees attached builds — fine for fresh projects, but ShiftRest
+          # already had v5+v6 in TF from prior EAS uploads, with only v5
+          # attached to v1.0. Result: increment returned 5+1=6, collision with
+          # existing v6, ENTITY_ERROR.ATTRIBUTE.INVALID.DUPLICATE on submit.
+          TF=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || echo "0")
+          AS=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID" 2>/dev/null || echo "0")
+          BUILD_NUMBER=$(( TF > AS ? TF : AS ))
+          NEW_NUMBER=$((BUILD_NUMBER + 1))
+          echo "TF latest=$TF, AppStore latest=$AS, picking max+1=$NEW_NUMBER"
+          agvtool new-version -all $NEW_NUMBER
+      - name: Build IPA
+        script: |
+          xcode-project build-ipa \
+            --workspace "$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - ios/build/ios/ipa/*.ipa
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true
+
+  ios-simulator-dev:
+    name: iOS Simulator Dev Client (manual trigger only — for sim testing)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      vars:
+        XCODE_WORKSPACE: "ios/ShiftRest.xcworkspace"
+        XCODE_SCHEME: "ShiftRest"
+      node: v22.11.0
+      cocoapods: default
+      xcode: latest
+    scripts:
+      - name: Install npm dependencies
+        script: npm install
+      - name: Expo prebuild
+        script: npx expo prebuild --platform ios --clean --no-install
+      - name: Pod install
+        script: cd ios && pod install
+      - name: Build for iPhoneSimulator (no signing needed)
+        script: |
+          cd ios
+          xcodebuild build \
+            -workspace "$XCODE_SCHEME.xcworkspace" \
+            -scheme "$XCODE_SCHEME" \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination "generic/platform=iOS Simulator" \
+            -derivedDataPath ./build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO 2>&1 | tee /tmp/xcodebuild.log
+          test ${PIPESTATUS[0]} -eq 0
+      - name: Package .app as zip artifact
+        script: |
+          APP_PATH=$(find ios/build/Build/Products -name "$XCODE_SCHEME.app" -type d | head -1)
+          echo "Found app at: $APP_PATH"
+          test -d "$APP_PATH"
+          cd "$(dirname "$APP_PATH")"
+          zip -ry "$CM_BUILD_DIR/ShiftRest-sim.zip" "$XCODE_SCHEME.app"
+          ls -la "$CM_BUILD_DIR/ShiftRest-sim.zip"
+    artifacts:
+      - ShiftRest-sim.zip

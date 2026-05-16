@@ -1,0 +1,309 @@
+/**
+ * S50 — Profile Overview. Streak heatmap + 3 quick stats + settings list.
+ */
+
+import React from 'react';
+import { View, StyleSheet, Pressable, Alert } from 'react-native';
+import { router } from 'expo-router';
+import {
+  Screen,
+  Eyebrow,
+  SerifHero,
+  GlassCard,
+  HeroNumber,
+  Text,
+  Glyph,
+} from '../../components/ui';
+import { colors, spacing, radii } from '../../constants/tokens';
+import { mockUser, mockProfessions } from '../../mock/user';
+import { formatTrialRemaining, clampDisplayName } from '../../lib/derive';
+import { useAuth } from '../../lib/auth/store';
+import { useOnboarding } from '../../lib/onboarding/store';
+import { useStreak, useProfileStats, useSubscription } from '../../lib/queries';
+import { t } from '../../lib/i18n';
+
+const STREAK_LENGTH = 14;
+
+export default function Profile() {
+  const { user, signOut } = useAuth();
+  const { state: onboarding, reset: resetOnboarding } = useOnboarding();
+  const { data: streak } = useStreak();
+  const { data: stats } = useProfileStats();
+  const { data: subscription } = useSubscription();
+  const streakValue = streak?.current_streak ?? mockUser.streak;
+
+  // For signed-in users always show their real numbers (0 is honest).
+  // Anonymous demo mode falls through to mockUser so the screen tells a
+  // story without any backend.
+  const daysInApp = user ? (stats?.daysInApp ?? 0) : mockUser.daysInApp;
+  const plansCompleted = user ? (stats?.plansCompleted ?? 0) : mockUser.transitionsCompleted;
+  const adherencePct = user ? (stats?.onPlanPct ?? 0) : mockUser.adherence;
+
+  // Display name preference:
+  //   onboarding.displayName (set in S11) →
+  //   real auth user_metadata.display_name →
+  //   email local part →
+  //   "Friend" generic placeholder (NOT mockUser.name — that leaks "Marina"
+  //   on cold-start which felt like demo data on App Store Review)
+  // Clamp to 24 chars so the SerifHero stays on ≤2 lines.
+  const displayName = clampDisplayName(
+    onboarding.displayName?.trim() ||
+      (user?.user_metadata as { display_name?: string } | undefined)?.display_name ||
+      user?.email?.split('@')[0] ||
+      t('profile.fallback_name'),
+  );
+
+  // Profession label preference: pick from mockProfessions catalogue when
+  // user picked one in S02, else fall back to mockUser.profession label.
+  const professionLabel =
+    mockProfessions.find((p) => p.id === onboarding.profession)?.title ??
+    t('professions.nurse');
+
+  // Subscription subtitle: prefer real DB row over mock. Anonymous users
+  // are always on the free tier until signup (mockUser irrelevant).
+  let subscriptionSubtitle: string;
+  if (!user) {
+    subscriptionSubtitle = t('profile.subscription.free');
+  } else if (subscription?.status === 'trial' && subscription.trial_end) {
+    subscriptionSubtitle = t('profile.subscription.trial_template', { remaining: formatTrialRemaining(subscription.trial_end) });
+  } else if (subscription?.status === 'active') {
+    subscriptionSubtitle =
+      subscription.plan === 'premium_annual' ? t('profile.subscription.annual') : t('profile.subscription.monthly');
+  } else if (subscription?.status === 'grace_period') {
+    subscriptionSubtitle = t('profile.subscription.grace');
+  } else if (subscription?.status === 'cancelled' || subscription?.status === 'expired') {
+    subscriptionSubtitle = t('profile.subscription.lapsed');
+  } else {
+    subscriptionSubtitle = t('profile.subscription.free');
+  }
+
+  const accountRow = user
+    ? {
+        glyph: 'user' as const,
+        label: t('profile.rows.account'),
+        subtitle: user.email ?? t('profile.signed_in'),
+        onPress: () => {
+          Alert.alert(t('profile.signout.title'), t('profile.signout.body'), [
+            { text: t('profile.signout.cancel'), style: 'cancel' },
+            {
+              text: t('profile.signout.confirm'),
+              style: 'destructive',
+              onPress: async () => {
+                await signOut();
+              },
+            },
+          ]);
+        },
+      }
+    : {
+        glyph: 'sparkle' as const,
+        label: t('profile.rows.save_account'),
+        subtitle: t('profile.rows.save_account_sub'),
+        onPress: () => router.push('/auth/signup'),
+      };
+
+  const restartOnboardingRow = {
+    glyph: 'sparkle' as const,
+    label: t('profile.rows.restart_dev'),
+    subtitle: t('profile.rows.restart_dev_sub'),
+    onPress: () => {
+      Alert.alert(
+        t('profile.restart.title'),
+        t('profile.restart.body'),
+        [
+          { text: t('profile.restart.cancel'), style: 'cancel' },
+          {
+            text: t('profile.restart.confirm'),
+            style: 'destructive',
+            onPress: () => {
+              resetOnboarding();
+              router.replace('/onboarding/profession');
+            },
+          },
+        ],
+      );
+    },
+  };
+
+  const SETTINGS: {
+    glyph: 'gear' | 'bell' | 'sparkle' | 'user';
+    label: string;
+    subtitle: string;
+    onPress: (() => void) | undefined;
+  }[] = [
+    accountRow,
+    {
+      glyph: 'gear',
+      label: t('profile.rows.sleep_prefs'),
+      subtitle: t('profile.rows.sleep_prefs_sub'),
+      onPress: () => router.push('/settings/sleep-preferences'),
+    },
+    {
+      glyph: 'bell',
+      label: t('profile.rows.notifications'),
+      subtitle: t('profile.rows.notifications_sub'),
+      onPress: () => router.push('/settings/notifications'),
+    },
+    {
+      glyph: 'sparkle',
+      label: t('profile.rows.subscription'),
+      subtitle: subscriptionSubtitle,
+      onPress: () => router.push('/settings/subscription'),
+    },
+    {
+      glyph: 'user',
+      label: t('profile.rows.about'),
+      subtitle: t('profile.rows.about_sub'),
+      onPress: () => router.push('/settings/about'),
+    },
+    restartOnboardingRow,
+  ];
+  return (
+    <Screen orbs="subtle" variant="dim" scroll>
+      <Eyebrow>{t('profile.eyebrow')}</Eyebrow>
+      <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
+        <SerifHero>{displayName}</SerifHero>
+        <Text
+          variant="titleLg"
+          family="display"
+          weight="light"
+          color="inkSubtle"
+          style={{ marginTop: spacing.xs }}
+        >
+          {`${professionLabel}.`}
+        </Text>
+      </View>
+
+      <Eyebrow>{t('streak.label_template', { n: streakValue })}</Eyebrow>
+      <View style={styles.streakRow}>
+        {Array.from({ length: STREAK_LENGTH }).map((_, i) => {
+          // Right-most dot = today; earliest = STREAK_LENGTH days ago.
+          // Filled when within current streak; outlined otherwise.
+          const dayIndex = STREAK_LENGTH - 1 - i;
+          const filled = dayIndex < streakValue;
+          const isToday = i === STREAK_LENGTH - 1;
+          // Subtle gradient on filled dots so they read as "history" not flat.
+          const opacity = filled ? 0.5 + (i / STREAK_LENGTH) * 0.5 : 1;
+          return (
+            <View
+              key={i}
+              style={[
+                styles.streakDot,
+                filled
+                  ? { backgroundColor: colors.primary, opacity }
+                  : styles.streakDotEmpty,
+                filled && isToday && styles.streakDotActive,
+              ]}
+            />
+          );
+        })}
+      </View>
+
+      <View style={{ height: spacing.huge }} />
+
+      <View style={styles.statsRow}>
+        <GlassCard variant="glass" padding="lg" style={styles.stat}>
+          <Eyebrow size="md">{t('profile.stat_days')}</Eyebrow>
+          <HeroNumber value={daysInApp} size="md" />
+        </GlassCard>
+        <View style={{ width: spacing.sm }} />
+        <GlassCard variant="glass" padding="lg" style={styles.stat}>
+          <Eyebrow size="md">{t('profile.stat_plans')}</Eyebrow>
+          <HeroNumber value={plansCompleted} size="md" />
+        </GlassCard>
+        <View style={{ width: spacing.sm }} />
+        <GlassCard variant="glass" padding="lg" style={styles.stat}>
+          <Eyebrow size="md">{t('profile.stat_on_plan')}</Eyebrow>
+          <HeroNumber value={adherencePct} size="md" unit="%" />
+        </GlassCard>
+      </View>
+
+      <View style={{ height: spacing.huge }} />
+
+      <Eyebrow>{t('profile.settings')}</Eyebrow>
+      <View style={{ height: spacing.md }} />
+
+      {SETTINGS.map((row) => (
+        <Pressable
+          key={row.label}
+          onPress={row.onPress}
+          disabled={!row.onPress}
+          accessibilityRole="button"
+          accessibilityLabel={row.label}
+          style={{ marginBottom: spacing.sm }}
+        >
+          <GlassCard variant="whisper" padding="xl">
+            <View style={styles.settingsRow}>
+              <View style={styles.settingsIcon}>
+                <Glyph name={row.glyph} size={20} color="primary" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text variant="titleMd" family="display" weight="medium" color="ink">
+                  {row.label}
+                </Text>
+                <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
+                  {row.subtitle}
+                </Text>
+              </View>
+              {row.onPress && <Glyph name="chevronRight" size={18} color="inkMuted" />}
+            </View>
+          </GlassCard>
+        </Pressable>
+      ))}
+
+      {/* Hint when in demo mode (no Supabase keys) */}
+      {!user && (
+        <View style={{ marginTop: spacing.md }}>
+          <Text variant="bodyMd" color="inkMuted" align="center">
+            {t('profile.anonymous_hint')}
+          </Text>
+        </View>
+      )}
+    </Screen>
+  );
+}
+
+const styles = StyleSheet.create({
+  streakRow: {
+    flexDirection: 'row',
+    marginTop: spacing.md,
+    gap: 6,
+  },
+  streakDot: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+  },
+  streakDotEmpty: {
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: colors.inkGhost,
+  },
+  streakDotActive: {
+    shadowColor: colors.primary,
+    shadowOpacity: 0.45,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 6,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  stat: {
+    flex: 1,
+  },
+  settingsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  settingsIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: radii.lg,
+    backgroundColor: colors.primaryContainer,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: spacing.md,
+  },
+});
