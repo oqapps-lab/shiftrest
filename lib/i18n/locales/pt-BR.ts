@@ -311,6 +311,61 @@ const ptBR = {
     one_day: "1 dia restante",
     n_days: "{{n}} dias restantes",
   },
+  onboarding_screens: {
+    profession: {
+      hero: "O que você faz?",
+      sub: "Ajustamos cada recomendação ao padrão de rotação da sua profissão.",
+    },
+    schedule: {
+      hero: "Qual é a sua escala?",
+      sub: "Ajustamos as janelas de sono ao ritmo da sua rotação.",
+    },
+    current_shift: {
+      hero: "Onde você está agora?",
+      sub: "Para ancorarmos o seu primeiro plano.",
+      commute_label: "TEMPO DE DESLOCAMENTO",
+      commute_a11y: "Tempo de deslocamento em minutos",
+      day_shift: "Turno diurno",
+      night_shift: "Turno noturno",
+      off_day: "Folga",
+      start: "INÍCIO",
+      end: "FIM",
+    },
+    problem: {
+      hero: "O que mais te incomoda?",
+      sub: "Vamos priorizar isso no seu plano.",
+    },
+    family: {
+      hero: "Tem compromissos com a família?",
+      sub: "Obrigações fixas mudam o nosso plano (buscar na escola, etc).",
+      kids_a11y: "Tenho filhos em casa",
+      kids_label: "Tenho filhos em casa",
+      pickup_time: "HORÁRIO DE BUSCA",
+      other_commitments: "OUTROS COMPROMISSOS",
+      placeholder: "ex.: ioga ter/qui 18:00",
+    },
+    name: {
+      hero: "Qual é o seu nome?",
+      sub: "Vamos te chamar por ele.",
+      label: "NOME",
+      placeholder: "Seu nome",
+    },
+    notifications: {
+      eyebrow: "QUASE LÁ",
+      hero: "Nunca perca a sua janela.",
+      allow: "Permitir notificações",
+      later: "Talvez depois",
+    },
+    loading: {
+      eyebrow: "ANALISANDO",
+    },
+    social_proof_2: {
+      cta: "Ver meu plano",
+      eyebrow: "VOCÊ ESTÁ EM BOA COMPANHIA",
+      hero_template: "De {{n}} trabalhadores em turnos",
+      reviews_template: "★ {{rating}} · {{n}}+ avaliações",
+    },
+  },
   number_words: ["Zero", "Um", "Dois", "Três", "Quatro", "Cinco", "Seis", "Sete"],
 };
 

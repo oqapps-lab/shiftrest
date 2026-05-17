@@ -27,9 +27,9 @@ import { t } from '../../lib/i18n';
 type ShiftKind = 'day' | 'night' | 'off';
 
 const SEGMENT_OPTIONS: SegmentOption<ShiftKind>[] = [
-  { value: 'day', label: 'Day shift' },
-  { value: 'night', label: 'Night shift' },
-  { value: 'off', label: 'Off day' },
+  { value: 'day', label: t('onboarding_screens.current_shift.day_shift') },
+  { value: 'night', label: t('onboarding_screens.current_shift.night_shift') },
+  { value: 'off', label: t('onboarding_screens.current_shift.off_day') },
 ];
 
 const SHIFT_TIMES: Record<ShiftKind, { start: string; end: string }> = {
@@ -57,7 +57,7 @@ export default function CurrentShift() {
         />
       }
     >
-      <Eyebrow>STEP 3 OF 10</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 3, total: 10 })}</Eyebrow>
       <ProgressDots
         count={10}
         active={2}
@@ -65,7 +65,7 @@ export default function CurrentShift() {
       />
 
       <HeroNumber
-        value="Where are you right now?"
+        value={t('onboarding_screens.current_shift.hero')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
@@ -75,7 +75,7 @@ export default function CurrentShift() {
         color="inkSubtle"
         style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
       >
-        So we can anchor your first plan.
+        {t('onboarding_screens.current_shift.sub')}
       </Text>
 
       <SegmentedControl<ShiftKind>
@@ -86,7 +86,7 @@ export default function CurrentShift() {
 
       <View style={styles.timeRow}>
         <GlassCard variant="paper" padding="lg" style={styles.timeCard}>
-          <Eyebrow size="md">START</Eyebrow>
+          <Eyebrow size="md">{t('onboarding_screens.current_shift.start')}</Eyebrow>
           <Text
             variant="headlineLg"
             family="display"
@@ -100,7 +100,7 @@ export default function CurrentShift() {
           </Text>
         </GlassCard>
         <GlassCard variant="paper" padding="lg" style={styles.timeCard}>
-          <Eyebrow size="md">END</Eyebrow>
+          <Eyebrow size="md">{t('onboarding_screens.current_shift.end')}</Eyebrow>
           <Text
             variant="headlineLg"
             family="display"
@@ -117,7 +117,7 @@ export default function CurrentShift() {
 
       <View style={{ marginTop: spacing.xl }}>
         <View style={styles.commuteHeader}>
-          <Eyebrow>Commute time</Eyebrow>
+          <Eyebrow>{t('onboarding_screens.current_shift.commute_label')}</Eyebrow>
           <Text variant="titleMd" family="display" weight="medium" color="ink">
             {commute} min
           </Text>
@@ -128,7 +128,7 @@ export default function CurrentShift() {
           step={5}
           value={commute}
           onChange={(v) => update({ commuteMinutes: v })}
-          accessibilityLabel="Commute time in minutes"
+          accessibilityLabel={t('onboarding_screens.current_shift.commute_a11y')}
           style={{ marginTop: spacing.sm }}
         />
       </View>

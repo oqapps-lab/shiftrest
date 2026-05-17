@@ -17,6 +17,7 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { Screen, Eyebrow, SerifHero, Text, PillCTA } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
+import { t } from '../../lib/i18n';
 
 type Status = 'pending' | 'success' | 'error';
 
@@ -77,7 +78,7 @@ export default function AuthConfirm() {
   return (
     <Screen orbs="subtle">
       <View style={{ marginTop: spacing.huge * 2 }}>
-        <Eyebrow>EMAIL CONFIRMATION</Eyebrow>
+        <Eyebrow>{t('auth.email_confirmation')}</Eyebrow>
         <View style={{ marginTop: spacing.md }}>
           <SerifHero>
             {status === 'pending' && 'Verifying...'}
@@ -101,7 +102,7 @@ export default function AuthConfirm() {
               <View style={{ marginTop: spacing.huge }}>
                 <PillCTA
                   variant="primary"
-                  label="Back to sign in"
+                  label={t('auth.back_to_signin')}
                   onPress={() => router.replace('/auth/login')}
                 />
               </View>

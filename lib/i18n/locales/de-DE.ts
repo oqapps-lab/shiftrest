@@ -312,6 +312,61 @@ const deDE = {
     one_day: 'noch 1 Tag',
     n_days: 'noch {{n}} Tage',
   },
+  onboarding_screens: {
+    profession: {
+      hero: 'Was machst du beruflich?',
+      sub: 'Wir stimmen jede Empfehlung auf den Schichtrhythmus deines Berufs ab.',
+    },
+    schedule: {
+      hero: 'Wie ist dein Dienstplan?',
+      sub: 'Wir passen die Schlaffenster an den Rhythmus deiner Rotation an.',
+    },
+    current_shift: {
+      hero: 'Wo stehst du gerade?',
+      sub: 'Damit wir deinen ersten Plan verankern können.',
+      commute_label: 'PENDELZEIT',
+      commute_a11y: 'Pendelzeit in Minuten',
+      day_shift: 'Tagschicht',
+      night_shift: 'Nachtschicht',
+      off_day: 'Freier Tag',
+      start: 'START',
+      end: 'ENDE',
+    },
+    problem: {
+      hero: 'Was stört dich am meisten?',
+      sub: 'Wir setzen es in deinem Plan an erste Stelle.',
+    },
+    family: {
+      hero: 'Familiäre Verpflichtungen?',
+      sub: 'Feste Verpflichtungen ändern unseren Plan (Schule abholen usw.).',
+      kids_a11y: 'Kinder zu Hause',
+      kids_label: 'Ich habe Kinder zu Hause',
+      pickup_time: 'ABHOLZEIT',
+      other_commitments: 'WEITERE VERPFLICHTUNGEN',
+      placeholder: 'z. B. Yoga Di/Do 18:00',
+    },
+    name: {
+      hero: 'Wie heißt du?',
+      sub: 'Damit wir dich beim Namen begrüßen können.',
+      label: 'NAME',
+      placeholder: 'Dein Name',
+    },
+    notifications: {
+      eyebrow: 'FAST GESCHAFFT',
+      hero: 'Verpasse dein Zeitfenster nie.',
+      allow: 'Benachrichtigungen erlauben',
+      later: 'Vielleicht später',
+    },
+    loading: {
+      eyebrow: 'WIRD ANALYSIERT',
+    },
+    social_proof_2: {
+      cta: 'Meinen Plan anzeigen',
+      eyebrow: 'DU BIST IN GUTER GESELLSCHAFT',
+      hero_template: 'Von {{n}} Schichtarbeitern',
+      reviews_template: '★ {{rating}} · {{n}}+ Bewertungen',
+    },
+  },
   number_words: ['Null', 'Eins', 'Zwei', 'Drei', 'Vier', 'Fünf', 'Sechs', 'Sieben'],
 };
 

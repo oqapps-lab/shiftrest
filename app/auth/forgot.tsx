@@ -21,6 +21,7 @@ import {
 import { colors, spacing } from '../../constants/tokens';
 import { useAuth } from '../../lib/auth/store';
 import { safeBack } from '../../lib/nav';
+import { t } from '../../lib/i18n';
 
 export default function Forgot() {
   const { resetPassword, configured } = useAuth();
@@ -49,9 +50,9 @@ export default function Forgot() {
   if (sent) {
     return (
       <Screen orbs="subtle" scroll tabBarClearance={false}>
-        <Eyebrow>CHECK YOUR INBOX</Eyebrow>
+        <Eyebrow>{t('auth.check_inbox')}</Eyebrow>
         <HeroNumber
-          value="Reset link sent"
+          value={t('auth.reset_link_sent')}
           size="md"
           style={{ marginTop: spacing.lg }}
         />
@@ -64,7 +65,7 @@ export default function Forgot() {
         </Text>
         <PillCTA
           variant="primary"
-          label="Back to sign in"
+          label={t('auth.back_to_signin')}
           onPress={() => router.replace('/auth/login')}
         />
       </Screen>
@@ -80,7 +81,7 @@ export default function Forgot() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label={loading ? 'Sending…' : 'Send reset link'}
+          label={loading ? t('auth.sending') : t('auth.send_reset')}
           disabled={!canSubmit}
           onPress={onSubmit}
         />
@@ -90,16 +91,16 @@ export default function Forgot() {
         onPress={() => safeBack('/auth/login')}
         hitSlop={12}
         accessibilityRole="button"
-        accessibilityLabel="Back"
+        accessibilityLabel={t('auth.back_a11y')}
         style={styles.backRow}
       >
         <Glyph name="chevronLeft" size={22} color="inkMuted" />
       </Pressable>
 
-      <Eyebrow>NO WORRIES</Eyebrow>
+      <Eyebrow>{t('auth.no_worries')}</Eyebrow>
 
       <HeroNumber
-        value="Reset password"
+        value={t('auth.reset_password')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
@@ -113,8 +114,8 @@ export default function Forgot() {
       </Text>
 
       <TextField
-        label="EMAIL"
-        placeholder="you@example.com"
+        label={t('auth.email_label')}
+        placeholder={t('auth.email_placeholder')}
         autoCapitalize="none"
         autoCorrect={false}
         autoComplete="email"

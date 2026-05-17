@@ -311,6 +311,61 @@ const sv = {
     one_day: '1 dag kvar',
     n_days: '{{n}} dagar kvar',
   },
+  onboarding_screens: {
+    profession: {
+      hero: 'Vad jobbar du med?',
+      sub: 'Vi anpassar varje rekommendation efter ditt yrkes rotationsmönster.',
+    },
+    schedule: {
+      hero: 'Vad är ditt schema?',
+      sub: 'Vi anpassar sömnfönstren efter din rotations rytm.',
+    },
+    current_shift: {
+      hero: 'Var är du just nu?',
+      sub: 'Så att vi kan förankra din första plan.',
+      commute_label: 'RESTID',
+      commute_a11y: 'Restid i minuter',
+      day_shift: 'Dagpass',
+      night_shift: 'Nattpass',
+      off_day: 'Ledig dag',
+      start: 'START',
+      end: 'SLUT',
+    },
+    problem: {
+      hero: 'Vad besvärar dig mest?',
+      sub: 'Vi prioriterar det i din plan.',
+    },
+    family: {
+      hero: 'Några familjeåtaganden?',
+      sub: 'Fasta åtaganden ändrar vår plan (hämtning från skolan, m.m.).',
+      kids_a11y: 'Har barn hemma',
+      kids_label: 'Jag har barn hemma',
+      pickup_time: 'HÄMTNINGSTID',
+      other_commitments: 'ÖVRIGA ÅTAGANDEN',
+      placeholder: 't.ex. yoga tis/tors 18:00',
+    },
+    name: {
+      hero: 'Vad heter du?',
+      sub: 'Vi hälsar dig med det.',
+      label: 'NAMN',
+      placeholder: 'Ditt namn',
+    },
+    notifications: {
+      eyebrow: 'NÄSTAN KLAR',
+      hero: 'Missa aldrig ditt fönster.',
+      allow: 'Tillåt aviseringar',
+      later: 'Kanske senare',
+    },
+    loading: {
+      eyebrow: 'ANALYSERAR',
+    },
+    social_proof_2: {
+      cta: 'Visa min plan',
+      eyebrow: 'DU ÄR I GOTT SÄLLSKAP',
+      hero_template: 'Av {{n}} skiftarbetare',
+      reviews_template: '★ {{rating}} · {{n}}+ recensioner',
+    },
+  },
   number_words: ['Noll', 'Ett', 'Två', 'Tre', 'Fyra', 'Fem', 'Sex', 'Sju'],
 };
 

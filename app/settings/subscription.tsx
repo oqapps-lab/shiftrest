@@ -22,6 +22,7 @@ import { formatTrialRemaining } from '../../lib/derive';
 import { safeBack } from '../../lib/nav';
 import { useAuth } from '../../lib/auth/store';
 import { useSubscription } from '../../lib/queries';
+import { t } from '../../lib/i18n';
 
 type DisplayStatus = 'free' | 'trial' | 'active' | 'cancelled' | 'expired' | 'grace';
 
@@ -110,7 +111,7 @@ export default function Subscription() {
           <PillCTA
             variant="glass"
             size="md"
-            label="Manage in App Store"
+            label={t('settings_screens.subscription.manage_store')}
             onPress={() =>
               Linking.openURL('https://apps.apple.com/account/subscriptions').catch(
                 () => Alert.alert('Could not open App Store'),
@@ -130,9 +131,9 @@ export default function Subscription() {
         <Glyph name="chevronLeft" size={22} color="inkMuted" />
       </Pressable>
 
-      <Eyebrow>SETTINGS</Eyebrow>
+      <Eyebrow>{t('settings_screens.eyebrow')}</Eyebrow>
       <HeroNumber
-        value="Subscription"
+        value={t('settings_screens.subscription.title')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
@@ -158,7 +159,7 @@ export default function Subscription() {
 
       {/* Plan benefits */}
       <View style={{ marginTop: spacing.huge }}>
-        <Eyebrow>YOUR PLAN INCLUDES</Eyebrow>
+        <Eyebrow>{t('settings_screens.subscription.plan_includes')}</Eyebrow>
         {[
           { glyph: 'bed' as const, text: 'Personalised sleep window' },
           { glyph: 'coffee' as const, text: 'Caffeine cutoff by sensitivity' },

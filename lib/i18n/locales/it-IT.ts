@@ -311,6 +311,61 @@ const itIT = {
     one_day: "1 giorno rimasto",
     n_days: "{{n}} giorni rimasti",
   },
+  onboarding_screens: {
+    profession: {
+      hero: "Che lavoro fai?",
+      sub: "Calibriamo ogni consiglio sullo schema di rotazione della tua professione.",
+    },
+    schedule: {
+      hero: "Qual è il tuo turno?",
+      sub: "Calibriamo le finestre di sonno sul ritmo della tua rotazione.",
+    },
+    current_shift: {
+      hero: "Dove sei adesso?",
+      sub: "Così possiamo ancorare il tuo primo piano.",
+      commute_label: "TEMPO DI TRAGITTO",
+      commute_a11y: "Tempo di tragitto in minuti",
+      day_shift: "Turno diurno",
+      night_shift: "Turno notturno",
+      off_day: "Giorno libero",
+      start: "INIZIO",
+      end: "FINE",
+    },
+    problem: {
+      hero: "Cosa ti disturba di più?",
+      sub: "Lo metteremo in cima al tuo piano.",
+    },
+    family: {
+      hero: "Impegni familiari?",
+      sub: "Gli impegni fissi cambiano il nostro piano (uscita da scuola, ecc.).",
+      kids_a11y: "Avere figli in casa",
+      kids_label: "Ho figli in casa",
+      pickup_time: "ORARIO USCITA SCUOLA",
+      other_commitments: "ALTRI IMPEGNI",
+      placeholder: "es. yoga mar/gio 18:00",
+    },
+    name: {
+      hero: "Come ti chiami?",
+      sub: "Ti saluteremo con il tuo nome.",
+      label: "NOME",
+      placeholder: "Il tuo nome",
+    },
+    notifications: {
+      eyebrow: "QUASI FATTO",
+      hero: "Non perdere mai la tua finestra.",
+      allow: "Consenti notifiche",
+      later: "Magari più tardi",
+    },
+    loading: {
+      eyebrow: "ANALISI IN CORSO",
+    },
+    social_proof_2: {
+      cta: "Mostra il mio piano",
+      eyebrow: "SEI IN BUONA COMPAGNIA",
+      hero_template: "Tra {{n}} turnisti",
+      reviews_template: "★ {{rating}} · {{n}}+ recensioni",
+    },
+  },
   number_words: ["Zero", "Uno", "Due", "Tre", "Quattro", "Cinque", "Sei", "Sette"],
 };
 

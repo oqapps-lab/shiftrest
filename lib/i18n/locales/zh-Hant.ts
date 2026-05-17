@@ -310,6 +310,61 @@ const zhHant = {
     one_day: "剩 1 天",
     n_days: "剩 {{n}} 天",
   },
+  onboarding_screens: {
+    profession: {
+      hero: "你的職業是什麼？",
+      sub: "我們會依照你職業的輪班模式調整每項建議。",
+    },
+    schedule: {
+      hero: "你的班表是？",
+      sub: "我們會配合輪班節奏調整睡眠時段。",
+    },
+    current_shift: {
+      hero: "你現在在哪裡？",
+      sub: "好讓我們為你的第一份計畫定錨。",
+      commute_label: "通勤時間",
+      commute_a11y: "通勤時間（分鐘）",
+      day_shift: "白班",
+      night_shift: "夜班",
+      off_day: "休假日",
+      start: "開始",
+      end: "結束",
+    },
+    problem: {
+      hero: "什麼最讓你困擾？",
+      sub: "我們會在計畫中優先處理。",
+    },
+    family: {
+      hero: "有家庭方面的安排嗎？",
+      sub: "固定的責任會影響我們的計畫（接送小孩等）。",
+      kids_a11y: "家中有小孩",
+      kids_label: "我家中有小孩",
+      pickup_time: "接送時間",
+      other_commitments: "其他安排",
+      placeholder: "例如：瑜伽 週二/週四 18:00",
+    },
+    name: {
+      hero: "你的名字是？",
+      sub: "我們會用這個名字稱呼你。",
+      label: "姓名",
+      placeholder: "你的名字",
+    },
+    notifications: {
+      eyebrow: "就快完成",
+      hero: "別錯過你的最佳時段。",
+      allow: "允許通知",
+      later: "稍後再說",
+    },
+    loading: {
+      eyebrow: "分析中",
+    },
+    social_proof_2: {
+      cta: "顯示我的計畫",
+      eyebrow: "你並不孤單",
+      hero_template: "{{n}} 位輪班工作者一起",
+      reviews_template: "★ {{rating}} · {{n}}+ 則評價",
+    },
+  },
   number_words: ["零", "一", "二", "三", "四", "五", "六", "七"],
 };
 

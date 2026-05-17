@@ -312,6 +312,61 @@ const esES = {
     one_day: 'queda 1 día',
     n_days: 'quedan {{n}} días',
   },
+  onboarding_screens: {
+    profession: {
+      hero: '¿A qué te dedicas?',
+      sub: 'Ajustamos cada recomendación al patrón de rotación de tu profesión.',
+    },
+    schedule: {
+      hero: '¿Cuál es tu turno?',
+      sub: 'Ajustamos las ventanas de sueño al ritmo de tu rotación.',
+    },
+    current_shift: {
+      hero: '¿Dónde estás ahora mismo?',
+      sub: 'Para anclar tu primer plan.',
+      commute_label: 'TIEMPO DE TRAYECTO',
+      commute_a11y: 'Tiempo de trayecto en minutos',
+      day_shift: 'Turno de día',
+      night_shift: 'Turno de noche',
+      off_day: 'Día libre',
+      start: 'INICIO',
+      end: 'FIN',
+    },
+    problem: {
+      hero: '¿Qué te molesta más?',
+      sub: 'Lo priorizaremos en tu plan.',
+    },
+    family: {
+      hero: '¿Compromisos familiares?',
+      sub: 'Las obligaciones fijas cambian nuestro plan (recoger en el cole, etc.).',
+      kids_a11y: 'Tener hijos en casa',
+      kids_label: 'Tengo hijos en casa',
+      pickup_time: 'HORA DE RECOGIDA',
+      other_commitments: 'OTROS COMPROMISOS',
+      placeholder: 'p. ej. yoga mar/jue 18:00',
+    },
+    name: {
+      hero: '¿Cómo te llamas?',
+      sub: 'Te saludaremos con tu nombre.',
+      label: 'NOMBRE',
+      placeholder: 'Tu nombre',
+    },
+    notifications: {
+      eyebrow: 'CASI HECHO',
+      hero: 'No te pierdas tu ventana.',
+      allow: 'Permitir notificaciones',
+      later: 'Quizá más tarde',
+    },
+    loading: {
+      eyebrow: 'ANALIZANDO',
+    },
+    social_proof_2: {
+      cta: 'Ver mi plan',
+      eyebrow: 'ESTÁS EN BUENA COMPAÑÍA',
+      hero_template: 'De {{n}} trabajadores por turnos',
+      reviews_template: '★ {{rating}} · {{n}}+ reseñas',
+    },
+  },
   number_words: ['Cero', 'Uno', 'Dos', 'Tres', 'Cuatro', 'Cinco', 'Seis', 'Siete'],
 };
 

@@ -18,6 +18,7 @@ import {
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
 import { mockNotificationTypes } from '../../mock/user';
+import { t } from '../../lib/i18n';
 
 export default function Notifications() {
   const { markCompleted } = useOnboarding();
@@ -36,22 +37,22 @@ export default function Notifications() {
         <View style={{ gap: spacing.sm }}>
           <PillCTA
             variant="primary"
-            label="Allow notifications"
+            label={t('onboarding_screens.notifications.allow')}
             onPress={finish}
           />
           <PillCTA
             variant="glass"
             size="md"
-            label="Maybe later"
+            label={t('onboarding_screens.notifications.later')}
             onPress={finish}
           />
         </View>
       }
     >
       <View style={styles.headWrap}>
-        <Eyebrow>ALMOST DONE</Eyebrow>
+        <Eyebrow>{t('onboarding_screens.notifications.eyebrow')}</Eyebrow>
         <View style={{ marginTop: spacing.md }}>
-          <SerifHero align="center">Never miss your window.</SerifHero>
+          <SerifHero align="center">{t('onboarding_screens.notifications.hero')}</SerifHero>
         </View>
       </View>
 

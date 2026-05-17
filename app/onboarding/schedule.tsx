@@ -37,7 +37,7 @@ export default function Schedule() {
         />
       }
     >
-      <Eyebrow>STEP 2 OF 10</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 2, total: 10 })}</Eyebrow>
       <ProgressDots
         count={10}
         active={1}
@@ -45,7 +45,7 @@ export default function Schedule() {
       />
 
       <HeroNumber
-        value="What's your schedule?"
+        value={t('onboarding_screens.schedule.hero')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
@@ -55,7 +55,7 @@ export default function Schedule() {
         color="inkSubtle"
         style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
       >
-        {"We tune sleep windows to your rotation's rhythm."}
+        {t('onboarding_screens.schedule.sub')}
       </Text>
 
       {mockScheduleTemplates.map((s) => (

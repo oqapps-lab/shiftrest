@@ -311,6 +311,61 @@ const ja = {
     one_day: "残り1日",
     n_days: "残り{{n}}日",
   },
+  onboarding_screens: {
+    profession: {
+      hero: "お仕事は何ですか？",
+      sub: "あなたの職業のローテーションパターンに合わせて、すべての提案を調整します。",
+    },
+    schedule: {
+      hero: "シフトはどんなパターンですか？",
+      sub: "ローテーションのリズムに合わせて睡眠時間帯を調整します。",
+    },
+    current_shift: {
+      hero: "今はどんな状況ですか？",
+      sub: "最初のプランを正しく組み立てるために。",
+      commute_label: "通勤時間",
+      commute_a11y: "通勤時間（分）",
+      day_shift: "日勤",
+      night_shift: "夜勤",
+      off_day: "休み",
+      start: "開始",
+      end: "終了",
+    },
+    problem: {
+      hero: "いちばんの悩みは？",
+      sub: "プランで最優先にします。",
+    },
+    family: {
+      hero: "ご家族の予定はありますか？",
+      sub: "固定の用事はプランに反映します（保育園のお迎えなど）。",
+      kids_a11y: "自宅に子どもがいる",
+      kids_label: "自宅に子どもがいます",
+      pickup_time: "お迎えの時刻",
+      other_commitments: "その他の予定",
+      placeholder: "例：火・木 18:00 ヨガ",
+    },
+    name: {
+      hero: "お名前は？",
+      sub: "そのお名前でご挨拶します。",
+      label: "名前",
+      placeholder: "あなたの名前",
+    },
+    notifications: {
+      eyebrow: "もう少しで完了",
+      hero: "大事な時間帯を、見逃さない。",
+      allow: "通知を許可",
+      later: "あとで",
+    },
+    loading: {
+      eyebrow: "分析中",
+    },
+    social_proof_2: {
+      cta: "プランを見る",
+      eyebrow: "あなたは一人じゃない",
+      hero_template: "{{n}} 人のシフト勤務者から",
+      reviews_template: "★ {{rating}} · {{n}}+ 件のレビュー",
+    },
+  },
   number_words: ["ゼロ", "一", "二", "三", "四", "五", "六", "七"],
 };
 

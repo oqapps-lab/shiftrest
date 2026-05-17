@@ -37,7 +37,7 @@ export default function Problem() {
         />
       }
     >
-      <Eyebrow>STEP 4 OF 10</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 4, total: 10 })}</Eyebrow>
       <ProgressDots
         count={10}
         active={3}
@@ -45,7 +45,7 @@ export default function Problem() {
       />
 
       <HeroNumber
-        value="What bothers you most?"
+        value={t('onboarding_screens.problem.hero')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
@@ -55,7 +55,7 @@ export default function Problem() {
         color="inkSubtle"
         style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
       >
-        {"We'll prioritise it in your plan."}
+        {t('onboarding_screens.problem.sub')}
       </Text>
 
       {mockMainProblems.map((p) => (

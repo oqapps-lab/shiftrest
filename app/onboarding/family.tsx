@@ -48,7 +48,7 @@ export default function Family() {
         />
       }
     >
-      <Eyebrow>STEP 9 OF 10</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 9, total: 10 })}</Eyebrow>
       <ProgressDots
         count={10}
         active={8}
@@ -56,7 +56,7 @@ export default function Family() {
       />
 
       <HeroNumber
-        value="Any family commitments?"
+        value={t('onboarding_screens.family.hero')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
@@ -66,23 +66,23 @@ export default function Family() {
         color="inkSubtle"
         style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
       >
-        Fixed obligations change our plan (school pickup, etc).
+        {t('onboarding_screens.family.sub')}
       </Text>
 
       <View style={styles.toggleRow}>
         <Text variant="titleMd" family="display" weight="medium" color="ink">
-          I have kids at home
+          {t('onboarding_screens.family.kids_label')}
         </Text>
         <Toggle
           value={hasKids}
           onChange={(v) => update({ hasChildren: v })}
-          accessibilityLabel="Have kids at home"
+          accessibilityLabel={t('onboarding_screens.family.kids_a11y')}
         />
       </View>
 
       {hasKids && (
         <View style={{ marginTop: spacing.xl }}>
-          <Eyebrow style={{ marginBottom: spacing.md }}>PICKUP TIME</Eyebrow>
+          <Eyebrow style={{ marginBottom: spacing.md }}>{t('onboarding_screens.family.pickup_time')}</Eyebrow>
           <SegmentedControl<PickupTime>
             options={PICKUP_OPTIONS}
             value={pickup}
@@ -90,10 +90,10 @@ export default function Family() {
           />
 
           <Eyebrow style={{ marginTop: spacing.xl, marginBottom: spacing.md }}>
-            OTHER COMMITMENTS
+            {t('onboarding_screens.family.other_commitments')}
           </Eyebrow>
           <TextField
-            placeholder="e.g. yoga Tue/Thu 18:00"
+            placeholder={t('onboarding_screens.family.placeholder')}
             value={other}
             onChangeText={(v) => update({ otherCommitments: v })}
             autoCapitalize="sentences"

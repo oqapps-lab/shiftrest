@@ -312,6 +312,61 @@ const nlNL = {
     one_day: 'nog 1 dag',
     n_days: 'nog {{n}} dagen',
   },
+  onboarding_screens: {
+    profession: {
+      hero: 'Wat doe je?',
+      sub: 'We stemmen elk advies af op het rotatiepatroon van jouw beroep.',
+    },
+    schedule: {
+      hero: 'Wat is je rooster?',
+      sub: 'We stemmen je slaapvensters af op het ritme van je rotatie.',
+    },
+    current_shift: {
+      hero: 'Waar zit je nu?',
+      sub: 'Zo verankeren we je eerste plan.',
+      commute_label: 'REISTIJD',
+      commute_a11y: 'Reistijd in minuten',
+      day_shift: 'Dagdienst',
+      night_shift: 'Nachtdienst',
+      off_day: 'Vrije dag',
+      start: 'START',
+      end: 'EINDE',
+    },
+    problem: {
+      hero: 'Wat zit je het meest dwars?',
+      sub: 'Daar geven we voorrang aan in je plan.',
+    },
+    family: {
+      hero: 'Heb je gezinsverplichtingen?',
+      sub: 'Vaste verplichtingen veranderen ons plan (kinderen ophalen, enz.).',
+      kids_a11y: 'Kinderen thuis',
+      kids_label: 'Ik heb kinderen thuis',
+      pickup_time: 'OPHAALTIJD',
+      other_commitments: 'OVERIGE VERPLICHTINGEN',
+      placeholder: 'bv. yoga di/do 18:00',
+    },
+    name: {
+      hero: 'Hoe heet je?',
+      sub: 'Daar begroeten we je mee.',
+      label: 'NAAM',
+      placeholder: 'Jouw naam',
+    },
+    notifications: {
+      eyebrow: 'BIJNA KLAAR',
+      hero: 'Mis je venster nooit meer.',
+      allow: 'Meldingen toestaan',
+      later: 'Misschien later',
+    },
+    loading: {
+      eyebrow: 'ANALYSEREN',
+    },
+    social_proof_2: {
+      cta: 'Toon mijn plan',
+      eyebrow: 'JE BENT IN GOED GEZELSCHAP',
+      hero_template: 'Van {{n}} ploegendienstwerkers',
+      reviews_template: '★ {{rating}} · {{n}}+ beoordelingen',
+    },
+  },
   number_words: ['Nul', 'Een', 'Twee', 'Drie', 'Vier', 'Vijf', 'Zes', 'Zeven'],
 };
 

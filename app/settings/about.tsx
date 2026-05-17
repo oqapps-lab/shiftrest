@@ -17,6 +17,7 @@ import {
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
 import { safeBack } from '../../lib/nav';
+import { t } from '../../lib/i18n';
 
 const SUPPORT_EMAIL = 'support@oqapps.pro';
 
@@ -29,7 +30,7 @@ interface Row {
 
 function openExternal(url: string) {
   Linking.openURL(url).catch(() =>
-    Alert.alert('Could not open link', `Please copy: ${url}`),
+    Alert.alert(t('settings_screens.about.link_open_error'), t('settings_screens.about.link_copy_hint', { url })),
   );
 }
 
@@ -40,20 +41,20 @@ export default function About() {
   const rows: Row[] = [
     {
       glyph: 'leaf',
-      label: 'FAQ',
-      subtitle: 'Common questions about shift sleep',
+      label: t('settings_screens.about.faq'),
+      subtitle: t('settings_screens.about.faq_sub'),
       onPress: () => openExternal('https://oqapps.pro/legal/shiftsleep/support#faq'),
     },
     {
       glyph: 'user',
-      label: 'Contact support',
+      label: t('settings_screens.about.contact'),
       subtitle: SUPPORT_EMAIL,
       onPress: () => openExternal(`mailto:${SUPPORT_EMAIL}`),
     },
     {
       glyph: 'sparkle',
-      label: 'Rate ShiftRest',
-      subtitle: 'Tell other shift workers about us',
+      label: t('settings_screens.about.rate'),
+      subtitle: t('settings_screens.about.rate_sub'),
       onPress: () =>
         openExternal(
           'itms-apps://itunes.apple.com/app/idShiftRest?action=write-review',
@@ -61,12 +62,12 @@ export default function About() {
     },
     {
       glyph: 'bell',
-      label: 'Privacy Policy',
+      label: t('settings_screens.about.privacy'),
       onPress: () => openExternal('https://oqapps.pro/legal/shiftsleep/privacy'),
     },
     {
       glyph: 'bell',
-      label: 'Terms of Use',
+      label: t('settings_screens.about.terms'),
       onPress: () => openExternal('https://oqapps.pro/legal/shiftsleep/terms'),
     },
   ];
@@ -77,22 +78,22 @@ export default function About() {
         onPress={() => safeBack('/(tabs)/profile')}
         hitSlop={12}
         accessibilityRole="button"
-        accessibilityLabel="Back"
+        accessibilityLabel={t('auth.back_a11y')}
         style={styles.backRow}
       >
         <Glyph name="chevronLeft" size={22} color="inkMuted" />
       </Pressable>
 
-      <Eyebrow>SETTINGS</Eyebrow>
+      <Eyebrow>{t('settings_screens.eyebrow')}</Eyebrow>
       <HeroNumber
-        value="About & support"
+        value={t('settings_screens.about.title')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
 
       {/* Version */}
       <GlassCard variant="paper" padding="xl" style={{ marginTop: spacing.huge }}>
-        <Eyebrow size="md">VERSION</Eyebrow>
+        <Eyebrow size="md">{t('settings_screens.about.version')}</Eyebrow>
         <Text
           variant="titleLg"
           family="display"
@@ -138,9 +139,9 @@ export default function About() {
 
       {/* Medical disclaimer */}
       <View style={{ marginTop: spacing.huge }}>
-        <Eyebrow>MEDICAL DISCLAIMER</Eyebrow>
+        <Eyebrow>{t('settings_screens.about.medical_disclaimer')}</Eyebrow>
         <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: spacing.sm }}>
-          {"ShiftRest provides general sleep guidance for shift workers. It is not a medical device and does not diagnose, treat, or cure any condition. If you have a sleep disorder or persistent fatigue, please consult a clinician."}
+          {t('settings_screens.about.medical_body')}
         </Text>
       </View>
 

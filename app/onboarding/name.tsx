@@ -38,7 +38,7 @@ export default function Name() {
         />
       }
     >
-      <Eyebrow>STEP 10 OF 10</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 10, total: 10 })}</Eyebrow>
       <ProgressDots
         count={10}
         active={9}
@@ -46,7 +46,7 @@ export default function Name() {
       />
 
       <HeroNumber
-        value="What's your name?"
+        value={t('onboarding_screens.name.hero')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
@@ -56,12 +56,12 @@ export default function Name() {
         color="inkSubtle"
         style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
       >
-        {"We'll greet you with it."}
+        {t('onboarding_screens.name.sub')}
       </Text>
 
       <TextField
-        label="NAME"
-        placeholder="Your name"
+        label={t('onboarding_screens.name.label')}
+        placeholder={t('onboarding_screens.name.placeholder')}
         autoCapitalize="words"
         autoCorrect={false}
         value={name}

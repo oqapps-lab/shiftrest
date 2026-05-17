@@ -311,6 +311,61 @@ const ko = {
     one_day: "1일 남음",
     n_days: "{{n}}일 남음",
   },
+  onboarding_screens: {
+    profession: {
+      hero: "어떤 일을 하세요?",
+      sub: "직업의 교대 패턴에 맞춰 모든 추천을 조정해요.",
+    },
+    schedule: {
+      hero: "근무 일정이 어떻게 되세요?",
+      sub: "교대 리듬에 맞춰 수면 시간대를 조정해요.",
+    },
+    current_shift: {
+      hero: "지금 어디에 있어요?",
+      sub: "첫 계획의 기준점을 잡기 위해서예요.",
+      commute_label: "통근 시간",
+      commute_a11y: "통근 시간(분)",
+      day_shift: "주간 근무",
+      night_shift: "야간 근무",
+      off_day: "휴무일",
+      start: "시작",
+      end: "종료",
+    },
+    problem: {
+      hero: "가장 힘든 점이 뭐예요?",
+      sub: "계획에서 가장 먼저 다뤄 드릴게요.",
+    },
+    family: {
+      hero: "가족과 관련된 일정이 있나요?",
+      sub: "고정된 일정은 계획에 반영해요 (등하원 등).",
+      kids_a11y: "집에 아이가 있어요",
+      kids_label: "집에 아이가 있어요",
+      pickup_time: "픽업 시간",
+      other_commitments: "기타 일정",
+      placeholder: "예: 요가 화/목 18:00",
+    },
+    name: {
+      hero: "이름이 어떻게 되세요?",
+      sub: "이 이름으로 인사할게요.",
+      label: "이름",
+      placeholder: "이름을 입력하세요",
+    },
+    notifications: {
+      eyebrow: "거의 다 됐어요",
+      hero: "최적의 타이밍을 놓치지 마세요.",
+      allow: "알림 허용",
+      later: "나중에",
+    },
+    loading: {
+      eyebrow: "분석 중",
+    },
+    social_proof_2: {
+      cta: "내 계획 보기",
+      eyebrow: "함께하는 사람들이 많아요",
+      hero_template: "{{n}}명의 교대 근무자와 함께",
+      reviews_template: "★ {{rating}} · 리뷰 {{n}}+개",
+    },
+  },
   number_words: ["영", "하나", "둘", "셋", "넷", "다섯", "여섯", "일곱"],
 };
 

@@ -32,6 +32,7 @@ import {
   type PlanTimes,
 } from '../../lib/notifications';
 import { useGeneratedPlan, formatPlanHour } from '../../lib/queries/plan';
+import { t } from '../../lib/i18n';
 
 const STORAGE_KEY = 'shiftrest:notification-settings:v1';
 
@@ -151,9 +152,9 @@ export default function NotificationsSettings() {
         <Glyph name="chevronLeft" size={22} color="inkMuted" />
       </Pressable>
 
-      <Eyebrow>SETTINGS</Eyebrow>
+      <Eyebrow>{t('settings_screens.eyebrow')}</Eyebrow>
       <HeroNumber
-        value="Notifications"
+        value={t('settings_screens.notifications.title')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
@@ -208,7 +209,7 @@ export default function NotificationsSettings() {
         </View>
         {state.bedReminder && (
           <View style={{ marginTop: spacing.lg }}>
-            <Eyebrow style={{ marginBottom: spacing.md }}>LEAD TIME</Eyebrow>
+            <Eyebrow style={{ marginBottom: spacing.md }}>{t('settings_screens.notifications.lead_time')}</Eyebrow>
             <SegmentedControl<LeadMinutes>
               options={LEAD_OPTIONS}
               value={state.bedReminderLead}

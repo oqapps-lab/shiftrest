@@ -14,6 +14,7 @@ import {
   ProgressDots,
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
+import { t } from '../../lib/i18n';
 
 const MESSAGES = [
   'Reading your rotation',
@@ -39,7 +40,7 @@ export default function Loading() {
   return (
     <Screen scroll={false} tabBarClearance={false} orbs="strong">
       <View style={styles.body}>
-        <Eyebrow>ANALYSING</Eyebrow>
+        <Eyebrow>{t('onboarding_screens.loading.eyebrow')}</Eyebrow>
 
         <View style={styles.orb}>
           <BreathingOrb size={320} pulse />
