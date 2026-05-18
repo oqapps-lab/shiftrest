@@ -183,6 +183,8 @@ const ja = {
     other_commitments: "その他の予定",
     yes_kids: "自宅に子どもがいます",
     take_melatonin: "はい、メラトニンを飲んでいます",
+    restart_dev_hint: "クイズの内容を消去し、もう一度オンボーディングを最初から行います。",
+    name_placeholder: "あなたのお名前",
   },
   onboarding: {
     step_template: "ステップ {{n}} / {{total}}",
@@ -444,6 +446,8 @@ const ja = {
     creating: "作成中…",
     sending: "送信中…",
     send_reset: "リセットリンクを送信",
+    forgot_sub: "登録時のメールアドレスを入力してください。リンクをお送りします。",
+    something_went_wrong: "問題が発生しました。",
   },
   settings_screens: {
     eyebrow: "設定",
@@ -465,11 +469,14 @@ const ja = {
     notifications: {
       title: "通知",
       lead_time: "通知タイミング",
+      sub: "状況に合わせた控えめなお知らせです。不要なものはオフにできます。",
+      local_only: "リマインダーは端末内でスケジュールされ、外部に送信されることはありません。",
     },
     subscription: {
       title: "サブスクリプション",
       manage_store: "App Store で管理",
       plan_includes: "ご利用中のプラン内容",
+      auto_renew_notice: "サブスクリプションは解約するまで自動更新されます。App Store のアカウントからいつでも解約できます。",
     },
   },
   number_words: ["ゼロ", "一", "二", "三", "四", "五", "六", "七"],

@@ -184,6 +184,8 @@ const frFR = {
     other_commitments: 'AUTRES ENGAGEMENTS',
     yes_kids: 'J’ai des enfants à la maison',
     take_melatonin: 'Oui, je prends de la mélatonine',
+    restart_dev_hint: 'Efface le quiz et te refait passer par l’onboarding.',
+    name_placeholder: 'Ton prénom',
   },
   onboarding: {
     step_template: 'ÉTAPE {{n}} SUR {{total}}',
@@ -445,6 +447,8 @@ const frFR = {
     creating: 'Création…',
     sending: 'Envoi…',
     send_reset: 'Envoyer le lien de réinitialisation',
+    forgot_sub: 'Saisis l’e-mail que tu as utilisé pour t’inscrire et on t’envoie un lien.',
+    something_went_wrong: 'Quelque chose s’est mal passé.',
   },
   settings_screens: {
     eyebrow: 'RÉGLAGES',
@@ -466,11 +470,14 @@ const frFR = {
     notifications: {
       title: 'Notifications',
       lead_time: 'DÉLAI DE RAPPEL',
+      sub: 'Des rappels discrets, adaptés au contexte. Désactive ce qui ne te sert pas.',
+      local_only: 'Les rappels sont planifiés en local et ne quittent jamais l’appareil.',
     },
     subscription: {
       title: 'Abonnement',
       manage_store: 'Gérer dans l’App Store',
       plan_includes: 'TON ABONNEMENT INCLUT',
+      auto_renew_notice: 'Les abonnements se renouvellent automatiquement jusqu’à leur annulation. Tu peux annuler à tout moment depuis ton compte App Store.',
     },
   },
   number_words: ['Zéro', 'Un', 'Deux', 'Trois', 'Quatre', 'Cinq', 'Six', 'Sept'],

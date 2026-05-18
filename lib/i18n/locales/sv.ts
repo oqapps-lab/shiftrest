@@ -183,6 +183,8 @@ const sv = {
     other_commitments: 'ÖVRIGA ÅTAGANDEN',
     yes_kids: 'Jag har barn hemma',
     take_melatonin: 'Ja, jag tar melatonin',
+    restart_dev_hint: 'Rensar quizet och tar dig genom onboardingen en gång till.',
+    name_placeholder: 'Ditt namn',
   },
   onboarding: {
     step_template: 'STEG {{n}} AV {{total}}',
@@ -444,6 +446,8 @@ const sv = {
     creating: 'Skapar…',
     sending: 'Skickar…',
     send_reset: 'Skicka återställningslänk',
+    forgot_sub: 'Ange e-postadressen du registrerade dig med, så skickar vi en länk.',
+    something_went_wrong: 'Något gick fel.',
   },
   settings_screens: {
     eyebrow: 'INSTÄLLNINGAR',
@@ -465,11 +469,14 @@ const sv = {
     notifications: {
       title: 'Aviseringar',
       lead_time: 'FÖRVARNINGSTID',
+      sub: 'Lugna, situationsanpassade påminnelser. Stäng av det du inte behöver.',
+      local_only: 'Påminnelser schemaläggs lokalt och lämnar aldrig din enhet.',
     },
     subscription: {
       title: 'Prenumeration',
       manage_store: 'Hantera i App Store',
       plan_includes: 'DIN PLAN INKLUDERAR',
+      auto_renew_notice: 'Prenumerationer förnyas automatiskt tills de sägs upp. Du kan säga upp när som helst via ditt App Store-konto.',
     },
   },
   number_words: ['Noll', 'Ett', 'Två', 'Tre', 'Fyra', 'Fem', 'Sex', 'Sju'],

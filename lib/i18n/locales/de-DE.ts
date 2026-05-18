@@ -184,6 +184,8 @@ const deDE = {
     other_commitments: 'WEITERE VERPFLICHTUNGEN',
     yes_kids: 'Ich habe Kinder zu Hause',
     take_melatonin: 'Ja, ich nehme Melatonin',
+    restart_dev_hint: 'Setzt das Quiz zurück und führt dich noch einmal durch das Onboarding.',
+    name_placeholder: 'Dein Name',
   },
   onboarding: {
     step_template: 'SCHRITT {{n}} VON {{total}}',
@@ -445,6 +447,8 @@ const deDE = {
     creating: 'Wird erstellt…',
     sending: 'Wird gesendet…',
     send_reset: 'Reset-Link senden',
+    forgot_sub: 'Gib die E-Mail-Adresse ein, mit der du dich angemeldet hast – wir schicken dir einen Link.',
+    something_went_wrong: 'Etwas ist schiefgelaufen.',
   },
   settings_screens: {
     eyebrow: 'EINSTELLUNGEN',
@@ -466,11 +470,14 @@ const deDE = {
     notifications: {
       title: 'Benachrichtigungen',
       lead_time: 'VORLAUFZEIT',
+      sub: 'Leise, kontextbezogene Hinweise. Schalte ab, was du nicht brauchst.',
+      local_only: 'Erinnerungen werden lokal geplant und verlassen nie dein Gerät.',
     },
     subscription: {
       title: 'Abonnement',
       manage_store: 'Im App Store verwalten',
       plan_includes: 'DEIN PLAN ENTHÄLT',
+      auto_renew_notice: 'Abonnements verlängern sich automatisch, bis sie gekündigt werden. Du kannst jederzeit über dein App-Store-Konto kündigen.',
     },
   },
   number_words: ['Null', 'Eins', 'Zwei', 'Drei', 'Vier', 'Fünf', 'Sechs', 'Sieben'],

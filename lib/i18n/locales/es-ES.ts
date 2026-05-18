@@ -184,6 +184,8 @@ const esES = {
     other_commitments: 'OTROS COMPROMISOS',
     yes_kids: 'Tengo hijos en casa',
     take_melatonin: 'Sí, tomo melatonina',
+    restart_dev_hint: 'Borra el cuestionario y te lleva otra vez por el onboarding.',
+    name_placeholder: 'Tu nombre',
   },
   onboarding: {
     step_template: 'PASO {{n}} DE {{total}}',
@@ -445,6 +447,8 @@ const esES = {
     creating: 'Creando…',
     sending: 'Enviando…',
     send_reset: 'Enviar enlace de restablecimiento',
+    forgot_sub: 'Introduce el correo con el que te registraste y te enviaremos un enlace.',
+    something_went_wrong: 'Algo ha salido mal.',
   },
   settings_screens: {
     eyebrow: 'AJUSTES',
@@ -466,11 +470,14 @@ const esES = {
     notifications: {
       title: 'Notificaciones',
       lead_time: 'TIEMPO DE ANTICIPACIÓN',
+      sub: 'Avisos discretos y contextuales. Desactiva lo que no necesites.',
+      local_only: 'Los recordatorios se programan en local y nunca salen del dispositivo.',
     },
     subscription: {
       title: 'Suscripción',
       manage_store: 'Gestionar en App Store',
       plan_includes: 'TU PLAN INCLUYE',
+      auto_renew_notice: 'Las suscripciones se renuevan automáticamente hasta que las canceles. Puedes cancelar cuando quieras desde tu cuenta de App Store.',
     },
   },
   number_words: ['Cero', 'Uno', 'Dos', 'Tres', 'Cuatro', 'Cinco', 'Seis', 'Siete'],

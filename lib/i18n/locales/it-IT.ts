@@ -183,6 +183,8 @@ const itIT = {
     other_commitments: "ALTRI IMPEGNI",
     yes_kids: "Ho figli in casa",
     take_melatonin: "Sì, prendo la melatonina",
+    restart_dev_hint: "Cancella il quiz e ti riporta attraverso l’onboarding.",
+    name_placeholder: "Il tuo nome",
   },
   onboarding: {
     step_template: "PASSO {{n}} DI {{total}}",
@@ -444,6 +446,8 @@ const itIT = {
     creating: "Creazione…",
     sending: "Invio…",
     send_reset: "Invia link di reimpostazione",
+    forgot_sub: "Inserisci l’email con cui ti sei registrato e ti inviamo un link.",
+    something_went_wrong: "Qualcosa è andato storto.",
   },
   settings_screens: {
     eyebrow: "IMPOSTAZIONI",
@@ -465,11 +469,14 @@ const itIT = {
     notifications: {
       title: "Notifiche",
       lead_time: "ANTICIPO",
+      sub: "Promemoria discreti e contestuali. Disattiva ciò che non ti serve.",
+      local_only: "I promemoria sono pianificati localmente e non lasciano mai il dispositivo.",
     },
     subscription: {
       title: "Abbonamento",
       manage_store: "Gestisci nell’App Store",
       plan_includes: "IL TUO PIANO INCLUDE",
+      auto_renew_notice: "Gli abbonamenti si rinnovano automaticamente finché non vengono annullati. Puoi annullare in qualsiasi momento dal tuo account App Store.",
     },
   },
   number_words: ["Zero", "Uno", "Due", "Tre", "Quattro", "Cinque", "Sei", "Sette"],

@@ -183,6 +183,8 @@ const ko = {
     other_commitments: "기타 일정",
     yes_kids: "집에 아이가 있어요",
     take_melatonin: "네, 멜라토닌을 복용해요",
+    restart_dev_hint: "퀴즈를 모두 지우고 온보딩을 처음부터 다시 진행해요.",
+    name_placeholder: "이름",
   },
   onboarding: {
     step_template: "{{n}} / {{total}} 단계",
@@ -444,6 +446,8 @@ const ko = {
     creating: "만드는 중…",
     sending: "보내는 중…",
     send_reset: "재설정 링크 보내기",
+    forgot_sub: "가입할 때 사용한 이메일을 입력하면 링크를 보내드려요.",
+    something_went_wrong: "문제가 생겼어요.",
   },
   settings_screens: {
     eyebrow: "설정",
@@ -465,11 +469,14 @@ const ko = {
     notifications: {
       title: "알림",
       lead_time: "사전 알림 시간",
+      sub: "상황에 맞춘 조용한 알림이에요. 필요 없는 건 언제든 꺼두세요.",
+      local_only: "알림은 기기 안에서만 예약되고, 외부로 전송되지 않아요.",
     },
     subscription: {
       title: "구독",
       manage_store: "App Store에서 관리",
       plan_includes: "내 플랜 포함 사항",
+      auto_renew_notice: "구독은 취소하기 전까지 자동으로 갱신돼요. App Store 계정에서 언제든 취소할 수 있어요.",
     },
   },
   number_words: ["영", "하나", "둘", "셋", "넷", "다섯", "여섯", "일곱"],

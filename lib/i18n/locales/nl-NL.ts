@@ -184,6 +184,8 @@ const nlNL = {
     other_commitments: 'OVERIGE VERPLICHTINGEN',
     yes_kids: 'Ik heb kinderen thuis',
     take_melatonin: 'Ja, ik neem melatonine',
+    restart_dev_hint: 'Wist de quiz en loopt de onboarding nog een keer met je door.',
+    name_placeholder: 'Je naam',
   },
   onboarding: {
     step_template: 'STAP {{n}} VAN {{total}}',
@@ -445,6 +447,8 @@ const nlNL = {
     creating: 'Aanmaken…',
     sending: 'Versturen…',
     send_reset: 'Resetlink versturen',
+    forgot_sub: 'Vul het e-mailadres in waarmee je je hebt aangemeld, dan sturen we je een link.',
+    something_went_wrong: 'Er is iets misgegaan.',
   },
   settings_screens: {
     eyebrow: 'INSTELLINGEN',
@@ -466,11 +470,14 @@ const nlNL = {
     notifications: {
       title: 'Meldingen',
       lead_time: 'AANKONDIGINGSTIJD',
+      sub: 'Rustige meldingen op het juiste moment. Zet uit wat je niet nodig hebt.',
+      local_only: 'Herinneringen worden lokaal ingepland en verlaten je apparaat nooit.',
     },
     subscription: {
       title: 'Abonnement',
       manage_store: 'Beheren in App Store',
       plan_includes: 'JOUW ABONNEMENT BEVAT',
+      auto_renew_notice: 'Abonnementen worden automatisch verlengd tot je ze opzegt. Je kunt op elk moment opzeggen via je App Store-account.',
     },
   },
   number_words: ['Nul', 'Een', 'Twee', 'Drie', 'Vier', 'Vijf', 'Zes', 'Zeven'],

@@ -183,6 +183,8 @@ const ptBR = {
     other_commitments: "OUTROS COMPROMISSOS",
     yes_kids: "Tenho filhos em casa",
     take_melatonin: "Sim, eu tomo melatonina",
+    restart_dev_hint: "Apaga o quiz e te leva de novo pelo onboarding.",
+    name_placeholder: "Seu nome",
   },
   onboarding: {
     step_template: "PASSO {{n}} DE {{total}}",
@@ -444,6 +446,8 @@ const ptBR = {
     creating: "Criando…",
     sending: "Enviando…",
     send_reset: "Enviar link de redefinição",
+    forgot_sub: "Informe o e-mail que você usou no cadastro e enviaremos um link.",
+    something_went_wrong: "Algo deu errado.",
   },
   settings_screens: {
     eyebrow: "CONFIGURAÇÕES",
@@ -465,11 +469,14 @@ const ptBR = {
     notifications: {
       title: "Notificações",
       lead_time: "ANTECEDÊNCIA",
+      sub: "Lembretes discretos e contextuais. Desative o que você não precisa.",
+      local_only: "Os lembretes são agendados localmente e nunca saem do dispositivo.",
     },
     subscription: {
       title: "Assinatura",
       manage_store: "Gerenciar na App Store",
       plan_includes: "SEU PLANO INCLUI",
+      auto_renew_notice: "As assinaturas se renovam automaticamente até serem canceladas. Você pode cancelar quando quiser pela sua conta na App Store.",
     },
   },
   number_words: ["Zero", "Um", "Dois", "Três", "Quatro", "Cinco", "Seis", "Sete"],

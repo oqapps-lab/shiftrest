@@ -182,6 +182,8 @@ const zhHant = {
     other_commitments: "其他安排",
     yes_kids: "家中有小孩",
     take_melatonin: "是,我有服用褪黑激素",
+    restart_dev_hint: "清除問卷答案,並重新引導你完成新手導引。",
+    name_placeholder: "你的名字",
   },
   onboarding: {
     step_template: "步驟 {{n}} / {{total}}",
@@ -443,6 +445,8 @@ const zhHant = {
     creating: "建立中…",
     sending: "傳送中…",
     send_reset: "傳送重設連結",
+    forgot_sub: "請輸入你註冊時使用的電子郵件,我們會寄一封連結信給你。",
+    something_went_wrong: "發生了一點問題。",
   },
   settings_screens: {
     eyebrow: "設定",
@@ -464,11 +468,14 @@ const zhHant = {
     notifications: {
       title: "通知",
       lead_time: "提前通知時間",
+      sub: "安靜、貼近情境的提醒。不需要的隨時關掉就好。",
+      local_only: "提醒只在裝置本機排程,不會傳送到任何外部伺服器。",
     },
     subscription: {
       title: "訂閱",
       manage_store: "在 App Store 管理",
       plan_includes: "你的方案包含",
+      auto_renew_notice: "訂閱會自動續訂,直到你取消為止。你隨時都能從 App Store 帳戶取消。",
     },
   },
   number_words: ["零", "一", "二", "三", "四", "五", "六", "七"],
