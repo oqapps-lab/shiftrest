@@ -54,6 +54,7 @@ import {
 } from '../../lib/onboarding/store';
 import { safeBack } from '../../lib/nav';
 import { t } from '../../lib/i18n';
+import { t } from '../lib/i18n';
 
 const SHIFT_OPTIONS: SegmentOption<ShiftKind>[] = [
   { value: 'day', label: 'Day shift' },
@@ -167,7 +168,7 @@ export default function SleepPreferences() {
 
       {/* Current shift */}
       <SectionHeader
-        label="WHERE YOU ARE TODAY"
+        label={t('sleep_prefs.section_today')}
         subtitle="So we can anchor your plan."
       />
       <SegmentedControl<ShiftKind>
@@ -176,7 +177,7 @@ export default function SleepPreferences() {
         onChange={(v) => update({ currentShift: v })}
       />
       <View style={styles.commuteHeader}>
-        <Eyebrow>Commute time</Eyebrow>
+        <Eyebrow>{t('sleep_prefs.commute')}</Eyebrow>
         <Text variant="titleMd" family="display" weight="medium" color="ink">
           {`${state.commuteMinutes} min`}
         </Text>
@@ -207,7 +208,7 @@ export default function SleepPreferences() {
 
       {/* Chronotype quiz */}
       <SectionHeader
-        label="CHRONOTYPE"
+        label={t('sleep_prefs.section_chronotype')}
         subtitle="Tap any answer to update."
       />
       {mockChronotypeQuestions.map((q, qIdx) => (
@@ -253,7 +254,7 @@ export default function SleepPreferences() {
           accessibilityLabel="Cups per day"
         />
       </View>
-      <Eyebrow style={{ marginBottom: spacing.md }}>USUAL TYPE</Eyebrow>
+      <Eyebrow style={{ marginBottom: spacing.md }}>{t('sleep_prefs.usual_type')}</Eyebrow>
       {mockCaffeineTypes.map((t) => (
         <OptionCard
           key={t.id}
@@ -281,7 +282,7 @@ export default function SleepPreferences() {
       ))}
 
       {/* Melatonin */}
-      <SectionHeader label="MELATONIN" />
+      <SectionHeader label={t('sleep_prefs.section_melatonin')} />
       <View style={styles.toggleRow}>
         <Text variant="titleMd" family="display" weight="medium" color="ink">
           I take it
@@ -294,7 +295,7 @@ export default function SleepPreferences() {
       </View>
       {state.takesMelatonin && (
         <View style={{ marginTop: spacing.md }}>
-          <Eyebrow style={{ marginBottom: spacing.md }}>DOSE (MG)</Eyebrow>
+          <Eyebrow style={{ marginBottom: spacing.md }}>{t('sleep_prefs.dose_mg')}</Eyebrow>
           <View style={styles.chipRow}>
             {mockMelatoninDoses.map((d) => {
               const active = state.melatoninDoseMg === d;
@@ -339,7 +340,7 @@ export default function SleepPreferences() {
       )}
 
       {/* Family */}
-      <SectionHeader label="FAMILY" />
+      <SectionHeader label={t('sleep_prefs.section_family')} />
       <View style={styles.toggleRow}>
         <Text variant="titleMd" family="display" weight="medium" color="ink">
           Kids at home
@@ -352,7 +353,7 @@ export default function SleepPreferences() {
       </View>
       {state.hasChildren && (
         <View style={{ marginTop: spacing.md }}>
-          <Eyebrow style={{ marginBottom: spacing.md }}>PICKUP TIME</Eyebrow>
+          <Eyebrow style={{ marginBottom: spacing.md }}>{t('sleep_prefs.pickup_time')}</Eyebrow>
           <SegmentedControl<PickupTime>
             options={PICKUP_OPTIONS}
             value={state.pickupTime}
@@ -371,7 +372,7 @@ export default function SleepPreferences() {
       />
 
       {/* Display name */}
-      <SectionHeader label="NAME" />
+      <SectionHeader label={t('sleep_prefs.section_name')} />
       <TextField
         placeholder="Marina"
         value={state.displayName}

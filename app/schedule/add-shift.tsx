@@ -28,6 +28,7 @@ import { safeDismiss } from '../../lib/nav';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth/store';
 import { emitChange, EVENTS } from '../../lib/queries';
+import { t } from '../lib/i18n';
 
 type Kind = 'day' | 'night' | 'off';
 
@@ -157,7 +158,7 @@ export default function AddShift() {
     >
       <View style={styles.headerRow}>
         <View style={{ width: 22 }} />
-        <Eyebrow>NEW SHIFT</Eyebrow>
+        <Eyebrow>{t('add_shift.eyebrow')}</Eyebrow>
         <Pressable
           onPress={() => safeDismiss('/(tabs)/schedule')}
           hitSlop={12}
@@ -169,17 +170,17 @@ export default function AddShift() {
       </View>
 
       <HeroNumber
-        value="Add a shift"
+        value={t('add_shift.hero')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
       <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: spacing.md }}>
-        {"Quick entry — adjust later from your calendar."}
+        {t('add_shift.sub')}
       </Text>
 
       {/* Date picker */}
       <View style={{ marginTop: spacing.huge }}>
-        <Eyebrow>WHEN</Eyebrow>
+        <Eyebrow>{t('add_shift.when_label')}</Eyebrow>
         <View style={[styles.dayRow, { marginTop: spacing.md }]}>
           {days.map((d) => {
             const active = d.key === dateKey;
@@ -217,7 +218,7 @@ export default function AddShift() {
 
       {/* Type */}
       <View style={{ marginTop: spacing.xl }}>
-        <Eyebrow style={{ marginBottom: spacing.md }}>SHIFT TYPE</Eyebrow>
+        <Eyebrow style={{ marginBottom: spacing.md }}>{t('add_shift.shift_type')}</Eyebrow>
         <SegmentedControl<Kind>
           options={KIND_OPTIONS}
           value={kind}
@@ -228,7 +229,7 @@ export default function AddShift() {
       {/* Hours (hidden when type=off) */}
       {!isOff && (
         <View style={{ marginTop: spacing.xl }}>
-          <Eyebrow style={{ marginBottom: spacing.md }}>START</Eyebrow>
+          <Eyebrow style={{ marginBottom: spacing.md }}>{t('add_shift.start')}</Eyebrow>
           <View style={styles.hourRow}>
             {HOUR_PRESETS.map((h) => (
               <Pressable
@@ -253,7 +254,7 @@ export default function AddShift() {
             ))}
           </View>
 
-          <Eyebrow style={{ marginTop: spacing.lg, marginBottom: spacing.md }}>END</Eyebrow>
+          <Eyebrow style={{ marginTop: spacing.lg, marginBottom: spacing.md }}>{t('add_shift.end')}</Eyebrow>
           <View style={styles.hourRow}>
             {HOUR_PRESETS.map((h) => (
               <Pressable
@@ -283,8 +284,8 @@ export default function AddShift() {
       {/* Notes */}
       <View style={{ marginTop: spacing.xl }}>
         <TextField
-          label="NOTES (OPTIONAL)"
-          placeholder="On-call, swap with Anna, etc."
+          label={t('add_shift.notes_label')}
+          placeholder={t('add_shift.notes_placeholder')}
           value={notes}
           onChangeText={setNotes}
           autoCapitalize="sentences"
@@ -293,7 +294,7 @@ export default function AddShift() {
 
       {/* Summary card */}
       <GlassCard variant="paper" padding="xl" style={{ marginTop: spacing.huge }}>
-        <Eyebrow>SUMMARY</Eyebrow>
+        <Eyebrow>{t('add_shift.summary')}</Eyebrow>
         <Text
           variant="titleMd"
           family="display"
