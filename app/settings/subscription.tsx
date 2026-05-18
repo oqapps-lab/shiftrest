@@ -197,7 +197,7 @@ export default function Subscription() {
         </Pressable>
 
         <Text variant="bodyMd" color="inkMuted" style={{ marginTop: spacing.lg }}>
-          {"Subscriptions auto-renew until cancelled. Cancel any time from your App Store account."}
+          {t('settings_screens.subscription.auto_renew_notice')}
         </Text>
       </View>
     </Screen>

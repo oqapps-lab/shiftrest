@@ -97,7 +97,7 @@ export default function AuthConfirm() {
           {status === 'error' && (
             <>
               <Text variant="bodyLg" color="inkSubtle">
-                {errorMsg ?? 'Something went wrong.'}
+                {errorMsg ?? t('auth.something_went_wrong')}
               </Text>
               <View style={{ marginTop: spacing.huge }}>
                 <PillCTA

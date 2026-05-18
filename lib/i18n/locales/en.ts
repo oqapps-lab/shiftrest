@@ -437,6 +437,8 @@ const en = {
     creating: "Creating…",
     sending: "Sending…",
     send_reset: "Send reset link",
+    forgot_sub: "Enter the email you signed up with and we'll send a link.",
+    something_went_wrong: "Something went wrong.",
   },
   settings_screens: {
     eyebrow: "SETTINGS",
@@ -458,11 +460,14 @@ const en = {
     notifications: {
       title: "Notifications",
       lead_time: "LEAD TIME",
+      sub: "Quiet, contextual nudges. Toggle anything you don't need.",
+      local_only: "Reminders are scheduled locally and never leave the device.",
     },
     subscription: {
       title: "Subscription",
       manage_store: "Manage in App Store",
       plan_includes: "YOUR PLAN INCLUDES",
+      auto_renew_notice: "Subscriptions auto-renew until cancelled. Cancel any time from your App Store account.",
     },
   },
   number_words: ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven'],

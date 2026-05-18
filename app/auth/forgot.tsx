@@ -110,7 +110,7 @@ export default function Forgot() {
         color="inkSubtle"
         style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
       >
-        {"Enter the email you signed up with and we'll send a link."}
+        {t('auth.forgot_sub')}
       </Text>
 
       <TextField

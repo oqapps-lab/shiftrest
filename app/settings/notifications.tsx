@@ -159,7 +159,7 @@ export default function NotificationsSettings() {
         style={{ marginTop: spacing.lg }}
       />
       <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: spacing.md }}>
-        {"Quiet, contextual nudges. Toggle anything you don't need."}
+        {t('settings_screens.notifications.sub')}
       </Text>
 
       {/* Master switch */}
@@ -264,7 +264,7 @@ export default function NotificationsSettings() {
       </View>
 
       <Text variant="bodyMd" color="inkMuted" style={{ marginTop: spacing.huge }}>
-        {"Reminders are scheduled locally and never leave the device."}
+        {t('settings_screens.notifications.local_only')}
       </Text>
 
       {scheduledCount !== null && state.master && scheduledCount > 0 && (

@@ -374,7 +374,7 @@ export default function SleepPreferences() {
       {/* Display name */}
       <SectionHeader label={t('sleep_prefs.section_name')} />
       <TextField
-        placeholder="Marina"
+        placeholder={t('sleep_prefs.name_placeholder')}
         value={state.displayName}
         onChangeText={(v) => update({ displayName: v })}
         autoCapitalize="words"
@@ -389,7 +389,7 @@ export default function SleepPreferences() {
               Reset all answers
             </Text>
             <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 4 }}>
-              {"Wipes the quiz and walks you through onboarding again."}
+              {t('sleep_prefs.restart_dev_hint')}
             </Text>
           </View>
           <Pressable
