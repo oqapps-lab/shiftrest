@@ -86,9 +86,13 @@ export function countCompleted<T extends { done: boolean }>(steps: readonly T[])
 }
 
 export function formatHour(h: number): string {
-  const whole = Math.floor(h);
-  const mins = Math.round((h - whole) * 60);
-  return `${String(whole).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
+  // Normalise rounding overflow: 23.99999 → mins=60 → would render '23:60'.
+  // Recompute via total minutes to ensure mins ∈ [0, 59] and hours roll over.
+  const totalMins = Math.round(h * 60);
+  const whole = Math.floor(totalMins / 60) % 24;
+  const mins = ((totalMins % 60) + 60) % 60;
+  const safeHour = ((whole % 24) + 24) % 24;
+  return `${String(safeHour).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
 }
 
 export function formatHourRange(start: number, end: number): string {
