@@ -480,6 +480,15 @@ const itIT = {
     },
   },
   number_words: ["Zero", "Uno", "Due", "Tre", "Quattro", "Cinque", "Sei", "Sette"],
+  shift_kind: {
+    day: 'Giorno',
+    night: 'Notte',
+    off: 'Riposo',
+    day_long: 'Turno diurno',
+    night_long: 'Turno notturno',
+    off_long: 'Giorno libero',
+  },
+
 };
 
 export default itIT;

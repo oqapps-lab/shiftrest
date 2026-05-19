@@ -480,6 +480,15 @@ const ptBR = {
     },
   },
   number_words: ["Zero", "Um", "Dois", "Três", "Quatro", "Cinco", "Seis", "Sete"],
+  shift_kind: {
+    day: 'Dia',
+    night: 'Noite',
+    off: 'Folga',
+    day_long: 'Turno diurno',
+    night_long: 'Turno noturno',
+    off_long: 'Dia de folga',
+  },
+
 };
 
 export default ptBR;

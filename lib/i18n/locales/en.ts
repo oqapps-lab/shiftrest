@@ -473,6 +473,15 @@ const en = {
     },
   },
   number_words: ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven'],
+  shift_kind: {
+    day: 'Day',
+    night: 'Night',
+    off: 'Off',
+    day_long: 'Day shift',
+    night_long: 'Night shift',
+    off_long: 'Off day',
+  },
+
 };
 
 export default en;

@@ -481,6 +481,15 @@ const frFR = {
     },
   },
   number_words: ['Zéro', 'Un', 'Deux', 'Trois', 'Quatre', 'Cinq', 'Six', 'Sept'],
+  shift_kind: {
+    day: 'Jour',
+    night: 'Nuit',
+    off: 'Repos',
+    day_long: 'Service de jour',
+    night_long: 'Service de nuit',
+    off_long: 'Jour de repos',
+  },
+
 };
 
 export default frFR;

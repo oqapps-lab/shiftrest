@@ -480,6 +480,15 @@ const ja = {
     },
   },
   number_words: ["ゼロ", "一", "二", "三", "四", "五", "六", "七"],
+  shift_kind: {
+    day: '昼',
+    night: '夜',
+    off: '休み',
+    day_long: '日勤',
+    night_long: '夜勤',
+    off_long: '休日',
+  },
+
 };
 
 export default ja;

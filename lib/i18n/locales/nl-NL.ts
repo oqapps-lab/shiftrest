@@ -481,6 +481,15 @@ const nlNL = {
     },
   },
   number_words: ['Nul', 'Een', 'Twee', 'Drie', 'Vier', 'Vijf', 'Zes', 'Zeven'],
+  shift_kind: {
+    day: 'Dag',
+    night: 'Nacht',
+    off: 'Vrij',
+    day_long: 'Dagdienst',
+    night_long: 'Nachtdienst',
+    off_long: 'Vrije dag',
+  },
+
 };
 
 export default nlNL;

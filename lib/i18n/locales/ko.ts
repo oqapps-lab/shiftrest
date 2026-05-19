@@ -480,6 +480,15 @@ const ko = {
     },
   },
   number_words: ["영", "하나", "둘", "셋", "넷", "다섯", "여섯", "일곱"],
+  shift_kind: {
+    day: '주간',
+    night: '야간',
+    off: '휴일',
+    day_long: '주간 근무',
+    night_long: '야간 근무',
+    off_long: '휴무일',
+  },
+
 };
 
 export default ko;

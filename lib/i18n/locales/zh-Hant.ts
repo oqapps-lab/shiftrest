@@ -479,6 +479,15 @@ const zhHant = {
     },
   },
   number_words: ["零", "一", "二", "三", "四", "五", "六", "七"],
+  shift_kind: {
+    day: '白班',
+    night: '夜班',
+    off: '休息',
+    day_long: '白班',
+    night_long: '夜班',
+    off_long: '休息日',
+  },
+
 };
 
 export default zhHant;

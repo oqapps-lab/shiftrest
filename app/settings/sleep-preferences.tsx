@@ -54,12 +54,11 @@ import {
 } from '../../lib/onboarding/store';
 import { safeBack } from '../../lib/nav';
 import { t } from '../../lib/i18n';
-import { t } from '../lib/i18n';
 
-const SHIFT_OPTIONS: SegmentOption<ShiftKind>[] = [
-  { value: 'day', label: 'Day shift' },
-  { value: 'night', label: 'Night shift' },
-  { value: 'off', label: 'Off day' },
+const getShiftOptions = (): SegmentOption<ShiftKind>[] => [
+  { value: 'day', label: t('shift_kind.day_long') },
+  { value: 'night', label: t('shift_kind.night_long') },
+  { value: 'off', label: t('shift_kind.off_long') },
 ];
 
 const MELATONIN_TIME_OPTIONS: { value: MelatoninTime; label: string }[] = [
@@ -172,7 +171,7 @@ export default function SleepPreferences() {
         subtitle="So we can anchor your plan."
       />
       <SegmentedControl<ShiftKind>
-        options={SHIFT_OPTIONS}
+        options={getShiftOptions()}
         value={state.currentShift}
         onChange={(v) => update({ currentShift: v })}
       />

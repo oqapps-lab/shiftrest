@@ -480,6 +480,15 @@ const sv = {
     },
   },
   number_words: ['Noll', 'Ett', 'Två', 'Tre', 'Fyra', 'Fem', 'Sex', 'Sju'],
+  shift_kind: {
+    day: 'Dag',
+    night: 'Natt',
+    off: 'Ledig',
+    day_long: 'Dagskift',
+    night_long: 'Nattskift',
+    off_long: 'Ledig dag',
+  },
+
 };
 
 export default sv;

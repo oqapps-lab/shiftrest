@@ -481,6 +481,15 @@ const esES = {
     },
   },
   number_words: ['Cero', 'Uno', 'Dos', 'Tres', 'Cuatro', 'Cinco', 'Seis', 'Siete'],
+  shift_kind: {
+    day: 'Día',
+    night: 'Noche',
+    off: 'Libre',
+    day_long: 'Turno de día',
+    night_long: 'Turno de noche',
+    off_long: 'Día libre',
+  },
+
 };
 
 export default esES;

@@ -28,14 +28,14 @@ import { safeDismiss } from '../../lib/nav';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth/store';
 import { emitChange, EVENTS } from '../../lib/queries';
-import { t } from '../lib/i18n';
+import { t } from '../../lib/i18n';
 
 type Kind = 'day' | 'night' | 'off';
 
-const KIND_OPTIONS: SegmentOption<Kind>[] = [
-  { value: 'day', label: 'Day' },
-  { value: 'night', label: 'Night' },
-  { value: 'off', label: 'Off' },
+const getKindOptions = (): SegmentOption<Kind>[] => [
+  { value: 'day', label: t('shift_kind.day') },
+  { value: 'night', label: t('shift_kind.night') },
+  { value: 'off', label: t('shift_kind.off') },
 ];
 
 // Hour presets for start / end. Real picker lands when we add a TimePicker
@@ -220,7 +220,7 @@ export default function AddShift() {
       <View style={{ marginTop: spacing.xl }}>
         <Eyebrow style={{ marginBottom: spacing.md }}>{t('add_shift.shift_type')}</Eyebrow>
         <SegmentedControl<Kind>
-          options={KIND_OPTIONS}
+          options={getKindOptions()}
           value={kind}
           onChange={setKind}
         />

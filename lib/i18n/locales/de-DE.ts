@@ -481,6 +481,15 @@ const deDE = {
     },
   },
   number_words: ['Null', 'Eins', 'Zwei', 'Drei', 'Vier', 'Fünf', 'Sechs', 'Sieben'],
+  shift_kind: {
+    day: 'Tag',
+    night: 'Nacht',
+    off: 'Frei',
+    day_long: 'Tagschicht',
+    night_long: 'Nachtschicht',
+    off_long: 'Freier Tag',
+  },
+
 };
 
 export default deDE;
