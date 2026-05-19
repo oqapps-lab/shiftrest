@@ -1,6 +1,16 @@
 /**
  * Mock user — used by demo screens until Stage 6 wires up real Supabase auth.
- * User-facing strings route through t() so the demo respects the active locale.
+ *
+ * User-facing strings route through t() so the demo respects the device locale
+ * AT APP LAUNCH. The 'export const mockX = getMockX()' pattern evaluates once
+ * at module load, so an in-session locale switch (e.g. SCREENSHOT_OVERRIDE
+ * flipped between ASO batch iterations) requires a full bundle reload via
+ * npx expo start --clear to pick up new translations in the mocks. In
+ * production this is a non-issue because changing the iOS system language
+ * forces an app restart anyway.
+ *
+ * If you need per-render locale-correctness (e.g. for runtime locale
+ * switcher), call the getMockX() function directly instead of the const.
  */
 
 import type { GlyphName } from '../components/ui';
