@@ -543,6 +543,21 @@ const en = {
     start_hour: 'Start {{hour}}',
     end_hour: 'End {{hour}}',
   },
+
+  push_notif: {
+    bed_title: 'Wind down soon',
+    bed_body: 'Sleep window opens in {{lead}} minutes — start dimming lights.',
+    caffeine_title: 'Last cup',
+    caffeine_body: 'Caffeine cutoff is now. Switch to herbal tea or water.',
+    melatonin_title: 'Melatonin',
+    melatonin_body: 'Time for your melatonin dose.',
+  },
+  errors: {
+    apple_ios_only: 'Sign in with Apple is iOS only.',
+    apple_unavailable: 'Sign in with Apple is unavailable on this device. Set up an iCloud account in Settings first.',
+    apple_no_token: 'Apple did not return an identity token.',
+    supabase_not_configured: 'Supabase is not configured.',
+  },
 };
 
 export default en;
