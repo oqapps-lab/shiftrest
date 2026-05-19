@@ -184,6 +184,8 @@ const itIT = {
     yes_kids: "Ho figli in casa",
     take_melatonin: "Sì, prendo la melatonina",
     restart_dev_hint: "Cancella il quiz e ti riporta attraverso l’onboarding.",
+        kids_at_home: "Bambini in casa",
+    reset_all_label: "Reimposta tutte le risposte",
     reset_alert: {
       title: "Azzerare tutte le risposte?",
       message: "Cancella il quiz e ripercorre l’onboarding da capo.",
@@ -507,6 +509,24 @@ const itIT = {
     off_long: 'Giorno libero',
   },
 
+  a11y: {
+    back: 'Indietro',
+    close: 'Chiudi',
+    close_paywall: 'Chiudi paywall',
+    decrease: 'Diminuisci',
+    increase: 'Aumenta',
+    restore_purchases: 'Ripristina acquisti',
+    bed_time_reminder: 'Promemoria ora di andare a letto',
+    caffeine_cutoff_reminder: 'Promemoria stop caffeina',
+    melatonin_reminder: 'Promemoria melatonina',
+    commute_time_minutes: 'Tempo di tragitto in minuti',
+    cups_per_day: 'Tazze al giorno',
+    take_melatonin: 'Prendi la melatonina',
+    have_kids_at_home: 'Hai figli a casa',
+    reset_onboarding_answers: 'Reimposta risposte di onboarding',
+    year_plan: 'Piano annuale {{price}}',
+    month_plan: 'Piano mensile {{price}}',
+  },
 };
 
 export default itIT;

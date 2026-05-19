@@ -185,6 +185,8 @@ const nlNL = {
     yes_kids: 'Ik heb kinderen thuis',
     take_melatonin: 'Ja, ik neem melatonine',
     restart_dev_hint: 'Wist de quiz en loopt de onboarding nog een keer met je door.',
+        kids_at_home: 'Kinderen thuis',
+    reset_all_label: 'Alle antwoorden resetten',
     reset_alert: {
       title: 'Alle antwoorden resetten?',
       message: 'Wist de quizgegevens en doorloopt de onboarding helemaal opnieuw.',
@@ -508,6 +510,24 @@ const nlNL = {
     off_long: 'Vrije dag',
   },
 
+  a11y: {
+    back: 'Terug',
+    close: 'Sluiten',
+    close_paywall: 'Paywall sluiten',
+    decrease: 'Verlagen',
+    increase: 'Verhogen',
+    restore_purchases: 'Aankopen herstellen',
+    bed_time_reminder: 'Herinnering bedtijd',
+    caffeine_cutoff_reminder: 'Herinnering cafeïnestop',
+    melatonin_reminder: 'Herinnering melatonine',
+    commute_time_minutes: 'Reistijd in minuten',
+    cups_per_day: 'Koppen per dag',
+    take_melatonin: 'Melatonine innemen',
+    have_kids_at_home: 'Je hebt kinderen thuis',
+    reset_onboarding_answers: 'Onboarding-antwoorden resetten',
+    year_plan: 'Jaarabonnement {{price}}',
+    month_plan: 'Maandabonnement {{price}}',
+  },
 };
 
 export default nlNL;

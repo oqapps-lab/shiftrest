@@ -184,6 +184,8 @@ const ja = {
     yes_kids: "自宅に子どもがいます",
     take_melatonin: "はい、メラトニンを飲んでいます",
     restart_dev_hint: "クイズの内容を消去し、もう一度オンボーディングを最初から行います。",
+        kids_at_home: "家に子どもがいる",
+    reset_all_label: "すべての回答をリセット",
     reset_alert: {
       title: "すべての回答をリセットしますか?",
       message: "クイズの状態を消去し、オンボーディングを最初からやり直します。",
@@ -507,6 +509,24 @@ const ja = {
     off_long: '休日',
   },
 
+  a11y: {
+    back: '戻る',
+    close: '閉じる',
+    close_paywall: 'ペイウォールを閉じる',
+    decrease: '減らす',
+    increase: '増やす',
+    restore_purchases: '購入を復元する',
+    bed_time_reminder: '就寝時間のリマインダー',
+    caffeine_cutoff_reminder: 'カフェイン終了のリマインダー',
+    melatonin_reminder: 'メラトニンのリマインダー',
+    commute_time_minutes: '通勤時間（分）',
+    cups_per_day: '1日あたりのカップ数',
+    take_melatonin: 'メラトニンを服用する',
+    have_kids_at_home: '家に子どもがいる',
+    reset_onboarding_answers: 'オンボーディングの回答をリセット',
+    year_plan: '年額プラン {{price}}',
+    month_plan: '月額プラン {{price}}',
+  },
 };
 
 export default ja;

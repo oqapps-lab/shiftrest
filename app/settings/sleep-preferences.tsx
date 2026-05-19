@@ -342,7 +342,7 @@ export default function SleepPreferences() {
       <SectionHeader label={t('sleep_prefs.section_family')} />
       <View style={styles.toggleRow}>
         <Text variant="titleMd" family="display" weight="medium" color="ink">
-          Kids at home
+          {t('sleep_prefs.kids_at_home')}
         </Text>
         <Toggle
           value={state.hasChildren}
@@ -385,7 +385,7 @@ export default function SleepPreferences() {
         <View style={styles.resetRow}>
           <View style={{ flex: 1 }}>
             <Text variant="titleMd" family="display" weight="medium" color="ink">
-              Reset all answers
+              {t('sleep_prefs.reset_all_label')}
             </Text>
             <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 4 }}>
               {t('sleep_prefs.restart_dev_hint')}

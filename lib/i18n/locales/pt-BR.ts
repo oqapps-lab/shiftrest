@@ -184,6 +184,8 @@ const ptBR = {
     yes_kids: "Tenho filhos em casa",
     take_melatonin: "Sim, eu tomo melatonina",
     restart_dev_hint: "Apaga o quiz e te leva de novo pelo onboarding.",
+        kids_at_home: "Crianças em casa",
+    reset_all_label: "Redefinir todas as respostas",
     reset_alert: {
       title: "Apagar todas as respostas?",
       message: "Apaga o quiz e refaz o onboarding desde o início.",
@@ -507,6 +509,24 @@ const ptBR = {
     off_long: 'Dia de folga',
   },
 
+  a11y: {
+    back: 'Voltar',
+    close: 'Fechar',
+    close_paywall: 'Fechar paywall',
+    decrease: 'Diminuir',
+    increase: 'Aumentar',
+    restore_purchases: 'Restaurar compras',
+    bed_time_reminder: 'Lembrete de hora de dormir',
+    caffeine_cutoff_reminder: 'Lembrete de corte de cafeína',
+    melatonin_reminder: 'Lembrete de melatonina',
+    commute_time_minutes: 'Tempo de deslocamento em minutos',
+    cups_per_day: 'Xícaras por dia',
+    take_melatonin: 'Tomar melatonina',
+    have_kids_at_home: 'Você tem filhos em casa',
+    reset_onboarding_answers: 'Redefinir respostas do onboarding',
+    year_plan: 'Plano anual {{price}}',
+    month_plan: 'Plano mensal {{price}}',
+  },
 };
 
 export default ptBR;

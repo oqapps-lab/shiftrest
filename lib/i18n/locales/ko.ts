@@ -184,6 +184,8 @@ const ko = {
     yes_kids: "집에 아이가 있어요",
     take_melatonin: "네, 멜라토닌을 복용해요",
     restart_dev_hint: "퀴즈를 모두 지우고 온보딩을 처음부터 다시 진행해요.",
+        kids_at_home: "집에 아이들이 있어요",
+    reset_all_label: "모든 답변 초기화",
     reset_alert: {
       title: "모든 답변을 초기화할까요?",
       message: "퀴즈 내용을 지우고 온보딩을 처음부터 다시 진행해요.",
@@ -507,6 +509,24 @@ const ko = {
     off_long: '휴무일',
   },
 
+  a11y: {
+    back: '뒤로',
+    close: '닫기',
+    close_paywall: '결제 화면 닫기',
+    decrease: '감소',
+    increase: '증가',
+    restore_purchases: '구매 복원',
+    bed_time_reminder: '취침 시간 알림',
+    caffeine_cutoff_reminder: '카페인 중단 알림',
+    melatonin_reminder: '멜라토닌 알림',
+    commute_time_minutes: '통근 시간(분)',
+    cups_per_day: '하루 컵 수',
+    take_melatonin: '멜라토닌 복용',
+    have_kids_at_home: '집에 아이가 있어요',
+    reset_onboarding_answers: '온보딩 답변 초기화',
+    year_plan: '연간 플랜 {{price}}',
+    month_plan: '월간 플랜 {{price}}',
+  },
 };
 
 export default ko;

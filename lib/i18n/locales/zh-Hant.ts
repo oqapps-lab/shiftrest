@@ -183,6 +183,8 @@ const zhHant = {
     yes_kids: "家中有小孩",
     take_melatonin: "是,我有服用褪黑激素",
     restart_dev_hint: "清除問卷答案,並重新引導你完成新手導引。",
+        kids_at_home: "家中有孩子",
+    reset_all_label: "重設所有回答",
     reset_alert: {
       title: "要重設所有答案嗎?",
       message: "會清除問卷狀態,並從頭重新進行新手導引。",
@@ -506,6 +508,24 @@ const zhHant = {
     off_long: '休息日',
   },
 
+  a11y: {
+    back: '返回',
+    close: '關閉',
+    close_paywall: '關閉付費牆',
+    decrease: '減少',
+    increase: '增加',
+    restore_purchases: '還原購買項目',
+    bed_time_reminder: '就寢時間提醒',
+    caffeine_cutoff_reminder: '咖啡因停止時間提醒',
+    melatonin_reminder: '褪黑激素提醒',
+    commute_time_minutes: '通勤時間（分鐘）',
+    cups_per_day: '每日杯數',
+    take_melatonin: '服用褪黑激素',
+    have_kids_at_home: '家中有小孩',
+    reset_onboarding_answers: '重設入門問答',
+    year_plan: '年度方案 {{price}}',
+    month_plan: '月度方案 {{price}}',
+  },
 };
 
 export default zhHant;

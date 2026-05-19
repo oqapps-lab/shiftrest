@@ -184,6 +184,8 @@ const sv = {
     yes_kids: 'Jag har barn hemma',
     take_melatonin: 'Ja, jag tar melatonin',
     restart_dev_hint: 'Rensar quizet och tar dig genom onboardingen en gång till.',
+        kids_at_home: 'Barn hemma',
+    reset_all_label: 'Återställ alla svar',
     reset_alert: {
       title: 'Återställa alla svar?',
       message: 'Rensar quizet och kör onboardingen från början igen.',
@@ -507,6 +509,24 @@ const sv = {
     off_long: 'Ledig dag',
   },
 
+  a11y: {
+    back: 'Tillbaka',
+    close: 'Stäng',
+    close_paywall: 'Stäng betalvägg',
+    decrease: 'Minska',
+    increase: 'Öka',
+    restore_purchases: 'Återställ köp',
+    bed_time_reminder: 'Påminnelse om läggdags',
+    caffeine_cutoff_reminder: 'Påminnelse om koffeinstopp',
+    melatonin_reminder: 'Påminnelse om melatonin',
+    commute_time_minutes: 'Restid i minuter',
+    cups_per_day: 'Koppar per dag',
+    take_melatonin: 'Ta melatonin',
+    have_kids_at_home: 'Du har barn hemma',
+    reset_onboarding_answers: 'Återställ onboarding-svar',
+    year_plan: 'Årsabonnemang {{price}}',
+    month_plan: 'Månadsabonnemang {{price}}',
+  },
 };
 
 export default sv;
