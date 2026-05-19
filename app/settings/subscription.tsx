@@ -44,7 +44,7 @@ export default function Subscription() {
   if (!user) {
     if (mockUser.subscription === 'trial' && trialIsExpired(mockUser.trialEndsAt)) {
       status = 'expired';
-      subtitle = 'Resubscribe to keep your insights';
+      subtitle = t('settings_screens.subscription.sub.expired');
     } else {
       status = mockUser.subscription === 'premium' ? 'active' : (mockUser.subscription as DisplayStatus);
       subtitle =
@@ -52,12 +52,12 @@ export default function Subscription() {
           ? formatTrialRemaining(mockUser.trialEndsAt)
           : mockUser.subscription === 'premium'
           ? 'Renews automatically'
-          : 'Unlock the full plan with a 7-day trial';
+          : t('settings_screens.subscription.sub.free');
     }
   } else if (sub?.status === 'trial' && sub.trial_end) {
     if (trialIsExpired(sub.trial_end)) {
       status = 'expired';
-      subtitle = 'Resubscribe to keep your insights';
+      subtitle = t('settings_screens.subscription.sub.expired');
     } else {
       status = 'trial';
       subtitle = formatTrialRemaining(sub.trial_end);
@@ -66,31 +66,31 @@ export default function Subscription() {
     status = 'active';
     subtitle =
       sub.plan === 'premium_annual'
-        ? 'Premium · annual · renews automatically'
-        : 'Premium · monthly · renews automatically';
+        ? t('settings_screens.subscription.sub.active_annual')
+        : t('settings_screens.subscription.sub.active_monthly');
   } else if (sub?.status === 'grace_period') {
     status = 'grace';
-    subtitle = 'Payment retrying — keep an eye on your inbox';
+    subtitle = t('settings_screens.subscription.sub.grace');
   } else if (sub?.status === 'cancelled') {
     status = 'cancelled';
     subtitle = sub.current_period_end
-      ? `Premium until ${new Date(sub.current_period_end).toLocaleDateString()}`
-      : 'Cancelled — you keep premium until period end';
+      ? t('settings_screens.subscription.sub.cancelled_until', { date: new Date(sub.current_period_end).toLocaleDateString() })
+      : t('settings_screens.subscription.sub.cancelled_no_date');
   } else if (sub?.status === 'expired') {
     status = 'expired';
-    subtitle = 'Resubscribe to keep your insights';
+    subtitle = t('settings_screens.subscription.sub.expired');
   } else {
     status = 'free';
-    subtitle = 'Unlock the full plan with a 7-day trial';
+    subtitle = t('settings_screens.subscription.sub.free');
   }
 
   const headlineByStatus: Record<DisplayStatus, string> = {
-    free: 'Free tier',
-    trial: 'Trial in progress',
-    active: 'Premium · active',
-    grace: 'Payment retrying',
-    cancelled: 'Cancelled',
-    expired: 'Premium expired',
+    free: t('settings_screens.subscription.headline.free'),
+    trial: t('settings_screens.subscription.headline.trial'),
+    active: t('settings_screens.subscription.headline.active'),
+    grace: t('settings_screens.subscription.headline.grace'),
+    cancelled: t('settings_screens.subscription.headline.cancelled'),
+    expired: t('settings_screens.subscription.headline.expired'),
   };
 
   const isPremiumLike = status === 'active' || status === 'trial' || status === 'grace';

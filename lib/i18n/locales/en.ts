@@ -488,6 +488,24 @@ const en = {
         melatonin: "Melatonin timing for your chronotype",
         transition: "Multi-day transition plans",
       },
+      headline: {
+        free: 'Free tier',
+        trial: 'Trial in progress',
+        active: 'Premium · active',
+        grace: 'Payment retrying',
+        cancelled: 'Cancelled',
+        expired: 'Premium expired',
+      },
+      sub: {
+        active_annual: 'Premium · annual · renews automatically',
+        active_monthly: 'Premium · monthly · renews automatically',
+        grace: 'Payment retrying — keep an eye on your inbox',
+        cancelled_until: 'Premium until {{date}}',
+        cancelled_no_date: 'Cancelled — you keep premium until period end',
+        expired: 'Resubscribe to keep your insights',
+        free: 'Unlock the full plan with a 7-day trial',
+        renews_auto: 'Renews automatically',
+      },
     },
   },
   number_words: ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven'],
@@ -518,6 +536,8 @@ const en = {
     reset_onboarding_answers: 'Reset onboarding answers',
     year_plan: 'Year plan {{price}}',
     month_plan: 'Month plan {{price}}',
+    start_hour: 'Start {{hour}}',
+    end_hour: 'End {{hour}}',
   },
 };
 

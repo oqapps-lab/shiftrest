@@ -61,7 +61,7 @@ export default function Forgot() {
           color="inkSubtle"
           style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
         >
-          {`Tap the link in the email we sent to ${email} to set a new password.`}
+          {t('auth.forgot_sent_template', { email })}
         </Text>
         <PillCTA
           variant="primary"

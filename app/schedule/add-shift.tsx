@@ -240,7 +240,7 @@ export default function AddShift() {
                   startHour === h && { backgroundColor: colors.primary },
                 ]}
                 accessibilityRole="button"
-                accessibilityLabel={`Start ${formatHour(h)}`}
+                accessibilityLabel={t('a11y.start_hour', { hour: formatHour(h) })}
               >
                 <Text
                   variant="labelMd"
@@ -265,7 +265,7 @@ export default function AddShift() {
                   endHour === h && { backgroundColor: colors.primary },
                 ]}
                 accessibilityRole="button"
-                accessibilityLabel={`End ${formatHour(h)}`}
+                accessibilityLabel={t('a11y.end_hour', { hour: formatHour(h) })}
               >
                 <Text
                   variant="labelMd"

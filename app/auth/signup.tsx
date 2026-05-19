@@ -85,7 +85,7 @@ export default function Signup() {
           color="inkSubtle"
           style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
         >
-          {`We sent a confirmation link to ${email}. Tap it to finish — then come back here to sign in.`}
+          {t('auth.signup_sent_template', { email })}
         </Text>
         <PillCTA
           variant="primary"
