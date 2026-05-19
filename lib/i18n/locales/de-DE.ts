@@ -478,6 +478,12 @@ const deDE = {
       lead_time: 'VORLAUFZEIT',
       sub: 'Leise, kontextbezogene Hinweise. Schalte ab, was du nicht brauchst.',
       local_only: 'Erinnerungen werden lokal geplant und verlassen nie dein Gerät.',
+      master: {
+        title: 'Alle Benachrichtigungen',
+        active: 'Erinnerungen laufen nach deinem Plan',
+        muted: 'Alles ist stummgeschaltet',
+        a11y: 'Hauptbenachrichtigungen',
+      },
     },
     subscription: {
       title: 'Abonnement',

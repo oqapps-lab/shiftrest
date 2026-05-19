@@ -476,6 +476,12 @@ const zhHant = {
       lead_time: "提前通知時間",
       sub: "安靜、貼近情境的提醒。不需要的隨時關掉就好。",
       local_only: "提醒只在裝置本機排程,不會傳送到任何外部伺服器。",
+      master: {
+        title: "所有通知",
+        active: "提醒會依照你的排班發送",
+        muted: "全部都已靜音",
+        a11y: "通知總開關",
+      },
     },
     subscription: {
       title: "訂閱",

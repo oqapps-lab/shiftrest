@@ -478,6 +478,12 @@ const nlNL = {
       lead_time: 'AANKONDIGINGSTIJD',
       sub: 'Rustige meldingen op het juiste moment. Zet uit wat je niet nodig hebt.',
       local_only: 'Herinneringen worden lokaal ingepland en verlaten je apparaat nooit.',
+      master: {
+        title: 'Alle meldingen',
+        active: 'Herinneringen volgen je plan',
+        muted: 'Alles staat op stil',
+        a11y: 'Hoofdmeldingen',
+      },
     },
     subscription: {
       title: 'Abonnement',

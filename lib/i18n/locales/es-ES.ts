@@ -478,6 +478,12 @@ const esES = {
       lead_time: 'TIEMPO DE ANTICIPACIÓN',
       sub: 'Avisos discretos y contextuales. Desactiva lo que no necesites.',
       local_only: 'Los recordatorios se programan en local y nunca salen del dispositivo.',
+      master: {
+        title: 'Todas las notificaciones',
+        active: 'Los recordatorios saltan según tu plan',
+        muted: 'Todo está silenciado',
+        a11y: 'Notificaciones generales',
+      },
     },
     subscription: {
       title: 'Suscripción',

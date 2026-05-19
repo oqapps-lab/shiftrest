@@ -477,6 +477,12 @@ const itIT = {
       lead_time: "ANTICIPO",
       sub: "Promemoria discreti e contestuali. Disattiva ciò che non ti serve.",
       local_only: "I promemoria sono pianificati localmente e non lasciano mai il dispositivo.",
+      master: {
+        title: "Tutte le notifiche",
+        active: "I promemoria seguono il tuo piano",
+        muted: "È tutto silenziato",
+        a11y: "Notifiche generali",
+      },
     },
     subscription: {
       title: "Abbonamento",

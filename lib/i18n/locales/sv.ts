@@ -477,6 +477,12 @@ const sv = {
       lead_time: 'FÖRVARNINGSTID',
       sub: 'Lugna, situationsanpassade påminnelser. Stäng av det du inte behöver.',
       local_only: 'Påminnelser schemaläggs lokalt och lämnar aldrig din enhet.',
+      master: {
+        title: 'Alla aviseringar',
+        active: 'Påminnelser följer din plan',
+        muted: 'Allt är tystat',
+        a11y: 'Huvudaviseringar',
+      },
     },
     subscription: {
       title: 'Prenumeration',

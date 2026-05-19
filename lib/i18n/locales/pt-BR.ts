@@ -477,6 +477,12 @@ const ptBR = {
       lead_time: "ANTECEDÊNCIA",
       sub: "Lembretes discretos e contextuais. Desative o que você não precisa.",
       local_only: "Os lembretes são agendados localmente e nunca saem do dispositivo.",
+      master: {
+        title: "Todas as notificações",
+        active: "Os lembretes seguem o seu plano",
+        muted: "Está tudo no mudo",
+        a11y: "Notificações gerais",
+      },
     },
     subscription: {
       title: "Assinatura",

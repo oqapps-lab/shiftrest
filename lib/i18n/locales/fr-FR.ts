@@ -478,6 +478,12 @@ const frFR = {
       lead_time: 'DÉLAI DE RAPPEL',
       sub: 'Des rappels discrets, adaptés au contexte. Désactive ce qui ne te sert pas.',
       local_only: 'Les rappels sont planifiés en local et ne quittent jamais l’appareil.',
+      master: {
+        title: 'Toutes les notifications',
+        active: 'Les rappels suivent ton plan',
+        muted: 'Tout est en silencieux',
+        a11y: 'Notifications générales',
+      },
     },
     subscription: {
       title: 'Abonnement',
