@@ -172,15 +172,16 @@ export default function Transition() {
       {days.map((d, dayIdx) => {
         const done = d.steps.filter((s) => s.done).length;
         const total = d.steps.length;
-        const status =
-          done === 0 ? t('transition.status_pending') : done === total ? t('transition.status_done') : t('transition.status_in_progress');
+        const statusKind: 'pending' | 'in_progress' | 'done' =
+          done === 0 ? 'pending' : done === total ? 'done' : 'in_progress';
+        const status = t(`transition.status_${statusKind}`);
         const chipBg =
-          status === t('transition.status_done')
+          statusKind === 'done'
             ? colors.primaryContainer
-            : status === t('transition.status_in_progress')
+            : statusKind === 'in_progress'
             ? colors.surfaceHigh
             : colors.surfaceLow;
-        const chipFg = status === t('transition.status_done') ? 'onPrimaryContainer' : 'inkMuted';
+        const chipFg = statusKind === 'done' ? 'onPrimaryContainer' : 'inkMuted';
         return (
           <GlassCard
             key={d.label}
