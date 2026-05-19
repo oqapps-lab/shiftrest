@@ -185,6 +185,12 @@ const esES = {
     yes_kids: 'Tengo hijos en casa',
     take_melatonin: 'Sí, tomo melatonina',
     restart_dev_hint: 'Borra el cuestionario y te lleva otra vez por el onboarding.',
+    reset_alert: {
+      title: '¿Borrar todas las respuestas?',
+      message: 'Reinicia el cuestionario y rehace el onboarding desde cero.',
+      cancel: 'Cancelar',
+      confirm: 'Borrar',
+    },
     name_placeholder: 'Tu nombre',
   },
   onboarding: {
@@ -478,6 +484,12 @@ const esES = {
       manage_store: 'Gestionar en App Store',
       plan_includes: 'TU PLAN INCLUYE',
       auto_renew_notice: 'Las suscripciones se renuevan automáticamente hasta que las canceles. Puedes cancelar cuando quieras desde tu cuenta de App Store.',
+      bullets: {
+        sleep: 'Ventana de sueño personalizada',
+        caffeine: 'Corte de cafeína según tu sensibilidad',
+        melatonin: 'Toma de melatonina según tu cronotipo',
+        transition: 'Planes de transición de varios días',
+      },
     },
   },
   number_words: ['Cero', 'Uno', 'Dos', 'Tres', 'Cuatro', 'Cinco', 'Seis', 'Siete'],

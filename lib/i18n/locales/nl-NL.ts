@@ -185,6 +185,12 @@ const nlNL = {
     yes_kids: 'Ik heb kinderen thuis',
     take_melatonin: 'Ja, ik neem melatonine',
     restart_dev_hint: 'Wist de quiz en loopt de onboarding nog een keer met je door.',
+    reset_alert: {
+      title: 'Alle antwoorden resetten?',
+      message: 'Wist de quizgegevens en doorloopt de onboarding helemaal opnieuw.',
+      cancel: 'Annuleren',
+      confirm: 'Resetten',
+    },
     name_placeholder: 'Je naam',
   },
   onboarding: {
@@ -478,6 +484,12 @@ const nlNL = {
       manage_store: 'Beheren in App Store',
       plan_includes: 'JOUW ABONNEMENT BEVAT',
       auto_renew_notice: 'Abonnementen worden automatisch verlengd tot je ze opzegt. Je kunt op elk moment opzeggen via je App Store-account.',
+      bullets: {
+        sleep: 'Persoonlijk slaapvenster',
+        caffeine: 'Cafeïnestop op basis van je gevoeligheid',
+        melatonin: 'Melatoninetiming voor jouw chronotype',
+        transition: 'Overgangsplannen over meerdere dagen',
+      },
     },
   },
   number_words: ['Nul', 'Een', 'Twee', 'Drie', 'Vier', 'Vijf', 'Zes', 'Zeven'],

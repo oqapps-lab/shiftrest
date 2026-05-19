@@ -184,6 +184,12 @@ const itIT = {
     yes_kids: "Ho figli in casa",
     take_melatonin: "Sì, prendo la melatonina",
     restart_dev_hint: "Cancella il quiz e ti riporta attraverso l’onboarding.",
+    reset_alert: {
+      title: "Azzerare tutte le risposte?",
+      message: "Cancella il quiz e ripercorre l’onboarding da capo.",
+      cancel: "Annulla",
+      confirm: "Azzera",
+    },
     name_placeholder: "Il tuo nome",
   },
   onboarding: {
@@ -477,6 +483,12 @@ const itIT = {
       manage_store: "Gestisci nell’App Store",
       plan_includes: "IL TUO PIANO INCLUDE",
       auto_renew_notice: "Gli abbonamenti si rinnovano automaticamente finché non vengono annullati. Puoi annullare in qualsiasi momento dal tuo account App Store.",
+      bullets: {
+        sleep: "Finestra del sonno personalizzata",
+        caffeine: "Stop alla caffeina in base alla tua sensibilità",
+        melatonin: "Timing della melatonina per il tuo cronotipo",
+        transition: "Piani di transizione su più giorni",
+      },
     },
   },
   number_words: ["Zero", "Uno", "Due", "Tre", "Quattro", "Cinque", "Sei", "Sette"],

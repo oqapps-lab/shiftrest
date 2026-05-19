@@ -183,6 +183,12 @@ const zhHant = {
     yes_kids: "家中有小孩",
     take_melatonin: "是,我有服用褪黑激素",
     restart_dev_hint: "清除問卷答案,並重新引導你完成新手導引。",
+    reset_alert: {
+      title: "要重設所有答案嗎?",
+      message: "會清除問卷狀態,並從頭重新進行新手導引。",
+      cancel: "取消",
+      confirm: "重設",
+    },
     name_placeholder: "你的名字",
   },
   onboarding: {
@@ -476,6 +482,12 @@ const zhHant = {
       manage_store: "在 App Store 管理",
       plan_includes: "你的方案包含",
       auto_renew_notice: "訂閱會自動續訂,直到你取消為止。你隨時都能從 App Store 帳戶取消。",
+      bullets: {
+        sleep: "為你量身訂做的睡眠時段",
+        caffeine: "依你的敏感度設定咖啡因停用時間",
+        melatonin: "依你的時型安排褪黑激素時機",
+        transition: "跨越多日的轉換計畫",
+      },
     },
   },
   number_words: ["零", "一", "二", "三", "四", "五", "六", "七"],

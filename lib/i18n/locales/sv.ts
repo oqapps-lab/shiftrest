@@ -184,6 +184,12 @@ const sv = {
     yes_kids: 'Jag har barn hemma',
     take_melatonin: 'Ja, jag tar melatonin',
     restart_dev_hint: 'Rensar quizet och tar dig genom onboardingen en gång till.',
+    reset_alert: {
+      title: 'Återställa alla svar?',
+      message: 'Rensar quizet och kör onboardingen från början igen.',
+      cancel: 'Avbryt',
+      confirm: 'Återställ',
+    },
     name_placeholder: 'Ditt namn',
   },
   onboarding: {
@@ -477,6 +483,12 @@ const sv = {
       manage_store: 'Hantera i App Store',
       plan_includes: 'DIN PLAN INKLUDERAR',
       auto_renew_notice: 'Prenumerationer förnyas automatiskt tills de sägs upp. Du kan säga upp när som helst via ditt App Store-konto.',
+      bullets: {
+        sleep: 'Personligt sömnfönster',
+        caffeine: 'Koffeinstopp efter din känslighet',
+        melatonin: 'Melatonintiming för din kronotyp',
+        transition: 'Övergångsplaner över flera dagar',
+      },
     },
   },
   number_words: ['Noll', 'Ett', 'Två', 'Tre', 'Fyra', 'Fem', 'Sex', 'Sju'],

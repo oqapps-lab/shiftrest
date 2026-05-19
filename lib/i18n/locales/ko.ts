@@ -184,6 +184,12 @@ const ko = {
     yes_kids: "집에 아이가 있어요",
     take_melatonin: "네, 멜라토닌을 복용해요",
     restart_dev_hint: "퀴즈를 모두 지우고 온보딩을 처음부터 다시 진행해요.",
+    reset_alert: {
+      title: "모든 답변을 초기화할까요?",
+      message: "퀴즈 내용을 지우고 온보딩을 처음부터 다시 진행해요.",
+      cancel: "취소",
+      confirm: "초기화",
+    },
     name_placeholder: "이름",
   },
   onboarding: {
@@ -477,6 +483,12 @@ const ko = {
       manage_store: "App Store에서 관리",
       plan_includes: "내 플랜 포함 사항",
       auto_renew_notice: "구독은 취소하기 전까지 자동으로 갱신돼요. App Store 계정에서 언제든 취소할 수 있어요.",
+      bullets: {
+        sleep: "나에게 맞춘 수면 구간",
+        caffeine: "민감도에 맞춘 카페인 차단 시간",
+        melatonin: "크로노타입에 맞춘 멜라토닌 복용 시점",
+        transition: "여러 날에 걸친 전환 플랜",
+      },
     },
   },
   number_words: ["영", "하나", "둘", "셋", "넷", "다섯", "여섯", "일곱"],

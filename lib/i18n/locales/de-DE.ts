@@ -185,6 +185,12 @@ const deDE = {
     yes_kids: 'Ich habe Kinder zu Hause',
     take_melatonin: 'Ja, ich nehme Melatonin',
     restart_dev_hint: 'Setzt das Quiz zurück und führt dich noch einmal durch das Onboarding.',
+    reset_alert: {
+      title: 'Alle Antworten zurücksetzen?',
+      message: 'Löscht den Quiz-Stand und startet das Onboarding von vorn.',
+      cancel: 'Abbrechen',
+      confirm: 'Zurücksetzen',
+    },
     name_placeholder: 'Dein Name',
   },
   onboarding: {
@@ -478,6 +484,12 @@ const deDE = {
       manage_store: 'Im App Store verwalten',
       plan_includes: 'DEIN PLAN ENTHÄLT',
       auto_renew_notice: 'Abonnements verlängern sich automatisch, bis sie gekündigt werden. Du kannst jederzeit über dein App-Store-Konto kündigen.',
+      bullets: {
+        sleep: 'Personalisiertes Schlaffenster',
+        caffeine: 'Koffein-Stopp nach deiner Empfindlichkeit',
+        melatonin: 'Melatonin-Timing für deinen Chronotyp',
+        transition: 'Mehrtägige Übergangspläne',
+      },
     },
   },
   number_words: ['Null', 'Eins', 'Zwei', 'Drei', 'Vier', 'Fünf', 'Sechs', 'Sieben'],

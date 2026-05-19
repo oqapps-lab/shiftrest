@@ -92,12 +92,12 @@ export default function SleepPreferences() {
 
   const onResetAlert = () => {
     Alert.alert(
-      'Reset all answers?',
-      'Wipes the quiz state and replays onboarding from scratch.',
+      t('sleep_prefs.reset_alert.title'),
+      t('sleep_prefs.reset_alert.message'),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('sleep_prefs.reset_alert.cancel'), style: 'cancel' },
         {
-          text: 'Reset',
+          text: t('sleep_prefs.reset_alert.confirm'),
           style: 'destructive',
           onPress: () => {
             reset();

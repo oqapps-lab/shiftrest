@@ -161,10 +161,10 @@ export default function Subscription() {
       <View style={{ marginTop: spacing.huge }}>
         <Eyebrow>{t('settings_screens.subscription.plan_includes')}</Eyebrow>
         {[
-          { glyph: 'bed' as const, text: 'Personalised sleep window' },
-          { glyph: 'coffee' as const, text: 'Caffeine cutoff by sensitivity' },
-          { glyph: 'moon' as const, text: 'Melatonin timing for your chronotype' },
-          { glyph: 'sparkle' as const, text: 'Multi-day transition plans' },
+          { glyph: 'bed' as const, text: t('settings_screens.subscription.bullets.sleep') },
+          { glyph: 'coffee' as const, text: t('settings_screens.subscription.bullets.caffeine') },
+          { glyph: 'moon' as const, text: t('settings_screens.subscription.bullets.melatonin') },
+          { glyph: 'sparkle' as const, text: t('settings_screens.subscription.bullets.transition') },
         ].map((b) => (
           <View key={b.text} style={styles.bulletRow}>
             <View style={styles.bulletIcon}>

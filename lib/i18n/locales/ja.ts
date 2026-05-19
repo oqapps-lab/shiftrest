@@ -184,6 +184,12 @@ const ja = {
     yes_kids: "自宅に子どもがいます",
     take_melatonin: "はい、メラトニンを飲んでいます",
     restart_dev_hint: "クイズの内容を消去し、もう一度オンボーディングを最初から行います。",
+    reset_alert: {
+      title: "すべての回答をリセットしますか?",
+      message: "クイズの状態を消去し、オンボーディングを最初からやり直します。",
+      cancel: "キャンセル",
+      confirm: "リセット",
+    },
     name_placeholder: "あなたのお名前",
   },
   onboarding: {
@@ -477,6 +483,12 @@ const ja = {
       manage_store: "App Store で管理",
       plan_includes: "ご利用中のプラン内容",
       auto_renew_notice: "サブスクリプションは解約するまで自動更新されます。App Store のアカウントからいつでも解約できます。",
+      bullets: {
+        sleep: "あなた専用の睡眠ウィンドウ",
+        caffeine: "感受性に合わせたカフェインの最終時刻",
+        melatonin: "クロノタイプに合わせたメラトニンのタイミング",
+        transition: "数日間にわたる切り替えプラン",
+      },
     },
   },
   number_words: ["ゼロ", "一", "二", "三", "四", "五", "六", "七"],

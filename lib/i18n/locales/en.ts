@@ -178,6 +178,12 @@ const en = {
     commute: 'Commute time',
     name_placeholder: 'Your name',
     restart_dev_hint: 'Wipes the quiz and walks you through onboarding again.',
+    reset_alert: {
+      title: 'Reset all answers?',
+      message: 'Wipes the quiz state and replays onboarding from scratch.',
+      cancel: 'Cancel',
+      confirm: 'Reset',
+    },
   },
   onboarding: {
     step_template: 'STEP {{n}} OF {{total}}',
@@ -470,6 +476,12 @@ const en = {
       manage_store: "Manage in App Store",
       plan_includes: "YOUR PLAN INCLUDES",
       auto_renew_notice: "Subscriptions auto-renew until cancelled. Cancel any time from your App Store account.",
+      bullets: {
+        sleep: "Personalised sleep window",
+        caffeine: "Caffeine cutoff by sensitivity",
+        melatonin: "Melatonin timing for your chronotype",
+        transition: "Multi-day transition plans",
+      },
     },
   },
   number_words: ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven'],
