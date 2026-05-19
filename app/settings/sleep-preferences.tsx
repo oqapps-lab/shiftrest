@@ -254,19 +254,17 @@ export default function SleepPreferences() {
         />
       </View>
       <Eyebrow style={{ marginBottom: spacing.md }}>{t('sleep_prefs.usual_type')}</Eyebrow>
-      {mockCaffeineTypes.map((t) => (
+      {mockCaffeineTypes.map((c) => (
         <OptionCard
-          key={t.id}
-          title={t.label}
-          glyph={t.glyph}
-          selected={state.caffeineType === t.id}
-          onPress={() => update({ caffeineType: t.id as CaffeineType })}
-          accessibilityLabel={t.label}
+          key={c.id}
+          title={c.label}
+          glyph={c.glyph}
+          selected={state.caffeineType === c.id}
+          onPress={() => update({ caffeineType: c.id as CaffeineType })}
+          accessibilityLabel={c.label}
         />
       ))}
-      <Eyebrow style={{ marginTop: spacing.lg, marginBottom: spacing.md }}>
-        SENSITIVITY
-      </Eyebrow>
+      <Eyebrow style={{ marginTop: spacing.lg, marginBottom: spacing.md }}>{t('sleep_prefs.sensitivity')}</Eyebrow>
       {mockCaffeineSensitivities.map((s) => (
         <OptionCard
           key={s.id}

@@ -57,22 +57,22 @@ export default function Notifications() {
       </View>
 
       <View style={{ marginTop: spacing.xl }}>
-        {mockNotificationTypes.map((t) => (
+        {mockNotificationTypes.map((n) => (
           <GlassCard
-            key={t.id}
+            key={n.id}
             variant="whisper"
             padding="lg"
             style={[styles.row, { marginBottom: spacing.md }]}
           >
             <View style={styles.iconWrap}>
-              <Glyph name={t.glyph} size={22} color="primary" />
+              <Glyph name={n.glyph} size={22} color="primary" />
             </View>
             <View style={{ flex: 1 }}>
               <Text variant="titleMd" family="display" weight="medium" color="ink">
-                {t.title}
+                {n.title}
               </Text>
               <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
-                {t.subtitle}
+                {n.subtitle}
               </Text>
             </View>
           </GlassCard>
