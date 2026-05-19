@@ -21,8 +21,10 @@ export function formatRelativeTime(nowHour: number, targetHour: number): string 
   let diff = targetHour - nowHour;
   if (diff < 0) diff += 24;
   if (diff === 0) return t('rel.now');
-  const h = Math.floor(diff);
-  const m = Math.round((diff - h) * 60);
+  const totalMins = Math.round(diff * 60);
+  if (totalMins === 0) return t('rel.now'); // sub-minute differences
+  const h = Math.floor(totalMins / 60);
+  const m = totalMins % 60;
   if (h === 0) return t('rel.m_away', { m });
   if (m === 0) return t('rel.h_away', { h });
   return t('rel.hm_away', { h, m });
