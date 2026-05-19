@@ -171,18 +171,18 @@ export default function NotificationsSettings() {
         <View style={styles.row}>
           <View style={{ flex: 1 }}>
             <Text variant="titleMd" family="display" weight="medium" color="ink">
-              All notifications
+              {t('settings_screens.notifications.master.title')}
             </Text>
             <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
               {state.master
-                ? 'Reminders fire on your plan'
-                : 'Everything is muted'}
+                ? t('settings_screens.notifications.master.active')
+                : t('settings_screens.notifications.master.muted')}
             </Text>
           </View>
           <Toggle
             value={state.master}
             onChange={(v) => update({ master: v })}
-            accessibilityLabel="Master notifications"
+            accessibilityLabel={t('settings_screens.notifications.master.a11y')}
           />
         </View>
       </GlassCard>

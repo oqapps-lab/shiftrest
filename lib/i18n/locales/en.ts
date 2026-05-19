@@ -470,6 +470,12 @@ const en = {
       lead_time: "LEAD TIME",
       sub: "Quiet, contextual nudges. Toggle anything you don't need.",
       local_only: "Reminders are scheduled locally and never leave the device.",
+      master: {
+        title: "All notifications",
+        active: "Reminders fire on your plan",
+        muted: "Everything is muted",
+        a11y: "Master notifications",
+      },
     },
     subscription: {
       title: "Subscription",
