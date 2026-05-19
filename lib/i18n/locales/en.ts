@@ -512,6 +512,7 @@ const en = {
       restore_title: 'Restore purchases',
       restore_link: 'Restore purchases',
       restore_placeholder: 'Adapty wiring lands in Stage 7. For now, this is a placeholder.',
+      resubscribe: 'Resubscribe',
       store_unavailable: 'Could not open App Store',
       bullets: {
         sleep: "Personalised sleep window",

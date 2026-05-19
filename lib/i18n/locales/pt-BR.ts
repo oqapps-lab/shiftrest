@@ -511,6 +511,7 @@ const ptBR = {
       restore_title: "Restaurar compras",
       restore_link: "Restaurar compras",
       restore_placeholder: "A integração com a Adapty chega na Etapa 7. Por enquanto, isto é apenas um espaço reservado.",
+      resubscribe: "Reativar",
       bullets: {
         sleep: "Janela de sono personalizada",
         caffeine: "Corte da cafeína conforme sua sensibilidade",

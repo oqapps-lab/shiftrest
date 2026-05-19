@@ -511,6 +511,7 @@ const ja = {
       restore_title: "購入を復元",
       restore_link: "購入を復元",
       restore_placeholder: "Adapty との連携はステージ7で実装します。今はプレースホルダーです。",
+      resubscribe: "再登録",
       bullets: {
         sleep: "あなた専用の睡眠ウィンドウ",
         caffeine: "感受性に合わせたカフェインの最終時刻",

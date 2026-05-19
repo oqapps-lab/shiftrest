@@ -512,6 +512,7 @@ const esES = {
       restore_title: 'Restaurar compras',
       restore_link: 'Restaurar compras',
       restore_placeholder: 'La integración con Adapty llega en la Etapa 7. Por ahora, esto es solo un marcador.',
+      resubscribe: 'Reactivar',
       bullets: {
         sleep: 'Ventana de sueño personalizada',
         caffeine: 'Corte de cafeína según tu sensibilidad',

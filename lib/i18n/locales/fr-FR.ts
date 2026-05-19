@@ -512,6 +512,7 @@ const frFR = {
       restore_title: 'Restaurer les achats',
       restore_link: 'Restaurer les achats',
       restore_placeholder: 'L’intégration Adapty arrive à l’Étape 7. Pour l’instant, ceci est un espace réservé.',
+      resubscribe: 'Se réabonner',
       bullets: {
         sleep: 'Fenêtre de sommeil personnalisée',
         caffeine: 'Arrêt de la caféine selon ta sensibilité',

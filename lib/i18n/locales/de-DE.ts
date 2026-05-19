@@ -512,6 +512,7 @@ const deDE = {
       restore_title: 'Käufe wiederherstellen',
       restore_link: 'Käufe wiederherstellen',
       restore_placeholder: 'Die Adapty-Anbindung kommt in Stage 7. Aktuell ist das nur ein Platzhalter.',
+      resubscribe: 'Erneut abonnieren',
       bullets: {
         sleep: 'Personalisiertes Schlaffenster',
         caffeine: 'Koffein-Stopp nach deiner Empfindlichkeit',

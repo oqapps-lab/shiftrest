@@ -104,7 +104,7 @@ export default function Subscription() {
         !isPremiumLike ? (
           <PillCTA
             variant="primary"
-            label={status === 'free' ? 'Start 7-day trial' : 'Resubscribe'}
+            label={status === 'free' ? t('paywall.start_trial') : t('settings_screens.subscription.resubscribe')}
             onPress={() => router.push('/paywall')}
           />
         ) : (

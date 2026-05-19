@@ -510,6 +510,7 @@ const zhHant = {
       restore_title: "還原購買項目",
       restore_link: "還原購買項目",
       restore_placeholder: "Adapty 整合會在第 7 階段加入。目前這只是預留訊息。",
+      resubscribe: "重新訂閱",
       bullets: {
         sleep: "為你量身訂做的睡眠時段",
         caffeine: "依你的敏感度設定咖啡因停用時間",

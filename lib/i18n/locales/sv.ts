@@ -511,6 +511,7 @@ const sv = {
       restore_title: 'Återställ köp',
       restore_link: 'Återställ köp',
       restore_placeholder: 'Adapty-integrationen kommer i steg 7. Just nu är det här en platshållare.',
+      resubscribe: 'Prenumerera igen',
       bullets: {
         sleep: 'Personligt sömnfönster',
         caffeine: 'Koffeinstopp efter din känslighet',
