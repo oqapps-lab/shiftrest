@@ -27,7 +27,8 @@ import { startTrial, emitChange, EVENTS } from '../lib/queries';
 import { logEvent } from '../lib/events';
 import { t } from '../lib/i18n';
 
-const VALUE_BULLETS = [
+// Lazy getter so t() runs at render time and respects current locale.
+const getValueBullets = () => [
   { glyph: 'bed' as const, text: t('paywall.bullet_sleep') },
   { glyph: 'coffee' as const, text: t('paywall.bullet_caffeine') },
   { glyph: 'moon' as const, text: t('paywall.bullet_melatonin') },
@@ -120,7 +121,7 @@ export default function Paywall() {
         <SerifHero>{t('paywall.hero')}</SerifHero>
       </View>
 
-      {VALUE_BULLETS.map((b) => (
+      {getValueBullets().map((b) => (
         <View key={b.text} style={styles.bulletRow}>
           <View style={styles.bulletIcon}>
             <Glyph name={b.glyph} size={20} color="primary" />
@@ -159,7 +160,7 @@ export default function Paywall() {
             <View style={{ flex: 1 }}>
               <View style={[styles.chip, { backgroundColor: colors.primaryContainer }]}>
                 <Text variant="labelMd" color="onPrimaryContainer" uppercase weight="medium">
-                  Best value · save 35%
+                  {t('paywall.best_value_save', { percent: '35' })}
                 </Text>
               </View>
               <HeroNumber value="$49.99" size="md" label={t('paywall.year_label', { weekPrice: '$0.96' })} labelPosition="below" />
