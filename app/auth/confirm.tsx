@@ -57,7 +57,7 @@ export default function AuthConfirm() {
       if (cancelled) return;
 
       if (error) {
-        setErrorMsg(error.message ?? 'Verification failed.');
+        setErrorMsg(error.message ?? t('errors.verification_failed'));
         setStatus('error');
         return;
       }

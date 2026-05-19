@@ -51,7 +51,7 @@ export default function Subscription() {
         mockUser.subscription === 'trial'
           ? formatTrialRemaining(mockUser.trialEndsAt)
           : mockUser.subscription === 'premium'
-          ? 'Renews automatically'
+          ? t('settings_screens.subscription.sub.renews_auto')
           : t('settings_screens.subscription.sub.free');
     }
   } else if (sub?.status === 'trial' && sub.trial_end) {
@@ -182,8 +182,8 @@ export default function Subscription() {
         <Pressable
           onPress={() =>
             Alert.alert(
-              'Restore purchases',
-              'Adapty wiring lands in Stage 7. For now, this is a placeholder.',
+              t('settings_screens.subscription.restore_title'),
+              t('settings_screens.subscription.restore_placeholder'),
             )
           }
           hitSlop={12}
@@ -192,7 +192,7 @@ export default function Subscription() {
           accessibilityLabel={t('a11y.restore_purchases')}
         >
           <Text variant="bodyLg" color="primary" weight="medium">
-            Restore purchases
+            {t('settings_screens.subscription.restore_link')}
           </Text>
         </Pressable>
 

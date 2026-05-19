@@ -86,8 +86,8 @@ export default function AddShift() {
   const canSave = !!dateKey && (isOff || startHour !== endHour);
 
   const summaryLine = `${formatDayMonth(selectedDay.date)} · ${
-    kind === 'off' ? 'Off day' : `${kind} ${formatHour(startHour)}–${formatHour(endHour)}`
-  }${notes.trim() ? '\n\nNote: ' + notes.trim() : ''}`;
+    kind === 'off' ? t('add_shift.summary_off') : t('add_shift.summary_kind_short', { kind: t('shift_kind.' + kind), start: formatHour(startHour), end: formatHour(endHour) })
+  }${notes.trim() ? '\n\n' + t('add_shift.note_prefix') + notes.trim() : ''}`;
 
   const onSave = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -150,7 +150,7 @@ export default function AddShift() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label={submitting ? 'Saving…' : 'Save shift'}
+          label={submitting ? t('add_shift.saving') : t('add_shift.save')}
           disabled={!canSave || submitting}
           onPress={onSave}
         />
@@ -303,7 +303,7 @@ export default function AddShift() {
           style={{ marginTop: spacing.sm }}
         >
           {`${formatDayMonth(selectedDay.date)} · ${
-            kind === 'off' ? 'Off day' : `${kind} shift ${formatHour(startHour)}–${formatHour(endHour)}`
+            kind === 'off' ? t('add_shift.summary_off') : t('add_shift.summary_kind_long', { kind: t('shift_kind.' + kind), start: formatHour(startHour), end: formatHour(endHour) })
           }`}
         </Text>
       </GlassCard>

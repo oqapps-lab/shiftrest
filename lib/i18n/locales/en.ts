@@ -272,6 +272,12 @@ const en = {
     eyebrow: "NEW SHIFT",
     hero: "Add a shift",
     sub: "Quick entry — adjust later from your calendar.",
+    save: 'Save shift',
+    saving: 'Saving…',
+    summary_off: 'Off day',
+    summary_kind_short: '{{kind}} {{start}}–{{end}}',
+    summary_kind_long: '{{kind}} shift {{start}}–{{end}}',
+    note_prefix: 'Note: ',
     when_label: "WHEN",
     shift_type: "SHIFT TYPE",
     start: "START",
@@ -488,6 +494,9 @@ const en = {
       manage_store: "Manage in App Store",
       plan_includes: "YOUR PLAN INCLUDES",
       auto_renew_notice: "Subscriptions auto-renew until cancelled. Cancel any time from your App Store account.",
+      restore_title: 'Restore purchases',
+      restore_link: 'Restore purchases',
+      restore_placeholder: 'Adapty wiring lands in Stage 7. For now, this is a placeholder.',
       bullets: {
         sleep: "Personalised sleep window",
         caffeine: "Caffeine cutoff by sensitivity",
@@ -561,6 +570,7 @@ const en = {
     supabase_not_configured: 'Supabase is not configured.',
     link_unverified: 'Link could not be verified.',
     link_missing_code: 'This link is missing the verification code. Try requesting a fresh email.',
+    verification_failed: 'Verification failed.',
   },
 };
 
