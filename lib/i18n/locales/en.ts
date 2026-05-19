@@ -176,6 +176,8 @@ const en = {
     section_chronotype: 'CHRONOTYPE',
     section_caffeine: 'CAFFEINE',
     commute: 'Commute time',
+    name_placeholder: 'Your name',
+    restart_dev_hint: 'Wipes the quiz and walks you through onboarding again.',
   },
   onboarding: {
     step_template: 'STEP {{n}} OF {{total}}',
