@@ -285,6 +285,9 @@ const ko = {
     summary_kind_short: "{{kind}} {{start}}–{{end}}",
     summary_kind_long: "{{kind}} 근무 {{start}}–{{end}}",
     note_prefix: "메모: ",
+    saved_title: "근무 저장 완료",
+    save_failed_title: "근무를 저장하지 못했어요",
+    ok: "확인",
     day_today: "오늘",
     day_tomorrow: "내일",
     when_label: "언제",
@@ -468,6 +471,7 @@ const ko = {
     forgot_sub: "가입할 때 사용한 이메일을 입력하면 링크를 보내드려요.",
     signup_sent_template: "{{email}} 주소로 확인 링크를 보냈어요. 링크를 눌러 마치고, 이곳으로 돌아와 로그인해요.",
     forgot_sent_template: "{{email}} 주소로 보낸 메일의 링크를 눌러 새 비밀번호를 설정해요.",
+    taking_to_app: "앱으로 이동할게요...",
     something_went_wrong: "문제가 생겼어요.",
   },
   settings_screens: {

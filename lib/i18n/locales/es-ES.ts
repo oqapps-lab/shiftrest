@@ -286,6 +286,9 @@ const esES = {
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: 'Turno {{kind}} {{start}}–{{end}}',
     note_prefix: 'Nota: ',
+    saved_title: 'Turno guardado',
+    save_failed_title: 'No se pudo guardar el turno',
+    ok: 'OK',
     day_today: 'Hoy',
     day_tomorrow: 'Mañana',
     when_label: 'CUÁNDO',
@@ -469,6 +472,7 @@ const esES = {
     forgot_sub: 'Introduce el correo con el que te registraste y te enviaremos un enlace.',
     signup_sent_template: 'Hemos enviado un enlace de confirmación a {{email}}. Tócalo para terminar — luego vuelve aquí para iniciar sesión.',
     forgot_sent_template: 'Toca el enlace del correo que enviamos a {{email}} para definir una nueva contraseña.',
+    taking_to_app: 'Te llevamos a la app...',
     something_went_wrong: 'Algo ha salido mal.',
   },
   settings_screens: {

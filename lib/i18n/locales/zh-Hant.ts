@@ -284,6 +284,9 @@ const zhHant = {
     summary_kind_short: "{{kind}} {{start}}–{{end}}",
     summary_kind_long: "{{kind}}班 {{start}}–{{end}}",
     note_prefix: "備註:",
+    saved_title: "已儲存班次",
+    save_failed_title: "無法儲存班次",
+    ok: "確定",
     day_today: "今天",
     day_tomorrow: "明天",
     when_label: "時間",
@@ -467,6 +470,7 @@ const zhHant = {
     forgot_sub: "請輸入你註冊時使用的電子郵件,我們會寄一封連結信給你。",
     signup_sent_template: "我們已將確認連結寄到 {{email}}。點一下完成,然後回到這裡登入。",
     forgot_sent_template: "點一下我們寄到 {{email}} 的信件中的連結,即可設定新密碼。",
+    taking_to_app: "正在帶你進入應用程式...",
     something_went_wrong: "發生了一點問題。",
   },
   settings_screens: {

@@ -285,6 +285,9 @@ const itIT = {
     summary_kind_short: "{{kind}} {{start}}–{{end}}",
     summary_kind_long: "Turno {{kind}} {{start}}–{{end}}",
     note_prefix: "Nota: ",
+    saved_title: "Turno salvato",
+    save_failed_title: "Impossibile salvare il turno",
+    ok: "OK",
     day_today: "Oggi",
     day_tomorrow: "Domani",
     when_label: "QUANDO",
@@ -468,6 +471,7 @@ const itIT = {
     forgot_sub: "Inserisci l’email con cui ti sei registrato e ti inviamo un link.",
     signup_sent_template: "Abbiamo inviato un link di conferma a {{email}}. Toccalo per concludere — poi torna qui per accedere.",
     forgot_sent_template: "Tocca il link nell’email che abbiamo inviato a {{email}} per impostare una nuova password.",
+    taking_to_app: "Ti portiamo all'app...",
     something_went_wrong: "Qualcosa è andato storto.",
   },
   settings_screens: {

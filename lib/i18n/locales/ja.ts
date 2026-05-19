@@ -285,6 +285,9 @@ const ja = {
     summary_kind_short: "{{kind}} {{start}}–{{end}}",
     summary_kind_long: "{{kind}}シフト {{start}}–{{end}}",
     note_prefix: "メモ:",
+    saved_title: "シフトを保存しました",
+    save_failed_title: "シフトを保存できませんでした",
+    ok: "OK",
     day_today: "今日",
     day_tomorrow: "明日",
     when_label: "いつ",
@@ -468,6 +471,7 @@ const ja = {
     forgot_sub: "登録時のメールアドレスを入力してください。リンクをお送りします。",
     signup_sent_template: "{{email}} に確認リンクをお送りしました。タップして完了してから、ここに戻ってサインインしてください。",
     forgot_sent_template: "{{email}} 宛のメールに記載のリンクをタップして、新しいパスワードを設定してください。",
+    taking_to_app: "アプリへ移動します...",
     something_went_wrong: "問題が発生しました。",
   },
   settings_screens: {

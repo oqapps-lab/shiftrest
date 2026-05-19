@@ -286,6 +286,9 @@ const deDE = {
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: '{{kind}}-Schicht {{start}}–{{end}}',
     note_prefix: 'Notiz: ',
+    saved_title: 'Schicht gespeichert',
+    save_failed_title: 'Schicht konnte nicht gespeichert werden',
+    ok: 'OK',
     day_today: 'Heute',
     day_tomorrow: 'Morgen',
     when_label: 'WANN',
@@ -469,6 +472,7 @@ const deDE = {
     forgot_sub: 'Gib die E-Mail-Adresse ein, mit der du dich angemeldet hast – wir schicken dir einen Link.',
     signup_sent_template: 'Wir haben einen Bestätigungslink an {{email}} gesendet. Tippe darauf, um abzuschließen – komm danach hierher zurück, um dich anzumelden.',
     forgot_sent_template: 'Tippe auf den Link in der E-Mail, die wir an {{email}} gesendet haben, um ein neues Passwort festzulegen.',
+    taking_to_app: 'Wir öffnen die App...',
     something_went_wrong: 'Etwas ist schiefgelaufen.',
   },
   settings_screens: {

@@ -286,6 +286,9 @@ const frFR = {
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: 'Service {{kind}} {{start}}–{{end}}',
     note_prefix: 'Note : ',
+    saved_title: 'Service enregistré',
+    save_failed_title: 'Impossible d'enregistrer le service',
+    ok: 'OK',
     day_today: "Aujourd'hui",
     day_tomorrow: 'Demain',
     when_label: 'QUAND',
@@ -469,6 +472,7 @@ const frFR = {
     forgot_sub: 'Saisis l’e-mail que tu as utilisé pour t’inscrire et on t’envoie un lien.',
     signup_sent_template: 'On a envoyé un lien de confirmation à {{email}}. Touche-le pour terminer — reviens ensuite ici pour te connecter.',
     forgot_sent_template: 'Touche le lien dans l’e-mail qu’on a envoyé à {{email}} pour définir un nouveau mot de passe.',
+    taking_to_app: 'Nous t'amenons dans l'app...',
     something_went_wrong: 'Quelque chose s’est mal passé.',
   },
   settings_screens: {

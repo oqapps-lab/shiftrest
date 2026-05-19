@@ -286,6 +286,9 @@ const nlNL = {
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: '{{kind}}-dienst {{start}}–{{end}}',
     note_prefix: 'Notitie: ',
+    saved_title: 'Dienst opgeslagen',
+    save_failed_title: 'Kon dienst niet opslaan',
+    ok: 'OK',
     day_today: 'Vandaag',
     day_tomorrow: 'Morgen',
     when_label: 'WANNEER',
@@ -469,6 +472,7 @@ const nlNL = {
     forgot_sub: 'Vul het e-mailadres in waarmee je je hebt aangemeld, dan sturen we je een link.',
     signup_sent_template: 'We hebben een bevestigingslink naar {{email}} gestuurd. Tik erop om af te ronden — kom dan hier terug om in te loggen.',
     forgot_sent_template: 'Tik op de link in de e-mail die we naar {{email}} hebben gestuurd om een nieuw wachtwoord in te stellen.',
+    taking_to_app: 'We brengen je naar de app...',
     something_went_wrong: 'Er is iets misgegaan.',
   },
   settings_screens: {

@@ -285,6 +285,9 @@ const ptBR = {
     summary_kind_short: "{{kind}} {{start}}–{{end}}",
     summary_kind_long: "Turno {{kind}} {{start}}–{{end}}",
     note_prefix: "Observação: ",
+    saved_title: "Turno salvo",
+    save_failed_title: "Não foi possível salvar o turno",
+    ok: "OK",
     day_today: "Hoje",
     day_tomorrow: "Amanhã",
     when_label: "QUANDO",
@@ -468,6 +471,7 @@ const ptBR = {
     forgot_sub: "Informe o e-mail que você usou no cadastro e enviaremos um link.",
     signup_sent_template: "Enviamos um link de confirmação para {{email}}. Toque nele para concluir — depois volte aqui para entrar.",
     forgot_sent_template: "Toque no link do e-mail que enviamos para {{email}} para definir uma nova senha.",
+    taking_to_app: "Levando você para o app...",
     something_went_wrong: "Algo deu errado.",
   },
   settings_screens: {

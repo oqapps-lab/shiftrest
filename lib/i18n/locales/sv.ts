@@ -285,6 +285,9 @@ const sv = {
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: '{{kind}}-pass {{start}}–{{end}}',
     note_prefix: 'Anteckning: ',
+    saved_title: 'Skift sparat',
+    save_failed_title: 'Det gick inte att spara skiftet',
+    ok: 'OK',
     day_today: 'Idag',
     day_tomorrow: 'Imorgon',
     when_label: 'NÄR',
@@ -468,6 +471,7 @@ const sv = {
     forgot_sub: 'Ange e-postadressen du registrerade dig med, så skickar vi en länk.',
     signup_sent_template: 'Vi har skickat en bekräftelselänk till {{email}}. Tryck på den för att slutföra — kom sedan tillbaka hit för att logga in.',
     forgot_sent_template: 'Tryck på länken i mejlet vi skickade till {{email}} för att ställa in ett nytt lösenord.',
+    taking_to_app: 'Vi tar dig till appen...',
     something_went_wrong: 'Något gick fel.',
   },
   settings_screens: {
