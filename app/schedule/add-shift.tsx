@@ -98,8 +98,8 @@ export default function AddShift() {
     // shift_type='off' enum value, this branch will INSERT instead of
     // showing the local-only confirmation.
     if (kind === 'off' || !isSupabaseConfigured || !supabase || !user?.id) {
-      Alert.alert('Shift saved', summaryLine, [
-        { text: 'OK', onPress: () => safeDismiss('/(tabs)/schedule') },
+      Alert.alert(t('add_shift.saved_title'), summaryLine, [
+        { text: t('add_shift.ok'), onPress: () => safeDismiss('/(tabs)/schedule') },
       ]);
       return;
     }
@@ -130,13 +130,13 @@ export default function AddShift() {
     setSubmitting(false);
 
     if (error) {
-      Alert.alert('Could not save shift', error.message, [{ text: 'OK' }]);
+      Alert.alert(t('add_shift.save_failed_title'), error.message, [{ text: t('add_shift.ok') }]);
       return;
     }
     // Notify any subscribed `useShifts(...)` so the calendar refetches.
     emitChange(EVENTS.shiftsChanged);
-    Alert.alert('Shift saved', summaryLine, [
-      { text: 'OK', onPress: () => safeDismiss('/(tabs)/schedule') },
+    Alert.alert(t('add_shift.saved_title'), summaryLine, [
+      { text: t('add_shift.ok'), onPress: () => safeDismiss('/(tabs)/schedule') },
     ]);
   };
 

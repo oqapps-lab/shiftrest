@@ -550,6 +550,21 @@ const zhHant = {
     start_hour: '開始 {{hour}}',
     end_hour: '結束 {{hour}}',
   },
+
+  push_notif: {
+    bed_title: '即將就寢',
+    bed_body: '{{lead}} 分鐘後睡眠時段開啟，先把燈光調暗吧。',
+    caffeine_title: '最後一杯',
+    caffeine_body: '咖啡因停飲時間到了，改喝花草茶或開水。',
+    melatonin_title: '褪黑激素',
+    melatonin_body: '該服用褪黑激素了。',
+  },
+  errors: {
+    apple_ios_only: '以 Apple 登入僅支援 iOS。',
+    apple_unavailable: '這部裝置無法使用以 Apple 登入。請先在「設定」中設定 iCloud 帳號。',
+    apple_no_token: 'Apple 未回傳身分識別權杖。',
+    supabase_not_configured: '尚未設定 Supabase。',
+  },
 };
 
 export default zhHant;

@@ -551,6 +551,21 @@ const ptBR = {
     start_hour: 'Início {{hour}}',
     end_hour: 'Fim {{hour}}',
   },
+
+  push_notif: {
+    bed_title: 'Hora de desacelerar',
+    bed_body: 'Sua janela de sono abre em {{lead}} minutos — comece a diminuir as luzes.',
+    caffeine_title: 'Última xícara',
+    caffeine_body: 'Limite de cafeína é agora. Troque por chá de ervas ou água.',
+    melatonin_title: 'Melatonina',
+    melatonin_body: 'Hora da sua dose de melatonina.',
+  },
+  errors: {
+    apple_ios_only: 'Entrar com Apple só está disponível no iOS.',
+    apple_unavailable: 'Entrar com Apple não está disponível neste dispositivo. Configure primeiro uma conta do iCloud em Ajustes.',
+    apple_no_token: 'A Apple não retornou um token de identidade.',
+    supabase_not_configured: 'O Supabase não está configurado.',
+  },
 };
 
 export default ptBR;

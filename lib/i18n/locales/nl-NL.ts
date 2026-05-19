@@ -552,6 +552,21 @@ const nlNL = {
     start_hour: 'Begin {{hour}}',
     end_hour: 'Einde {{hour}}',
   },
+
+  push_notif: {
+    bed_title: 'Tijd om af te bouwen',
+    bed_body: 'Je slaapvenster opent over {{lead}} minuten — begin met de lichten dimmen.',
+    caffeine_title: 'Laatste kop',
+    caffeine_body: 'Cafeïnegrens is nu. Schakel over op kruidenthee of water.',
+    melatonin_title: 'Melatonine',
+    melatonin_body: 'Tijd voor je melatoninedosis.',
+  },
+  errors: {
+    apple_ios_only: 'Inloggen met Apple is alleen op iOS beschikbaar.',
+    apple_unavailable: 'Inloggen met Apple is niet beschikbaar op dit apparaat. Stel eerst een iCloud-account in via Instellingen.',
+    apple_no_token: 'Apple heeft geen identiteitstoken geretourneerd.',
+    supabase_not_configured: 'Supabase is niet geconfigureerd.',
+  },
 };
 
 export default nlNL;

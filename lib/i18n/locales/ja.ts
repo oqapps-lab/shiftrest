@@ -551,6 +551,21 @@ const ja = {
     start_hour: '開始 {{hour}}',
     end_hour: '終了 {{hour}}',
   },
+
+  push_notif: {
+    bed_title: 'もうすぐ就寝',
+    bed_body: 'あと {{lead}} 分で睡眠ウィンドウが開きます。照明を落とし始めましょう。',
+    caffeine_title: '最後の一杯',
+    caffeine_body: 'カフェイン終了の時間です。ハーブティーか水に切り替えましょう。',
+    melatonin_title: 'メラトニン',
+    melatonin_body: 'メラトニンを服用する時間です。',
+  },
+  errors: {
+    apple_ios_only: 'Appleでサインインは iOS でのみご利用いただけます。',
+    apple_unavailable: 'このデバイスでは Apple でサインインを利用できません。先に「設定」で iCloud アカウントを設定してください。',
+    apple_no_token: 'Apple から ID トークンが返されませんでした。',
+    supabase_not_configured: 'Supabase が構成されていません。',
+  },
 };
 
 export default ja;

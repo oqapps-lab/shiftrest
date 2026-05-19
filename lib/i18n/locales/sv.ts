@@ -551,6 +551,21 @@ const sv = {
     start_hour: 'Start {{hour}}',
     end_hour: 'Slut {{hour}}',
   },
+
+  push_notif: {
+    bed_title: 'Dags att varva ner',
+    bed_body: 'Ditt sömnfönster öppnas om {{lead}} minuter – börja dämpa lamporna.',
+    caffeine_title: 'Sista koppen',
+    caffeine_body: 'Koffeinstopp nu. Byt till örtte eller vatten.',
+    melatonin_title: 'Melatonin',
+    melatonin_body: 'Dags för din melatonindos.',
+  },
+  errors: {
+    apple_ios_only: 'Logga in med Apple finns bara på iOS.',
+    apple_unavailable: 'Logga in med Apple är inte tillgängligt på den här enheten. Ställ in ett iCloud-konto i Inställningar först.',
+    apple_no_token: 'Apple returnerade ingen identitetstoken.',
+    supabase_not_configured: 'Supabase är inte konfigurerat.',
+  },
 };
 
 export default sv;

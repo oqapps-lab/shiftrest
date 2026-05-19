@@ -551,6 +551,21 @@ const ko = {
     start_hour: '시작 {{hour}}',
     end_hour: '종료 {{hour}}',
   },
+
+  push_notif: {
+    bed_title: '곧 잠잘 시간',
+    bed_body: '{{lead}}분 뒤에 수면 창이 열려요. 조명을 어둡게 낮춰 보세요.',
+    caffeine_title: '마지막 한 잔',
+    caffeine_body: '지금이 카페인 마지막 시간이에요. 허브차나 물로 바꿔 보세요.',
+    melatonin_title: '멜라토닌',
+    melatonin_body: '멜라토닌을 복용할 시간이에요.',
+  },
+  errors: {
+    apple_ios_only: 'Apple로 로그인은 iOS에서만 사용할 수 있어요.',
+    apple_unavailable: '이 기기에서는 Apple로 로그인을 사용할 수 없어요. 먼저 설정에서 iCloud 계정을 추가해 주세요.',
+    apple_no_token: 'Apple이 신원 토큰을 반환하지 않았어요.',
+    supabase_not_configured: 'Supabase가 구성되지 않았어요.',
+  },
 };
 
 export default ko;

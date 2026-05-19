@@ -552,6 +552,21 @@ const esES = {
     start_hour: 'Inicio {{hour}}',
     end_hour: 'Fin {{hour}}',
   },
+
+  push_notif: {
+    bed_title: 'Hora de relajarte',
+    bed_body: 'Tu ventana de sueño se abre en {{lead}} minutos — empieza a atenuar las luces.',
+    caffeine_title: 'Última taza',
+    caffeine_body: 'El corte de cafeína es ahora. Cambia a infusión o agua.',
+    melatonin_title: 'Melatonina',
+    melatonin_body: 'Hora de tu dosis de melatonina.',
+  },
+  errors: {
+    apple_ios_only: 'Iniciar sesión con Apple solo está disponible en iOS.',
+    apple_unavailable: 'Iniciar sesión con Apple no está disponible en este dispositivo. Configura primero una cuenta de iCloud en Ajustes.',
+    apple_no_token: 'Apple no devolvió un token de identidad.',
+    supabase_not_configured: 'Supabase no está configurado.',
+  },
 };
 
 export default esES;

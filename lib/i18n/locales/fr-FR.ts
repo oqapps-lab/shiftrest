@@ -552,6 +552,21 @@ const frFR = {
     start_hour: 'Début {{hour}}',
     end_hour: 'Fin {{hour}}',
   },
+
+  push_notif: {
+    bed_title: 'Bientôt au calme',
+    bed_body: 'Ta fenêtre de sommeil s’ouvre dans {{lead}} minutes — commence à tamiser les lumières.',
+    caffeine_title: 'Dernière tasse',
+    caffeine_body: 'Stop caféine maintenant. Passe à une tisane ou à l’eau.',
+    melatonin_title: 'Mélatonine',
+    melatonin_body: 'C’est l’heure de ta dose de mélatonine.',
+  },
+  errors: {
+    apple_ios_only: 'La connexion avec Apple est réservée à iOS.',
+    apple_unavailable: 'La connexion avec Apple n’est pas disponible sur cet appareil. Configure d’abord un compte iCloud dans Réglages.',
+    apple_no_token: 'Apple n’a pas renvoyé de jeton d’identité.',
+    supabase_not_configured: 'Supabase n’est pas configuré.',
+  },
 };
 
 export default frFR;

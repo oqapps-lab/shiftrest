@@ -551,6 +551,21 @@ const itIT = {
     start_hour: 'Inizio {{hour}}',
     end_hour: 'Fine {{hour}}',
   },
+
+  push_notif: {
+    bed_title: 'Tempo di rilassarti',
+    bed_body: 'La tua finestra di sonno si apre tra {{lead}} minuti — inizia ad abbassare le luci.',
+    caffeine_title: 'Ultima tazza',
+    caffeine_body: 'Stop alla caffeina ora. Passa a una tisana o ad acqua.',
+    melatonin_title: 'Melatonina',
+    melatonin_body: 'È ora della tua dose di melatonina.',
+  },
+  errors: {
+    apple_ios_only: 'L’accesso con Apple è disponibile solo su iOS.',
+    apple_unavailable: 'L’accesso con Apple non è disponibile su questo dispositivo. Configura prima un account iCloud nelle Impostazioni.',
+    apple_no_token: 'Apple non ha restituito un token di identità.',
+    supabase_not_configured: 'Supabase non è configurato.',
+  },
 };
 
 export default itIT;

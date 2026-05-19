@@ -278,6 +278,9 @@ const en = {
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: '{{kind}} shift {{start}}–{{end}}',
     note_prefix: 'Note: ',
+    saved_title: 'Shift saved',
+    save_failed_title: 'Could not save shift',
+    ok: 'OK',
     when_label: "WHEN",
     shift_type: "SHIFT TYPE",
     start: "START",
@@ -497,6 +500,7 @@ const en = {
       restore_title: 'Restore purchases',
       restore_link: 'Restore purchases',
       restore_placeholder: 'Adapty wiring lands in Stage 7. For now, this is a placeholder.',
+      store_unavailable: 'Could not open App Store',
       bullets: {
         sleep: "Personalised sleep window",
         caffeine: "Caffeine cutoff by sensitivity",

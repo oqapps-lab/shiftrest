@@ -114,7 +114,7 @@ export default function Subscription() {
             label={t('settings_screens.subscription.manage_store')}
             onPress={() =>
               Linking.openURL('https://apps.apple.com/account/subscriptions').catch(
-                () => Alert.alert('Could not open App Store'),
+                () => Alert.alert(t('settings_screens.subscription.store_unavailable')),
               )
             }
           />
