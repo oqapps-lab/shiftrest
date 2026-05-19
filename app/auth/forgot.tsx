@@ -141,7 +141,7 @@ export default function Forgot() {
             DEMO MODE
           </Text>
           <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 4 }}>
-            {"Supabase keys aren't set yet. Submit will fail with a clear error — UI is fully wired."}
+            {t('auth.signup_demo_sub')}
           </Text>
         </View>
       )}

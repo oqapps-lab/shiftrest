@@ -91,7 +91,7 @@ export default function AuthConfirm() {
           {status === 'pending' && <ActivityIndicator />}
           {status === 'success' && (
             <Text variant="bodyLg" color="inkSubtle">
-              Taking you to the app...
+              {t('auth.taking_to_app')}
             </Text>
           )}
           {status === 'error' && (
