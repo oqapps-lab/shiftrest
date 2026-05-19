@@ -65,7 +65,7 @@ function nextSevenDays(): DayOption[] {
     out.push({
       key: localDateKey(d),
       date: d,
-      label: i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : formatDayMonth(d),
+      label: i === 0 ? t('add_shift.day_today') : i === 1 ? t('add_shift.day_tomorrow') : formatDayMonth(d),
     });
   }
   return out;

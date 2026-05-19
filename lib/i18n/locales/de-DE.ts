@@ -286,6 +286,8 @@ const deDE = {
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: '{{kind}}-Schicht {{start}}–{{end}}',
     note_prefix: 'Notiz: ',
+    day_today: 'Heute',
+    day_tomorrow: 'Morgen',
     when_label: 'WANN',
     shift_type: 'SCHICHTART',
     start: 'START',

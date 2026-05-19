@@ -285,6 +285,8 @@ const itIT = {
     summary_kind_short: "{{kind}} {{start}}–{{end}}",
     summary_kind_long: "Turno {{kind}} {{start}}–{{end}}",
     note_prefix: "Nota: ",
+    day_today: "Oggi",
+    day_tomorrow: "Domani",
     when_label: "QUANDO",
     shift_type: "TIPO DI TURNO",
     start: "INIZIO",

@@ -285,6 +285,8 @@ const en = {
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: '{{kind}} shift {{start}}–{{end}}',
     note_prefix: 'Note: ',
+    day_today: 'Today',
+    day_tomorrow: 'Tomorrow',
     saved_title: 'Shift saved',
     save_failed_title: 'Could not save shift',
     ok: 'OK',

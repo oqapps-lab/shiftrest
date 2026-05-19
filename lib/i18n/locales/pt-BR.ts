@@ -285,6 +285,8 @@ const ptBR = {
     summary_kind_short: "{{kind}} {{start}}–{{end}}",
     summary_kind_long: "Turno {{kind}} {{start}}–{{end}}",
     note_prefix: "Observação: ",
+    day_today: "Hoje",
+    day_tomorrow: "Amanhã",
     when_label: "QUANDO",
     shift_type: "TIPO DE TURNO",
     start: "INÍCIO",

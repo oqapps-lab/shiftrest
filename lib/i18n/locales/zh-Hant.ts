@@ -284,6 +284,8 @@ const zhHant = {
     summary_kind_short: "{{kind}} {{start}}–{{end}}",
     summary_kind_long: "{{kind}}班 {{start}}–{{end}}",
     note_prefix: "備註:",
+    day_today: "今天",
+    day_tomorrow: "明天",
     when_label: "時間",
     shift_type: "班次類型",
     start: "開始",

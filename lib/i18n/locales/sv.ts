@@ -285,6 +285,8 @@ const sv = {
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: '{{kind}}-pass {{start}}–{{end}}',
     note_prefix: 'Anteckning: ',
+    day_today: 'Idag',
+    day_tomorrow: 'Imorgon',
     when_label: 'NÄR',
     shift_type: 'PASSTYP',
     start: 'START',

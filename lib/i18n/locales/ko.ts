@@ -285,6 +285,8 @@ const ko = {
     summary_kind_short: "{{kind}} {{start}}–{{end}}",
     summary_kind_long: "{{kind}} 근무 {{start}}–{{end}}",
     note_prefix: "메모: ",
+    day_today: "오늘",
+    day_tomorrow: "내일",
     when_label: "언제",
     shift_type: "근무 종류",
     start: "시작",

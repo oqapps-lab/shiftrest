@@ -285,6 +285,8 @@ const ja = {
     summary_kind_short: "{{kind}} {{start}}–{{end}}",
     summary_kind_long: "{{kind}}シフト {{start}}–{{end}}",
     note_prefix: "メモ:",
+    day_today: "今日",
+    day_tomorrow: "明日",
     when_label: "いつ",
     shift_type: "シフトの種類",
     start: "開始",

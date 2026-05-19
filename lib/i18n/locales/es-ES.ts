@@ -286,6 +286,8 @@ const esES = {
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: 'Turno {{kind}} {{start}}–{{end}}',
     note_prefix: 'Nota: ',
+    day_today: 'Hoy',
+    day_tomorrow: 'Mañana',
     when_label: 'CUÁNDO',
     shift_type: 'TIPO DE TURNO',
     start: 'INICIO',

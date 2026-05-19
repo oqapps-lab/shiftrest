@@ -286,6 +286,8 @@ const frFR = {
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: 'Service {{kind}} {{start}}–{{end}}',
     note_prefix: 'Note : ',
+    day_today: "Aujourd'hui",
+    day_tomorrow: 'Demain',
     when_label: 'QUAND',
     shift_type: 'TYPE DE SERVICE',
     start: 'DÉBUT',

@@ -286,6 +286,8 @@ const nlNL = {
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: '{{kind}}-dienst {{start}}–{{end}}',
     note_prefix: 'Notitie: ',
+    day_today: 'Vandaag',
+    day_tomorrow: 'Morgen',
     when_label: 'WANNEER',
     shift_type: 'TYPE DIENST',
     start: 'START',
