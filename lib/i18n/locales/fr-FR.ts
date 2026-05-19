@@ -585,6 +585,10 @@ const frFR = {
     link_unverified: 'Impossible de vérifier le lien.',
     link_missing_code: 'Il manque le code de vérification dans ce lien. Demande un nouvel e-mail.',
     verification_failed: 'Échec de la vérification.',
+    verifying: 'Vérification...',
+    youre_in: "C'est bon.",
+    couldnt_verify: 'Impossible de vérifier.',
+    signin_unavailable: 'Le service de connexion est indisponible. Réessaie dans une minute.',
   },
 };
 

@@ -584,6 +584,10 @@ const ptBR = {
     link_unverified: 'Não foi possível verificar o link.',
     link_missing_code: 'Está faltando o código de verificação neste link. Solicite um novo e-mail.',
     verification_failed: 'Falha na verificação.',
+    verifying: 'Verificando...',
+    youre_in: 'Você entrou.',
+    couldnt_verify: 'Não foi possível verificar.',
+    signin_unavailable: 'O serviço de login não está disponível agora. Tente novamente em um minuto.',
   },
 };
 

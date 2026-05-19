@@ -585,6 +585,10 @@ const esES = {
     link_unverified: 'No se pudo verificar el enlace.',
     link_missing_code: 'A este enlace le falta el código de verificación. Solicita un correo nuevo.',
     verification_failed: 'La verificación falló.',
+    verifying: 'Verificando...',
+    youre_in: 'Estás dentro.',
+    couldnt_verify: 'No se pudo verificar.',
+    signin_unavailable: 'El servicio de inicio de sesión no está disponible ahora mismo. Vuelve a intentarlo en un minuto.',
   },
 };
 

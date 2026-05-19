@@ -584,6 +584,10 @@ const ko = {
     link_unverified: '링크를 확인할 수 없어요.',
     link_missing_code: '이 링크에 인증 코드가 없어요. 이메일을 다시 요청해 주세요.',
     verification_failed: '인증에 실패했어요.',
+    verifying: '확인 중입니다...',
+    youre_in: '들어왔어요.',
+    couldnt_verify: '확인하지 못했어요.',
+    signin_unavailable: '지금은 로그인 서비스를 사용할 수 없어요. 잠시 후 다시 시도해 주세요.',
   },
 };
 

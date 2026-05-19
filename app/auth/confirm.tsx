@@ -28,11 +28,12 @@ export default function AuthConfirm() {
 
   React.useEffect(() => {
     let cancelled = false;
+    let timerId: ReturnType<typeof setTimeout> | null = null;
 
     (async () => {
       if (!isSupabaseConfigured || !supabase) {
         if (cancelled) return;
-        setErrorMsg('Sign-in service is unavailable right now. Try again in a minute.');
+        setErrorMsg(t('errors.signin_unavailable'));
         setStatus('error');
         return;
       }
@@ -67,11 +68,12 @@ export default function AuthConfirm() {
       // Recovery → user must set a new password before continuing.
       // Other types → straight into the app.
       const next = params.type === 'recovery' ? '/auth/forgot' : '/(tabs)';
-      setTimeout(() => router.replace(next as never), 600);
+      timerId = setTimeout(() => router.replace(next as never), 600);
     })();
 
     return () => {
       cancelled = true;
+      if (timerId !== null) clearTimeout(timerId);
     };
   }, [params.code, params.type, params.error, params.error_description]);
 
@@ -81,9 +83,9 @@ export default function AuthConfirm() {
         <Eyebrow>{t('auth.email_confirmation')}</Eyebrow>
         <View style={{ marginTop: spacing.md }}>
           <SerifHero>
-            {status === 'pending' && 'Verifying...'}
-            {status === 'success' && 'You’re in.'}
-            {status === 'error' && 'Couldn’t verify.'}
+            {status === 'pending' && t('errors.verifying')}
+            {status === 'success' && t('errors.youre_in')}
+            {status === 'error' && t('errors.couldnt_verify')}
           </SerifHero>
         </View>
 

@@ -584,6 +584,10 @@ const ja = {
     link_unverified: 'リンクを確認できませんでした。',
     link_missing_code: 'このリンクには確認コードがありません。新しいメールを送り直してください。',
     verification_failed: '確認に失敗しました。',
+    verifying: '確認しています...',
+    youre_in: '入れました。',
+    couldnt_verify: '確認できませんでした。',
+    signin_unavailable: 'サインインサービスを今は利用できません。1分後にもう一度試してください。',
   },
 };
 

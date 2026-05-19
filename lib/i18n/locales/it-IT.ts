@@ -584,6 +584,10 @@ const itIT = {
     link_unverified: 'Impossibile verificare il link.',
     link_missing_code: 'A questo link manca il codice di verifica. Richiedi una nuova email.',
     verification_failed: 'Verifica non riuscita.',
+    verifying: 'Verifica in corso...',
+    youre_in: 'Sei dentro.',
+    couldnt_verify: 'Impossibile verificare.',
+    signin_unavailable: 'Il servizio di accesso non è disponibile ora. Riprova tra un minuto.',
   },
 };
 

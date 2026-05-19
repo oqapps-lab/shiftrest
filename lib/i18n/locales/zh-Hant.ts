@@ -583,6 +583,10 @@ const zhHant = {
     link_unverified: '無法驗證連結。',
     link_missing_code: '此連結缺少驗證碼。請重新請求一封電子郵件。',
     verification_failed: '驗證失敗。',
+    verifying: '驗證中...',
+    youre_in: '你進來了。',
+    couldnt_verify: '無法驗證。',
+    signin_unavailable: '登入服務目前無法使用。請於一分鐘後再試。',
   },
 };
 

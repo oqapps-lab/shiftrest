@@ -587,6 +587,10 @@ const en = {
     link_unverified: 'Link could not be verified.',
     link_missing_code: 'This link is missing the verification code. Try requesting a fresh email.',
     verification_failed: 'Verification failed.',
+    verifying: 'Verifying...',
+    youre_in: 'You’re in.',
+    couldnt_verify: 'Couldn’t verify.',
+    signin_unavailable: 'Sign-in service is unavailable right now. Try again in a minute.',
   },
 };
 

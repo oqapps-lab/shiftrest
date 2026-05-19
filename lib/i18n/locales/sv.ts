@@ -584,6 +584,10 @@ const sv = {
     link_unverified: 'Länken kunde inte verifieras.',
     link_missing_code: 'Den här länken saknar verifieringskoden. Begär ett nytt mejl.',
     verification_failed: 'Verifieringen misslyckades.',
+    verifying: 'Verifierar...',
+    youre_in: 'Du är inne.',
+    couldnt_verify: 'Det gick inte att verifiera.',
+    signin_unavailable: 'Inloggningstjänsten är inte tillgänglig just nu. Försök igen om en minut.',
   },
 };
 

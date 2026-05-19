@@ -585,6 +585,10 @@ const deDE = {
     link_unverified: 'Der Link konnte nicht verifiziert werden.',
     link_missing_code: 'Diesem Link fehlt der Bestätigungscode. Fordere eine neue E-Mail an.',
     verification_failed: 'Verifizierung fehlgeschlagen.',
+    verifying: 'Wird überprüft...',
+    youre_in: 'Du bist drin.',
+    couldnt_verify: 'Konnte nicht bestätigt werden.',
+    signin_unavailable: 'Der Anmeldedienst ist gerade nicht verfügbar. Versuche es in einer Minute erneut.',
   },
 };
 

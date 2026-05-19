@@ -585,6 +585,10 @@ const nlNL = {
     link_unverified: 'De link kon niet worden geverifieerd.',
     link_missing_code: 'In deze link ontbreekt de verificatiecode. Vraag een nieuwe e-mail aan.',
     verification_failed: 'Verificatie mislukt.',
+    verifying: 'Bezig met verifiëren...',
+    youre_in: 'Je bent erin.',
+    couldnt_verify: 'Kon niet verifiëren.',
+    signin_unavailable: 'De aanmeldservice is nu niet beschikbaar. Probeer het over een minuut opnieuw.',
   },
 };
 
