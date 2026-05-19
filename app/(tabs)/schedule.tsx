@@ -115,25 +115,26 @@ export default function Schedule() {
   const { user } = useAuth();
 
   const today = React.useMemo(() => new Date(), []);
-  const [viewYear, setViewYear] = React.useState(today.getFullYear());
-  const [viewMonth, setViewMonth] = React.useState(today.getMonth());
+  // Combined state so rapid taps near year boundary use the LATEST pair
+  // in functional setters (avoid closure-captured staleness).
+  const [view, setView] = React.useState(() => ({ year: today.getFullYear(), month: today.getMonth() }));
+  const viewYear = view.year;
+  const viewMonth = view.month;
 
   // ±1 month with year rollover at Dec/Jan.
   const shiftMonth = React.useCallback((delta: 1 | -1) => {
     Haptics.selectionAsync();
-    setViewYear((y) => {
-      const flat = y * 12 + viewMonth + delta;
-      return Math.floor(flat / 12);
+    setView(({ year, month }) => {
+      const flat = year * 12 + month + delta;
+      return { year: Math.floor(flat / 12), month: ((flat % 12) + 12) % 12 };
     });
-    setViewMonth((m) => ((m + delta + 12) % 12));
-  }, [viewMonth]);
+  }, []);
 
   const isCurrentMonth = viewYear === today.getFullYear() && viewMonth === today.getMonth();
   const goToToday = React.useCallback(() => {
     if (isCurrentMonth) return;
     Haptics.selectionAsync();
-    setViewYear(today.getFullYear());
-    setViewMonth(today.getMonth());
+    setView({ year: today.getFullYear(), month: today.getMonth() });
   }, [isCurrentMonth, today]);
 
   const viewedDate = React.useMemo(() => new Date(viewYear, viewMonth, 1), [viewYear, viewMonth]);
