@@ -24,7 +24,7 @@ export const mockUser = {
   daysInApp: 42,
   transitionsCompleted: 3,
   adherence: 98,
-  subscription: 'trial' as const,
+  subscription: 'trial' as 'free' | 'trial' | 'premium' | 'expired',
   trialEndsAt: '2026-04-27',
 };
 
