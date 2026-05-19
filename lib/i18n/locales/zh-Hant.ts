@@ -510,6 +510,7 @@ const zhHant = {
       restore_title: "還原購買項目",
       restore_link: "還原購買項目",
       restore_placeholder: "Adapty 整合會在第 7 階段加入。目前這只是預留訊息。",
+      store_unavailable: "無法開啟 App Store",
       resubscribe: "重新訂閱",
       bullets: {
         sleep: "為你量身訂做的睡眠時段",

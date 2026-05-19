@@ -511,6 +511,7 @@ const ptBR = {
       restore_title: "Restaurar compras",
       restore_link: "Restaurar compras",
       restore_placeholder: "A integração com a Adapty chega na Etapa 7. Por enquanto, isto é apenas um espaço reservado.",
+      store_unavailable: "Não foi possível abrir a App Store",
       resubscribe: "Reativar",
       bullets: {
         sleep: "Janela de sono personalizada",

@@ -512,6 +512,7 @@ const nlNL = {
       restore_title: 'Aankopen herstellen',
       restore_link: 'Aankopen herstellen',
       restore_placeholder: 'De Adapty-koppeling komt in fase 7. Voor nu is dit een tijdelijke melding.',
+      store_unavailable: 'Kan App Store niet openen',
       resubscribe: 'Opnieuw abonneren',
       bullets: {
         sleep: 'Persoonlijk slaapvenster',

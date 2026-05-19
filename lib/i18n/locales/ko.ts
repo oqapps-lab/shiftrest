@@ -511,6 +511,7 @@ const ko = {
       restore_title: "구매 복원",
       restore_link: "구매 복원",
       restore_placeholder: "Adapty 연동은 7단계에서 추가돼요. 지금은 자리만 잡아뒀어요.",
+      store_unavailable: "App Store를 열 수 없어요",
       resubscribe: "재구독",
       bullets: {
         sleep: "나에게 맞춘 수면 구간",

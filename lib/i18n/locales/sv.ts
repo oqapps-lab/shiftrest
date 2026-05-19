@@ -511,6 +511,7 @@ const sv = {
       restore_title: 'Återställ köp',
       restore_link: 'Återställ köp',
       restore_placeholder: 'Adapty-integrationen kommer i steg 7. Just nu är det här en platshållare.',
+      store_unavailable: 'Kunde inte öppna App Store',
       resubscribe: 'Prenumerera igen',
       bullets: {
         sleep: 'Personligt sömnfönster',

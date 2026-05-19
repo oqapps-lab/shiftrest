@@ -511,6 +511,7 @@ const itIT = {
       restore_title: "Ripristina gli acquisti",
       restore_link: "Ripristina gli acquisti",
       restore_placeholder: "L'integrazione con Adapty arriverà nello Stage 7. Per ora è solo un segnaposto.",
+      store_unavailable: "Impossibile aprire l'App Store",
       resubscribe: "Riabbonati",
       bullets: {
         sleep: "Finestra del sonno personalizzata",
