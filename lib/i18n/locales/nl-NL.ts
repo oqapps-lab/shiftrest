@@ -458,6 +458,8 @@ const nlNL = {
     sending: 'Versturen…',
     send_reset: 'Resetlink versturen',
     forgot_sub: 'Vul het e-mailadres in waarmee je je hebt aangemeld, dan sturen we je een link.',
+    signup_sent_template: 'We hebben een bevestigingslink naar {{email}} gestuurd. Tik erop om af te ronden — kom dan hier terug om in te loggen.',
+    forgot_sent_template: 'Tik op de link in de e-mail die we naar {{email}} hebben gestuurd om een nieuw wachtwoord in te stellen.',
     something_went_wrong: 'Er is iets misgegaan.',
   },
   settings_screens: {
@@ -500,6 +502,24 @@ const nlNL = {
         melatonin: 'Melatoninetiming voor jouw chronotype',
         transition: 'Overgangsplannen over meerdere dagen',
       },
+      headline: {
+        free: 'Gratis versie',
+        trial: 'Proefperiode loopt',
+        active: 'Premium · actief',
+        grace: 'Betaling opnieuw proberen',
+        cancelled: 'Opgezegd',
+        expired: 'Premium verlopen',
+      },
+      sub: {
+        active_annual: 'Premium · jaarlijks · wordt automatisch verlengd',
+        active_monthly: 'Premium · maandelijks · wordt automatisch verlengd',
+        grace: 'Betaling opnieuw proberen — houd je inbox in de gaten',
+        cancelled_until: 'Premium tot {{date}}',
+        cancelled_no_date: 'Opgezegd — je houdt premium tot het einde van de periode',
+        expired: 'Sluit je opnieuw aan om je inzichten te behouden',
+        free: 'Ontgrendel het volledige plan met een proefperiode van 7 dagen',
+        renews_auto: 'Wordt automatisch verlengd',
+      },
     },
   },
   number_words: ['Nul', 'Een', 'Twee', 'Drie', 'Vier', 'Vijf', 'Zes', 'Zeven'],
@@ -529,6 +549,8 @@ const nlNL = {
     reset_onboarding_answers: 'Onboarding-antwoorden resetten',
     year_plan: 'Jaarabonnement {{price}}',
     month_plan: 'Maandabonnement {{price}}',
+    start_hour: 'Begin {{hour}}',
+    end_hour: 'Einde {{hour}}',
   },
 };
 

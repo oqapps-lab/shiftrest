@@ -457,6 +457,8 @@ const ptBR = {
     sending: "Enviando…",
     send_reset: "Enviar link de redefinição",
     forgot_sub: "Informe o e-mail que você usou no cadastro e enviaremos um link.",
+    signup_sent_template: "Enviamos um link de confirmação para {{email}}. Toque nele para concluir — depois volte aqui para entrar.",
+    forgot_sent_template: "Toque no link do e-mail que enviamos para {{email}} para definir uma nova senha.",
     something_went_wrong: "Algo deu errado.",
   },
   settings_screens: {
@@ -499,6 +501,24 @@ const ptBR = {
         melatonin: "Horário da melatonina para o seu cronotipo",
         transition: "Planos de transição de vários dias",
       },
+      headline: {
+        free: 'Plano gratuito',
+        trial: 'Teste em andamento',
+        active: 'Premium · ativo',
+        grace: 'Tentando o pagamento novamente',
+        cancelled: 'Cancelado',
+        expired: 'Premium expirado',
+      },
+      sub: {
+        active_annual: 'Premium · anual · renova automaticamente',
+        active_monthly: 'Premium · mensal · renova automaticamente',
+        grace: 'Tentando o pagamento de novo — fique de olho no seu e-mail',
+        cancelled_until: 'Premium até {{date}}',
+        cancelled_no_date: 'Cancelado — você mantém o premium até o fim do período',
+        expired: 'Assine de novo para manter seus insights',
+        free: 'Desbloqueie o plano completo com um teste de 7 dias',
+        renews_auto: 'Renova automaticamente',
+      },
     },
   },
   number_words: ["Zero", "Um", "Dois", "Três", "Quatro", "Cinco", "Seis", "Sete"],
@@ -528,6 +548,8 @@ const ptBR = {
     reset_onboarding_answers: 'Redefinir respostas do onboarding',
     year_plan: 'Plano anual {{price}}',
     month_plan: 'Plano mensal {{price}}',
+    start_hour: 'Início {{hour}}',
+    end_hour: 'Fim {{hour}}',
   },
 };
 

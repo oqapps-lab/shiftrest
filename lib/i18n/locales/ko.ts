@@ -457,6 +457,8 @@ const ko = {
     sending: "보내는 중…",
     send_reset: "재설정 링크 보내기",
     forgot_sub: "가입할 때 사용한 이메일을 입력하면 링크를 보내드려요.",
+    signup_sent_template: "{{email}} 주소로 확인 링크를 보냈어요. 링크를 눌러 마치고, 이곳으로 돌아와 로그인해요.",
+    forgot_sent_template: "{{email}} 주소로 보낸 메일의 링크를 눌러 새 비밀번호를 설정해요.",
     something_went_wrong: "문제가 생겼어요.",
   },
   settings_screens: {
@@ -499,6 +501,24 @@ const ko = {
         melatonin: "크로노타입에 맞춘 멜라토닌 복용 시점",
         transition: "여러 날에 걸친 전환 플랜",
       },
+      headline: {
+        free: '무료 플랜',
+        trial: '체험판 이용 중',
+        active: '프리미엄 · 이용 중',
+        grace: '결제 재시도 중',
+        cancelled: '취소됨',
+        expired: '프리미엄 만료',
+      },
+      sub: {
+        active_annual: '프리미엄 · 연간 · 자동 갱신',
+        active_monthly: '프리미엄 · 월간 · 자동 갱신',
+        grace: '결제 재시도 중이에요 — 메일함을 확인해 주세요',
+        cancelled_until: '{{date}}까지 프리미엄',
+        cancelled_no_date: '취소됨 — 기간 종료까지 프리미엄을 그대로 이용해요',
+        expired: '다시 구독해 인사이트를 이어가세요',
+        free: '7일 체험으로 전체 플랜을 열어 보세요',
+        renews_auto: '자동으로 갱신돼요',
+      },
     },
   },
   number_words: ["영", "하나", "둘", "셋", "넷", "다섯", "여섯", "일곱"],
@@ -528,6 +548,8 @@ const ko = {
     reset_onboarding_answers: '온보딩 답변 초기화',
     year_plan: '연간 플랜 {{price}}',
     month_plan: '월간 플랜 {{price}}',
+    start_hour: '시작 {{hour}}',
+    end_hour: '종료 {{hour}}',
   },
 };
 

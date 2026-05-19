@@ -456,6 +456,8 @@ const zhHant = {
     sending: "傳送中…",
     send_reset: "傳送重設連結",
     forgot_sub: "請輸入你註冊時使用的電子郵件,我們會寄一封連結信給你。",
+    signup_sent_template: "我們已將確認連結寄到 {{email}}。點一下完成,然後回到這裡登入。",
+    forgot_sent_template: "點一下我們寄到 {{email}} 的信件中的連結,即可設定新密碼。",
     something_went_wrong: "發生了一點問題。",
   },
   settings_screens: {
@@ -498,6 +500,24 @@ const zhHant = {
         melatonin: "依你的時型安排褪黑激素時機",
         transition: "跨越多日的轉換計畫",
       },
+      headline: {
+        free: '免費版',
+        trial: '試用進行中',
+        active: 'Premium · 使用中',
+        grace: '正在重試付款',
+        cancelled: '已取消',
+        expired: 'Premium 已到期',
+      },
+      sub: {
+        active_annual: 'Premium · 年訂 · 自動續訂',
+        active_monthly: 'Premium · 月訂 · 自動續訂',
+        grace: '正在重試付款 — 請留意你的收件匣',
+        cancelled_until: 'Premium 至 {{date}}',
+        cancelled_no_date: '已取消 — 你會保留 Premium 直到本期結束',
+        expired: '重新訂閱以保留你的洞察',
+        free: '透過 7 天試用解鎖完整方案',
+        renews_auto: '自動續訂',
+      },
     },
   },
   number_words: ["零", "一", "二", "三", "四", "五", "六", "七"],
@@ -527,6 +547,8 @@ const zhHant = {
     reset_onboarding_answers: '重設入門問答',
     year_plan: '年度方案 {{price}}',
     month_plan: '月度方案 {{price}}',
+    start_hour: '開始 {{hour}}',
+    end_hour: '結束 {{hour}}',
   },
 };
 

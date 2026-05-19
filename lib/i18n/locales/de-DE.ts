@@ -552,6 +552,21 @@ const deDE = {
     start_hour: 'Start {{hour}}',
     end_hour: 'Ende {{hour}}',
   },
+
+  push_notif: {
+    bed_title: 'Bald runterfahren',
+    bed_body: 'Dein Schlaffenster öffnet sich in {{lead}} Minuten – dimme schon mal das Licht.',
+    caffeine_title: 'Letzte Tasse',
+    caffeine_body: 'Koffein-Stopp ist jetzt. Wechsle zu Kräutertee oder Wasser.',
+    melatonin_title: 'Melatonin',
+    melatonin_body: 'Zeit für deine Melatonin-Dosis.',
+  },
+  errors: {
+    apple_ios_only: 'Mit Apple anmelden ist nur unter iOS verfügbar.',
+    apple_unavailable: 'Mit Apple anmelden ist auf diesem Gerät nicht verfügbar. Richte zuerst in den Einstellungen ein iCloud-Konto ein.',
+    apple_no_token: 'Apple hat kein Identitätstoken zurückgegeben.',
+    supabase_not_configured: 'Supabase ist nicht konfiguriert.',
+  },
 };
 
 export default deDE;

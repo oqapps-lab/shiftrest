@@ -457,6 +457,8 @@ const sv = {
     sending: 'Skickar…',
     send_reset: 'Skicka återställningslänk',
     forgot_sub: 'Ange e-postadressen du registrerade dig med, så skickar vi en länk.',
+    signup_sent_template: 'Vi har skickat en bekräftelselänk till {{email}}. Tryck på den för att slutföra — kom sedan tillbaka hit för att logga in.',
+    forgot_sent_template: 'Tryck på länken i mejlet vi skickade till {{email}} för att ställa in ett nytt lösenord.',
     something_went_wrong: 'Något gick fel.',
   },
   settings_screens: {
@@ -499,6 +501,24 @@ const sv = {
         melatonin: 'Melatonintiming för din kronotyp',
         transition: 'Övergångsplaner över flera dagar',
       },
+      headline: {
+        free: 'Gratisnivå',
+        trial: 'Provperiod pågår',
+        active: 'Premium · aktiv',
+        grace: 'Försöker betalningen igen',
+        cancelled: 'Avslutad',
+        expired: 'Premium har gått ut',
+      },
+      sub: {
+        active_annual: 'Premium · årligen · förnyas automatiskt',
+        active_monthly: 'Premium · månadsvis · förnyas automatiskt',
+        grace: 'Försöker betalningen igen — håll koll på din inkorg',
+        cancelled_until: 'Premium till {{date}}',
+        cancelled_no_date: 'Avslutad — du behåller premium tills perioden tar slut',
+        expired: 'Prenumerera igen för att behålla dina insikter',
+        free: 'Lås upp hela planen med en 7-dagars provperiod',
+        renews_auto: 'Förnyas automatiskt',
+      },
     },
   },
   number_words: ['Noll', 'Ett', 'Två', 'Tre', 'Fyra', 'Fem', 'Sex', 'Sju'],
@@ -528,6 +548,8 @@ const sv = {
     reset_onboarding_answers: 'Återställ onboarding-svar',
     year_plan: 'Årsabonnemang {{price}}',
     month_plan: 'Månadsabonnemang {{price}}',
+    start_hour: 'Start {{hour}}',
+    end_hour: 'Slut {{hour}}',
   },
 };
 
