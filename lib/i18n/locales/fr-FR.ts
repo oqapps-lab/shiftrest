@@ -185,6 +185,8 @@ const frFR = {
     yes_kids: 'J’ai des enfants à la maison',
     take_melatonin: 'Oui, je prends de la mélatonine',
     restart_dev_hint: 'Efface le quiz et te refait passer par l’onboarding.',
+    anchor_plan_sub: 'Pour ancrer ton plan.',
+    tap_to_update_sub: 'Touche une réponse pour la modifier.',
         kids_at_home: 'Enfants à la maison',
     reset_all_label: 'Réinitialiser toutes les réponses',
     reset_alert: {
@@ -456,6 +458,8 @@ const frFR = {
     sending: 'Envoi…',
     send_reset: 'Envoyer le lien de réinitialisation',
     forgot_sub: 'Saisis l’e-mail que tu as utilisé pour t’inscrire et on t’envoie un lien.',
+    signup_sent_template: 'On a envoyé un lien de confirmation à {{email}}. Touche-le pour terminer — reviens ensuite ici pour te connecter.',
+    forgot_sent_template: 'Touche le lien dans l’e-mail qu’on a envoyé à {{email}} pour définir un nouveau mot de passe.',
     something_went_wrong: 'Quelque chose s’est mal passé.',
   },
   settings_screens: {
@@ -498,6 +502,24 @@ const frFR = {
         melatonin: 'Prise de mélatonine selon ton chronotype',
         transition: 'Plans de transition sur plusieurs jours',
       },
+      headline: {
+        free: 'Offre gratuite',
+        trial: 'Essai en cours',
+        active: 'Premium · actif',
+        grace: 'Nouvelle tentative de paiement',
+        cancelled: 'Annulé',
+        expired: 'Premium expiré',
+      },
+      sub: {
+        active_annual: 'Premium · annuel · renouvellement automatique',
+        active_monthly: 'Premium · mensuel · renouvellement automatique',
+        grace: 'Nouvelle tentative de paiement — garde un œil sur ta boîte mail',
+        cancelled_until: 'Premium jusqu’au {{date}}',
+        cancelled_no_date: 'Annulé — tu gardes premium jusqu’à la fin de la période',
+        expired: 'Réabonne-toi pour garder tes insights',
+        free: 'Débloque le plan complet avec un essai de 7 jours',
+        renews_auto: 'Renouvellement automatique',
+      },
     },
   },
   number_words: ['Zéro', 'Un', 'Deux', 'Trois', 'Quatre', 'Cinq', 'Six', 'Sept'],
@@ -527,6 +549,8 @@ const frFR = {
     reset_onboarding_answers: 'Réinitialiser les réponses de l’onboarding',
     year_plan: 'Forfait annuel {{price}}',
     month_plan: 'Forfait mensuel {{price}}',
+    start_hour: 'Début {{hour}}',
+    end_hour: 'Fin {{hour}}',
   },
 };
 

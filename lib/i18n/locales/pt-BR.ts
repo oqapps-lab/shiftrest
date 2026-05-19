@@ -184,6 +184,8 @@ const ptBR = {
     yes_kids: "Tenho filhos em casa",
     take_melatonin: "Sim, eu tomo melatonina",
     restart_dev_hint: "Apaga o quiz e te leva de novo pelo onboarding.",
+    anchor_plan_sub: "Para ancorar bem o seu plano.",
+    tap_to_update_sub: "Toque em qualquer resposta para atualizá-la.",
         kids_at_home: "Crianças em casa",
     reset_all_label: "Redefinir todas as respostas",
     reset_alert: {

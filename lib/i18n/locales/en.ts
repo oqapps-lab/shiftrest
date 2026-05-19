@@ -178,6 +178,8 @@ const en = {
     commute: 'Commute time',
     name_placeholder: 'Your name',
     restart_dev_hint: 'Wipes the quiz and walks you through onboarding again.',
+    anchor_plan_sub: 'So we can anchor your plan.',
+    tap_to_update_sub: 'Tap any answer to update.',
     kids_at_home: 'Kids at home',
     reset_all_label: 'Reset all answers',
     reset_alert: {

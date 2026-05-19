@@ -184,6 +184,8 @@ const ja = {
     yes_kids: "自宅に子どもがいます",
     take_melatonin: "はい、メラトニンを飲んでいます",
     restart_dev_hint: "クイズの内容を消去し、もう一度オンボーディングを最初から行います。",
+    anchor_plan_sub: "プランの基準にします。",
+    tap_to_update_sub: "回答をタップして変更できます。",
         kids_at_home: "家に子どもがいる",
     reset_all_label: "すべての回答をリセット",
     reset_alert: {
@@ -455,6 +457,8 @@ const ja = {
     sending: "送信中…",
     send_reset: "リセットリンクを送信",
     forgot_sub: "登録時のメールアドレスを入力してください。リンクをお送りします。",
+    signup_sent_template: "{{email}} に確認リンクをお送りしました。タップして完了してから、ここに戻ってサインインしてください。",
+    forgot_sent_template: "{{email}} 宛のメールに記載のリンクをタップして、新しいパスワードを設定してください。",
     something_went_wrong: "問題が発生しました。",
   },
   settings_screens: {
@@ -497,6 +501,24 @@ const ja = {
         melatonin: "クロノタイプに合わせたメラトニンのタイミング",
         transition: "数日間にわたる切り替えプラン",
       },
+      headline: {
+        free: '無料プラン',
+        trial: 'お試し期間中',
+        active: 'プレミアム · 有効',
+        grace: '支払いを再試行中',
+        cancelled: 'キャンセル済み',
+        expired: 'プレミアム期限切れ',
+      },
+      sub: {
+        active_annual: 'プレミアム · 年額 · 自動更新されます',
+        active_monthly: 'プレミアム · 月額 · 自動更新されます',
+        grace: '支払いを再試行中です — メールをご確認ください',
+        cancelled_until: '{{date}} までプレミアム',
+        cancelled_no_date: 'キャンセル済み — 期間終了までプレミアムをご利用いただけます',
+        expired: '再登録してインサイトを継続しましょう',
+        free: '7日間の無料トライアルですべてのプランをアンロック',
+        renews_auto: '自動更新されます',
+      },
     },
   },
   number_words: ["ゼロ", "一", "二", "三", "四", "五", "六", "七"],
@@ -526,6 +548,8 @@ const ja = {
     reset_onboarding_answers: 'オンボーディングの回答をリセット',
     year_plan: '年額プラン {{price}}',
     month_plan: '月額プラン {{price}}',
+    start_hour: '開始 {{hour}}',
+    end_hour: '終了 {{hour}}',
   },
 };
 

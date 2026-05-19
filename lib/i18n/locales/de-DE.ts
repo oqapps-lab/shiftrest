@@ -185,6 +185,8 @@ const deDE = {
     yes_kids: 'Ich habe Kinder zu Hause',
     take_melatonin: 'Ja, ich nehme Melatonin',
     restart_dev_hint: 'Setzt das Quiz zurück und führt dich noch einmal durch das Onboarding.',
+    anchor_plan_sub: 'Damit wir deinen Plan verankern können.',
+    tap_to_update_sub: 'Tippe auf eine Antwort, um sie zu ändern.',
         kids_at_home: 'Kinder zu Hause',
     reset_all_label: 'Alle Antworten zurücksetzen',
     reset_alert: {

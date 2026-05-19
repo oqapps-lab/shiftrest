@@ -184,6 +184,8 @@ const sv = {
     yes_kids: 'Jag har barn hemma',
     take_melatonin: 'Ja, jag tar melatonin',
     restart_dev_hint: 'Rensar quizet och tar dig genom onboardingen en gång till.',
+    anchor_plan_sub: 'För att förankra din plan.',
+    tap_to_update_sub: 'Tryck på ett svar för att uppdatera det.',
         kids_at_home: 'Barn hemma',
     reset_all_label: 'Återställ alla svar',
     reset_alert: {

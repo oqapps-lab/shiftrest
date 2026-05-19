@@ -168,7 +168,7 @@ export default function SleepPreferences() {
       {/* Current shift */}
       <SectionHeader
         label={t('sleep_prefs.section_today')}
-        subtitle="So we can anchor your plan."
+        subtitle={t('sleep_prefs.anchor_plan_sub')}
       />
       <SegmentedControl<ShiftKind>
         options={getShiftOptions()}
@@ -208,7 +208,7 @@ export default function SleepPreferences() {
       {/* Chronotype quiz */}
       <SectionHeader
         label={t('sleep_prefs.section_chronotype')}
-        subtitle="Tap any answer to update."
+        subtitle={t('sleep_prefs.tap_to_update_sub')}
       />
       {mockChronotypeQuestions.map((q, qIdx) => (
         <View key={q.id} style={{ marginBottom: spacing.lg }}>

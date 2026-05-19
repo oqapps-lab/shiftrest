@@ -184,6 +184,8 @@ const itIT = {
     yes_kids: "Ho figli in casa",
     take_melatonin: "Sì, prendo la melatonina",
     restart_dev_hint: "Cancella il quiz e ti riporta attraverso l’onboarding.",
+    anchor_plan_sub: "Per ancorare il tuo piano.",
+    tap_to_update_sub: "Tocca una risposta per aggiornarla.",
         kids_at_home: "Bambini in casa",
     reset_all_label: "Reimposta tutte le risposte",
     reset_alert: {
@@ -455,6 +457,8 @@ const itIT = {
     sending: "Invio…",
     send_reset: "Invia link di reimpostazione",
     forgot_sub: "Inserisci l’email con cui ti sei registrato e ti inviamo un link.",
+    signup_sent_template: "Abbiamo inviato un link di conferma a {{email}}. Toccalo per concludere — poi torna qui per accedere.",
+    forgot_sent_template: "Tocca il link nell’email che abbiamo inviato a {{email}} per impostare una nuova password.",
     something_went_wrong: "Qualcosa è andato storto.",
   },
   settings_screens: {
@@ -497,6 +501,24 @@ const itIT = {
         melatonin: "Timing della melatonina per il tuo cronotipo",
         transition: "Piani di transizione su più giorni",
       },
+      headline: {
+        free: 'Piano gratuito',
+        trial: 'Prova in corso',
+        active: 'Premium · attivo',
+        grace: 'Nuovo tentativo di pagamento',
+        cancelled: 'Annullato',
+        expired: 'Premium scaduto',
+      },
+      sub: {
+        active_annual: 'Premium · annuale · si rinnova automaticamente',
+        active_monthly: 'Premium · mensile · si rinnova automaticamente',
+        grace: 'Nuovo tentativo di pagamento — tieni d’occhio la casella email',
+        cancelled_until: 'Premium fino al {{date}}',
+        cancelled_no_date: 'Annullato — mantieni premium fino alla fine del periodo',
+        expired: 'Riabbonati per non perdere gli insight',
+        free: 'Sblocca il piano completo con una prova di 7 giorni',
+        renews_auto: 'Si rinnova automaticamente',
+      },
     },
   },
   number_words: ["Zero", "Uno", "Due", "Tre", "Quattro", "Cinque", "Sei", "Sette"],
@@ -526,6 +548,8 @@ const itIT = {
     reset_onboarding_answers: 'Reimposta risposte di onboarding',
     year_plan: 'Piano annuale {{price}}',
     month_plan: 'Piano mensile {{price}}',
+    start_hour: 'Inizio {{hour}}',
+    end_hour: 'Fine {{hour}}',
   },
 };
 

@@ -185,6 +185,8 @@ const esES = {
     yes_kids: 'Tengo hijos en casa',
     take_melatonin: 'Sí, tomo melatonina',
     restart_dev_hint: 'Borra el cuestionario y te lleva otra vez por el onboarding.',
+    anchor_plan_sub: 'Para anclar bien tu plan.',
+    tap_to_update_sub: 'Toca cualquier respuesta para actualizarla.',
         kids_at_home: 'Niños en casa',
     reset_all_label: 'Restablecer todas las respuestas',
     reset_alert: {

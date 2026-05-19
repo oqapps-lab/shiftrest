@@ -184,6 +184,8 @@ const ko = {
     yes_kids: "집에 아이가 있어요",
     take_melatonin: "네, 멜라토닌을 복용해요",
     restart_dev_hint: "퀴즈를 모두 지우고 온보딩을 처음부터 다시 진행해요.",
+    anchor_plan_sub: "플랜의 기준을 잡을게요.",
+    tap_to_update_sub: "답변을 누르면 바꿀 수 있어요.",
         kids_at_home: "집에 아이들이 있어요",
     reset_all_label: "모든 답변 초기화",
     reset_alert: {

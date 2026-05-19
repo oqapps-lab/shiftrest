@@ -185,6 +185,8 @@ const nlNL = {
     yes_kids: 'Ik heb kinderen thuis',
     take_melatonin: 'Ja, ik neem melatonine',
     restart_dev_hint: 'Wist de quiz en loopt de onboarding nog een keer met je door.',
+    anchor_plan_sub: 'Zo verankeren we je plan.',
+    tap_to_update_sub: 'Tik op een antwoord om het te wijzigen.',
         kids_at_home: 'Kinderen thuis',
     reset_all_label: 'Alle antwoorden resetten',
     reset_alert: {

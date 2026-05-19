@@ -183,6 +183,8 @@ const zhHant = {
     yes_kids: "家中有小孩",
     take_melatonin: "是,我有服用褪黑激素",
     restart_dev_hint: "清除問卷答案,並重新引導你完成新手導引。",
+    anchor_plan_sub: "讓我們確定你的計畫。",
+    tap_to_update_sub: "點選任何答案即可更新。",
         kids_at_home: "家中有孩子",
     reset_all_label: "重設所有回答",
     reset_alert: {
