@@ -43,10 +43,15 @@ export default function Home() {
   const { data: generatedPlan } = useGeneratedPlan();
 
   // Event hours: prefer live plan, fall back to mockPlan.
+  // Parse mock 'HH:MM' as fractional hours so e.g. '17:30' → 17.5 not 17.
+  const parseFloatHour = (hhmm: string): number => {
+    const [h, m] = hhmm.split(':').map(Number);
+    return (h || 0) + (m || 0) / 60;
+  };
   const caffeineHour = planHourAsFloat(generatedPlan?.caffeine_cutoff_at)
-    ?? Number(mockPlan.caffeineCutoff.split(':')[0]);
+    ?? parseFloatHour(mockPlan.caffeineCutoff);
   const melatoninHour = planHourAsFloat(generatedPlan?.melatonin_at)
-    ?? Number(mockPlan.melatoninTime.split(':')[0]);
+    ?? parseFloatHour(mockPlan.melatoninTime);
   const sleepStartHour = planHourAsFloat(generatedPlan?.sleep_start) ?? mockPlan.sleepStart;
 
   const events = [
