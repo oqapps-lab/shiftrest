@@ -113,7 +113,7 @@ export default function Transition() {
         done: s.done,
       })),
     }));
-  }, [livePlan]);
+  }, [livePlan, mockTransition.days]);
 
   const [days, setDays] = useState<UiDay[]>(initialDays);
 

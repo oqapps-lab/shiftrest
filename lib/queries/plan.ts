@@ -132,7 +132,6 @@ export function useGeneratedPlan(date: string = todayLocalIso()): QueryResult<Sl
           // Don't promote network errors to React state — they fire LogBox
           // toasts in dev. Just log to console and fall back silently.
           if (__DEV__) {
-            // eslint-disable-next-line no-console
             console.warn('[plan-generator] invoke failed, using fallback', invokeErr);
           }
           setData(null);

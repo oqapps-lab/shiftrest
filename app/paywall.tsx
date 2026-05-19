@@ -19,7 +19,6 @@ import {
   ProgressDots,
 } from '../components/ui';
 import { colors, spacing, radii } from '../constants/tokens';
-import { mockUser } from '../mock/user';
 import { firstName } from '../lib/derive';
 import { useOnboarding } from '../lib/onboarding/store';
 import { useAuth } from '../lib/auth/store';

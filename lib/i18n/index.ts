@@ -68,7 +68,6 @@ i18n.locale = SCREENSHOT_OVERRIDE || deviceLocale();
 
 if (__DEV__) {
   // Single-line debug marker the capture script can grep
-  // eslint-disable-next-line no-console
   console.log('[i18n] locale =', i18n.locale, '| sample =', i18n.t('welcome.hero'));
 }
 
