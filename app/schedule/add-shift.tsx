@@ -163,7 +163,7 @@ export default function AddShift() {
           onPress={() => safeDismiss('/(tabs)/schedule')}
           hitSlop={12}
           accessibilityRole="button"
-          accessibilityLabel="Close"
+          accessibilityLabel={t('a11y.close')}
         >
           <Glyph name="close" size={22} color="inkMuted" />
         </Pressable>

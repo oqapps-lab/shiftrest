@@ -146,7 +146,7 @@ export default function NotificationsSettings() {
         onPress={() => safeBack('/(tabs)/profile')}
         hitSlop={12}
         accessibilityRole="button"
-        accessibilityLabel="Back"
+        accessibilityLabel={t('a11y.back')}
         style={styles.backRow}
       >
         <Glyph name="chevronLeft" size={22} color="inkMuted" />
@@ -204,7 +204,7 @@ export default function NotificationsSettings() {
           <Toggle
             value={state.bedReminder}
             onChange={(v) => update({ bedReminder: v })}
-            accessibilityLabel="Bed time reminder"
+            accessibilityLabel={t('a11y.bed_time_reminder')}
           />
         </View>
         {state.bedReminder && (
@@ -236,7 +236,7 @@ export default function NotificationsSettings() {
           <Toggle
             value={state.caffeineReminder}
             onChange={(v) => update({ caffeineReminder: v })}
-            accessibilityLabel="Caffeine cutoff reminder"
+            accessibilityLabel={t('a11y.caffeine_cutoff_reminder')}
           />
         </View>
       </View>
@@ -258,7 +258,7 @@ export default function NotificationsSettings() {
           <Toggle
             value={state.melatoninReminder}
             onChange={(v) => update({ melatoninReminder: v })}
-            accessibilityLabel="Melatonin reminder"
+            accessibilityLabel={t('a11y.melatonin_reminder')}
           />
         </View>
       </View>

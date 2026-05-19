@@ -3,6 +3,7 @@
  * Large central display number (HeroNumber sm), tinted circle buttons.
  */
 
+import { t } from '../../lib/i18n';
 import React from 'react';
 import { Pressable, StyleSheet, View, ViewStyle, StyleProp } from 'react-native';
 import * as Haptics from 'expo-haptics';
@@ -52,7 +53,7 @@ export function Stepper({
         style={[styles.btn, { opacity: canDec ? 1 : 0.4 }]}
         hitSlop={8}
         accessibilityRole="button"
-        accessibilityLabel="Decrease"
+        accessibilityLabel={t('a11y.decrease')}
       >
         <Glyph name="close" size={18} color="primary" />
       </Pressable>
@@ -81,7 +82,7 @@ export function Stepper({
         style={[styles.btn, { opacity: canInc ? 1 : 0.4 }]}
         hitSlop={8}
         accessibilityRole="button"
-        accessibilityLabel="Increase"
+        accessibilityLabel={t('a11y.increase')}
       >
         <Glyph name="plus" size={18} color="primary" />
       </Pressable>

@@ -125,7 +125,7 @@ export default function Subscription() {
         onPress={() => safeBack('/(tabs)/profile')}
         hitSlop={12}
         accessibilityRole="button"
-        accessibilityLabel="Back"
+        accessibilityLabel={t('a11y.back')}
         style={styles.backRow}
       >
         <Glyph name="chevronLeft" size={22} color="inkMuted" />
@@ -189,7 +189,7 @@ export default function Subscription() {
           hitSlop={12}
           style={styles.linkRow}
           accessibilityRole="button"
-          accessibilityLabel="Restore purchases"
+          accessibilityLabel={t('a11y.restore_purchases')}
         >
           <Text variant="bodyLg" color="primary" weight="medium">
             Restore purchases

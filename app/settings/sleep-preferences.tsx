@@ -114,7 +114,7 @@ export default function SleepPreferences() {
         onPress={() => safeBack('/(tabs)/profile')}
         hitSlop={12}
         accessibilityRole="button"
-        accessibilityLabel="Back"
+        accessibilityLabel={t('a11y.back')}
         style={styles.backRow}
       >
         <Glyph name="chevronLeft" size={22} color="inkMuted" />
@@ -187,7 +187,7 @@ export default function SleepPreferences() {
         step={5}
         value={state.commuteMinutes}
         onChange={(v) => update({ commuteMinutes: v })}
-        accessibilityLabel="Commute time in minutes"
+        accessibilityLabel={t('a11y.commute_time_minutes')}
         style={{ marginTop: spacing.sm }}
       />
 
@@ -250,7 +250,7 @@ export default function SleepPreferences() {
           step={1}
           unit="cups/day"
           onChange={(v) => update({ caffeineCupsPerDay: v })}
-          accessibilityLabel="Cups per day"
+          accessibilityLabel={t('a11y.cups_per_day')}
         />
       </View>
       <Eyebrow style={{ marginBottom: spacing.md }}>{t('sleep_prefs.usual_type')}</Eyebrow>
@@ -289,7 +289,7 @@ export default function SleepPreferences() {
         <Toggle
           value={state.takesMelatonin}
           onChange={(v) => update({ takesMelatonin: v })}
-          accessibilityLabel="Take melatonin"
+          accessibilityLabel={t('a11y.take_melatonin')}
         />
       </View>
       {state.takesMelatonin && (
@@ -347,7 +347,7 @@ export default function SleepPreferences() {
         <Toggle
           value={state.hasChildren}
           onChange={(v) => update({ hasChildren: v })}
-          accessibilityLabel="Have kids at home"
+          accessibilityLabel={t('a11y.have_kids_at_home')}
         />
       </View>
       {state.hasChildren && (
@@ -395,7 +395,7 @@ export default function SleepPreferences() {
             onPress={onResetAlert}
             hitSlop={12}
             accessibilityRole="button"
-            accessibilityLabel="Reset onboarding answers"
+            accessibilityLabel={t('a11y.reset_onboarding_answers')}
             style={styles.resetButton}
           >
             <Text variant="labelMd" weight="medium" color="coralDim" uppercase>

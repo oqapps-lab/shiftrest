@@ -109,7 +109,7 @@ export default function Paywall() {
           }}
           hitSlop={12}
           accessibilityRole="button"
-          accessibilityLabel="Close paywall"
+          accessibilityLabel={t('a11y.close_paywall')}
         >
           <Glyph name="close" size={22} color="inkMuted" />
         </Pressable>
@@ -139,7 +139,7 @@ export default function Paywall() {
           setPlan('year');
         }}
         accessibilityRole="button"
-        accessibilityLabel="Year plan $49.99"
+        accessibilityLabel={t('a11y.year_plan', { price: '$49.99' })}
       >
         <GlassCard
           variant={plan === 'year' ? 'glass' : 'paper'}
@@ -184,7 +184,7 @@ export default function Paywall() {
           setPlan('month');
         }}
         accessibilityRole="button"
-        accessibilityLabel="Month plan $5.99"
+        accessibilityLabel={t('a11y.month_plan', { price: '$5.99' })}
       >
         <GlassCard
           variant={plan === 'month' ? 'glass' : 'paper'}

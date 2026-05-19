@@ -500,6 +500,25 @@ const en = {
     off_long: 'Off day',
   },
 
+
+  a11y: {
+    back: 'Back',
+    close: 'Close',
+    close_paywall: 'Close paywall',
+    decrease: 'Decrease',
+    increase: 'Increase',
+    restore_purchases: 'Restore purchases',
+    bed_time_reminder: 'Bed time reminder',
+    caffeine_cutoff_reminder: 'Caffeine cutoff reminder',
+    melatonin_reminder: 'Melatonin reminder',
+    commute_time_minutes: 'Commute time in minutes',
+    cups_per_day: 'Cups per day',
+    take_melatonin: 'Take melatonin',
+    have_kids_at_home: 'Have kids at home',
+    reset_onboarding_answers: 'Reset onboarding answers',
+    year_plan: 'Year plan {{price}}',
+    month_plan: 'Month plan {{price}}',
+  },
 };
 
 export default en;
