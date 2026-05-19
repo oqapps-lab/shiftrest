@@ -16,18 +16,14 @@ import {
 import { spacing } from '../../constants/tokens';
 import { t } from '../../lib/i18n';
 
-const MESSAGES = [
-  'Reading your rotation',
-  'Calculating sleep window',
-  'Aligning melatonin',
-  'Drafting your plan',
-];
+const getMessages = (): string[] => t('onboarding_screens.loading_steps') as unknown as string[];
+const MESSAGES_LEN = 4;
 
 export default function Loading() {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-    if (step >= MESSAGES.length) {
+    if (step >= MESSAGES_LEN) {
       const t = setTimeout(() => router.replace('/onboarding/aha'), 600);
       return () => clearTimeout(t);
     }
@@ -35,7 +31,7 @@ export default function Loading() {
     return () => clearTimeout(t);
   }, [step]);
 
-  const currentMessage = MESSAGES[Math.min(step, MESSAGES.length - 1)];
+  const currentMessage = getMessages()[Math.min(step, MESSAGES_LEN - 1)];
 
   return (
     <Screen scroll={false} tabBarClearance={false} orbs="strong">
@@ -50,7 +46,7 @@ export default function Loading() {
 
         <View style={{ height: spacing.xxxl }} />
 
-        <ProgressDots count={MESSAGES.length} active={Math.min(step, MESSAGES.length - 1)} />
+        <ProgressDots count={MESSAGES_LEN} active={Math.min(step, MESSAGES_LEN - 1)} />
       </View>
     </Screen>
   );

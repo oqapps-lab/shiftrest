@@ -40,7 +40,7 @@ export default function AuthConfirm() {
       // GoTrue may bounce back errors as ?error=...&error_description=...
       if (params.error) {
         if (cancelled) return;
-        setErrorMsg(params.error_description ?? params.error ?? 'Link could not be verified.');
+        setErrorMsg(params.error_description ?? params.error ?? t('errors.link_unverified'));
         setStatus('error');
         return;
       }
@@ -48,7 +48,7 @@ export default function AuthConfirm() {
       const code = typeof params.code === 'string' ? params.code : null;
       if (!code) {
         if (cancelled) return;
-        setErrorMsg('This link is missing the verification code. Try requesting a fresh email.');
+        setErrorMsg(t('errors.link_missing_code'));
         setStatus('error');
         return;
       }

@@ -357,6 +357,8 @@ const en = {
     n_days: '{{n}} days left',
   },
   onboarding_screens: {
+    loading_steps: ['Reading your rotation', 'Calculating sleep window', 'Aligning melatonin', 'Drafting your plan'],
+
     profession: {
       hero: "What do you do?",
       sub: "We tune every recommendation to your profession's rotation pattern.",
@@ -557,6 +559,8 @@ const en = {
     apple_unavailable: 'Sign in with Apple is unavailable on this device. Set up an iCloud account in Settings first.',
     apple_no_token: 'Apple did not return an identity token.',
     supabase_not_configured: 'Supabase is not configured.',
+    link_unverified: 'Link could not be verified.',
+    link_missing_code: 'This link is missing the verification code. Try requesting a fresh email.',
   },
 };
 
