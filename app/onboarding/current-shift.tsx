@@ -26,7 +26,7 @@ import { t } from '../../lib/i18n';
 
 type ShiftKind = 'day' | 'night' | 'off';
 
-const SEGMENT_OPTIONS: SegmentOption<ShiftKind>[] = [
+const getSegmentOptions = (): SegmentOption<ShiftKind>[] => [
   { value: 'day', label: t('onboarding_screens.current_shift.day_shift') },
   { value: 'night', label: t('onboarding_screens.current_shift.night_shift') },
   { value: 'off', label: t('onboarding_screens.current_shift.off_day') },
@@ -79,7 +79,7 @@ export default function CurrentShift() {
       </Text>
 
       <SegmentedControl<ShiftKind>
-        options={SEGMENT_OPTIONS}
+        options={getSegmentOptions()}
         value={shift}
         onChange={(v) => update({ currentShift: v })}
       />
