@@ -279,6 +279,12 @@ const sv = {
     eyebrow: 'NYTT PASS',
     hero: 'Lägg till ett pass',
     sub: 'Snabb inmatning — justera senare i din kalender.',
+    save: 'Spara pass',
+    saving: 'Sparar…',
+    summary_off: 'Ledig dag',
+    summary_kind_short: '{{kind}} {{start}}–{{end}}',
+    summary_kind_long: '{{kind}}-pass {{start}}–{{end}}',
+    note_prefix: 'Anteckning: ',
     when_label: 'NÄR',
     shift_type: 'PASSTYP',
     start: 'START',
@@ -364,6 +370,7 @@ const sv = {
     n_days: '{{n}} dagar kvar',
   },
   onboarding_screens: {
+    loading_steps: ['Läser av din rotation', 'Räknar ut ditt sömnfönster', 'Anpassar melatoninet', 'Skriver din plan'],
     profession: {
       hero: 'Vad jobbar du med?',
       sub: 'Vi anpassar varje rekommendation efter ditt yrkes rotationsmönster.',
@@ -495,6 +502,9 @@ const sv = {
       manage_store: 'Hantera i App Store',
       plan_includes: 'DIN PLAN INKLUDERAR',
       auto_renew_notice: 'Prenumerationer förnyas automatiskt tills de sägs upp. Du kan säga upp när som helst via ditt App Store-konto.',
+      restore_title: 'Återställ köp',
+      restore_link: 'Återställ köp',
+      restore_placeholder: 'Adapty-integrationen kommer i steg 7. Just nu är det här en platshållare.',
       bullets: {
         sleep: 'Personligt sömnfönster',
         caffeine: 'Koffeinstopp efter din känslighet',
@@ -565,6 +575,9 @@ const sv = {
     apple_unavailable: 'Logga in med Apple är inte tillgängligt på den här enheten. Ställ in ett iCloud-konto i Inställningar först.',
     apple_no_token: 'Apple returnerade ingen identitetstoken.',
     supabase_not_configured: 'Supabase är inte konfigurerat.',
+    link_unverified: 'Länken kunde inte verifieras.',
+    link_missing_code: 'Den här länken saknar verifieringskoden. Begär ett nytt mejl.',
+    verification_failed: 'Verifieringen misslyckades.',
   },
 };
 

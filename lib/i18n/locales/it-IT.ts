@@ -279,6 +279,12 @@ const itIT = {
     eyebrow: "NUOVO TURNO",
     hero: "Aggiungi un turno",
     sub: "Inserimento rapido — modifica più tardi dal calendario.",
+    save: "Salva turno",
+    saving: "Salvataggio…",
+    summary_off: "Giorno libero",
+    summary_kind_short: "{{kind}} {{start}}–{{end}}",
+    summary_kind_long: "Turno {{kind}} {{start}}–{{end}}",
+    note_prefix: "Nota: ",
     when_label: "QUANDO",
     shift_type: "TIPO DI TURNO",
     start: "INIZIO",
@@ -364,6 +370,7 @@ const itIT = {
     n_days: "{{n}} giorni rimasti",
   },
   onboarding_screens: {
+    loading_steps: ['Stiamo leggendo la tua rotazione', 'Stiamo calcolando la finestra di sonno', 'Stiamo allineando la melatonina', 'Stiamo redigendo il tuo piano'],
     profession: {
       hero: "Che lavoro fai?",
       sub: "Calibriamo ogni consiglio sullo schema di rotazione della tua professione.",
@@ -495,6 +502,9 @@ const itIT = {
       manage_store: "Gestisci nell’App Store",
       plan_includes: "IL TUO PIANO INCLUDE",
       auto_renew_notice: "Gli abbonamenti si rinnovano automaticamente finché non vengono annullati. Puoi annullare in qualsiasi momento dal tuo account App Store.",
+      restore_title: "Ripristina gli acquisti",
+      restore_link: "Ripristina gli acquisti",
+      restore_placeholder: "L'integrazione con Adapty arriverà nello Stage 7. Per ora è solo un segnaposto.",
       bullets: {
         sleep: "Finestra del sonno personalizzata",
         caffeine: "Stop alla caffeina in base alla tua sensibilità",
@@ -565,6 +575,9 @@ const itIT = {
     apple_unavailable: 'L’accesso con Apple non è disponibile su questo dispositivo. Configura prima un account iCloud nelle Impostazioni.',
     apple_no_token: 'Apple non ha restituito un token di identità.',
     supabase_not_configured: 'Supabase non è configurato.',
+    link_unverified: 'Impossibile verificare il link.',
+    link_missing_code: 'A questo link manca il codice di verifica. Richiedi una nuova email.',
+    verification_failed: 'Verifica non riuscita.',
   },
 };
 

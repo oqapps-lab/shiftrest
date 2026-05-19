@@ -279,6 +279,12 @@ const ko = {
     eyebrow: "새 근무",
     hero: "근무 추가",
     sub: "빠른 입력 — 캘린더에서 나중에 조정할 수 있어요.",
+    save: "근무 저장",
+    saving: "저장 중…",
+    summary_off: "휴무일",
+    summary_kind_short: "{{kind}} {{start}}–{{end}}",
+    summary_kind_long: "{{kind}} 근무 {{start}}–{{end}}",
+    note_prefix: "메모: ",
     when_label: "언제",
     shift_type: "근무 종류",
     start: "시작",
@@ -364,6 +370,7 @@ const ko = {
     n_days: "{{n}}일 남음",
   },
   onboarding_screens: {
+    loading_steps: ['로테이션을 읽고 있어요', '수면 시간대를 계산하고 있어요', '멜라토닌 타이밍을 맞추고 있어요', '플랜을 준비하고 있어요'],
     profession: {
       hero: "어떤 일을 하세요?",
       sub: "직업의 교대 패턴에 맞춰 모든 추천을 조정해요.",
@@ -495,6 +502,9 @@ const ko = {
       manage_store: "App Store에서 관리",
       plan_includes: "내 플랜 포함 사항",
       auto_renew_notice: "구독은 취소하기 전까지 자동으로 갱신돼요. App Store 계정에서 언제든 취소할 수 있어요.",
+      restore_title: "구매 복원",
+      restore_link: "구매 복원",
+      restore_placeholder: "Adapty 연동은 7단계에서 추가돼요. 지금은 자리만 잡아뒀어요.",
       bullets: {
         sleep: "나에게 맞춘 수면 구간",
         caffeine: "민감도에 맞춘 카페인 차단 시간",
@@ -565,6 +575,9 @@ const ko = {
     apple_unavailable: '이 기기에서는 Apple로 로그인을 사용할 수 없어요. 먼저 설정에서 iCloud 계정을 추가해 주세요.',
     apple_no_token: 'Apple이 신원 토큰을 반환하지 않았어요.',
     supabase_not_configured: 'Supabase가 구성되지 않았어요.',
+    link_unverified: '링크를 확인할 수 없어요.',
+    link_missing_code: '이 링크에 인증 코드가 없어요. 이메일을 다시 요청해 주세요.',
+    verification_failed: '인증에 실패했어요.',
   },
 };
 

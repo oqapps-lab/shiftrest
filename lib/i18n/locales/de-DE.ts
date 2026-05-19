@@ -280,6 +280,12 @@ const deDE = {
     eyebrow: 'NEUE SCHICHT',
     hero: 'Schicht hinzufügen',
     sub: 'Schnelle Eingabe — später im Kalender anpassen.',
+    save: 'Schicht speichern',
+    saving: 'Wird gespeichert…',
+    summary_off: 'Freier Tag',
+    summary_kind_short: '{{kind}} {{start}}–{{end}}',
+    summary_kind_long: '{{kind}}-Schicht {{start}}–{{end}}',
+    note_prefix: 'Notiz: ',
     when_label: 'WANN',
     shift_type: 'SCHICHTART',
     start: 'START',
@@ -365,6 +371,7 @@ const deDE = {
     n_days: 'noch {{n}} Tage',
   },
   onboarding_screens: {
+    loading_steps: ['Wir lesen deine Rotation', 'Wir berechnen dein Schlaffenster', 'Wir richten Melatonin aus', 'Wir entwerfen deinen Plan'],
     profession: {
       hero: 'Was machst du beruflich?',
       sub: 'Wir stimmen jede Empfehlung auf den Schichtrhythmus deines Berufs ab.',
@@ -496,6 +503,9 @@ const deDE = {
       manage_store: 'Im App Store verwalten',
       plan_includes: 'DEIN PLAN ENTHÄLT',
       auto_renew_notice: 'Abonnements verlängern sich automatisch, bis sie gekündigt werden. Du kannst jederzeit über dein App-Store-Konto kündigen.',
+      restore_title: 'Käufe wiederherstellen',
+      restore_link: 'Käufe wiederherstellen',
+      restore_placeholder: 'Die Adapty-Anbindung kommt in Stage 7. Aktuell ist das nur ein Platzhalter.',
       bullets: {
         sleep: 'Personalisiertes Schlaffenster',
         caffeine: 'Koffein-Stopp nach deiner Empfindlichkeit',
@@ -566,6 +576,9 @@ const deDE = {
     apple_unavailable: 'Mit Apple anmelden ist auf diesem Gerät nicht verfügbar. Richte zuerst in den Einstellungen ein iCloud-Konto ein.',
     apple_no_token: 'Apple hat kein Identitätstoken zurückgegeben.',
     supabase_not_configured: 'Supabase ist nicht konfiguriert.',
+    link_unverified: 'Der Link konnte nicht verifiziert werden.',
+    link_missing_code: 'Diesem Link fehlt der Bestätigungscode. Fordere eine neue E-Mail an.',
+    verification_failed: 'Verifizierung fehlgeschlagen.',
   },
 };
 

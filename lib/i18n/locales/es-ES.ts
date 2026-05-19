@@ -280,6 +280,12 @@ const esES = {
     eyebrow: 'NUEVO TURNO',
     hero: 'Añadir un turno',
     sub: 'Entrada rápida — ajusta luego desde tu calendario.',
+    save: 'Guardar turno',
+    saving: 'Guardando…',
+    summary_off: 'Día libre',
+    summary_kind_short: '{{kind}} {{start}}–{{end}}',
+    summary_kind_long: 'Turno {{kind}} {{start}}–{{end}}',
+    note_prefix: 'Nota: ',
     when_label: 'CUÁNDO',
     shift_type: 'TIPO DE TURNO',
     start: 'INICIO',
@@ -365,6 +371,7 @@ const esES = {
     n_days: 'quedan {{n}} días',
   },
   onboarding_screens: {
+    loading_steps: ['Leyendo tu rotación', 'Calculando tu ventana de sueño', 'Alineando la melatonina', 'Preparando tu plan'],
     profession: {
       hero: '¿A qué te dedicas?',
       sub: 'Ajustamos cada recomendación al patrón de rotación de tu profesión.',
@@ -496,6 +503,9 @@ const esES = {
       manage_store: 'Gestionar en App Store',
       plan_includes: 'TU PLAN INCLUYE',
       auto_renew_notice: 'Las suscripciones se renuevan automáticamente hasta que las canceles. Puedes cancelar cuando quieras desde tu cuenta de App Store.',
+      restore_title: 'Restaurar compras',
+      restore_link: 'Restaurar compras',
+      restore_placeholder: 'La integración con Adapty llega en la Etapa 7. Por ahora, esto es solo un marcador.',
       bullets: {
         sleep: 'Ventana de sueño personalizada',
         caffeine: 'Corte de cafeína según tu sensibilidad',
@@ -566,6 +576,9 @@ const esES = {
     apple_unavailable: 'Iniciar sesión con Apple no está disponible en este dispositivo. Configura primero una cuenta de iCloud en Ajustes.',
     apple_no_token: 'Apple no devolvió un token de identidad.',
     supabase_not_configured: 'Supabase no está configurado.',
+    link_unverified: 'No se pudo verificar el enlace.',
+    link_missing_code: 'A este enlace le falta el código de verificación. Solicita un correo nuevo.',
+    verification_failed: 'La verificación falló.',
   },
 };
 

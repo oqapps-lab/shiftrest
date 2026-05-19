@@ -280,6 +280,12 @@ const frFR = {
     eyebrow: 'NOUVEAU SERVICE',
     hero: 'Ajouter un service',
     sub: 'Saisie rapide — tu pourras ajuster depuis ton calendrier.',
+    save: 'Enregistrer le service',
+    saving: 'Enregistrement…',
+    summary_off: 'Jour de repos',
+    summary_kind_short: '{{kind}} {{start}}–{{end}}',
+    summary_kind_long: 'Service {{kind}} {{start}}–{{end}}',
+    note_prefix: 'Note : ',
     when_label: 'QUAND',
     shift_type: 'TYPE DE SERVICE',
     start: 'DÉBUT',
@@ -365,6 +371,7 @@ const frFR = {
     n_days: '{{n}} jours restants',
   },
   onboarding_screens: {
+    loading_steps: ['Lecture de ta rotation', 'Calcul de ta fenêtre de sommeil', 'Calage de la mélatonine', 'Rédaction de ton plan'],
     profession: {
       hero: 'Quel est ton métier ?',
       sub: 'On adapte chaque recommandation au rythme de rotation de ton métier.',
@@ -496,6 +503,9 @@ const frFR = {
       manage_store: 'Gérer dans l’App Store',
       plan_includes: 'TON ABONNEMENT INCLUT',
       auto_renew_notice: 'Les abonnements se renouvellent automatiquement jusqu’à leur annulation. Tu peux annuler à tout moment depuis ton compte App Store.',
+      restore_title: 'Restaurer les achats',
+      restore_link: 'Restaurer les achats',
+      restore_placeholder: 'L’intégration Adapty arrive à l’Étape 7. Pour l’instant, ceci est un espace réservé.',
       bullets: {
         sleep: 'Fenêtre de sommeil personnalisée',
         caffeine: 'Arrêt de la caféine selon ta sensibilité',
@@ -566,6 +576,9 @@ const frFR = {
     apple_unavailable: 'La connexion avec Apple n’est pas disponible sur cet appareil. Configure d’abord un compte iCloud dans Réglages.',
     apple_no_token: 'Apple n’a pas renvoyé de jeton d’identité.',
     supabase_not_configured: 'Supabase n’est pas configuré.',
+    link_unverified: 'Impossible de vérifier le lien.',
+    link_missing_code: 'Il manque le code de vérification dans ce lien. Demande un nouvel e-mail.',
+    verification_failed: 'Échec de la vérification.',
   },
 };
 

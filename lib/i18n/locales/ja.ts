@@ -279,6 +279,12 @@ const ja = {
     eyebrow: "新しいシフト",
     hero: "シフトを追加",
     sub: "すばやく入力 — あとからカレンダーで調整できます。",
+    save: "シフトを保存",
+    saving: "保存中…",
+    summary_off: "休日",
+    summary_kind_short: "{{kind}} {{start}}–{{end}}",
+    summary_kind_long: "{{kind}}シフト {{start}}–{{end}}",
+    note_prefix: "メモ:",
     when_label: "いつ",
     shift_type: "シフトの種類",
     start: "開始",
@@ -364,6 +370,7 @@ const ja = {
     n_days: "残り{{n}}日",
   },
   onboarding_screens: {
+    loading_steps: ['あなたのローテーションを読み込み中', '睡眠の時間帯を計算中', 'メラトニンのタイミングを調整中', 'あなたのプランを作成中'],
     profession: {
       hero: "お仕事は何ですか？",
       sub: "あなたの職業のローテーションパターンに合わせて、すべての提案を調整します。",
@@ -495,6 +502,9 @@ const ja = {
       manage_store: "App Store で管理",
       plan_includes: "ご利用中のプラン内容",
       auto_renew_notice: "サブスクリプションは解約するまで自動更新されます。App Store のアカウントからいつでも解約できます。",
+      restore_title: "購入を復元",
+      restore_link: "購入を復元",
+      restore_placeholder: "Adapty との連携はステージ7で実装します。今はプレースホルダーです。",
       bullets: {
         sleep: "あなた専用の睡眠ウィンドウ",
         caffeine: "感受性に合わせたカフェインの最終時刻",
@@ -565,6 +575,9 @@ const ja = {
     apple_unavailable: 'このデバイスでは Apple でサインインを利用できません。先に「設定」で iCloud アカウントを設定してください。',
     apple_no_token: 'Apple から ID トークンが返されませんでした。',
     supabase_not_configured: 'Supabase が構成されていません。',
+    link_unverified: 'リンクを確認できませんでした。',
+    link_missing_code: 'このリンクには確認コードがありません。新しいメールを送り直してください。',
+    verification_failed: '確認に失敗しました。',
   },
 };
 

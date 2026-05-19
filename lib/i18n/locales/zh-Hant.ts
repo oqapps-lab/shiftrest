@@ -278,6 +278,12 @@ const zhHant = {
     eyebrow: "新班次",
     hero: "新增班次",
     sub: "快速輸入 — 之後可在行事曆中調整。",
+    save: "儲存班次",
+    saving: "儲存中…",
+    summary_off: "休息日",
+    summary_kind_short: "{{kind}} {{start}}–{{end}}",
+    summary_kind_long: "{{kind}}班 {{start}}–{{end}}",
+    note_prefix: "備註:",
     when_label: "時間",
     shift_type: "班次類型",
     start: "開始",
@@ -363,6 +369,7 @@ const zhHant = {
     n_days: "剩 {{n}} 天",
   },
   onboarding_screens: {
+    loading_steps: ['正在讀取你的輪班', '正在計算你的睡眠時段', '正在對齊褪黑激素時機', '正在草擬你的計畫'],
     profession: {
       hero: "你的職業是什麼？",
       sub: "我們會依照你職業的輪班模式調整每項建議。",
@@ -494,6 +501,9 @@ const zhHant = {
       manage_store: "在 App Store 管理",
       plan_includes: "你的方案包含",
       auto_renew_notice: "訂閱會自動續訂,直到你取消為止。你隨時都能從 App Store 帳戶取消。",
+      restore_title: "還原購買項目",
+      restore_link: "還原購買項目",
+      restore_placeholder: "Adapty 整合會在第 7 階段加入。目前這只是預留訊息。",
       bullets: {
         sleep: "為你量身訂做的睡眠時段",
         caffeine: "依你的敏感度設定咖啡因停用時間",
@@ -564,6 +574,9 @@ const zhHant = {
     apple_unavailable: '這部裝置無法使用以 Apple 登入。請先在「設定」中設定 iCloud 帳號。',
     apple_no_token: 'Apple 未回傳身分識別權杖。',
     supabase_not_configured: '尚未設定 Supabase。',
+    link_unverified: '無法驗證連結。',
+    link_missing_code: '此連結缺少驗證碼。請重新請求一封電子郵件。',
+    verification_failed: '驗證失敗。',
   },
 };
 

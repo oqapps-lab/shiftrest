@@ -280,6 +280,12 @@ const nlNL = {
     eyebrow: 'NIEUWE DIENST',
     hero: 'Dienst toevoegen',
     sub: 'Snel invoeren — pas later aan in je kalender.',
+    save: 'Dienst opslaan',
+    saving: 'Bezig met opslaan…',
+    summary_off: 'Vrije dag',
+    summary_kind_short: '{{kind}} {{start}}–{{end}}',
+    summary_kind_long: '{{kind}}-dienst {{start}}–{{end}}',
+    note_prefix: 'Notitie: ',
     when_label: 'WANNEER',
     shift_type: 'TYPE DIENST',
     start: 'START',
@@ -365,6 +371,7 @@ const nlNL = {
     n_days: 'nog {{n}} dagen',
   },
   onboarding_screens: {
+    loading_steps: ['We lezen je rotatie', 'We berekenen je slaapvenster', 'We stemmen melatonine af', 'We stellen je plan op'],
     profession: {
       hero: 'Wat doe je?',
       sub: 'We stemmen elk advies af op het rotatiepatroon van jouw beroep.',
@@ -496,6 +503,9 @@ const nlNL = {
       manage_store: 'Beheren in App Store',
       plan_includes: 'JOUW ABONNEMENT BEVAT',
       auto_renew_notice: 'Abonnementen worden automatisch verlengd tot je ze opzegt. Je kunt op elk moment opzeggen via je App Store-account.',
+      restore_title: 'Aankopen herstellen',
+      restore_link: 'Aankopen herstellen',
+      restore_placeholder: 'De Adapty-koppeling komt in fase 7. Voor nu is dit een tijdelijke melding.',
       bullets: {
         sleep: 'Persoonlijk slaapvenster',
         caffeine: 'Cafeïnestop op basis van je gevoeligheid',
@@ -566,6 +576,9 @@ const nlNL = {
     apple_unavailable: 'Inloggen met Apple is niet beschikbaar op dit apparaat. Stel eerst een iCloud-account in via Instellingen.',
     apple_no_token: 'Apple heeft geen identiteitstoken geretourneerd.',
     supabase_not_configured: 'Supabase is niet geconfigureerd.',
+    link_unverified: 'De link kon niet worden geverifieerd.',
+    link_missing_code: 'In deze link ontbreekt de verificatiecode. Vraag een nieuwe e-mail aan.',
+    verification_failed: 'Verificatie mislukt.',
   },
 };
 
