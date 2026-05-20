@@ -262,3 +262,57 @@ If any of those fail, fix before pushing build.
 - [ ] Replace icon v2 placeholder with final design (after launch ok)
 - [ ] Take screenshots for 6.7" and 6.5" device sizes (1290×2796, 1242×2688)
 - [ ] Final ASC age-rating questionnaire — submit + verify "12+" classification
+
+
+---
+
+# Stage 6.6 update — 2026-05-20
+
+## Current ASC state
+
+- **App Pricing**: Free (USD $0.00, USA base, equivalent prices auto-derive across territories). Set via `POST /v1/appPriceSchedules` 2026-05-20.
+- **App Privacy**: Published with Tracking=Yes declarations for AppsFlyer-related categories (Device ID, Purchases, Usage Data).
+- **v1.0 state**: `PREPARE_FOR_SUBMISSION` (CANCELED prior public review attempt 2026-05-20 17:42 — user wanted External TestFlight first).
+- **Build #21** (`457371a7-c627-4570-b92e-3c65e19db904`): VALID, attached to v1.0, Beta App Review APPROVED 2026-05-20, External TestFlight `IN_BETA_TESTING`.
+- **External Reviewers** beta group exists, build #21 attached, ready to invite testers.
+- **Internal QA Direct** beta group has both build #20 and #21.
+
+## Pre-public-release checklist (status as of 2026-05-20)
+
+| Item | State | Notes |
+|---|---|---|
+| App created in ASC | ✅ | ID `6766302800` |
+| Bundle ID registered | ✅ | `com.gazetastreet.shiftrest` |
+| Distribution cert + profile | ✅ | EAS local credentials |
+| App Pricing set | ✅ | Free |
+| App Privacy questionnaire | ✅ | Published, Tracking=Yes |
+| Screenshots × 11 locales | ✅ | 1320×2868, APP_IPHONE_67 set |
+| App description, keywords, URLs | ✅ | per Stage 6 listing work |
+| Reviewer demo account | ✅ | Supabase per `project_supabase_creds.md` |
+| App Review Information | ✅ | filled |
+| Age Rating | ✅ | 12+ |
+| Export Compliance | ✅ | `ITSAppUsesNonExemptEncryption: false` |
+| IAPs configured | ✅ | Adapty monthly + annual |
+| Localization | ✅ | 12 locales |
+| ATT prompt + Info.plist key | ✅ | added in build #21 |
+| **Real-device QA** | ❌ | **NEXT — install build #21 from TestFlight on physical iPhone, run Apple Sign-In + Sandbox purchase + push delivery + ATT prompt** |
+| Final visual QA on zh-Hant | ❌ | deferred during i18n session |
+| Public Submit For Review | ❌ | awaiting real-device QA confirmation |
+
+## Recommended order to public release
+
+1. **External testers invited** to build #21 (you in ASC UI → Users and Access → Testers → invite via email or public link).
+2. **Real-device testing** — minimum 1 iPhone with full flow (onboarding → signup → trial → notification delivery).
+3. **Fix any findings** in build #22 if needed.
+4. **Submit For Review** for public release (via `POST /v1/reviewSubmissions` after PATCHing v1.0 to attached build).
+5. **Choose release strategy**: AFTER_APPROVAL (auto), MANUAL (you click Release), or Phased Release over 7 days (recommended for v1.0).
+
+## Code health (static gates)
+
+- `tsc --noEmit` → 0 errors
+- `eslint app components lib` → 0 warnings
+- `jest` → 42 tests passed (derive.ts coverage)
+- All 446 i18n keys × 11 locales = 100% parity
+- 0 hardcoded user-facing strings
+- 0 module-level eager-eval `t()` traps
+- WCAG AA contrast pass for all text colors (inkMuted bumped #7B7B76 → #6B6B65)

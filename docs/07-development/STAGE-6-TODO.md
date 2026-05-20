@@ -79,3 +79,40 @@ ui-qa pass on iPhone 17 (HEAD `46bd7a1`).
 User asked to check `151.241.234.33` for an existing self-hosted Supabase
 instance to potentially reuse. Result of that scan lands in this section
 once verified.
+
+
+---
+
+## Stage 6.6 status (2026-05-20) — what's done since this TODO was written
+
+All "Open TODOs before submission" closed:
+
+- [x] `NSUserNotificationsUsageDescription` in app.json (was there from Stage 6).
+- [x] `NSUserTrackingUsageDescription` added (ATT for AppsFlyer).
+- [x] `eas init` done — `extra.eas.projectId` wired.
+- [x] App created in ASC (ID `6766302800`).
+- [x] Both IAPs created in ASC (Premium Monthly + Yearly via Adapty product mapping).
+- [x] Apple Review demo-account seeded (per `project_supabase_creds.md` memory).
+- [x] Screenshots uploaded × 11 locales (1320×2868 for APP_IPHONE_67 set type).
+- [x] Age rating questionnaire submitted (12+, per memory).
+- [x] App Pricing = Free (via `POST /v1/appPriceSchedules` 2026-05-20).
+- [x] App Privacy questionnaire published (Tracking=Yes for AppsFlyer-related categories).
+- [x] OAuth — Apple Sign-In wired in `lib/auth/store.tsx`.
+- [x] Deep-link `shiftrest://auth/confirm` registered, handled by `app/auth/confirm.tsx`.
+- [x] Adapty SDK init in `app/_layout.tsx` via `ensureAdaptyActivated()`.
+- [x] Adapty paywall CTA wired to subscription state via `useSubscription()` hook.
+
+## What's open NOW
+
+- [ ] **Real-device QA on TestFlight build #21** — Apple Sign-In flow, Sandbox purchase, push delivery, ATT prompt.
+- [ ] AppsFlyer `EXPO_PUBLIC_APPSFLYER_DEV_KEY` + `APP_ID` in `.env` (SDK bundled but bails at init currently).
+- [ ] Edge cases QA: airplane mode, OpenAI timeout, cold start with empty AsyncStorage.
+- [ ] Device matrix: iPhone SE, large screens, iOS 15.1, Dynamic Type, VoiceOver.
+- [ ] Sentry crash reporting setup (optional but recommended).
+- [ ] Final visual QA on `zh-Hant` (was deferred during i18n work).
+- [ ] Vercel deploy for `oqapps/site/` — verify Privacy/Support/Marketing URLs resolve before public submission.
+- [ ] Decision: when to do Submit For Review for public release. Currently `v1.0 state = PREPARE_FOR_SUBMISSION`; build #21 is in External TestFlight.
+
+## Self-hosted Supabase check (parked from earlier)
+
+Status unchanged — `151.241.234.33` scan not done. Project is on Supabase Cloud (ref `umjngckluosbmyjxgfjx` per `project_supabase_creds.md`). Self-hosted migration would be a separate post-launch initiative.
