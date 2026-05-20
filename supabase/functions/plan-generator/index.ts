@@ -84,9 +84,14 @@ interface OpenAiPlanResponse {
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
-// Audited 2026-04-26 against /v1/models — gpt-5.4-mini is the latest
-// small chat-capable model with structured-output support. When a newer
-// 5.5 / 6.x lands, swap here (and re-confirm pricing in cost_cents calc).
+// ⚠️ VERIFY THIS MODEL EXISTS IN YOUR OPENAI ACCOUNT BEFORE LAUNCH.
+// Audited 2026-04-26 against /v1/models — gpt-5.4-mini was then the
+// latest small chat-capable model with structured-output support.
+// As of 2026-05-20, double-check the model still resolves — OpenAI
+// rotates aliases. If 404 → app silently falls back to mockPlan via
+// useGeneratedPlan's catch. Likely valid alternates if 5.4-mini is
+// deprecated: gpt-4o-mini, gpt-4.1-mini.
+// When swapping, re-confirm pricing in cost_cents calc below.
 const OPENAI_MODEL = 'gpt-5.4-mini';
 const OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
 
@@ -375,7 +380,9 @@ serve(async (req) => {
     user_id: userId,
     shift_id: null,
     date,
-    plan_type: shift ? (shift.shift_type === 'night' ? 'work_day' : 'work_day') : 'day_off',
+    // Both day and night shifts are 'work_day'; 'transition' plan_type lives in the
+    // separate transition_plans table (handled outside this function).
+    plan_type: shift ? 'work_day' : 'day_off',
     sleep_start: buildLocalTimestamp(date, parsed.sleep_start),
     sleep_end: buildLocalTimestamp(date, parsed.sleep_end),
     sleep_duration_minutes: parsed.sleep_duration_minutes,
