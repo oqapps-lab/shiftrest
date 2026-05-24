@@ -284,6 +284,7 @@ const ptBR = {
     summary_off: "Folga",
     summary_kind_short: "{{kind}} {{start}}–{{end}}",
     summary_kind_long: "Turno {{kind}} {{start}}–{{end}}",
+    next_day_suffix: '(+1 dia)',
     note_prefix: "Observação: ",
     saved_title: "Turno salvo",
     save_failed_title: "Não foi possível salvar o turno",

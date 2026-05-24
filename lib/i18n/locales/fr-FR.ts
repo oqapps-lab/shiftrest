@@ -285,6 +285,7 @@ const frFR = {
     summary_off: 'Jour de repos',
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: 'Service {{kind}} {{start}}–{{end}}',
+    next_day_suffix: '(+1 jour)',
     note_prefix: 'Note : ',
     saved_title: 'Service enregistré',
     save_failed_title: "Impossible d'enregistrer le service",

@@ -284,6 +284,7 @@ const en = {
     summary_off: 'Off day',
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: '{{kind}} shift {{start}}–{{end}}',
+    next_day_suffix: '(+1 day)',
     note_prefix: 'Note: ',
     day_today: 'Today',
     day_tomorrow: 'Tomorrow',

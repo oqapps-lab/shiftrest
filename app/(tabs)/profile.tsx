@@ -30,7 +30,7 @@ export default function Profile() {
   const { data: streak } = useStreak();
   const { data: stats } = useProfileStats();
   const { data: subscription } = useSubscription();
-  const streakValue = streak?.current_streak ?? mockUser.streak;
+  const streakValue = user ? (streak?.current_streak ?? 0) : mockUser.streak;
 
   // For signed-in users always show their real numbers (0 is honest).
   // Anonymous demo mode falls through to mockUser so the screen tells a
@@ -156,7 +156,7 @@ export default function Profile() {
       subtitle: t('profile.rows.about_sub'),
       onPress: () => router.push('/settings/about'),
     },
-    restartOnboardingRow,
+    ...(__DEV__ ? [restartOnboardingRow] : []),
   ];
   return (
     <Screen orbs="subtle" variant="dim" scroll>
@@ -170,7 +170,7 @@ export default function Profile() {
           color="inkSubtle"
           style={{ marginTop: spacing.xs }}
         >
-          {`${professionLabel}.`}
+          {professionLabel}
         </Text>
       </View>
 

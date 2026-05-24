@@ -285,6 +285,7 @@ const esES = {
     summary_off: 'Día libre',
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: 'Turno {{kind}} {{start}}–{{end}}',
+    next_day_suffix: '(+1 día)',
     note_prefix: 'Nota: ',
     saved_title: 'Turno guardado',
     save_failed_title: 'No se pudo guardar el turno',

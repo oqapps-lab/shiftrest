@@ -161,6 +161,10 @@ export function PillCTA({
                     Platform.OS === 'ios'
                       ? 'rgba(255,252,248,0.55)'
                       : 'rgba(252,249,246,0.92)',
+                  // B03 — subtle 1px outline so the glass CTA stays visible
+                  // on any background gradient (was invisible at light edges).
+                  borderWidth: 1,
+                  borderColor: 'rgba(15,23,42,0.22)',
                 },
               ]}
             />

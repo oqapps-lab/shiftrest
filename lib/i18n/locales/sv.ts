@@ -284,6 +284,7 @@ const sv = {
     summary_off: 'Ledig dag',
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: '{{kind}}-pass {{start}}–{{end}}',
+    next_day_suffix: '(+1 dag)',
     note_prefix: 'Anteckning: ',
     saved_title: 'Skift sparat',
     save_failed_title: 'Det gick inte att spara skiftet',
