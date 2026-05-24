@@ -285,6 +285,7 @@ const deDE = {
     summary_off: 'Freier Tag',
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: '{{kind}}-Schicht {{start}}–{{end}}',
+    next_day_suffix: '(+1 Tag)',
     note_prefix: 'Notiz: ',
     saved_title: 'Schicht gespeichert',
     save_failed_title: 'Schicht konnte nicht gespeichert werden',

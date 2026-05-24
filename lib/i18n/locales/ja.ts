@@ -284,6 +284,7 @@ const ja = {
     summary_off: "休日",
     summary_kind_short: "{{kind}} {{start}}–{{end}}",
     summary_kind_long: "{{kind}}シフト {{start}}–{{end}}",
+    next_day_suffix: '(翌日まで)',
     note_prefix: "メモ:",
     saved_title: "シフトを保存しました",
     save_failed_title: "シフトを保存できませんでした",

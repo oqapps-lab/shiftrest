@@ -78,6 +78,17 @@ export default function AddShift() {
   const [kind, setKind] = useState<Kind>('day');
   const [startHour, setStartHour] = useState<number>(7);
   const [endHour, setEndHour] = useState<number>(19);
+  // B14 — selecting Night auto-populates 19:00-07:00, Day → 07:00-19:00
+  function selectKind(next: Kind) {
+    setKind(next);
+    if (next === 'night') {
+      setStartHour(19);
+      setEndHour(7);
+    } else if (next === 'day') {
+      setStartHour(7);
+      setEndHour(19);
+    }
+  }
   const [notes, setNotes] = useState<string>('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -85,8 +96,9 @@ export default function AddShift() {
   const isOff = kind === 'off';
   const canSave = !!dateKey && (isOff || startHour !== endHour);
 
+  const overnightSuffix = kind !== 'off' && endHour <= startHour ? ' ' + t('add_shift.next_day_suffix') : '';
   const summaryLine = `${formatDayMonth(selectedDay.date)} · ${
-    kind === 'off' ? t('add_shift.summary_off') : t('add_shift.summary_kind_short', { kind: t('shift_kind.' + kind), start: formatHour(startHour), end: formatHour(endHour) })
+    kind === 'off' ? t('add_shift.summary_off') : t('add_shift.summary_kind_short', { kind: t('shift_kind.' + kind), start: formatHour(startHour), end: formatHour(endHour) }) + overnightSuffix
   }${notes.trim() ? '\n\n' + t('add_shift.note_prefix') + notes.trim() : ''}`;
 
   const onSave = async () => {
@@ -222,7 +234,7 @@ export default function AddShift() {
         <SegmentedControl<Kind>
           options={getKindOptions()}
           value={kind}
-          onChange={setKind}
+          onChange={selectKind}
         />
       </View>
 

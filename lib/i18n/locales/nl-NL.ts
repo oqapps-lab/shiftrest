@@ -285,6 +285,7 @@ const nlNL = {
     summary_off: 'Vrije dag',
     summary_kind_short: '{{kind}} {{start}}–{{end}}',
     summary_kind_long: '{{kind}}-dienst {{start}}–{{end}}',
+    next_day_suffix: '(+1 dag)',
     note_prefix: 'Notitie: ',
     saved_title: 'Dienst opgeslagen',
     save_failed_title: 'Kon dienst niet opslaan',

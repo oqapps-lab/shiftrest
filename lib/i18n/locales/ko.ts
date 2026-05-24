@@ -284,6 +284,7 @@ const ko = {
     summary_off: "휴무일",
     summary_kind_short: "{{kind}} {{start}}–{{end}}",
     summary_kind_long: "{{kind}} 근무 {{start}}–{{end}}",
+    next_day_suffix: '(다음 날까지)',
     note_prefix: "메모: ",
     saved_title: "근무 저장 완료",
     save_failed_title: "근무를 저장하지 못했어요",

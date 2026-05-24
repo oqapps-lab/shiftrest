@@ -284,6 +284,7 @@ const itIT = {
     summary_off: "Giorno libero",
     summary_kind_short: "{{kind}} {{start}}–{{end}}",
     summary_kind_long: "Turno {{kind}} {{start}}–{{end}}",
+    next_day_suffix: '(+1 giorno)',
     note_prefix: "Nota: ",
     saved_title: "Turno salvato",
     save_failed_title: "Impossibile salvare il turno",

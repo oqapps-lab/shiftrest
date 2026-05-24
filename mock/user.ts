@@ -25,7 +25,12 @@ export const mockUser = {
   transitionsCompleted: 3,
   adherence: 98,
   subscription: 'trial' as 'free' | 'trial' | 'premium' | 'expired',
-  trialEndsAt: '2026-04-27',
+  get trialEndsAt() {
+    // Dynamic so the demo doesn't go stale — always 14 days from today.
+    const d = new Date();
+    d.setDate(d.getDate() + 14);
+    return d.toISOString().slice(0, 10);
+  },
 };
 
 export const mockPlan = {

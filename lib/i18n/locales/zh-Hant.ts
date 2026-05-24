@@ -283,6 +283,7 @@ const zhHant = {
     summary_off: "休息日",
     summary_kind_short: "{{kind}} {{start}}–{{end}}",
     summary_kind_long: "{{kind}}班 {{start}}–{{end}}",
+    next_day_suffix: '(隔天)',
     note_prefix: "備註:",
     saved_title: "已儲存班次",
     save_failed_title: "無法儲存班次",
