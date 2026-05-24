@@ -14,6 +14,8 @@ workflows:
       node: v22.11.0
       cocoapods: default
       xcode: latest
+      groups:
+        - signing
     triggering:
       events:
         - push
