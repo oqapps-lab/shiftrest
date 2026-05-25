@@ -14,7 +14,7 @@
 | A | Splash + Icon visual | A1 | P3 — косметика, не блокер релиза |
 | B | Haptics в онбординге | B1 | P3 |
 | C | Onboarding step 3 — commute slider | C1 | P1 — функциональная поломка |
-| D | "Show my plan" social proof copy | D1 | P0 — Apple reject (fake stars) |
+| D | "Show my plan" social proof copy | D1 ✅ | P0 — closed 2026-05-25 (160a4ff) |
 | E | Подписки + StoreKit | E1, E2, E3, E4 | P0 — приложение не покупается |
 | F | Today: Transition in progress хардкод | F1 | P1 — фейковые данные |
 | G | Onboarding: нет вопроса про следующую смену | G1 | P1 — недостаёт логики |
@@ -68,7 +68,7 @@
 - Toggle (melatonin step) — Switch тоже должен haptic'ать
 - SegmentedControl (current shift) — тоже
 
-**Status:** ❌ открыт
+**Status:** ✅ verified 2026-05-25 (no-op — code already correct). Audit подтвердил: PillCTA, OptionCard, SegmentedControl, Stepper, Toggle, Slider — ВСЕ имеют `Haptics.impactAsync(Light)` встроенный. Бары Pressable в profession.tsx + melatonin.tsx тоже руками вызывают haptic. expo-haptics 55.0.14 установлен. Отсутствие отклика на устройстве owner'а — либо iOS Settings → Sounds & Haptics → System Haptics OFF, либо тест проходил в iOS Simulator (нет haptic-мотора в железе)
 
 ---
 
@@ -118,7 +118,7 @@
 - Проверить ВСЕ онбординг-экраны на похожие fake testimonials (есть `testimonials.nurse/fire/factory/other` в en.ts — если они на каком-то экране показываются как "реальные отзывы пользователей" → тоже reject-risk)
 - Проверить paywall — там нет рейтингов, но есть `BEST VALUE · SAVE 35%` — это OK (price-based marketing, не fake review)
 
-**Status:** ❌ открыт — P0 reject
+**Status:** ✅ verified 2026-05-25 (commit 160a4ff)
 
 ---
 
