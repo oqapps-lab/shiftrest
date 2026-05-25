@@ -408,6 +408,17 @@ const en = {
       start: "START",
       end: "END",
     },
+    next_shift: {
+      hero: "When's your next shift?",
+      sub: "We'll build the first 36 hours of your sleep plan around it.",
+      options: {
+        tonight: { title: "Tonight", subtitle: "Within the next 12 hours" },
+        tomorrow_am: { title: "Tomorrow, morning", subtitle: "Day shift starts ~12-24h from now" },
+        tomorrow_pm: { title: "Tomorrow, evening", subtitle: "Night shift starts ~18-30h from now" },
+        day_after: { title: "Day after tomorrow", subtitle: "Plenty of time to reset" },
+        on_break: { title: "I'm on a break", subtitle: "Off rotation right now" },
+      },
+    },
     problem: {
       hero: "What bothers you most?",
       sub: "We'll prioritise it in your plan.",

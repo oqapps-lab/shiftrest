@@ -407,6 +407,17 @@ const sv = {
       start: 'START',
       end: 'SLUT',
     },
+    next_shift: {
+      hero: 'När är ditt nästa pass?',
+      sub: 'Vi bygger de första 36 timmarna av din sömnplan runt det.',
+      options: {
+        tonight: { title: 'I kväll', subtitle: 'Inom de närmaste 12 timmarna' },
+        tomorrow_am: { title: 'I morgon bitti', subtitle: 'Dagpass om ~12-24 timmar' },
+        tomorrow_pm: { title: 'I morgon kväll', subtitle: 'Nattpass om ~18-30 timmar' },
+        day_after: { title: 'I övermorgon', subtitle: 'Gott om tid att återhämta dig' },
+        on_break: { title: 'Jag är ledig', subtitle: 'Utanför rotationen just nu' },
+      },
+    },
     problem: {
       hero: 'Vad besvärar dig mest?',
       sub: 'Vi prioriterar det i din plan.',

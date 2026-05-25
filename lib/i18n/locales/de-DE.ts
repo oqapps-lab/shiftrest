@@ -408,6 +408,17 @@ const deDE = {
       start: 'START',
       end: 'ENDE',
     },
+    next_shift: {
+      hero: 'Wann ist deine nächste Schicht?',
+      sub: 'Wir bauen die ersten 36 Stunden deines Schlafplans darauf auf.',
+      options: {
+        tonight: { title: 'Heute Abend', subtitle: 'Innerhalb der nächsten 12 Stunden' },
+        tomorrow_am: { title: 'Morgen, Vormittag', subtitle: 'Tagschicht in ~12-24 Std' },
+        tomorrow_pm: { title: 'Morgen, Abend', subtitle: 'Nachtschicht in ~18-30 Std' },
+        day_after: { title: 'Übermorgen', subtitle: 'Genug Zeit für den Reset' },
+        on_break: { title: 'Ich habe Pause', subtitle: 'Aktuell außerhalb der Rotation' },
+      },
+    },
     problem: {
       hero: 'Was stört dich am meisten?',
       sub: 'Wir setzen es in deinem Plan an erste Stelle.',

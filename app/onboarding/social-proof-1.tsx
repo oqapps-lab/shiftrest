@@ -33,10 +33,10 @@ export default function SocialProof1() {
         />
       }
     >
-      <Eyebrow>{t('onboarding.step_template', { n: 5, total: 10 })}</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 6, total: 11 })}</Eyebrow>
       <ProgressDots
-        count={10}
-        active={4}
+        count={11}
+        active={5}
         style={{ marginVertical: spacing.sm, justifyContent: 'flex-start' }}
       />
 

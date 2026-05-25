@@ -408,6 +408,17 @@ const esES = {
       start: 'INICIO',
       end: 'FIN',
     },
+    next_shift: {
+      hero: '¿Cuándo es tu próximo turno?',
+      sub: 'Construiremos las primeras 36 horas de tu plan de sueño en torno a él.',
+      options: {
+        tonight: { title: 'Esta noche', subtitle: 'En las próximas 12 horas' },
+        tomorrow_am: { title: 'Mañana, por la mañana', subtitle: 'Turno de día en ~12-24h' },
+        tomorrow_pm: { title: 'Mañana, por la tarde', subtitle: 'Turno de noche en ~18-30h' },
+        day_after: { title: 'Pasado mañana', subtitle: 'Tiempo de sobra para reiniciar' },
+        on_break: { title: 'Estoy de descanso', subtitle: 'Fuera de rotación ahora' },
+      },
+    },
     problem: {
       hero: '¿Qué te molesta más?',
       sub: 'Lo priorizaremos en tu plan.',

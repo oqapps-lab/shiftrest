@@ -408,6 +408,17 @@ const frFR = {
       start: 'DÉBUT',
       end: 'FIN',
     },
+    next_shift: {
+      hero: 'Quand est ton prochain quart ?',
+      sub: 'Nous construirons les 36 premières heures de ton plan de sommeil autour.',
+      options: {
+        tonight: { title: 'Ce soir', subtitle: 'Dans les 12 prochaines heures' },
+        tomorrow_am: { title: 'Demain matin', subtitle: 'Quart de jour dans 12-24 h' },
+        tomorrow_pm: { title: 'Demain soir', subtitle: 'Quart de nuit dans 18-30 h' },
+        day_after: { title: 'Après-demain', subtitle: 'Largement le temps de récupérer' },
+        on_break: { title: 'Je suis en pause', subtitle: 'Hors rotation pour l’instant' },
+      },
+    },
     problem: {
       hero: 'Qu’est-ce qui te gêne le plus ?',
       sub: 'On en fera la priorité dans ton plan.',

@@ -407,6 +407,17 @@ const itIT = {
       start: "INIZIO",
       end: "FINE",
     },
+    next_shift: {
+      hero: "Quando è il tuo prossimo turno?",
+      sub: "Costruiremo le prime 36 ore del tuo piano del sonno intorno ad esso.",
+      options: {
+        tonight: { title: "Stasera", subtitle: "Nelle prossime 12 ore" },
+        tomorrow_am: { title: "Domani mattina", subtitle: "Turno di giorno tra 12-24 ore" },
+        tomorrow_pm: { title: "Domani sera", subtitle: "Turno di notte tra 18-30 ore" },
+        day_after: { title: "Dopodomani", subtitle: "Tutto il tempo per resettarti" },
+        on_break: { title: "Sono in pausa", subtitle: "Fuori rotazione adesso" },
+      },
+    },
     problem: {
       hero: "Cosa ti disturba di più?",
       sub: "Lo metteremo in cima al tuo piano.",

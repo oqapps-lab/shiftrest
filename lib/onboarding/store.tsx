@@ -34,6 +34,7 @@ const STORAGE_KEY = 'shiftrest:onboarding:v1';
 export type Profession = 'nurse' | 'firefighter' | 'factory' | 'other';
 export type ScheduleId = '3x12-day-night' | '24-48' | '48-96' | 'continental' | 'custom';
 export type ShiftKind = 'day' | 'night' | 'off';
+export type NextShift = 'tonight' | 'tomorrow_am' | 'tomorrow_pm' | 'day_after' | 'on_break';
 export type MainProblem = 'falling-asleep' | 'transitions' | 'fatigue' | 'caffeine';
 export type CaffeineType = 'coffee' | 'tea' | 'energy';
 export type CaffeineSensitivity = 'normal' | 'slow' | 'unknown';
@@ -51,7 +52,10 @@ export interface OnboardingState {
   currentShift: ShiftKind;
   commuteMinutes: number;
 
-  // S05 main problem
+  // S05 next-shift — when's the next shift starting (drives 36h pre-shift plan)
+  nextShift: NextShift | null;
+
+  // S06 main problem
   mainProblem: MainProblem | null;
 
   // S07 chronotype (3-question MEQ — answers keyed by question id)
@@ -84,6 +88,7 @@ const INITIAL: OnboardingState = {
   scheduleId: null,
   currentShift: 'day',
   commuteMinutes: 30,
+  nextShift: null,
   mainProblem: null,
   chronotypeAnswers: {},
   caffeineCupsPerDay: 2,

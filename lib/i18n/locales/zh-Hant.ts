@@ -406,6 +406,17 @@ const zhHant = {
       start: "開始",
       end: "結束",
     },
+    next_shift: {
+      hero: "你的下一個班次是什麼時候？",
+      sub: "我們將圍繞它構建你睡眠計劃的前 36 小時。",
+      options: {
+        tonight: { title: "今晚", subtitle: "12 小時內" },
+        tomorrow_am: { title: "明天上午", subtitle: "日班約在 12-24 小時後" },
+        tomorrow_pm: { title: "明天傍晚", subtitle: "夜班約在 18-30 小時後" },
+        day_after: { title: "後天", subtitle: "有充足時間重置" },
+        on_break: { title: "我在休假", subtitle: "目前不在輪班中" },
+      },
+    },
     problem: {
       hero: "什麼最讓你困擾？",
       sub: "我們會在計畫中優先處理。",

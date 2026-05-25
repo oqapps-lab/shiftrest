@@ -37,9 +37,9 @@ export default function Schedule() {
         />
       }
     >
-      <Eyebrow>{t('onboarding.step_template', { n: 2, total: 10 })}</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 2, total: 11 })}</Eyebrow>
       <ProgressDots
-        count={10}
+        count={11}
         active={1}
         style={{ marginVertical: spacing.sm, justifyContent: 'flex-start' }}
       />

@@ -407,6 +407,17 @@ const ptBR = {
       start: "INÍCIO",
       end: "FIM",
     },
+    next_shift: {
+      hero: "Quando é seu próximo turno?",
+      sub: "Vamos construir as primeiras 36 horas do seu plano de sono em torno dele.",
+      options: {
+        tonight: { title: "Hoje à noite", subtitle: "Nas próximas 12 horas" },
+        tomorrow_am: { title: "Amanhã de manhã", subtitle: "Turno do dia em ~12-24h" },
+        tomorrow_pm: { title: "Amanhã à noite", subtitle: "Turno da noite em ~18-30h" },
+        day_after: { title: "Depois de amanhã", subtitle: "Tempo de sobra para se restabelecer" },
+        on_break: { title: "Estou de folga", subtitle: "Fora da rotação agora" },
+      },
+    },
     problem: {
       hero: "O que mais te incomoda?",
       sub: "Vamos priorizar isso no seu plano.",

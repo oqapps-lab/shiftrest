@@ -13,6 +13,7 @@ export default function OnboardingLayout() {
       <Stack.Screen name="profession" />
       <Stack.Screen name="schedule" />
       <Stack.Screen name="current-shift" />
+      <Stack.Screen name="next-shift" />
       <Stack.Screen name="problem" />
       <Stack.Screen name="social-proof-1" />
       <Stack.Screen name="chronotype" />

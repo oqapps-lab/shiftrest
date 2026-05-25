@@ -407,6 +407,17 @@ const ko = {
       start: "시작",
       end: "종료",
     },
+    next_shift: {
+      hero: "다음 근무는 언제인가요?",
+      sub: "수면 계획의 첫 36시간을 그에 맞춰 구성합니다.",
+      options: {
+        tonight: { title: "오늘 밤", subtitle: "12시간 이내" },
+        tomorrow_am: { title: "내일 아침", subtitle: "주간 근무 시작 약 12-24시간 후" },
+        tomorrow_pm: { title: "내일 저녁", subtitle: "야간 근무 시작 약 18-30시간 후" },
+        day_after: { title: "모레", subtitle: "충분한 회복 시간" },
+        on_break: { title: "휴식 중", subtitle: "현재 근무 외" },
+      },
+    },
     problem: {
       hero: "가장 힘든 점이 뭐예요?",
       sub: "계획에서 가장 먼저 다뤄 드릴게요.",

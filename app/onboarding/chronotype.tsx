@@ -42,10 +42,10 @@ export default function Chronotype() {
         />
       }
     >
-      <Eyebrow>{t('onboarding.step_template', { n: 6, total: 10 })}</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 7, total: 11 })}</Eyebrow>
       <ProgressDots
-        count={10}
-        active={5}
+        count={11}
+        active={6}
         style={{ marginVertical: spacing.sm, justifyContent: 'flex-start' }}
       />
 

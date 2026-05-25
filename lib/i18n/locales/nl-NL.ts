@@ -408,6 +408,17 @@ const nlNL = {
       start: 'START',
       end: 'EINDE',
     },
+    next_shift: {
+      hero: 'Wanneer is je volgende dienst?',
+      sub: 'We bouwen de eerste 36 uur van je slaapplan eromheen.',
+      options: {
+        tonight: { title: 'Vannacht', subtitle: 'Binnen de komende 12 uur' },
+        tomorrow_am: { title: 'Morgenochtend', subtitle: 'Dagdienst over ~12-24 uur' },
+        tomorrow_pm: { title: 'Morgenavond', subtitle: 'Nachtdienst over ~18-30 uur' },
+        day_after: { title: 'Overmorgen', subtitle: 'Genoeg tijd om te resetten' },
+        on_break: { title: 'Ik ben vrij', subtitle: 'Nu uit de rotatie' },
+      },
+    },
     problem: {
       hero: 'Wat zit je het meest dwars?',
       sub: 'Daar geven we voorrang aan in je plan.',

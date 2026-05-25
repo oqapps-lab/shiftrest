@@ -172,6 +172,7 @@ describe('mapToProfileRow', () => {
     scheduleId: '3x12-day-night' as const,
     currentShift: 'day' as const,
     commuteMinutes: 30,
+    nextShift: null,
     mainProblem: 'falling-asleep' as const,
     chronotypeAnswers: { q1: 'a', q2: 'a', q3: 'a' },
     caffeineCupsPerDay: 2,

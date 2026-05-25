@@ -407,6 +407,17 @@ const ja = {
       start: "開始",
       end: "終了",
     },
+    next_shift: {
+      hero: "次のシフトはいつ？",
+      sub: "睡眠プランの最初の36時間をそれに合わせて組み立てます。",
+      options: {
+        tonight: { title: "今夜", subtitle: "12時間以内" },
+        tomorrow_am: { title: "明日の朝", subtitle: "日勤は約12〜24時間後" },
+        tomorrow_pm: { title: "明日の夕方", subtitle: "夜勤は約18〜30時間後" },
+        day_after: { title: "明後日", subtitle: "リセットに十分な時間" },
+        on_break: { title: "休み中", subtitle: "今はローテーション外" },
+      },
+    },
     problem: {
       hero: "いちばんの悩みは？",
       sub: "プランで最優先にします。",
