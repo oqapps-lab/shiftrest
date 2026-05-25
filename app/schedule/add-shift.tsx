@@ -40,7 +40,7 @@ const getKindOptions = (): SegmentOption<Kind>[] => [
 
 // Hour presets for start / end. Real picker lands when we add a TimePicker
 // primitive (tracked alongside S04 current-shift TODO).
-const HOUR_PRESETS: number[] = [6, 7, 8, 12, 18, 19, 20, 22];
+const HOUR_PRESETS: number[] = Array.from({ length: 24 }, (_, i) => i);
 
 interface DayOption {
   /** Local YYYY-MM-DD; do NOT use Date.toISOString here — UTC pulls the
@@ -94,7 +94,7 @@ export default function AddShift() {
 
   const selectedDay = days.find((d) => d.key === dateKey) ?? days[0];
   const isOff = kind === 'off';
-  const canSave = !!dateKey && (isOff || startHour !== endHour);
+  const canSave = !!dateKey;
 
   const overnightSuffix = kind !== 'off' && endHour <= startHour ? ' ' + t('add_shift.next_day_suffix') : '';
   const summaryLine = `${formatDayMonth(selectedDay.date)} · ${
