@@ -53,9 +53,13 @@ export function Slider({
           lastStepRef.current = v;
           onChange(v);
         },
-        onPanResponderMove: (evt, gesture) => {
+        onPanResponderMove: (evt) => {
           if (width === 0) return;
-          const x = Math.min(width, Math.max(0, evt.nativeEvent.locationX + gesture.dx));
+          // C1 fix: locationX on iOS PanResponder is already the touch
+          // position relative to this View, updated as the touch moves. The
+          // previous code added gesture.dx on top → double-count → erratic
+          // snapping back and forth.
+          const x = Math.min(width, Math.max(0, evt.nativeEvent.locationX));
           const v = snap(min + (x / width) * (max - min));
           if (v !== lastStepRef.current) {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
