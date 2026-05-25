@@ -54,9 +54,11 @@ export default function Home() {
     ?? parseFloatHour(mockPlan.melatoninTime);
   const sleepStartHour = planHourAsFloat(generatedPlan?.sleep_start) ?? mockPlan.sleepStart;
 
+  // J1/F1 — exclude melatonin event when user opted out in onboarding
+  const showMelatonin = onboarding.takesMelatonin !== false;
   const events = [
     { ...EVENT_STYLES.caffeine,  hour: caffeineHour },
-    { ...EVENT_STYLES.melatonin, hour: melatoninHour },
+    ...(showMelatonin ? [{ ...EVENT_STYLES.melatonin, hour: melatoninHour }] : []),
     { ...EVENT_STYLES.sleep,     hour: sleepStartHour },
   ];
 
@@ -172,25 +174,28 @@ export default function Home() {
         </GlassCard>
       ))}
 
-      <Pressable
-        onPress={() => router.push('/transition')}
-        style={{ marginTop: spacing.md }}
-      >
-        <GlassCard variant="dusk" padding="xxl">
-          <View style={styles.eventRow}>
-            <View style={[styles.eventIcon, { backgroundColor: colors.duskGlow }]}>
-              <Glyph name="sparkle" size={22} color="duskDim" />
+      {/* F1: Transition card only when a real live plan has transition_type — never show the mock Night→Day for anon */}
+      {livePlan?.transition_type && (
+        <Pressable
+          onPress={() => router.push('/transition')}
+          style={{ marginTop: spacing.md }}
+        >
+          <GlassCard variant="dusk" padding="xxl">
+            <View style={styles.eventRow}>
+              <View style={[styles.eventIcon, { backgroundColor: colors.duskGlow }]}>
+                <Glyph name="sparkle" size={22} color="duskDim" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Eyebrow color="duskDim">{t('today.transition_in_progress')}</Eyebrow>
+                <Text variant="titleLg" family="display" weight="light" color="ink" style={{ marginTop: 2 }}>
+                  {t('today.transition_subtitle', { from: fromLabel, to: toLabel, done: doneToday, total: totalToday })}
+                </Text>
+              </View>
+              <Glyph name="chevronRight" size={20} color="duskDim" />
             </View>
-            <View style={{ flex: 1 }}>
-              <Eyebrow color="duskDim">{t('today.transition_in_progress')}</Eyebrow>
-              <Text variant="titleLg" family="display" weight="light" color="ink" style={{ marginTop: 2 }}>
-                {t('today.transition_subtitle', { from: fromLabel, to: toLabel, done: doneToday, total: totalToday })}
-              </Text>
-            </View>
-            <Glyph name="chevronRight" size={20} color="duskDim" />
-          </View>
-        </GlassCard>
-      </Pressable>
+          </GlassCard>
+        </Pressable>
+      )}
     </Screen>
   );
 }
