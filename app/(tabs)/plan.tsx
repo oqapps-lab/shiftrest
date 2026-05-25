@@ -14,10 +14,14 @@ import {
   Glyph,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
-import { mockPlan } from '../../mock/user';
-import { formatDayMonth, formatHour, hoursBetween } from '../../lib/derive';
+import {
+  formatDayMonth,
+  formatHour,
+  hoursBetween,
+  suggestedPlanFromOnboarding,
+} from '../../lib/derive';
 import { useGeneratedPlan, planHourAsFloat, type PlanRecommendation } from '../../lib/queries/plan';
-import { useOnboarding } from '../../lib/onboarding/store';
+import { useOnboarding, chronotypeBucket, computeChronotypeScore } from '../../lib/onboarding/store';
 import type { GlyphName } from '../../components/ui';
 import { t } from '../../lib/i18n';
 
@@ -36,14 +40,14 @@ interface UiRec {
  * against the CURRENT locale. Module-level const evaluation would freeze
  * the strings at load time and never update across locale switches.
  */
-function buildFallbackRecs(): UiRec[] {
-  const caffeineHour = Number(mockPlan.caffeineCutoff.split(':')[0]);
-  const hoursBeforeSleep = hoursBetween(caffeineHour, mockPlan.sleepStart);
+function buildFallbackRecs(suggested: ReturnType<typeof suggestedPlanFromOnboarding>): UiRec[] {
+  const caffeineHour = Number(suggested.caffeineCutoff.split(':')[0]);
+  const hoursBeforeSleep = hoursBetween(caffeineHour, suggested.sleepStart);
   return [
     {
       glyph: 'coffee',
       eyebrow: t('plan.cards.caffeine.eyebrow'),
-      hero: t('plan.cards.caffeine.hero', { time: mockPlan.caffeineCutoff }),
+      hero: t('plan.cards.caffeine.hero', { time: suggested.caffeineCutoff }),
       body: t('plan.cards.caffeine.body', { h: hoursBeforeSleep }),
       tintBg: colors.sunriseGlow,
       tintFg: 'sunriseDim',
@@ -51,7 +55,7 @@ function buildFallbackRecs(): UiRec[] {
     {
       glyph: 'moon',
       eyebrow: `${t('plan.cards.melatonin.eyebrow')} · ${t('plan.premium_suffix')}`,
-      hero: t('plan.cards.melatonin.hero', { time: mockPlan.melatoninTime }),
+      hero: t('plan.cards.melatonin.hero', { time: suggested.melatoninTime }),
       body: t('plan.cards.melatonin.body'),
       tintBg: colors.duskGlow,
       tintFg: 'duskDim',
@@ -93,6 +97,15 @@ export default function Plan() {
   // J1: hide melatonin card when user opted out in onboarding
   const showMelatonin = onboarding.takesMelatonin !== false;
 
+  // Suggested plan derived from the user's onboarding answers (current
+  // shift + chronotype). Replaces the old mockPlan fallback which leaked
+  // generic "Caffeine cutoff 14:30, Melatonin 22:00" to users who never
+  // gave us their schedule (live-test 2026-05-25 hardcode complaint).
+  const suggested = suggestedPlanFromOnboarding(
+    onboarding.currentShift,
+    chronotypeBucket(computeChronotypeScore(onboarding.chronotypeAnswers)),
+  );
+
   const liveRecs = livePlan?.metadata?.recommendations ?? null;
   const baseRecs: UiRec[] = liveRecs && liveRecs.length > 0
     ? liveRecs
@@ -104,7 +117,7 @@ export default function Plan() {
           body: r.body,
           locked: r.locked,
         }))
-    : buildFallbackRecs();
+    : buildFallbackRecs(suggested);
   // Strip melatonin card from fallback when user opted out — buildFallbackRecs
   // always includes it for the demo "looks rich" effect; honesty wins here.
   const recs: UiRec[] = showMelatonin
@@ -112,9 +125,9 @@ export default function Plan() {
     : baseRecs.filter((r) => r.glyph !== 'moon');
 
   const sleepStartHour =
-    planHourAsFloat(livePlan?.sleep_start) ?? mockPlan.sleepStart;
+    planHourAsFloat(livePlan?.sleep_start) ?? suggested.sleepStart;
   const sleepEndHour =
-    planHourAsFloat(livePlan?.sleep_end) ?? mockPlan.sleepEnd;
+    planHourAsFloat(livePlan?.sleep_end) ?? suggested.sleepEnd;
   const now = new Date();
   const nowHour = now.getHours() + now.getMinutes() / 60;
 
@@ -154,8 +167,8 @@ export default function Plan() {
           nowHour={nowHour}
           sleepStart={sleepStartHour}
           sleepEnd={sleepEndHour}
-          shiftStart={mockPlan.shiftStart}
-          shiftEnd={mockPlan.shiftEnd}
+          shiftStart={suggested.shiftStart}
+          shiftEnd={suggested.shiftEnd}
           size={280}
           label={ringLabel}
           centerLabel={day === 1 ? formatHour(nowHour) : formatHour(sleepStartHour)}

@@ -18,9 +18,21 @@ import {
   HeroNumber,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
-import { mockPlan, mockShiftBlocks, getMockTransition } from '../../mock/user';
-import { countCompleted, formatHour, formatRelativeTime, formatStreak, getGreeting, firstName } from '../../lib/derive';
-import { useOnboarding } from '../../lib/onboarding/store';
+import { mockShiftBlocks, getMockTransition } from '../../mock/user';
+import {
+  countCompleted,
+  formatHour,
+  formatRelativeTime,
+  formatStreak,
+  getGreeting,
+  firstName,
+  suggestedPlanFromOnboarding,
+} from '../../lib/derive';
+import {
+  useOnboarding,
+  chronotypeBucket,
+  computeChronotypeScore,
+} from '../../lib/onboarding/store';
 import { useStreak, useActiveTransitionPlan } from '../../lib/queries';
 import { useGeneratedPlan, planHourAsFloat } from '../../lib/queries/plan';
 import { useAuth } from '../../lib/auth/store';
@@ -42,17 +54,23 @@ export default function Home() {
   const { data: livePlan } = useActiveTransitionPlan();
   const { data: generatedPlan } = useGeneratedPlan();
 
-  // Event hours: prefer live plan, fall back to mockPlan.
-  // Parse mock 'HH:MM' as fractional hours so e.g. '17:30' → 17.5 not 17.
+  // Event hours: prefer live plan, fall back to a plan derived from
+  // onboarding answers (currentShift + chronotype). Never mockPlan —
+  // that surfaced generic 14:30/22:00/23:00 times to users who never
+  // gave us their schedule (live-test 2026-05-25 hardcode complaint).
+  const suggested = suggestedPlanFromOnboarding(
+    onboarding.currentShift,
+    chronotypeBucket(computeChronotypeScore(onboarding.chronotypeAnswers)),
+  );
   const parseFloatHour = (hhmm: string): number => {
     const [h, m] = hhmm.split(':').map(Number);
     return (h || 0) + (m || 0) / 60;
   };
   const caffeineHour = planHourAsFloat(generatedPlan?.caffeine_cutoff_at)
-    ?? parseFloatHour(mockPlan.caffeineCutoff);
+    ?? parseFloatHour(suggested.caffeineCutoff);
   const melatoninHour = planHourAsFloat(generatedPlan?.melatonin_at)
-    ?? parseFloatHour(mockPlan.melatoninTime);
-  const sleepStartHour = planHourAsFloat(generatedPlan?.sleep_start) ?? mockPlan.sleepStart;
+    ?? parseFloatHour(suggested.melatoninTime);
+  const sleepStartHour = planHourAsFloat(generatedPlan?.sleep_start) ?? suggested.sleepStart;
 
   // J1/F1 — exclude melatonin event when user opted out in onboarding
   const showMelatonin = onboarding.takesMelatonin !== false;
@@ -138,10 +156,10 @@ export default function Home() {
       <View style={{ alignItems: 'center', marginBottom: spacing.huge }}>
         <TimelineRing
           nowHour={nowHour}
-          sleepStart={mockPlan.sleepStart}
-          sleepEnd={mockPlan.sleepEnd}
-          shiftStart={mockPlan.shiftStart}
-          shiftEnd={mockPlan.shiftEnd}
+          sleepStart={sleepStartHour}
+          sleepEnd={planHourAsFloat(generatedPlan?.sleep_end) ?? suggested.sleepEnd}
+          shiftStart={suggested.shiftStart}
+          shiftEnd={suggested.shiftEnd}
           size={260}
           label={t('today.label_today')}
           centerLabel={formatHour(nowHour)}

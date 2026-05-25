@@ -106,3 +106,81 @@ export function hoursBetween(from: number, to: number): number {
   if (diff < 0) diff += 24;
   return diff;
 }
+
+/**
+ * Suggested plan times derived from onboarding answers.
+ *
+ * Used when there's no live `generated_plan` yet (anon users, or signed-in
+ * users before the OpenAI plan generator has run). Replaces the old habit
+ * of falling back to `mockPlan` — which surfaced "Caffeine cutoff 14:30 /
+ * Melatonin 22:00" to users who never gave us a schedule (live-test
+ * 2026-05-25 hardcode complaint).
+ *
+ * Rules (clinically informed):
+ * - Day shift (07-19): sleep 23-07, caffeine cutoff at 14:00 (~6h pre-bed),
+ *   melatonin 21:30 (~90 min pre-bed).
+ * - Night shift (19-07): sleep 09-17, caffeine cutoff at 02:00 (last hr of
+ *   shift), melatonin 07:30 (anchor adaptation).
+ * - Off (no shift today): default to day-shift defaults.
+ *
+ * Chronotype shifts by ±30 min: lark earlier, owl later.
+ */
+export interface SuggestedPlan {
+  sleepStart: number;
+  sleepEnd: number;
+  caffeineCutoff: string;
+  melatoninTime: string;
+  shiftStart: number;
+  shiftEnd: number;
+}
+
+const DAY_DEFAULTS: SuggestedPlan = {
+  sleepStart: 23,
+  sleepEnd: 7,
+  caffeineCutoff: '14:00',
+  melatoninTime: '21:30',
+  shiftStart: 7,
+  shiftEnd: 19,
+};
+
+const NIGHT_DEFAULTS: SuggestedPlan = {
+  sleepStart: 9,
+  sleepEnd: 17,
+  caffeineCutoff: '02:00',
+  melatoninTime: '07:30',
+  shiftStart: 19,
+  shiftEnd: 7,
+};
+
+function shiftHours(p: SuggestedPlan, deltaHours: number): SuggestedPlan {
+  const wrap = (h: number) => ((h + deltaHours) % 24 + 24) % 24;
+  // deltaHours can be fractional (e.g. ±0.5). For string times we have to
+  // shift via total minutes — naive `wrap(h)` returns 13.5 for 14h - 0.5h
+  // and renders as "13.5:00" instead of "13:30".
+  const wrapStr = (s: string) => {
+    const [h, m] = s.split(':').map(Number);
+    const totalMins = h * 60 + m + Math.round(deltaHours * 60);
+    const norm = ((totalMins % (24 * 60)) + 24 * 60) % (24 * 60);
+    const hh = Math.floor(norm / 60);
+    const mm = norm % 60;
+    return `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
+  };
+  return {
+    sleepStart: wrap(p.sleepStart),
+    sleepEnd: wrap(p.sleepEnd),
+    caffeineCutoff: wrapStr(p.caffeineCutoff),
+    melatoninTime: wrapStr(p.melatoninTime),
+    shiftStart: p.shiftStart,
+    shiftEnd: p.shiftEnd,
+  };
+}
+
+export function suggestedPlanFromOnboarding(
+  shift: 'day' | 'night' | 'off',
+  chronotype: 'lark' | 'intermediate' | 'owl' | null,
+): SuggestedPlan {
+  const base = shift === 'night' ? NIGHT_DEFAULTS : DAY_DEFAULTS;
+  if (chronotype === 'lark') return shiftHours(base, -0.5);
+  if (chronotype === 'owl') return shiftHours(base, 0.5);
+  return base;
+}

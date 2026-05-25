@@ -18,9 +18,18 @@ import {
   Glyph,
 } from '../../components/ui';
 import { spacing, radii, colors } from '../../constants/tokens';
-import { mockPlan } from '../../mock/user';
-import { formatHour, formatHourRange, hoursBetween, firstName } from '../../lib/derive';
-import { useOnboarding } from '../../lib/onboarding/store';
+import {
+  formatHour,
+  formatHourRange,
+  hoursBetween,
+  firstName,
+  suggestedPlanFromOnboarding,
+} from '../../lib/derive';
+import {
+  useOnboarding,
+  chronotypeBucket,
+  computeChronotypeScore,
+} from '../../lib/onboarding/store';
 import { useGeneratedPlan, planHourAsFloat, formatPlanHour } from '../../lib/queries/plan';
 import { t } from '../../lib/i18n';
 
@@ -28,14 +37,22 @@ export default function Aha() {
   const { state: onboarding } = useOnboarding();
   const { data: livePlan } = useGeneratedPlan();
   // No mockUser.name fallback — eyebrow drops the name fragment in cold-start
-  // rather than greeting "Marina, your plan is ready" on a fresh device.
+  // rather than greeting a fake name on a fresh device.
   const userName = onboarding.displayName?.trim();
   const displayName = userName ? firstName(userName).toUpperCase() : '';
 
-  // Prefer live plan times when present, fall back to mockPlan.
-  const sleepStartHour = planHourAsFloat(livePlan?.sleep_start) ?? mockPlan.sleepStart;
-  const sleepEndHour = planHourAsFloat(livePlan?.sleep_end) ?? mockPlan.sleepEnd;
-  const caffeineCutoffStr = formatPlanHour(livePlan?.caffeine_cutoff_at) || mockPlan.caffeineCutoff;
+  // Suggested plan from this user's onboarding answers — never mockPlan.
+  // Without a generated_plan yet we have to derive something to show on the
+  // aha screen; using their currentShift + chronotype gives a personalised
+  // preview instead of a generic 23:00-07:00 demo schedule.
+  const suggested = suggestedPlanFromOnboarding(
+    onboarding.currentShift,
+    chronotypeBucket(computeChronotypeScore(onboarding.chronotypeAnswers)),
+  );
+
+  const sleepStartHour = planHourAsFloat(livePlan?.sleep_start) ?? suggested.sleepStart;
+  const sleepEndHour = planHourAsFloat(livePlan?.sleep_end) ?? suggested.sleepEnd;
+  const caffeineCutoffStr = formatPlanHour(livePlan?.caffeine_cutoff_at) || suggested.caffeineCutoff;
   const caffeineHourValue = Number(caffeineCutoffStr.split(':')[0]);
   const hoursBeforeSleep = hoursBetween(caffeineHourValue, sleepStartHour);
 
@@ -68,8 +85,8 @@ export default function Aha() {
           nowHour={nowHour}
           sleepStart={sleepStartHour}
           sleepEnd={sleepEndHour}
-          shiftStart={mockPlan.shiftStart}
-          shiftEnd={mockPlan.shiftEnd}
+          shiftStart={suggested.shiftStart}
+          shiftEnd={suggested.shiftEnd}
           size={280}
           label={t('today.label_today')}
           centerLabel={formatHour(nowHour)}
