@@ -567,6 +567,7 @@ const zhHant = {
     decrease: '減少',
     increase: '增加',
     restore_purchases: '還原購買項目',
+    view_streak: "查看你的連勝",
     bed_time_reminder: '就寢時間提醒',
     caffeine_cutoff_reminder: '咖啡因停止時間提醒',
     melatonin_reminder: '褪黑激素提醒',

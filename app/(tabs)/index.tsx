@@ -60,8 +60,9 @@ export default function Home() {
     { ...EVENT_STYLES.sleep,     hour: sleepStartHour },
   ];
 
-  // Streak: real DB row when signed-in user has one, else mockUser.streak.
-  const streakValue = streak?.current_streak ?? mockUser.streak;
+  // Streak: real DB row when signed-in user has one, else 0.
+  // Anon users see no pill (hidden when value===0).
+  const streakValue = streak?.current_streak ?? 0;
 
   // Transition teaser: when a live plan exists pull its day-1 step counts;
   // else fall back to the mockTransition fixture so the demo still reads.
@@ -105,19 +106,27 @@ export default function Home() {
         <View style={{ flex: 1 }}>
           <Eyebrow>{displayName ? `${getGreeting(nowHour)}, ${displayName}` : getGreeting(nowHour)}</Eyebrow>
         </View>
-        <View style={styles.streak}>
-          <Glyph name="flame" size={16} color="sunriseDim" />
-          <Text
-            variant="labelMd"
-            family="body"
-            weight="medium"
-            color="ink"
-            uppercase
-            style={{ marginLeft: 6 }}
+        {streakValue > 0 && (
+          <Pressable
+            onPress={() => router.push('/(tabs)/profile')}
+            accessibilityRole="button"
+            accessibilityLabel={t('a11y.view_streak')}
+            hitSlop={8}
+            style={styles.streak}
           >
-            {formatStreak(streakValue)}
-          </Text>
-        </View>
+            <Glyph name="flame" size={16} color="sunriseDim" />
+            <Text
+              variant="labelMd"
+              family="body"
+              weight="medium"
+              color="ink"
+              uppercase
+              style={{ marginLeft: 6 }}
+            >
+              {formatStreak(streakValue)}
+            </Text>
+          </Pressable>
+        )}
       </View>
 
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>

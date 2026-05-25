@@ -568,6 +568,7 @@ const ptBR = {
     decrease: 'Diminuir',
     increase: 'Aumentar',
     restore_purchases: 'Restaurar compras',
+    view_streak: "Ver sua sequência",
     bed_time_reminder: 'Lembrete de hora de dormir',
     caffeine_cutoff_reminder: 'Lembrete de corte de cafeína',
     melatonin_reminder: 'Lembrete de melatonina',

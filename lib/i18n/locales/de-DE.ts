@@ -569,6 +569,7 @@ const deDE = {
     decrease: 'Verringern',
     increase: 'Erhöhen',
     restore_purchases: 'Käufe wiederherstellen',
+    view_streak: "Streak ansehen",
     bed_time_reminder: 'Schlafenszeit-Erinnerung',
     caffeine_cutoff_reminder: 'Koffein-Stopp-Erinnerung',
     melatonin_reminder: 'Melatonin-Erinnerung',

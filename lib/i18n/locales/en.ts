@@ -570,6 +570,7 @@ const en = {
     decrease: 'Decrease',
     increase: 'Increase',
     restore_purchases: 'Restore purchases',
+    view_streak: "View your streak",
     bed_time_reminder: 'Bed time reminder',
     caffeine_cutoff_reminder: 'Caffeine cutoff reminder',
     melatonin_reminder: 'Melatonin reminder',

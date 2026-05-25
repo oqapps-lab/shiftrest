@@ -569,6 +569,7 @@ const frFR = {
     decrease: 'Diminuer',
     increase: 'Augmenter',
     restore_purchases: 'Restaurer les achats',
+    view_streak: "Voir votre série",
     bed_time_reminder: 'Rappel d’heure de coucher',
     caffeine_cutoff_reminder: 'Rappel d’arrêt de la caféine',
     melatonin_reminder: 'Rappel de mélatonine',

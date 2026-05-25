@@ -568,6 +568,7 @@ const itIT = {
     decrease: 'Diminuisci',
     increase: 'Aumenta',
     restore_purchases: 'Ripristina acquisti',
+    view_streak: "Vedi la tua serie",
     bed_time_reminder: 'Promemoria ora di andare a letto',
     caffeine_cutoff_reminder: 'Promemoria stop caffeina',
     melatonin_reminder: 'Promemoria melatonina',

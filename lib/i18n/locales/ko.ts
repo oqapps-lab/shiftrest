@@ -568,6 +568,7 @@ const ko = {
     decrease: '감소',
     increase: '증가',
     restore_purchases: '구매 복원',
+    view_streak: "스트릭 보기",
     bed_time_reminder: '취침 시간 알림',
     caffeine_cutoff_reminder: '카페인 중단 알림',
     melatonin_reminder: '멜라토닌 알림',

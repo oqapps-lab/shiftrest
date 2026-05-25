@@ -569,6 +569,7 @@ const esES = {
     decrease: 'Disminuir',
     increase: 'Aumentar',
     restore_purchases: 'Restaurar compras',
+    view_streak: "Ver tu racha",
     bed_time_reminder: 'Recordatorio de hora de dormir',
     caffeine_cutoff_reminder: 'Recordatorio de corte de cafeína',
     melatonin_reminder: 'Recordatorio de melatonina',

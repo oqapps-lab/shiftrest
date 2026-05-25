@@ -30,14 +30,14 @@ export default function Profile() {
   const { data: streak } = useStreak();
   const { data: stats } = useProfileStats();
   const { data: subscription } = useSubscription();
-  const streakValue = user ? (streak?.current_streak ?? 0) : mockUser.streak;
+  const streakValue = user ? (streak?.current_streak ?? 0) : 0;
 
   // For signed-in users always show their real numbers (0 is honest).
   // Anonymous demo mode falls through to mockUser so the screen tells a
   // story without any backend.
-  const daysInApp = user ? (stats?.daysInApp ?? 0) : mockUser.daysInApp;
-  const plansCompleted = user ? (stats?.plansCompleted ?? 0) : mockUser.transitionsCompleted;
-  const adherencePct = user ? (stats?.onPlanPct ?? 0) : mockUser.adherence;
+  const daysInApp = user ? (stats?.daysInApp ?? 0) : 0;
+  const plansCompleted = user ? (stats?.plansCompleted ?? 0) : 0;
+  const adherencePct = user ? (stats?.onPlanPct ?? 0) : 0;
 
   // Display name preference:
   //   onboarding.displayName (set in S11) →

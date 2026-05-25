@@ -569,6 +569,7 @@ const nlNL = {
     decrease: 'Verlagen',
     increase: 'Verhogen',
     restore_purchases: 'Aankopen herstellen',
+    view_streak: "Bekijk je streak",
     bed_time_reminder: 'Herinnering bedtijd',
     caffeine_cutoff_reminder: 'Herinnering cafeïnestop',
     melatonin_reminder: 'Herinnering melatonine',

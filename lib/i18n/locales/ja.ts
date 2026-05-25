@@ -568,6 +568,7 @@ const ja = {
     decrease: '減らす',
     increase: '増やす',
     restore_purchases: '購入を復元する',
+    view_streak: "ストリークを見る",
     bed_time_reminder: '就寝時間のリマインダー',
     caffeine_cutoff_reminder: 'カフェイン終了のリマインダー',
     melatonin_reminder: 'メラトニンのリマインダー',

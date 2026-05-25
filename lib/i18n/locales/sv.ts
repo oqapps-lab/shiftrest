@@ -568,6 +568,7 @@ const sv = {
     decrease: 'Minska',
     increase: 'Öka',
     restore_purchases: 'Återställ köp',
+    view_streak: "Visa din streak",
     bed_time_reminder: 'Påminnelse om läggdags',
     caffeine_cutoff_reminder: 'Påminnelse om koffeinstopp',
     melatonin_reminder: 'Påminnelse om melatonin',
