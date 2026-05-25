@@ -28,6 +28,7 @@ import { safeDismiss } from '../../lib/nav';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth/store';
 import { emitChange, EVENTS } from '../../lib/queries';
+import { setLocalShift } from '../../lib/local-shifts/store';
 import { t } from '../../lib/i18n';
 
 type Kind = 'day' | 'night' | 'off';
@@ -110,6 +111,12 @@ export default function AddShift() {
     // shift_type='off' enum value, this branch will INSERT instead of
     // showing the local-only confirmation.
     if (kind === 'off' || !isSupabaseConfigured || !supabase || !user?.id) {
+      // Anon path: persist to local-shifts store so the Schedule calendar
+      // dots reflect what the user just added (I1 fix). Off-days kept
+      // separately so Sleep Plan logic doesn't pick them up as work shifts.
+      const isoDate = `${selectedDay.date.getFullYear()}-${String(selectedDay.date.getMonth() + 1).padStart(2, '0')}-${String(selectedDay.date.getDate()).padStart(2, '0')}`;
+      setLocalShift(isoDate, kind);
+      emitChange(EVENTS.shiftsChanged);
       Alert.alert(t('add_shift.saved_title'), summaryLine, [
         { text: t('add_shift.ok'), onPress: () => safeDismiss('/(tabs)/schedule') },
       ]);

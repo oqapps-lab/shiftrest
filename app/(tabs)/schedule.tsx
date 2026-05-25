@@ -23,6 +23,7 @@ import { colors, spacing } from '../../constants/tokens';
 import { formatMonthYear } from '../../lib/derive';
 import { useShifts } from '../../lib/queries';
 import { useAuth } from '../../lib/auth/store';
+import { useLocalShifts } from '../../lib/local-shifts/store';
 import { t } from '../../lib/i18n';
 import type { Translations } from '../../lib/i18n/locales/en';
 
@@ -149,9 +150,24 @@ export default function Schedule() {
     return map;
   }, [shiftRows]);
 
+  // I1: anon users — use local-shifts (persisted to AsyncStorage) instead of
+  // the static buildMockGrid cycle so Add-shift entries actually paint the
+  // calendar.
+  const localShifts = useLocalShifts();
+  const localShiftByIso = React.useMemo(() => {
+    const map = new Map<string, 'day' | 'night'>();
+    for (const [iso, kind] of Object.entries(localShifts)) {
+      if (kind === 'day' || kind === 'night') map.set(iso, kind);
+    }
+    return map;
+  }, [localShifts]);
   const grid = React.useMemo(
-    () => (user ? buildMonthGrid(viewYear, viewMonth, shiftByIso) : buildMockGrid(viewYear, viewMonth)),
-    [user, viewYear, viewMonth, shiftByIso],
+    () => user
+      ? buildMonthGrid(viewYear, viewMonth, shiftByIso)
+      : Object.keys(localShifts).length > 0
+        ? buildMonthGrid(viewYear, viewMonth, localShiftByIso)
+        : buildMockGrid(viewYear, viewMonth),
+    [user, viewYear, viewMonth, shiftByIso, localShiftByIso, localShifts],
   );
 
   const todayIso = localIso(today);
