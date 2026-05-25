@@ -329,6 +329,15 @@ const frFR = {
     bullet_caffeine: 'Stop caféine selon la sensibilité, pas une règle générique',
     bullet_melatonin: 'Horaire de mélatonine adapté à ton chronotype',
     bullet_transition: 'Plans de transition pour les rotations',
+    restore_link: "Restaurer les achats",
+    restore_loading: "Restauration…",
+    restore_title: "Restaurer les achats",
+    restore_success: "Premium restauré. Bon retour.",
+    restore_empty: "Aucun achat trouvé sur cet identifiant Apple.",
+    restore_failed: "Impossible de restaurer. Vérifie la connexion et réessaie.",
+    terms_link: "Conditions d’utilisation",
+    privacy_link: "Politique de confidentialité",
+    auto_renew_disclosure: "Les abonnements se renouvellent automatiquement sauf annulation au moins 24 heures avant la fin de la période en cours. Gestion dans l’App Store.",
   },
   testimonials: {
     nurse: {

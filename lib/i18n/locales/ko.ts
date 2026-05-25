@@ -328,6 +328,15 @@ const ko = {
     bullet_caffeine: "일률 규칙이 아닌, 민감도에 맞춘 카페인 컷오프",
     bullet_melatonin: "크로노타입에 맞는 멜라토닌 타이밍",
     bullet_transition: "교대 근무를 위한 전환 플랜",
+    restore_link: "구매 복원",
+    restore_loading: "복원 중…",
+    restore_title: "구매 복원",
+    restore_success: "프리미엄이 복원되었습니다. 다시 오신 것을 환영합니다.",
+    restore_empty: "이 Apple ID에 구매 내역이 없습니다.",
+    restore_failed: "복원하지 못했습니다. 연결을 확인한 후 다시 시도해 주세요.",
+    terms_link: "이용 약관",
+    privacy_link: "개인정보 처리방침",
+    auto_renew_disclosure: "구독은 현재 기간 종료 최소 24시간 전에 취소하지 않으면 자동 갱신됩니다. App Store에서 관리하세요.",
   },
   testimonials: {
     nurse: {
