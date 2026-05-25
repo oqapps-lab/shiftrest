@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet, Linking, Alert } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import {
@@ -23,6 +23,7 @@ import { firstName } from '../lib/derive';
 import { useOnboarding } from '../lib/onboarding/store';
 import { useAuth } from '../lib/auth/store';
 import { startTrial, emitChange, EVENTS } from '../lib/queries';
+import { restorePurchases } from '../lib/adapty';
 import { logEvent } from '../lib/events';
 import { t } from '../lib/i18n';
 
@@ -37,6 +38,32 @@ const getValueBullets = () => [
 export default function Paywall() {
   const [plan, setPlan] = useState<'month' | 'year'>('year');
   const [submitting, setSubmitting] = useState(false);
+  const [restoring, setRestoring] = useState(false);
+
+  // Apple Guideline 3.1.2(c) — legal links required on paywall.
+  const TERMS_URL = 'https://oqapps.pro/legal/shiftsleep/terms';
+  const PRIVACY_URL = 'https://oqapps.pro/legal/shiftsleep/privacy';
+
+  const onRestore = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setRestoring(true);
+    try {
+      const profile = await restorePurchases();
+      const hasPremium = !!profile?.accessLevels?.premium?.isActive;
+      Alert.alert(
+        t('paywall.restore_title'),
+        hasPremium ? t('paywall.restore_success') : t('paywall.restore_empty'),
+      );
+      if (hasPremium) {
+        emitChange(EVENTS.subscriptionChanged);
+        router.back();
+      }
+    } catch (e) {
+      Alert.alert(t('paywall.restore_title'), t('paywall.restore_failed'));
+    } finally {
+      setRestoring(false);
+    }
+  };
   const { state: onboarding } = useOnboarding();
   const { user } = useAuth();
   // Only show the user's name in the eyebrow when we have a real one — never
@@ -212,6 +239,55 @@ export default function Paywall() {
       <Eyebrow>{t('paywall.trial_timeline')}</Eyebrow>
       <View style={{ marginTop: spacing.sm, flexDirection: 'row', justifyContent: 'flex-start' }}>
         <ProgressDots count={7} active={0} size={8} />
+      </View>
+
+      {/* Apple-required paywall footer: Restore + ToS + Privacy + auto-renewal disclosure */}
+      <View style={{ marginTop: spacing.xxxl, alignItems: 'center' }}>
+        <Pressable
+          onPress={onRestore}
+          disabled={restoring}
+          accessibilityRole="button"
+          accessibilityLabel={t('a11y.restore_purchases')}
+          hitSlop={12}
+        >
+          <Text variant="labelLg" color="primary" weight="medium" style={{ textDecorationLine: 'underline' }}>
+            {restoring ? t('paywall.restore_loading') : t('paywall.restore_link')}
+          </Text>
+        </Pressable>
+
+        <View style={{ height: spacing.md }} />
+
+        <Text variant="bodyMd" color="inkSubtle" align="center" style={{ paddingHorizontal: spacing.md }}>
+          {t('paywall.auto_renew_disclosure')}
+        </Text>
+
+        <View style={{ height: spacing.md }} />
+
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Pressable
+            onPress={() => Linking.openURL(TERMS_URL).catch(() => null)}
+            accessibilityRole="link"
+            accessibilityLabel={t('paywall.terms_link')}
+            hitSlop={8}
+          >
+            <Text variant="labelMd" color="primary" style={{ textDecorationLine: 'underline' }}>
+              {t('paywall.terms_link')}
+            </Text>
+          </Pressable>
+          <Text variant="labelMd" color="inkSubtle" style={{ marginHorizontal: spacing.sm }}>
+            ·
+          </Text>
+          <Pressable
+            onPress={() => Linking.openURL(PRIVACY_URL).catch(() => null)}
+            accessibilityRole="link"
+            accessibilityLabel={t('paywall.privacy_link')}
+            hitSlop={8}
+          >
+            <Text variant="labelMd" color="primary" style={{ textDecorationLine: 'underline' }}>
+              {t('paywall.privacy_link')}
+            </Text>
+          </Pressable>
+        </View>
       </View>
 
     </Screen>

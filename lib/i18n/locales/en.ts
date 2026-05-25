@@ -328,6 +328,15 @@ const en = {
     bullet_caffeine: "Caffeine cutoff by sensitivity, not a generic rule",
     bullet_melatonin: "Melatonin timing that works with your chronotype",
     bullet_transition: "Transition plans for rotating shifts",
+    restore_link: "Restore purchases",
+    restore_loading: "Restoring…",
+    restore_title: "Restore purchases",
+    restore_success: "Premium restored. Welcome back.",
+    restore_empty: "No purchases found on this Apple ID.",
+    restore_failed: "Could not restore. Check your connection and try again.",
+    terms_link: "Terms of Use",
+    privacy_link: "Privacy Policy",
+    auto_renew_disclosure: "Subscriptions auto-renew unless cancelled at least 24 hours before the end of the current period. Manage in App Store.",
   },
   testimonials: {
     nurse: {
