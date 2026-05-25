@@ -223,8 +223,10 @@ const sv = {
       usual_time_label: 'VANLIG TID',
     },
     social_proof_1: {
-      sub: 'av skiftarbetare sover inte tillräckligt.',
-      hero: 'Du är inte ensam.',
+      sub: "Designat utifrån cirkadiansk forskning tillämpad på roterande, natt- och jourpass.",
+      hero: "Sömnmedicin, byggd för skiftarbete.",
+      research_title: "Forskningsgrund",
+      research_body: "Kronobiologi, skiftarbetes sömnmedicin och beteendevetenskaplig sömnforskning — anpassad till sjuksköterskor, brandmän, ambulanspersonal, fabriksarbetare och roterande team.",
     },
   },
   schedule: {
@@ -434,10 +436,10 @@ const sv = {
       eyebrow: 'ANALYSERAR',
     },
     social_proof_2: {
-      cta: 'Visa min plan',
-      eyebrow: 'DU ÄR I GOTT SÄLLSKAP',
-      hero_template: 'Av {{n}} skiftarbetare',
-      reviews_template: '★ {{rating}} · {{n}}+ recensioner',
+      cta: "Visa min plan",
+      eyebrow: "GRUNDAT I SÖMNMEDICIN",
+      hero: "Utformad för skiftarbetare.",
+      body: "ShiftRest kombinerar forskning i kronobiologi, skiftarbetes sömnmedicin och beteendevetenskaplig sömnforskning — anpassad till verkligheten för sjuksköterskor, brandmän, ambulanspersonal, fabriksarbetare och alla med roterande schema.",
     },
   },
   auth: {

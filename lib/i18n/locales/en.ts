@@ -223,8 +223,10 @@ const en = {
       usual_time_label: 'USUAL TIME TAKEN',
     },
     social_proof_1: {
-      sub: "of shift workers don't get enough sleep.",
-      hero: "You're not alone.",
+      sub: "Designed using circadian research applied to rotating, night, and on-call schedules.",
+      hero: "Sleep medicine, built for shift work.",
+      research_title: "Research basis",
+      research_body: "Chronobiology, shift-work sleep medicine, and behavioural sleep science — adapted to the realities of nurses, firefighters, EMTs, factory workers, and rotating teams.",
     },
   },
   schedule: {
@@ -436,9 +438,9 @@ const en = {
     },
     social_proof_2: {
       cta: "Show my plan",
-      eyebrow: "YOU'RE IN GOOD COMPANY",
-      hero_template: "From {{n}} shift workers",
-      reviews_template: "★ {{rating}} · {{n}}+ reviews",
+      eyebrow: "GROUNDED IN SLEEP MEDICINE",
+      hero: "Designed for shift workers.",
+      body: "ShiftRest combines chronobiology research, shift-work sleep medicine, and behavioural sleep science — adapted for the realities of nurses, firefighters, EMTs, factory workers, and anyone on a rotating schedule.",
     },
   },
   auth: {

@@ -224,8 +224,10 @@ const frFR = {
       usual_time_label: 'HEURE HABITUELLE',
     },
     social_proof_1: {
-      sub: 'des postés ne dorment pas assez.',
-      hero: 'Tu n’es pas seul.',
+      sub: "Conçu à partir de la recherche circadienne appliquée aux horaires rotatifs, de nuit et d’astreinte.",
+      hero: "Médecine du sommeil, pensée pour le travail posté.",
+      research_title: "Base de recherche",
+      research_body: "Chronobiologie, médecine du sommeil en travail posté et science comportementale du sommeil — adaptées aux infirmiers, pompiers, secouristes, ouvriers et équipes en rotation.",
     },
   },
   schedule: {
@@ -435,10 +437,10 @@ const frFR = {
       eyebrow: 'ANALYSE EN COURS',
     },
     social_proof_2: {
-      cta: 'Voir mon plan',
-      eyebrow: 'TU ES EN BONNE COMPAGNIE',
-      hero_template: 'Parmi {{n}} travailleurs postés',
-      reviews_template: '★ {{rating}} · {{n}}+ avis',
+      cta: "Afficher mon plan",
+      eyebrow: "FONDÉ SUR LA MÉDECINE DU SOMMEIL",
+      hero: "Pensé pour le travail posté.",
+      body: "ShiftRest combine recherche en chronobiologie, médecine du sommeil en travail posté et science comportementale du sommeil — adaptées au quotidien des infirmiers, pompiers, secouristes, ouvriers et de toute personne en horaires rotatifs.",
     },
   },
   auth: {

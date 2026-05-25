@@ -223,8 +223,10 @@ const itIT = {
       usual_time_label: "ORARIO ABITUALE",
     },
     social_proof_1: {
-      sub: "dei turnisti non dorme abbastanza.",
-      hero: "Non sei solo.",
+      sub: "Progettato sulla ricerca circadiana applicata a turni rotativi, notturni e di reperibilità.",
+      hero: "Medicina del sonno, pensata per il lavoro a turni.",
+      research_title: "Basi scientifiche",
+      research_body: "Cronobiologia, medicina del sonno per il lavoro a turni e scienza comportamentale del sonno — adattate a infermieri, vigili del fuoco, soccorritori, operai e team a rotazione.",
     },
   },
   schedule: {
@@ -435,9 +437,9 @@ const itIT = {
     },
     social_proof_2: {
       cta: "Mostra il mio piano",
-      eyebrow: "SEI IN BUONA COMPAGNIA",
-      hero_template: "Tra {{n}} turnisti",
-      reviews_template: "★ {{rating}} · {{n}}+ recensioni",
+      eyebrow: "FONDATO SULLA MEDICINA DEL SONNO",
+      hero: "Pensato per chi lavora a turni.",
+      body: "ShiftRest combina ricerca in cronobiologia, medicina del sonno nel lavoro a turni e scienza comportamentale del sonno — adattata alla realtà di infermieri, vigili del fuoco, soccorritori, operai e di chiunque lavori a turni.",
     },
   },
   auth: {

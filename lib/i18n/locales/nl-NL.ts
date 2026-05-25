@@ -224,8 +224,10 @@ const nlNL = {
       usual_time_label: 'GEBRUIKELIJK TIJDSTIP',
     },
     social_proof_1: {
-      sub: 'van de ploegenwerkers slaapt te weinig.',
-      hero: 'Je bent niet alleen.',
+      sub: "Ontworpen op basis van circadiaan onderzoek toegepast op roterende, nacht- en bereikbaarheidsdiensten.",
+      hero: "Slaapgeneeskunde, gemaakt voor ploegendienst.",
+      research_title: "Onderzoeksbasis",
+      research_body: "Chronobiologie, slaapgeneeskunde voor ploegendienst en gedragsmatige slaapwetenschap — aangepast aan verpleegkundigen, brandweerlieden, ambulancemedewerkers, fabrieksmedewerkers en roterende teams.",
     },
   },
   schedule: {
@@ -435,10 +437,10 @@ const nlNL = {
       eyebrow: 'ANALYSEREN',
     },
     social_proof_2: {
-      cta: 'Toon mijn plan',
-      eyebrow: 'JE BENT IN GOED GEZELSCHAP',
-      hero_template: 'Van {{n}} ploegendienstwerkers',
-      reviews_template: '★ {{rating}} · {{n}}+ beoordelingen',
+      cta: "Toon mijn plan",
+      eyebrow: "GEFUNDEERD IN SLAAPGENEESKUNDE",
+      hero: "Ontworpen voor ploegendienstwerkers.",
+      body: "ShiftRest combineert onderzoek in chronobiologie, slaapgeneeskunde bij ploegendienst en gedragsmatige slaapwetenschap — aangepast aan de realiteit van verpleegkundigen, brandweerlieden, ambulancemedewerkers, fabrieksmedewerkers en iedereen met een roterend rooster.",
     },
   },
   auth: {

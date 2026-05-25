@@ -224,8 +224,10 @@ const deDE = {
       usual_time_label: 'ÜBLICHE EINNAHMEZEIT',
     },
     social_proof_1: {
-      sub: 'der Schichtarbeiter schlafen nicht genug.',
-      hero: 'Du bist nicht allein.',
+      sub: "Basierend auf zirkadianer Forschung, angewandt auf rotierende, Nacht- und Bereitschaftsdienste.",
+      hero: "Schlafmedizin – für Schichtarbeit gebaut.",
+      research_title: "Forschungsgrundlage",
+      research_body: "Chronobiologie, Schichtarbeitsmedizin und verhaltensbezogene Schlafforschung – angepasst an Pflegekräfte, Feuerwehrleute, Rettungssanitäter, Industriearbeiter und rotierende Teams.",
     },
   },
   schedule: {
@@ -435,10 +437,10 @@ const deDE = {
       eyebrow: 'WIRD ANALYSIERT',
     },
     social_proof_2: {
-      cta: 'Meinen Plan anzeigen',
-      eyebrow: 'DU BIST IN GUTER GESELLSCHAFT',
-      hero_template: 'Von {{n}} Schichtarbeitern',
-      reviews_template: '★ {{rating}} · {{n}}+ Bewertungen',
+      cta: "Meinen Plan anzeigen",
+      eyebrow: "AUF SCHLAFMEDIZIN AUFGEBAUT",
+      hero: "Für Schichtarbeiter konzipiert.",
+      body: "ShiftRest verbindet Chronobiologie-Forschung, Schichtarbeitsmedizin und verhaltensbezogene Schlafforschung – für den Alltag von Pflegekräften, Feuerwehrleuten, Sanitätern, Industriearbeitern und allen mit wechselnden Diensten.",
     },
   },
   auth: {

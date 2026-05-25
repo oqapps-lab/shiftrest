@@ -224,8 +224,10 @@ const esES = {
       usual_time_label: 'HORA HABITUAL',
     },
     social_proof_1: {
-      sub: 'de los turnistas no duermen lo suficiente.',
-      hero: 'No estás solo.',
+      sub: "Diseñado con investigación circadiana aplicada a horarios rotativos, nocturnos y de guardia.",
+      hero: "Medicina del sueño, pensada para turnos.",
+      research_title: "Base de investigación",
+      research_body: "Cronobiología, medicina del sueño en trabajo por turnos y ciencia conductual del sueño — adaptadas a enfermeros, bomberos, técnicos de emergencias, operarios de fábrica y equipos rotativos.",
     },
   },
   schedule: {
@@ -435,10 +437,10 @@ const esES = {
       eyebrow: 'ANALIZANDO',
     },
     social_proof_2: {
-      cta: 'Ver mi plan',
-      eyebrow: 'ESTÁS EN BUENA COMPAÑÍA',
-      hero_template: 'De {{n}} trabajadores por turnos',
-      reviews_template: '★ {{rating}} · {{n}}+ reseñas',
+      cta: "Mostrar mi plan",
+      eyebrow: "BASADO EN MEDICINA DEL SUEÑO",
+      hero: "Pensado para trabajadores por turnos.",
+      body: "ShiftRest combina investigación en cronobiología, medicina del sueño en turnos y ciencia conductual del sueño — adaptada a la realidad de enfermeros, bomberos, técnicos de emergencias, operarios de fábrica y a cualquier persona con horario rotativo.",
     },
   },
   auth: {

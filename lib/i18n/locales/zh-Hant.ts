@@ -222,8 +222,10 @@ const zhHant = {
       usual_time_label: "通常服用時間",
     },
     social_proof_1: {
-      sub: "的輪班工作者睡眠不足。",
-      hero: "你不是一個人。",
+      sub: "依據生理時鐘研究設計,適用於輪班、夜班與待命排班。",
+      hero: "為輪班工作打造的睡眠醫學。",
+      research_title: "研究依據",
+      research_body: "時間生物學、輪班睡眠醫學與行為睡眠科學 — 配合護理人員、消防員、急救人員、工廠員工與輪班團隊的實際情況。",
     },
   },
   schedule: {
@@ -433,10 +435,10 @@ const zhHant = {
       eyebrow: "分析中",
     },
     social_proof_2: {
-      cta: "顯示我的計畫",
-      eyebrow: "你並不孤單",
-      hero_template: "{{n}} 位輪班工作者一起",
-      reviews_template: "★ {{rating}} · {{n}}+ 則評價",
+      cta: "顯示我的方案",
+      eyebrow: "立基於睡眠醫學",
+      hero: "為輪班工作者設計。",
+      body: "ShiftRest 結合時間生物學研究、輪班睡眠醫學與行為睡眠科學 — 配合護理人員、消防員、急救人員、工廠員工等輪班工作者的真實情境量身打造。",
     },
   },
   auth: {

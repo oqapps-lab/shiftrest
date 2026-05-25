@@ -223,8 +223,10 @@ const ptBR = {
       usual_time_label: "HORÁRIO HABITUAL",
     },
     social_proof_1: {
-      sub: "dos plantonistas não dormem o suficiente.",
-      hero: "Você não está sozinho.",
+      sub: "Construído sobre pesquisa circadiana aplicada a turnos rotativos, noturnos e de plantão.",
+      hero: "Medicina do sono, pensada para turnos.",
+      research_title: "Base de pesquisa",
+      research_body: "Cronobiologia, medicina do sono no trabalho em turnos e ciência comportamental do sono — adaptadas à realidade de enfermeiros, bombeiros, paramédicos, operários e equipes em rodízio.",
     },
   },
   schedule: {
@@ -434,10 +436,10 @@ const ptBR = {
       eyebrow: "ANALISANDO",
     },
     social_proof_2: {
-      cta: "Ver meu plano",
-      eyebrow: "VOCÊ ESTÁ EM BOA COMPANHIA",
-      hero_template: "De {{n}} trabalhadores em turnos",
-      reviews_template: "★ {{rating}} · {{n}}+ avaliações",
+      cta: "Mostrar meu plano",
+      eyebrow: "BASEADO EM MEDICINA DO SONO",
+      hero: "Pensado para quem trabalha em turnos.",
+      body: "O ShiftRest combina pesquisa em cronobiologia, medicina do sono em turnos e ciência comportamental do sono — adaptada à rotina de enfermeiros, bombeiros, paramédicos, operários e de qualquer pessoa em escala rotativa.",
     },
   },
   auth: {
