@@ -317,13 +317,14 @@ const en = {
   paywall: {
     eyebrow_plain: "YOUR PLAN IS READY",
     eyebrow_with_name: "{{name}}, YOUR PLAN IS READY",
-    hero: "7 days. Then you decide.",
+    hero: "3 days. Then you decide.",
     year_label: "YEAR · {{weekPrice}} / week",
     monthly_label: "MONTHLY",
-    trial_timeline: "7-DAY TRIAL TIMELINE",
+    weekly_label: "WEEKLY",
+    trial_timeline: "3-DAY TRIAL TIMELINE",
     best_value: "BEST VALUE",
     best_value_save: "BEST VALUE · SAVE {{percent}}%",
-    start_trial: "Start 7-day trial",
+    start_trial: "Start 3-day trial",
     starting_trial: "Starting trial…",
     maybe_later: "Maybe later",
     bullet_sleep: "Sleep window tuned to your rotation",
@@ -339,6 +340,7 @@ const en = {
     terms_link: "Terms of Use",
     privacy_link: "Privacy Policy",
     auto_renew_disclosure: "Subscriptions auto-renew unless cancelled at least 24 hours before the end of the current period. Manage in App Store.",
+    cancel_clarity: "Cancel anytime in Settings → Subscriptions. We never email you to come back.",
   },
   testimonials: {
     nurse: {
@@ -592,6 +594,7 @@ const en = {
     reset_onboarding_answers: 'Reset onboarding answers',
     year_plan: 'Year plan {{price}}',
     month_plan: 'Month plan {{price}}',
+    week_plan: "Week plan {{price}}",
     start_hour: 'Start {{hour}}',
     end_hour: 'End {{hour}}',
   },

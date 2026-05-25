@@ -251,7 +251,7 @@ export function useActiveTransitionPlan(): QueryResult<TransitionPlanWithSteps |
 // ─── Subscription state ────────────────────────────────────────────────────
 
 export type SubscriptionStatus = 'free' | 'trial' | 'active' | 'expired' | 'cancelled' | 'grace_period';
-export type SubscriptionPlan = 'free' | 'premium_monthly' | 'premium_annual';
+export type SubscriptionPlan = 'free' | 'premium_weekly' | 'premium_monthly' | 'premium_annual';
 
 export interface SubscriptionRow {
   status: SubscriptionStatus;
