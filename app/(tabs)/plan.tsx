@@ -17,6 +17,7 @@ import { colors, spacing, radii } from '../../constants/tokens';
 import { mockPlan } from '../../mock/user';
 import { formatDayMonth, formatHour, hoursBetween } from '../../lib/derive';
 import { useGeneratedPlan, planHourAsFloat, type PlanRecommendation } from '../../lib/queries/plan';
+import { useOnboarding } from '../../lib/onboarding/store';
 import type { GlyphName } from '../../components/ui';
 import { t } from '../../lib/i18n';
 
@@ -88,17 +89,27 @@ export default function Plan() {
   const [day, setDay] = useState(1);
   const pagerLabels = [t('plan.yesterday'), `${t('plan.today')} · ${formatDayMonth()}`, t('plan.tomorrow')];
   const { data: livePlan } = useGeneratedPlan();
+  const { state: onboarding } = useOnboarding();
+  // J1: hide melatonin card when user opted out in onboarding
+  const showMelatonin = onboarding.takesMelatonin !== false;
 
   const liveRecs = livePlan?.metadata?.recommendations ?? null;
-  const recs: UiRec[] = liveRecs && liveRecs.length > 0
-    ? liveRecs.map((r) => ({
-        ...REC_STYLE[r.type],
-        eyebrow: r.locked ? `${r.eyebrow} · ${t('plan.premium_suffix')}` : r.eyebrow,
-        hero: r.hero,
-        body: r.body,
-        locked: r.locked,
-      }))
+  const baseRecs: UiRec[] = liveRecs && liveRecs.length > 0
+    ? liveRecs
+        .filter((r) => showMelatonin || r.type !== 'melatonin')
+        .map((r) => ({
+          ...REC_STYLE[r.type],
+          eyebrow: r.locked ? `${r.eyebrow} · ${t('plan.premium_suffix')}` : r.eyebrow,
+          hero: r.hero,
+          body: r.body,
+          locked: r.locked,
+        }))
     : buildFallbackRecs();
+  // Strip melatonin card from fallback when user opted out — buildFallbackRecs
+  // always includes it for the demo "looks rich" effect; honesty wins here.
+  const recs: UiRec[] = showMelatonin
+    ? baseRecs
+    : baseRecs.filter((r) => r.glyph !== 'moon');
 
   const sleepStartHour =
     planHourAsFloat(livePlan?.sleep_start) ?? mockPlan.sleepStart;
