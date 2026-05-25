@@ -138,7 +138,7 @@ export default function Paywall() {
         emitChange(EVENTS.subscriptionChanged);
         router.back();
       }
-    } catch (e) {
+    } catch {
       Alert.alert(t('paywall.restore_title'), t('paywall.restore_failed'));
     } finally {
       setRestoring(false);

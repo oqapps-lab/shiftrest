@@ -15,7 +15,7 @@ import {
   Glyph,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
-import { mockUser, mockProfessions } from '../../mock/user';
+import { mockProfessions } from '../../mock/user';
 import { formatTrialRemaining, clampDisplayName } from '../../lib/derive';
 import { useAuth } from '../../lib/auth/store';
 import { useOnboarding } from '../../lib/onboarding/store';

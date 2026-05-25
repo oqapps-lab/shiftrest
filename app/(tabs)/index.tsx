@@ -18,7 +18,7 @@ import {
   HeroNumber,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
-import { mockUser, mockPlan, mockShiftBlocks, getMockTransition } from '../../mock/user';
+import { mockPlan, mockShiftBlocks, getMockTransition } from '../../mock/user';
 import { countCompleted, formatHour, formatRelativeTime, formatStreak, getGreeting, firstName } from '../../lib/derive';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useActiveTransitionPlan } from '../../lib/queries';
