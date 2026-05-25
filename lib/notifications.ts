@@ -12,6 +12,7 @@
  */
 
 import * as Notifications from 'expo-notifications';
+import { t } from './i18n';
 import * as Device from 'expo-device';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -164,8 +165,8 @@ export async function rescheduleNotifications(
       const fireTime = shiftMinutes(sleepTime, lead);
       const id = await Notifications.scheduleNotificationAsync({
         content: {
-          title: 'Wind down soon',
-          body: `Sleep window opens in ${prefs.bedReminderLead} minutes — start dimming lights.`,
+          title: t('push_notif.bed_title'),
+          body: t('push_notif.bed_body', { lead: String(prefs.bedReminderLead) }),
           sound: 'default',
         },
         trigger: {
@@ -180,18 +181,18 @@ export async function rescheduleNotifications(
 
   // Caffeine cutoff — fires AT cutoff time.
   if (prefs.caffeineReminder && plan.caffeine_cutoff) {
-    const t = parseHourMinute(plan.caffeine_cutoff);
-    if (t) {
+    const tm = parseHourMinute(plan.caffeine_cutoff);
+    if (tm) {
       const id = await Notifications.scheduleNotificationAsync({
         content: {
-          title: 'Last cup',
-          body: 'Caffeine cutoff is now. Switch to herbal tea or water.',
+          title: t('push_notif.caffeine_title'),
+          body: t('push_notif.caffeine_body'),
           sound: 'default',
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.DAILY,
-          hour: t.hour,
-          minute: t.minute,
+          hour: tm.hour,
+          minute: tm.minute,
         },
       });
       newIds.push(id);
@@ -200,18 +201,18 @@ export async function rescheduleNotifications(
 
   // Melatonin — fires AT melatonin_at time. Only when plan has it set.
   if (prefs.melatoninReminder && plan.melatonin_at) {
-    const t = parseHourMinute(plan.melatonin_at);
-    if (t) {
+    const tm = parseHourMinute(plan.melatonin_at);
+    if (tm) {
       const id = await Notifications.scheduleNotificationAsync({
         content: {
-          title: 'Melatonin',
-          body: 'Time for your melatonin dose.',
+          title: t('push_notif.melatonin_title'),
+          body: t('push_notif.melatonin_body'),
           sound: 'default',
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.DAILY,
-          hour: t.hour,
-          minute: t.minute,
+          hour: tm.hour,
+          minute: tm.minute,
         },
       });
       newIds.push(id);

@@ -18,6 +18,7 @@ import {
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
 import { mockNotificationTypes } from '../../mock/user';
+import { t } from '../../lib/i18n';
 
 export default function Notifications() {
   const { markCompleted } = useOnboarding();
@@ -36,42 +37,42 @@ export default function Notifications() {
         <View style={{ gap: spacing.sm }}>
           <PillCTA
             variant="primary"
-            label="Allow notifications"
+            label={t('onboarding_screens.notifications.allow')}
             onPress={finish}
           />
           <PillCTA
             variant="glass"
             size="md"
-            label="Maybe later"
+            label={t('onboarding_screens.notifications.later')}
             onPress={finish}
           />
         </View>
       }
     >
       <View style={styles.headWrap}>
-        <Eyebrow>ALMOST DONE</Eyebrow>
+        <Eyebrow>{t('onboarding_screens.notifications.eyebrow')}</Eyebrow>
         <View style={{ marginTop: spacing.md }}>
-          <SerifHero align="center">Never miss your window.</SerifHero>
+          <SerifHero align="center">{t('onboarding_screens.notifications.hero')}</SerifHero>
         </View>
       </View>
 
       <View style={{ marginTop: spacing.xl }}>
-        {mockNotificationTypes.map((t) => (
+        {mockNotificationTypes.map((n) => (
           <GlassCard
-            key={t.id}
+            key={n.id}
             variant="whisper"
             padding="lg"
             style={[styles.row, { marginBottom: spacing.md }]}
           >
             <View style={styles.iconWrap}>
-              <Glyph name={t.glyph} size={22} color="primary" />
+              <Glyph name={n.glyph} size={22} color="primary" />
             </View>
             <View style={{ flex: 1 }}>
               <Text variant="titleMd" family="display" weight="medium" color="ink">
-                {t.title}
+                {n.title}
               </Text>
               <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
-                {t.subtitle}
+                {n.subtitle}
               </Text>
             </View>
           </GlassCard>

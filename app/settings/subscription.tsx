@@ -22,6 +22,7 @@ import { formatTrialRemaining } from '../../lib/derive';
 import { safeBack } from '../../lib/nav';
 import { useAuth } from '../../lib/auth/store';
 import { useSubscription } from '../../lib/queries';
+import { t } from '../../lib/i18n';
 
 type DisplayStatus = 'free' | 'trial' | 'active' | 'cancelled' | 'expired' | 'grace';
 
@@ -43,20 +44,20 @@ export default function Subscription() {
   if (!user) {
     if (mockUser.subscription === 'trial' && trialIsExpired(mockUser.trialEndsAt)) {
       status = 'expired';
-      subtitle = 'Resubscribe to keep your insights';
+      subtitle = t('settings_screens.subscription.sub.expired');
     } else {
       status = mockUser.subscription === 'premium' ? 'active' : (mockUser.subscription as DisplayStatus);
       subtitle =
         mockUser.subscription === 'trial'
           ? formatTrialRemaining(mockUser.trialEndsAt)
           : mockUser.subscription === 'premium'
-          ? 'Renews automatically'
-          : 'Unlock the full plan with a 7-day trial';
+          ? t('settings_screens.subscription.sub.renews_auto')
+          : t('settings_screens.subscription.sub.free');
     }
   } else if (sub?.status === 'trial' && sub.trial_end) {
     if (trialIsExpired(sub.trial_end)) {
       status = 'expired';
-      subtitle = 'Resubscribe to keep your insights';
+      subtitle = t('settings_screens.subscription.sub.expired');
     } else {
       status = 'trial';
       subtitle = formatTrialRemaining(sub.trial_end);
@@ -65,31 +66,31 @@ export default function Subscription() {
     status = 'active';
     subtitle =
       sub.plan === 'premium_annual'
-        ? 'Premium · annual · renews automatically'
-        : 'Premium · monthly · renews automatically';
+        ? t('settings_screens.subscription.sub.active_annual')
+        : t('settings_screens.subscription.sub.active_monthly');
   } else if (sub?.status === 'grace_period') {
     status = 'grace';
-    subtitle = 'Payment retrying — keep an eye on your inbox';
+    subtitle = t('settings_screens.subscription.sub.grace');
   } else if (sub?.status === 'cancelled') {
     status = 'cancelled';
     subtitle = sub.current_period_end
-      ? `Premium until ${new Date(sub.current_period_end).toLocaleDateString()}`
-      : 'Cancelled — you keep premium until period end';
+      ? t('settings_screens.subscription.sub.cancelled_until', { date: new Date(sub.current_period_end).toLocaleDateString() })
+      : t('settings_screens.subscription.sub.cancelled_no_date');
   } else if (sub?.status === 'expired') {
     status = 'expired';
-    subtitle = 'Resubscribe to keep your insights';
+    subtitle = t('settings_screens.subscription.sub.expired');
   } else {
     status = 'free';
-    subtitle = 'Unlock the full plan with a 7-day trial';
+    subtitle = t('settings_screens.subscription.sub.free');
   }
 
   const headlineByStatus: Record<DisplayStatus, string> = {
-    free: 'Free tier',
-    trial: 'Trial in progress',
-    active: 'Premium · active',
-    grace: 'Payment retrying',
-    cancelled: 'Cancelled',
-    expired: 'Premium expired',
+    free: t('settings_screens.subscription.headline.free'),
+    trial: t('settings_screens.subscription.headline.trial'),
+    active: t('settings_screens.subscription.headline.active'),
+    grace: t('settings_screens.subscription.headline.grace'),
+    cancelled: t('settings_screens.subscription.headline.cancelled'),
+    expired: t('settings_screens.subscription.headline.expired'),
   };
 
   const isPremiumLike = status === 'active' || status === 'trial' || status === 'grace';
@@ -103,17 +104,17 @@ export default function Subscription() {
         !isPremiumLike ? (
           <PillCTA
             variant="primary"
-            label={status === 'free' ? 'Start 7-day trial' : 'Resubscribe'}
+            label={status === 'free' ? t('paywall.start_trial') : t('settings_screens.subscription.resubscribe')}
             onPress={() => router.push('/paywall')}
           />
         ) : (
           <PillCTA
             variant="glass"
             size="md"
-            label="Manage in App Store"
+            label={t('settings_screens.subscription.manage_store')}
             onPress={() =>
               Linking.openURL('https://apps.apple.com/account/subscriptions').catch(
-                () => Alert.alert('Could not open App Store'),
+                () => Alert.alert(t('settings_screens.subscription.store_unavailable')),
               )
             }
           />
@@ -124,15 +125,15 @@ export default function Subscription() {
         onPress={() => safeBack('/(tabs)/profile')}
         hitSlop={12}
         accessibilityRole="button"
-        accessibilityLabel="Back"
+        accessibilityLabel={t('a11y.back')}
         style={styles.backRow}
       >
         <Glyph name="chevronLeft" size={22} color="inkMuted" />
       </Pressable>
 
-      <Eyebrow>SETTINGS</Eyebrow>
+      <Eyebrow>{t('settings_screens.eyebrow')}</Eyebrow>
       <HeroNumber
-        value="Subscription"
+        value={t('settings_screens.subscription.title')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
@@ -158,12 +159,12 @@ export default function Subscription() {
 
       {/* Plan benefits */}
       <View style={{ marginTop: spacing.huge }}>
-        <Eyebrow>YOUR PLAN INCLUDES</Eyebrow>
+        <Eyebrow>{t('settings_screens.subscription.plan_includes')}</Eyebrow>
         {[
-          { glyph: 'bed' as const, text: 'Personalised sleep window' },
-          { glyph: 'coffee' as const, text: 'Caffeine cutoff by sensitivity' },
-          { glyph: 'moon' as const, text: 'Melatonin timing for your chronotype' },
-          { glyph: 'sparkle' as const, text: 'Multi-day transition plans' },
+          { glyph: 'bed' as const, text: t('settings_screens.subscription.bullets.sleep') },
+          { glyph: 'coffee' as const, text: t('settings_screens.subscription.bullets.caffeine') },
+          { glyph: 'moon' as const, text: t('settings_screens.subscription.bullets.melatonin') },
+          { glyph: 'sparkle' as const, text: t('settings_screens.subscription.bullets.transition') },
         ].map((b) => (
           <View key={b.text} style={styles.bulletRow}>
             <View style={styles.bulletIcon}>
@@ -181,22 +182,22 @@ export default function Subscription() {
         <Pressable
           onPress={() =>
             Alert.alert(
-              'Restore purchases',
-              'Adapty wiring lands in Stage 7. For now, this is a placeholder.',
+              t('settings_screens.subscription.restore_title'),
+              t('settings_screens.subscription.restore_placeholder'),
             )
           }
           hitSlop={12}
           style={styles.linkRow}
           accessibilityRole="button"
-          accessibilityLabel="Restore purchases"
+          accessibilityLabel={t('a11y.restore_purchases')}
         >
           <Text variant="bodyLg" color="primary" weight="medium">
-            Restore purchases
+            {t('settings_screens.subscription.restore_link')}
           </Text>
         </Pressable>
 
         <Text variant="bodyMd" color="inkMuted" style={{ marginTop: spacing.lg }}>
-          {"Subscriptions auto-renew until cancelled. Cancel any time from your App Store account."}
+          {t('settings_screens.subscription.auto_renew_notice')}
         </Text>
       </View>
     </Screen>

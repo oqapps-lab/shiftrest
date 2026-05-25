@@ -51,7 +51,6 @@ export async function logEvent(
   // analytics.
   supabase.from('app_events').insert(row).then(({ error }) => {
     if (error && __DEV__) {
-      // eslint-disable-next-line no-console
       console.warn('[events] insert failed', error.message);
     }
   });

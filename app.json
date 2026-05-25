@@ -23,7 +23,10 @@
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "NSUserNotificationsUsageDescription": "ShiftRest schedules local reminders for caffeine cutoff, melatonin time, and bed-time so your sleep plan actually fires.",
-        "UIBackgroundModes": ["remote-notification"]
+        "NSUserTrackingUsageDescription": "Allow ShiftRest to measure which channels bring shift workers to better sleep. We use this only to improve our app — never to show you ads.",
+        "UIBackgroundModes": [
+          "remote-notification"
+        ]
       }
     },
     "android": {
@@ -66,7 +69,8 @@
         }
       ],
       "react-native-adapty",
-      "./plugins/with-modular-headers-fix.js"
+      "./plugins/with-modular-headers-fix.js",
+      "expo-tracking-transparency"
     ],
     "experiments": {
       "typedRoutes": true

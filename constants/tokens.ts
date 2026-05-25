@@ -45,7 +45,7 @@ export const colors = {
   // Text
   ink: '#32332F',
   inkSubtle: '#5F5F5B',
-  inkMuted: '#7B7B76',
+  inkMuted: '#6B6B65',
   inkGhost: '#B3B2AD',
 
   // Utility

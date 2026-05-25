@@ -31,7 +31,7 @@ const TIME_OPTIONS: { value: MelatoninTime; label: string }[] = [
 export default function Melatonin() {
   const { state, update } = useOnboarding();
   const takes = state.takesMelatonin;
-  const dose = state.melatoninDoseMg;
+  const dose = state.melatoninDoseMg ?? '0.5';
   const time = state.melatoninTime;
 
   return (

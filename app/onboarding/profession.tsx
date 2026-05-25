@@ -40,17 +40,17 @@ export default function Profession() {
         />
       }
     >
-      <Eyebrow>STEP 1 OF 10</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 1, total: 10 })}</Eyebrow>
       <ProgressDots count={10} active={0} style={{ marginVertical: spacing.sm, justifyContent: 'flex-start' }} />
 
       <HeroNumber
-        value="What do you do?"
+        value={t('onboarding_screens.profession.hero')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
 
       <Text variant="bodyLg" color="inkSubtle" style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}>
-        {"We tune every recommendation to your profession's rotation pattern."}
+        {t('onboarding_screens.profession.sub')}
       </Text>
 
       {mockProfessions.map((p) => {

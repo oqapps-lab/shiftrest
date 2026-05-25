@@ -45,7 +45,7 @@ export async function ensureAppsFlyerInit(): Promise<void> {
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     appsFlyer = require('react-native-appsflyer').default;
-  } catch (err) {
+  } catch {
     if (__DEV__) {
       console.log('[appsflyer] native module not bundled — skipping init');
     }

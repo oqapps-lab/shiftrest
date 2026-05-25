@@ -55,10 +55,10 @@ import {
 import { safeBack } from '../../lib/nav';
 import { t } from '../../lib/i18n';
 
-const SHIFT_OPTIONS: SegmentOption<ShiftKind>[] = [
-  { value: 'day', label: 'Day shift' },
-  { value: 'night', label: 'Night shift' },
-  { value: 'off', label: 'Off day' },
+const getShiftOptions = (): SegmentOption<ShiftKind>[] => [
+  { value: 'day', label: t('shift_kind.day_long') },
+  { value: 'night', label: t('shift_kind.night_long') },
+  { value: 'off', label: t('shift_kind.off_long') },
 ];
 
 const MELATONIN_TIME_OPTIONS: { value: MelatoninTime; label: string }[] = [
@@ -92,12 +92,12 @@ export default function SleepPreferences() {
 
   const onResetAlert = () => {
     Alert.alert(
-      'Reset all answers?',
-      'Wipes the quiz state and replays onboarding from scratch.',
+      t('sleep_prefs.reset_alert.title'),
+      t('sleep_prefs.reset_alert.message'),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('sleep_prefs.reset_alert.cancel'), style: 'cancel' },
         {
-          text: 'Reset',
+          text: t('sleep_prefs.reset_alert.confirm'),
           style: 'destructive',
           onPress: () => {
             reset();
@@ -114,7 +114,7 @@ export default function SleepPreferences() {
         onPress={() => safeBack('/(tabs)/profile')}
         hitSlop={12}
         accessibilityRole="button"
-        accessibilityLabel="Back"
+        accessibilityLabel={t('a11y.back')}
         style={styles.backRow}
       >
         <Glyph name="chevronLeft" size={22} color="inkMuted" />
@@ -167,16 +167,16 @@ export default function SleepPreferences() {
 
       {/* Current shift */}
       <SectionHeader
-        label="WHERE YOU ARE TODAY"
-        subtitle="So we can anchor your plan."
+        label={t('sleep_prefs.section_today')}
+        subtitle={t('sleep_prefs.anchor_plan_sub')}
       />
       <SegmentedControl<ShiftKind>
-        options={SHIFT_OPTIONS}
+        options={getShiftOptions()}
         value={state.currentShift}
         onChange={(v) => update({ currentShift: v })}
       />
       <View style={styles.commuteHeader}>
-        <Eyebrow>Commute time</Eyebrow>
+        <Eyebrow>{t('sleep_prefs.commute')}</Eyebrow>
         <Text variant="titleMd" family="display" weight="medium" color="ink">
           {`${state.commuteMinutes} min`}
         </Text>
@@ -187,7 +187,7 @@ export default function SleepPreferences() {
         step={5}
         value={state.commuteMinutes}
         onChange={(v) => update({ commuteMinutes: v })}
-        accessibilityLabel="Commute time in minutes"
+        accessibilityLabel={t('a11y.commute_time_minutes')}
         style={{ marginTop: spacing.sm }}
       />
 
@@ -207,8 +207,8 @@ export default function SleepPreferences() {
 
       {/* Chronotype quiz */}
       <SectionHeader
-        label="CHRONOTYPE"
-        subtitle="Tap any answer to update."
+        label={t('sleep_prefs.section_chronotype')}
+        subtitle={t('sleep_prefs.tap_to_update_sub')}
       />
       {mockChronotypeQuestions.map((q, qIdx) => (
         <View key={q.id} style={{ marginBottom: spacing.lg }}>
@@ -250,23 +250,21 @@ export default function SleepPreferences() {
           step={1}
           unit="cups/day"
           onChange={(v) => update({ caffeineCupsPerDay: v })}
-          accessibilityLabel="Cups per day"
+          accessibilityLabel={t('a11y.cups_per_day')}
         />
       </View>
-      <Eyebrow style={{ marginBottom: spacing.md }}>USUAL TYPE</Eyebrow>
-      {mockCaffeineTypes.map((t) => (
+      <Eyebrow style={{ marginBottom: spacing.md }}>{t('sleep_prefs.usual_type')}</Eyebrow>
+      {mockCaffeineTypes.map((c) => (
         <OptionCard
-          key={t.id}
-          title={t.label}
-          glyph={t.glyph}
-          selected={state.caffeineType === t.id}
-          onPress={() => update({ caffeineType: t.id as CaffeineType })}
-          accessibilityLabel={t.label}
+          key={c.id}
+          title={c.label}
+          glyph={c.glyph}
+          selected={state.caffeineType === c.id}
+          onPress={() => update({ caffeineType: c.id as CaffeineType })}
+          accessibilityLabel={c.label}
         />
       ))}
-      <Eyebrow style={{ marginTop: spacing.lg, marginBottom: spacing.md }}>
-        SENSITIVITY
-      </Eyebrow>
+      <Eyebrow style={{ marginTop: spacing.lg, marginBottom: spacing.md }}>{t('sleep_prefs.sensitivity')}</Eyebrow>
       {mockCaffeineSensitivities.map((s) => (
         <OptionCard
           key={s.id}
@@ -281,7 +279,7 @@ export default function SleepPreferences() {
       ))}
 
       {/* Melatonin */}
-      <SectionHeader label="MELATONIN" />
+      <SectionHeader label={t('sleep_prefs.section_melatonin')} />
       <View style={styles.toggleRow}>
         <Text variant="titleMd" family="display" weight="medium" color="ink">
           I take it
@@ -289,12 +287,12 @@ export default function SleepPreferences() {
         <Toggle
           value={state.takesMelatonin}
           onChange={(v) => update({ takesMelatonin: v })}
-          accessibilityLabel="Take melatonin"
+          accessibilityLabel={t('a11y.take_melatonin')}
         />
       </View>
       {state.takesMelatonin && (
         <View style={{ marginTop: spacing.md }}>
-          <Eyebrow style={{ marginBottom: spacing.md }}>DOSE (MG)</Eyebrow>
+          <Eyebrow style={{ marginBottom: spacing.md }}>{t('sleep_prefs.dose_mg')}</Eyebrow>
           <View style={styles.chipRow}>
             {mockMelatoninDoses.map((d) => {
               const active = state.melatoninDoseMg === d;
@@ -339,20 +337,20 @@ export default function SleepPreferences() {
       )}
 
       {/* Family */}
-      <SectionHeader label="FAMILY" />
+      <SectionHeader label={t('sleep_prefs.section_family')} />
       <View style={styles.toggleRow}>
         <Text variant="titleMd" family="display" weight="medium" color="ink">
-          Kids at home
+          {t('sleep_prefs.kids_at_home')}
         </Text>
         <Toggle
           value={state.hasChildren}
           onChange={(v) => update({ hasChildren: v })}
-          accessibilityLabel="Have kids at home"
+          accessibilityLabel={t('a11y.have_kids_at_home')}
         />
       </View>
       {state.hasChildren && (
         <View style={{ marginTop: spacing.md }}>
-          <Eyebrow style={{ marginBottom: spacing.md }}>PICKUP TIME</Eyebrow>
+          <Eyebrow style={{ marginBottom: spacing.md }}>{t('sleep_prefs.pickup_time')}</Eyebrow>
           <SegmentedControl<PickupTime>
             options={PICKUP_OPTIONS}
             value={state.pickupTime}
@@ -371,9 +369,9 @@ export default function SleepPreferences() {
       />
 
       {/* Display name */}
-      <SectionHeader label="NAME" />
+      <SectionHeader label={t('sleep_prefs.section_name')} />
       <TextField
-        placeholder="Marina"
+        placeholder={t('sleep_prefs.name_placeholder')}
         value={state.displayName}
         onChangeText={(v) => update({ displayName: v })}
         autoCapitalize="words"
@@ -385,17 +383,17 @@ export default function SleepPreferences() {
         <View style={styles.resetRow}>
           <View style={{ flex: 1 }}>
             <Text variant="titleMd" family="display" weight="medium" color="ink">
-              Reset all answers
+              {t('sleep_prefs.reset_all_label')}
             </Text>
             <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 4 }}>
-              {"Wipes the quiz and walks you through onboarding again."}
+              {t('sleep_prefs.restart_dev_hint')}
             </Text>
           </View>
           <Pressable
             onPress={onResetAlert}
             hitSlop={12}
             accessibilityRole="button"
-            accessibilityLabel="Reset onboarding answers"
+            accessibilityLabel={t('a11y.reset_onboarding_answers')}
             style={styles.resetButton}
           >
             <Text variant="labelMd" weight="medium" color="coralDim" uppercase>

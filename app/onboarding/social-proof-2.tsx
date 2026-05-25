@@ -16,6 +16,7 @@ import {
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
 import { mockTestimonials, mockSocialProofStats } from '../../mock/user';
+import { t } from '../../lib/i18n';
 
 export default function SocialProof2() {
   // Intentional: SP1 shows `.nurse`, SP2 shows `.fire` — different voice/angle.
@@ -29,16 +30,16 @@ export default function SocialProof2() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label="Show my plan"
+          label={t('onboarding_screens.social_proof_2.cta')}
           onPress={() => router.push('/onboarding/loading')}
         />
       }
     >
       <View style={styles.headWrap}>
-        <Eyebrow>{"YOU'RE IN GOOD COMPANY"}</Eyebrow>
+        <Eyebrow>{t('onboarding_screens.social_proof_2.eyebrow')}</Eyebrow>
         <View style={{ marginTop: spacing.md }}>
           <SerifHero align="center">
-            {`From ${mockSocialProofStats.totalUsers.toLocaleString()} shift workers`}
+            {t('onboarding_screens.social_proof_2.hero_template', { n: mockSocialProofStats.totalUsers.toLocaleString() })}
           </SerifHero>
         </View>
       </View>
@@ -63,7 +64,7 @@ export default function SocialProof2() {
       </GlassCard>
 
       <Text variant="bodyMd" color="inkSubtle" align="center">
-        {`★ ${mockSocialProofStats.appStoreRating} · ${mockSocialProofStats.totalReviews.toLocaleString()}+ reviews`}
+        {t('onboarding_screens.social_proof_2.reviews_template', { rating: mockSocialProofStats.appStoreRating, n: mockSocialProofStats.totalReviews.toLocaleString() })}
       </Text>
     </Screen>
   );

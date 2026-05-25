@@ -100,3 +100,109 @@ xcrun simctl openurl A20FE3AE-F8A9-4CE1-8834-98D7CD5A0270 "exp://127.0.0.1:8081"
 npx tsc --noEmit
 npm run lint
 ```
+
+
+---
+
+# Stage 6.6 — Internationalization + Deep Audit + Build #21 (2026-05-19 → 2026-05-20)
+
+Snapshot after the multi-day i18n + audit session covering 41+ commits.
+
+## Last known git HEAD
+
+`205357d` on `main` — Jest infra + 42 unit tests + WCAG inkMuted fix.
+
+## What's done (this stage)
+
+### i18n localization
+
+- Added 11 locale files (`en`, `de-DE`, `es-ES`, `fr-FR`, `it-IT`, `ja`, `ko`, `nl-NL`, `pt-BR`, `sv`, `zh-Hant`).
+- 446 unique `t('namespace.key')` calls across `app/`, `components/`, `lib/`, `mock/` — each resolved in all 11 locales (cross-validated via `/tmp/validate_i18n.py`).
+- Source files patched to route every user-facing string through `t()`:
+  onboarding screens, auth (login/signup/forgot/confirm), settings (subscription/notifications/sleep-preferences/about), paywall, transition modal, add-shift, tabs (home/plan/schedule/profile), components/ui internals (Stepper a11y, FloatingTabBar labels).
+
+### Bug fixes (20 distinct issues)
+
+| # | Bug | Fix |
+|---|---|---|
+| 1 | `lib/notifications.ts` `const t = parseHourMinute(...)` shadowed i18n `t()` import → runtime `_t is not a function` | Renamed local to `tm` |
+| 2 | `app/settings/sleep-preferences.tsx` had duplicate `import { t }` lines | Removed dup |
+| 3 | `app/schedule/add-shift.tsx` broken relative `../lib/i18n` → `../../lib/i18n` | Fixed path |
+| 4 | 8 macOS `._*` resource forks tracked in git → Metro SyntaxError | `git rm --cached` + `.gitignore` |
+| 5 | `en.ts` lost keys to VS Code revert mid-session | `chflags uchg` lock + multi-round restoration |
+| 6 | 5 module-level `const FOO = [..., t('key')]` patterns — eager-eval at module load, never re-translates on locale switch | Converted to lazy `getFoo()` functions: `SHIFT_OPTIONS`, `KIND_OPTIONS`, `VALUE_BULLETS`, `SEGMENT_OPTIONS`, `getValueBullets` |
+| 7 | `formatHour(23.99999)` → `'23:60'` (Math.round overflow) | Refactored via `Math.round(h*60)` + modulo |
+| 8 | `formatRelativeTime(10, 10.001)` → `'in 0m'` (sub-minute rounded down) | Added `if (totalMins === 0) return now` |
+| 9 | Calendar `shiftMonth` race on Dec→Jan double-tap (closure-captured `viewMonth` stale) | Combined `{year, month}` into single `view` state |
+| 10 | `home.tsx` parsed `mockPlan.caffeineCutoff` via `Number(split(':')[0])` — lost minutes | Added `parseFloatHour()` helper |
+| 11 | `confirm.tsx` setTimeout(600ms) had no clearTimeout in unmount cleanup | Added `timerId` tracking |
+| 12 | FR locale `'Aujourd'hui'` / `'Impossible d'enregistrer...'` broke parser (apostrophe in single-quoted string) | Switched to double quotes |
+| 13 | SENSITIVITY hardcoded in sleep-preferences (i18n key existed but unused) | Routed via `t('sleep_prefs.sensitivity')` |
+| 14 | Today/Tomorrow chip labels in add-shift hardcoded | Added 11-locale `add_shift.day_today`/`day_tomorrow` |
+| 15 | Paywall `'Best value · save 35%'` hardcoded | Routed via `t('paywall.best_value_save', {percent:'35'})` |
+| 16 | subscription.tsx ternary `'Start 7-day trial' / 'Resubscribe'` hardcoded | Routed via t() |
+| 17 | `confirm.tsx` 4 hardcoded strings inside SerifHero conditional (`'Verifying...'`, `"You're in."`, `"Couldn't verify."`, `'Sign-in service is unavailable...'`) | Added `errors.*` keys, 11-locale translated |
+| 18 | `transition.tsx` brittle `status === t('transition.status_done')` compare | Refactored to `statusKind` enum |
+| 19 | `subscription.tsx` `mockUser.subscription === 'premium'` always-false (TS narrowed `'trial' as const`) | Widened type |
+| 20 | `transition.tsx` useMemo missing dep `mockTransition.days` | Added |
+
+### Backend / infra
+
+- `package-lock.json` refreshed (expo-localization, i18n-js, rtl-detect, bignumber.js, lodash, make-plural deps).
+- 12 tables × 12 RLS enabled + 35 policies. RLS coverage 100%.
+- `plan-generator` Edge Function — auth model verified (service_role for DB writes after JWT validation).
+
+### Build pipeline
+
+| Build # | Status | Contains |
+|---|---|---|
+| **20** | TestFlight Internal | i18n base, before deep audit fixes |
+| **21** | Beta App Review **APPROVED** → External TestFlight `IN_BETA_TESTING` | + 17 commits post-#20 with bug fixes + ATT setup |
+
+### ASC state (as of 2026-05-20 17:50 UTC)
+
+- **App Pricing**: Free (USD $0, USA base territory, equivalent prices auto-derive). Set via `POST /v1/appPriceSchedules`.
+- **App Privacy**: Published. Tracking=Yes for Device ID / Purchases / Usage Data (AppsFlyer-related).
+- **v1.0 state**: `PREPARE_FOR_SUBMISSION` (CANCELED public review submission, user wanted External TestFlight first).
+- **External Reviewers** beta group exists, build #21 attached, ready to invite testers.
+
+### ATT setup (build #21)
+
+- `npx expo install expo-tracking-transparency` (~55.0.14).
+- `app.json` `infoPlist.NSUserTrackingUsageDescription` added.
+- `app/_layout.tsx` — `requestTrackingPermissionsAsync()` called BEFORE `ensureAppsFlyerInit()` so SDK can use IDFA when granted.
+- `.env` still missing `EXPO_PUBLIC_APPSFLYER_DEV_KEY` / `APP_ID` → SDK bundled but bails at init (no real tracking until env filled).
+
+### Testing infrastructure
+
+- Jest@29 + jest-expo + @types/jest installed.
+- `__tests__/derive.test.ts` — 42 unit tests covering all pure functions in `lib/derive.ts`, including the formatHour and formatRelativeTime regressions. Runs in 0.557s.
+- `tsc --noEmit` → 0 errors.
+- `eslint app components lib --ext .ts,.tsx` → 0 warnings.
+
+### A11y
+
+- WCAG AA contrast audit — found `inkMuted` (#7B7B76) → 4.06:1 on canvas, fails body-text 4.5:1 requirement.
+- Fixed: `inkMuted` → `#6B6B65` (5.11:1 canvas, 4.62 surface, 4.38 surfaceHigh).
+
+## What's NOT done (next session)
+
+- Real-device testing on physical iPhone (TestFlight build #21).
+- Apple Sign-In flow on real device.
+- Subscription purchase flow in Sandbox.
+- Push notification delivery verification.
+- Edge cases (airplane mode, OpenAI timeout, etc.).
+- Device matrix (iPhone SE, large screens, iOS 15.1 minimum, Dark Mode, Dynamic Type, VoiceOver).
+- Performance baseline (cold start time, memory, FPS).
+- Sentry crash reporting setup.
+- AppsFlyer ENV keys (when ready for attribution).
+- Final visual QA on `zh-Hant` (was deferred earlier).
+- Decision: Submit For Review (public) — currently CANCELED at user request.
+
+## Memory
+
+Project memory updated under `~/.claude/projects/.../memory/`:
+- `project_submission_ready.md` — v1.0 metadata state
+- `project_v10_attached_to_build20.md` — outdated, now build #21 attached
+- `project_dist_cert_recovery_needed.md` — Codemagic plan unused (EAS local worked)
+- 2 feedback memories added (sub-agent verification + import shadowing)

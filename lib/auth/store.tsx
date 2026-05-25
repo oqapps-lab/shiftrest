@@ -18,6 +18,7 @@ import React, {
   useState,
   type ReactNode,
 } from 'react';
+import { t } from '../i18n';
 import { Platform } from 'react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import type { Session, User, AuthError } from '@supabase/supabase-js';
@@ -104,14 +105,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signInWithApple = useCallback(async (): Promise<AuthResult> => {
     if (!supabase) return NOT_CONFIGURED;
     if (Platform.OS !== 'ios') {
-      return { error: new Error('Sign in with Apple is iOS only.') };
+      return { error: new Error(t('errors.apple_ios_only')) };
     }
 
     try {
       const available = await AppleAuthentication.isAvailableAsync();
       if (!available) {
         return {
-          error: new Error('Sign in with Apple is unavailable on this device. Set up an iCloud account in Settings first.'),
+          error: new Error(t('errors.apple_unavailable')),
         };
       }
 
@@ -123,7 +124,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (!credential.identityToken) {
-        return { error: new Error('Apple did not return an identity token.') };
+        return { error: new Error(t('errors.apple_no_token')) };
       }
 
       // Apple returns the user's full name only on the FIRST sign-in. Pass it

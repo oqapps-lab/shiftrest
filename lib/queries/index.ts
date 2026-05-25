@@ -11,6 +11,7 @@
  */
 
 import { useCallback, useEffect, useState } from 'react';
+import { t } from '../i18n';
 import { DeviceEventEmitter } from 'react-native';
 import { supabase, isSupabaseConfigured } from '../supabase';
 import { useAuth } from '../auth/store';
@@ -273,7 +274,7 @@ export interface SubscriptionRow {
  */
 export async function startTrial(plan: SubscriptionPlan = 'premium_monthly'): Promise<{ error: Error | null }> {
   if (!isSupabaseConfigured || !supabase) {
-    return { error: new Error('Supabase is not configured.') };
+    return { error: new Error(t('errors.supabase_not_configured')) };
   }
   if (plan === 'free') {
     return { error: new Error('free is not a trial plan') };

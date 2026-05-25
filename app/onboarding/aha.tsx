@@ -18,7 +18,7 @@ import {
   Glyph,
 } from '../../components/ui';
 import { spacing, radii, colors } from '../../constants/tokens';
-import { mockUser, mockPlan } from '../../mock/user';
+import { mockPlan } from '../../mock/user';
 import { formatHour, formatHourRange, hoursBetween, firstName } from '../../lib/derive';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useGeneratedPlan, planHourAsFloat, formatPlanHour } from '../../lib/queries/plan';

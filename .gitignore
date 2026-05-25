@@ -63,3 +63,7 @@ credentials/
 # Untracked working notes / ASO drafts
 aso/
 
+
+# macOS resource forks (AppleDouble) + thumbnail metadata
+._*
+.DS_Store

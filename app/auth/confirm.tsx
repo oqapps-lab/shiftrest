@@ -17,6 +17,7 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { Screen, Eyebrow, SerifHero, Text, PillCTA } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
+import { t } from '../../lib/i18n';
 
 type Status = 'pending' | 'success' | 'error';
 
@@ -27,11 +28,12 @@ export default function AuthConfirm() {
 
   React.useEffect(() => {
     let cancelled = false;
+    let timerId: ReturnType<typeof setTimeout> | null = null;
 
     (async () => {
       if (!isSupabaseConfigured || !supabase) {
         if (cancelled) return;
-        setErrorMsg('Sign-in service is unavailable right now. Try again in a minute.');
+        setErrorMsg(t('errors.signin_unavailable'));
         setStatus('error');
         return;
       }
@@ -39,7 +41,7 @@ export default function AuthConfirm() {
       // GoTrue may bounce back errors as ?error=...&error_description=...
       if (params.error) {
         if (cancelled) return;
-        setErrorMsg(params.error_description ?? params.error ?? 'Link could not be verified.');
+        setErrorMsg(params.error_description ?? params.error ?? t('errors.link_unverified'));
         setStatus('error');
         return;
       }
@@ -47,7 +49,7 @@ export default function AuthConfirm() {
       const code = typeof params.code === 'string' ? params.code : null;
       if (!code) {
         if (cancelled) return;
-        setErrorMsg('This link is missing the verification code. Try requesting a fresh email.');
+        setErrorMsg(t('errors.link_missing_code'));
         setStatus('error');
         return;
       }
@@ -56,7 +58,7 @@ export default function AuthConfirm() {
       if (cancelled) return;
 
       if (error) {
-        setErrorMsg(error.message ?? 'Verification failed.');
+        setErrorMsg(error.message ?? t('errors.verification_failed'));
         setStatus('error');
         return;
       }
@@ -66,23 +68,24 @@ export default function AuthConfirm() {
       // Recovery → user must set a new password before continuing.
       // Other types → straight into the app.
       const next = params.type === 'recovery' ? '/auth/forgot' : '/(tabs)';
-      setTimeout(() => router.replace(next as never), 600);
+      timerId = setTimeout(() => router.replace(next as never), 600);
     })();
 
     return () => {
       cancelled = true;
+      if (timerId !== null) clearTimeout(timerId);
     };
   }, [params.code, params.type, params.error, params.error_description]);
 
   return (
     <Screen orbs="subtle">
       <View style={{ marginTop: spacing.huge * 2 }}>
-        <Eyebrow>EMAIL CONFIRMATION</Eyebrow>
+        <Eyebrow>{t('auth.email_confirmation')}</Eyebrow>
         <View style={{ marginTop: spacing.md }}>
           <SerifHero>
-            {status === 'pending' && 'Verifying...'}
-            {status === 'success' && 'You’re in.'}
-            {status === 'error' && 'Couldn’t verify.'}
+            {status === 'pending' && t('errors.verifying')}
+            {status === 'success' && t('errors.youre_in')}
+            {status === 'error' && t('errors.couldnt_verify')}
           </SerifHero>
         </View>
 
@@ -90,18 +93,18 @@ export default function AuthConfirm() {
           {status === 'pending' && <ActivityIndicator />}
           {status === 'success' && (
             <Text variant="bodyLg" color="inkSubtle">
-              Taking you to the app...
+              {t('auth.taking_to_app')}
             </Text>
           )}
           {status === 'error' && (
             <>
               <Text variant="bodyLg" color="inkSubtle">
-                {errorMsg ?? 'Something went wrong.'}
+                {errorMsg ?? t('auth.something_went_wrong')}
               </Text>
               <View style={{ marginTop: spacing.huge }}>
                 <PillCTA
                   variant="primary"
-                  label="Back to sign in"
+                  label={t('auth.back_to_signin')}
                   onPress={() => router.replace('/auth/login')}
                 />
               </View>

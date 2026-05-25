@@ -24,6 +24,7 @@ import {
 import { colors, spacing } from '../../constants/tokens';
 import { useAuth } from '../../lib/auth/store';
 import { safeBack } from '../../lib/nav';
+import { t } from '../../lib/i18n';
 
 export default function Signup() {
   const { signUpWithPassword, signInWithApple, configured } = useAuth();
@@ -73,9 +74,9 @@ export default function Signup() {
   if (done === 'check_email') {
     return (
       <Screen orbs="subtle" scroll tabBarClearance={false}>
-        <Eyebrow>CHECK YOUR INBOX</Eyebrow>
+        <Eyebrow>{t('auth.check_inbox')}</Eyebrow>
         <HeroNumber
-          value="One last step"
+          value={t('auth.one_last_step')}
           size="md"
           style={{ marginTop: spacing.lg }}
         />
@@ -84,11 +85,11 @@ export default function Signup() {
           color="inkSubtle"
           style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
         >
-          {`We sent a confirmation link to ${email}. Tap it to finish — then come back here to sign in.`}
+          {t('auth.signup_sent_template', { email })}
         </Text>
         <PillCTA
           variant="primary"
-          label="Back to sign in"
+          label={t('auth.back_to_signin')}
           onPress={() => router.replace('/auth/login')}
         />
       </Screen>
@@ -104,7 +105,7 @@ export default function Signup() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label={loading ? 'Creating account…' : 'Create account'}
+          label={loading ? t('auth.creating') : t('auth.sign_up_button')}
           disabled={!canSubmit}
           onPress={onSubmit}
         />
@@ -114,16 +115,16 @@ export default function Signup() {
         onPress={() => safeBack('/auth/login')}
         hitSlop={12}
         accessibilityRole="button"
-        accessibilityLabel="Back"
+        accessibilityLabel={t('auth.back_a11y')}
         style={styles.backRow}
       >
         <Glyph name="chevronLeft" size={22} color="inkMuted" />
       </Pressable>
 
-      <Eyebrow>SAVE YOUR PROGRESS</Eyebrow>
+      <Eyebrow>{t('auth.save_progress')}</Eyebrow>
 
       <HeroNumber
-        value="Create account"
+        value={t('auth.create_account')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
@@ -133,7 +134,7 @@ export default function Signup() {
         color="inkSubtle"
         style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
       >
-        {"Sync your plan across devices and never lose your streak."}
+        {t('auth.signup_sub')}
       </Text>
 
       {Platform.OS === 'ios' && configured && (
@@ -156,8 +157,8 @@ export default function Signup() {
       )}
 
       <TextField
-        label="NAME (OPTIONAL)"
-        placeholder="Your name"
+        label={t('auth.name_optional')}
+        placeholder={t('auth.name_placeholder')}
         autoCapitalize="words"
         autoCorrect={false}
         autoComplete="name"
@@ -170,8 +171,8 @@ export default function Signup() {
       <View style={{ height: spacing.lg }} />
 
       <TextField
-        label="EMAIL"
-        placeholder="you@example.com"
+        label={t('auth.email_label')}
+        placeholder={t('auth.email_placeholder')}
         autoCapitalize="none"
         autoCorrect={false}
         autoComplete="email"
@@ -185,8 +186,8 @@ export default function Signup() {
       <View style={{ height: spacing.lg }} />
 
       <TextField
-        label="PASSWORD"
-        placeholder="At least 6 characters"
+        label={t('auth.password_label')}
+        placeholder={t('auth.password_placeholder')}
         autoCapitalize="none"
         autoCorrect={false}
         autoComplete="new-password"
@@ -209,30 +210,30 @@ export default function Signup() {
       {!configured && (
         <View style={styles.demoBox}>
           <Text variant="labelMd" color="inkMuted" uppercase weight="medium">
-            DEMO MODE
+            {t('auth.demo_mode_label')}
           </Text>
           <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 4 }}>
-            {"Supabase keys aren't set yet. Submit will fail with a clear error — UI is fully wired."}
+            {t('auth.signup_demo_sub')}
           </Text>
         </View>
       )}
 
       <Text variant="bodyMd" color="inkMuted" style={{ marginTop: spacing.xl }}>
-        {"By creating an account you agree to our Terms and Privacy Policy."}
+        {t('auth.terms_notice')}
       </Text>
 
       <View style={styles.footerRow}>
         <Text variant="bodyMd" color="inkSubtle">
-          Already registered?
+          {t('auth.already_registered')}
         </Text>
         <Pressable
           onPress={() => router.replace('/auth/login')}
           hitSlop={8}
           accessibilityRole="button"
-          accessibilityLabel="Sign in"
+          accessibilityLabel={t('auth.sign_in_a11y')}
         >
           <Text variant="bodyMd" color="primary" weight="medium" style={{ marginLeft: 6 }}>
-            Sign in
+            {t('auth.sign_in_button')}
           </Text>
         </Pressable>
       </View>

@@ -28,13 +28,14 @@ import { safeDismiss } from '../../lib/nav';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth/store';
 import { emitChange, EVENTS } from '../../lib/queries';
+import { t } from '../../lib/i18n';
 
 type Kind = 'day' | 'night' | 'off';
 
-const KIND_OPTIONS: SegmentOption<Kind>[] = [
-  { value: 'day', label: 'Day' },
-  { value: 'night', label: 'Night' },
-  { value: 'off', label: 'Off' },
+const getKindOptions = (): SegmentOption<Kind>[] => [
+  { value: 'day', label: t('shift_kind.day') },
+  { value: 'night', label: t('shift_kind.night') },
+  { value: 'off', label: t('shift_kind.off') },
 ];
 
 // Hour presets for start / end. Real picker lands when we add a TimePicker
@@ -64,7 +65,7 @@ function nextSevenDays(): DayOption[] {
     out.push({
       key: localDateKey(d),
       date: d,
-      label: i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : formatDayMonth(d),
+      label: i === 0 ? t('add_shift.day_today') : i === 1 ? t('add_shift.day_tomorrow') : formatDayMonth(d),
     });
   }
   return out;
@@ -77,6 +78,17 @@ export default function AddShift() {
   const [kind, setKind] = useState<Kind>('day');
   const [startHour, setStartHour] = useState<number>(7);
   const [endHour, setEndHour] = useState<number>(19);
+  // B14 — selecting Night auto-populates 19:00-07:00, Day → 07:00-19:00
+  function selectKind(next: Kind) {
+    setKind(next);
+    if (next === 'night') {
+      setStartHour(19);
+      setEndHour(7);
+    } else if (next === 'day') {
+      setStartHour(7);
+      setEndHour(19);
+    }
+  }
   const [notes, setNotes] = useState<string>('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -84,9 +96,10 @@ export default function AddShift() {
   const isOff = kind === 'off';
   const canSave = !!dateKey && (isOff || startHour !== endHour);
 
+  const overnightSuffix = kind !== 'off' && endHour <= startHour ? ' ' + t('add_shift.next_day_suffix') : '';
   const summaryLine = `${formatDayMonth(selectedDay.date)} · ${
-    kind === 'off' ? 'Off day' : `${kind} ${formatHour(startHour)}–${formatHour(endHour)}`
-  }${notes.trim() ? '\n\nNote: ' + notes.trim() : ''}`;
+    kind === 'off' ? t('add_shift.summary_off') : t('add_shift.summary_kind_short', { kind: t('shift_kind.' + kind), start: formatHour(startHour), end: formatHour(endHour) }) + overnightSuffix
+  }${notes.trim() ? '\n\n' + t('add_shift.note_prefix') + notes.trim() : ''}`;
 
   const onSave = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -97,8 +110,8 @@ export default function AddShift() {
     // shift_type='off' enum value, this branch will INSERT instead of
     // showing the local-only confirmation.
     if (kind === 'off' || !isSupabaseConfigured || !supabase || !user?.id) {
-      Alert.alert('Shift saved', summaryLine, [
-        { text: 'OK', onPress: () => safeDismiss('/(tabs)/schedule') },
+      Alert.alert(t('add_shift.saved_title'), summaryLine, [
+        { text: t('add_shift.ok'), onPress: () => safeDismiss('/(tabs)/schedule') },
       ]);
       return;
     }
@@ -129,13 +142,13 @@ export default function AddShift() {
     setSubmitting(false);
 
     if (error) {
-      Alert.alert('Could not save shift', error.message, [{ text: 'OK' }]);
+      Alert.alert(t('add_shift.save_failed_title'), error.message, [{ text: t('add_shift.ok') }]);
       return;
     }
     // Notify any subscribed `useShifts(...)` so the calendar refetches.
     emitChange(EVENTS.shiftsChanged);
-    Alert.alert('Shift saved', summaryLine, [
-      { text: 'OK', onPress: () => safeDismiss('/(tabs)/schedule') },
+    Alert.alert(t('add_shift.saved_title'), summaryLine, [
+      { text: t('add_shift.ok'), onPress: () => safeDismiss('/(tabs)/schedule') },
     ]);
   };
 
@@ -149,7 +162,7 @@ export default function AddShift() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label={submitting ? 'Saving…' : 'Save shift'}
+          label={submitting ? t('add_shift.saving') : t('add_shift.save')}
           disabled={!canSave || submitting}
           onPress={onSave}
         />
@@ -157,29 +170,29 @@ export default function AddShift() {
     >
       <View style={styles.headerRow}>
         <View style={{ width: 22 }} />
-        <Eyebrow>NEW SHIFT</Eyebrow>
+        <Eyebrow>{t('add_shift.eyebrow')}</Eyebrow>
         <Pressable
           onPress={() => safeDismiss('/(tabs)/schedule')}
           hitSlop={12}
           accessibilityRole="button"
-          accessibilityLabel="Close"
+          accessibilityLabel={t('a11y.close')}
         >
           <Glyph name="close" size={22} color="inkMuted" />
         </Pressable>
       </View>
 
       <HeroNumber
-        value="Add a shift"
+        value={t('add_shift.hero')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
       <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: spacing.md }}>
-        {"Quick entry — adjust later from your calendar."}
+        {t('add_shift.sub')}
       </Text>
 
       {/* Date picker */}
       <View style={{ marginTop: spacing.huge }}>
-        <Eyebrow>WHEN</Eyebrow>
+        <Eyebrow>{t('add_shift.when_label')}</Eyebrow>
         <View style={[styles.dayRow, { marginTop: spacing.md }]}>
           {days.map((d) => {
             const active = d.key === dateKey;
@@ -217,18 +230,18 @@ export default function AddShift() {
 
       {/* Type */}
       <View style={{ marginTop: spacing.xl }}>
-        <Eyebrow style={{ marginBottom: spacing.md }}>SHIFT TYPE</Eyebrow>
+        <Eyebrow style={{ marginBottom: spacing.md }}>{t('add_shift.shift_type')}</Eyebrow>
         <SegmentedControl<Kind>
-          options={KIND_OPTIONS}
+          options={getKindOptions()}
           value={kind}
-          onChange={setKind}
+          onChange={selectKind}
         />
       </View>
 
       {/* Hours (hidden when type=off) */}
       {!isOff && (
         <View style={{ marginTop: spacing.xl }}>
-          <Eyebrow style={{ marginBottom: spacing.md }}>START</Eyebrow>
+          <Eyebrow style={{ marginBottom: spacing.md }}>{t('add_shift.start')}</Eyebrow>
           <View style={styles.hourRow}>
             {HOUR_PRESETS.map((h) => (
               <Pressable
@@ -239,7 +252,7 @@ export default function AddShift() {
                   startHour === h && { backgroundColor: colors.primary },
                 ]}
                 accessibilityRole="button"
-                accessibilityLabel={`Start ${formatHour(h)}`}
+                accessibilityLabel={t('a11y.start_hour', { hour: formatHour(h) })}
               >
                 <Text
                   variant="labelMd"
@@ -253,7 +266,7 @@ export default function AddShift() {
             ))}
           </View>
 
-          <Eyebrow style={{ marginTop: spacing.lg, marginBottom: spacing.md }}>END</Eyebrow>
+          <Eyebrow style={{ marginTop: spacing.lg, marginBottom: spacing.md }}>{t('add_shift.end')}</Eyebrow>
           <View style={styles.hourRow}>
             {HOUR_PRESETS.map((h) => (
               <Pressable
@@ -264,7 +277,7 @@ export default function AddShift() {
                   endHour === h && { backgroundColor: colors.primary },
                 ]}
                 accessibilityRole="button"
-                accessibilityLabel={`End ${formatHour(h)}`}
+                accessibilityLabel={t('a11y.end_hour', { hour: formatHour(h) })}
               >
                 <Text
                   variant="labelMd"
@@ -283,8 +296,8 @@ export default function AddShift() {
       {/* Notes */}
       <View style={{ marginTop: spacing.xl }}>
         <TextField
-          label="NOTES (OPTIONAL)"
-          placeholder="On-call, swap with Anna, etc."
+          label={t('add_shift.notes_label')}
+          placeholder={t('add_shift.notes_placeholder')}
           value={notes}
           onChangeText={setNotes}
           autoCapitalize="sentences"
@@ -293,7 +306,7 @@ export default function AddShift() {
 
       {/* Summary card */}
       <GlassCard variant="paper" padding="xl" style={{ marginTop: spacing.huge }}>
-        <Eyebrow>SUMMARY</Eyebrow>
+        <Eyebrow>{t('add_shift.summary')}</Eyebrow>
         <Text
           variant="titleMd"
           family="display"
@@ -302,7 +315,7 @@ export default function AddShift() {
           style={{ marginTop: spacing.sm }}
         >
           {`${formatDayMonth(selectedDay.date)} · ${
-            kind === 'off' ? 'Off day' : `${kind} shift ${formatHour(startHour)}–${formatHour(endHour)}`
+            kind === 'off' ? t('add_shift.summary_off') : t('add_shift.summary_kind_long', { kind: t('shift_kind.' + kind), start: formatHour(startHour), end: formatHour(endHour) })
           }`}
         </Text>
       </GlassCard>

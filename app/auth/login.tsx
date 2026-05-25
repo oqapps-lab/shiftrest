@@ -23,6 +23,7 @@ import {
 import { colors, spacing } from '../../constants/tokens';
 import { useAuth } from '../../lib/auth/store';
 import { safeBack } from '../../lib/nav';
+import { t } from '../../lib/i18n';
 
 export default function Login() {
   const { signInWithPassword, signInWithApple, configured } = useAuth();
@@ -70,7 +71,7 @@ export default function Login() {
       floatingFooter={
         <PillCTA
           variant="primary"
-          label={loading ? 'Signing in…' : 'Sign in'}
+          label={loading ? t('auth.signing_in') : t('auth.sign_in_button')}
           disabled={!canSubmit}
           onPress={onSubmit}
         />
@@ -80,16 +81,16 @@ export default function Login() {
         onPress={() => safeBack('/')}
         hitSlop={12}
         accessibilityRole="button"
-        accessibilityLabel="Back"
+        accessibilityLabel={t('auth.back_a11y')}
         style={styles.backRow}
       >
         <Glyph name="chevronLeft" size={22} color="inkMuted" />
       </Pressable>
 
-      <Eyebrow>WELCOME BACK</Eyebrow>
+      <Eyebrow>{t('auth.welcome_back')}</Eyebrow>
 
       <HeroNumber
-        value="Sign in"
+        value={t('auth.sign_in_hero')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
@@ -99,7 +100,7 @@ export default function Login() {
         color="inkSubtle"
         style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
       >
-        {"Pick up where you left off — your plan, streak, and history."}
+        {t('auth.sign_in_sub')}
       </Text>
 
       {Platform.OS === 'ios' && configured && (
@@ -114,7 +115,7 @@ export default function Login() {
           <View style={styles.divider}>
             <View style={styles.dividerLine} />
             <Text variant="labelMd" color="inkMuted" uppercase weight="medium" style={{ marginHorizontal: spacing.md }}>
-              OR
+              {t('auth.or_divider')}
             </Text>
             <View style={styles.dividerLine} />
           </View>
@@ -122,8 +123,8 @@ export default function Login() {
       )}
 
       <TextField
-        label="EMAIL"
-        placeholder="you@example.com"
+        label={t('auth.email_label')}
+        placeholder={t('auth.email_placeholder')}
         autoCapitalize="none"
         autoCorrect={false}
         autoComplete="email"
@@ -137,8 +138,8 @@ export default function Login() {
       <View style={{ height: spacing.lg }} />
 
       <TextField
-        label="PASSWORD"
-        placeholder="At least 6 characters"
+        label={t('auth.password_label')}
+        placeholder={t('auth.password_placeholder')}
         autoCapitalize="none"
         autoCorrect={false}
         autoComplete="password"
@@ -161,10 +162,10 @@ export default function Login() {
       {!configured && (
         <View style={styles.demoBox}>
           <Text variant="labelMd" color="inkMuted" uppercase weight="medium">
-            DEMO MODE
+            {t('auth.demo_mode_label')}
           </Text>
           <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 4 }}>
-            {"Supabase keys aren't set yet. Sign-in will fail with a clear error — UI is fully wired."}
+            {t('auth.demo_mode_text')}
           </Text>
         </View>
       )}
@@ -174,25 +175,25 @@ export default function Login() {
         hitSlop={12}
         style={styles.linkRow}
         accessibilityRole="button"
-        accessibilityLabel="Forgot password"
+        accessibilityLabel={t('auth.forgot_pw_a11y')}
       >
         <Text variant="bodyMd" color="primary" weight="medium">
-          Forgot password?
+          {t('auth.forgot_password')}
         </Text>
       </Pressable>
 
       <View style={styles.footerRow}>
         <Text variant="bodyMd" color="inkSubtle">
-          New to ShiftRest?
+          {t('auth.new_to_app')}
         </Text>
         <Pressable
           onPress={() => router.replace('/auth/signup')}
           hitSlop={8}
           accessibilityRole="button"
-          accessibilityLabel="Create account"
+          accessibilityLabel={t('auth.create_account_a11y')}
         >
           <Text variant="bodyMd" color="primary" weight="medium" style={{ marginLeft: 6 }}>
-            Create account
+            {t('auth.create_account')}
           </Text>
         </Pressable>
       </View>

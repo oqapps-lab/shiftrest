@@ -86,7 +86,7 @@ export function GlassCard({
           style={styles.topHighlight}
           pointerEvents="none"
         />
-        <View style={styles.content}>{children}</View>
+        {children}
       </View>
     );
   }
@@ -109,9 +109,6 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     height: 2,
-  },
-  content: {
-    width: '100%',
   },
 });
 

@@ -19,18 +19,19 @@ import {
   ProgressDots,
 } from '../components/ui';
 import { colors, spacing, radii } from '../constants/tokens';
-import { mockUser } from '../mock/user';
 import { firstName } from '../lib/derive';
 import { useOnboarding } from '../lib/onboarding/store';
 import { useAuth } from '../lib/auth/store';
 import { startTrial, emitChange, EVENTS } from '../lib/queries';
 import { logEvent } from '../lib/events';
+import { t } from '../lib/i18n';
 
-const VALUE_BULLETS = [
-  { glyph: 'bed' as const, text: 'Sleep window tuned to your rotation' },
-  { glyph: 'coffee' as const, text: 'Caffeine cutoff by sensitivity, not a generic rule' },
-  { glyph: 'moon' as const, text: 'Melatonin timing that works with your chronotype' },
-  { glyph: 'sparkle' as const, text: 'Transition plans for rotating shifts' },
+// Lazy getter so t() runs at render time and respects current locale.
+const getValueBullets = () => [
+  { glyph: 'bed' as const, text: t('paywall.bullet_sleep') },
+  { glyph: 'coffee' as const, text: t('paywall.bullet_caffeine') },
+  { glyph: 'moon' as const, text: t('paywall.bullet_melatonin') },
+  { glyph: 'sparkle' as const, text: t('paywall.bullet_transition') },
 ];
 
 export default function Paywall() {
@@ -78,7 +79,7 @@ export default function Paywall() {
         <>
           <PillCTA
             variant="primary"
-            label={submitting ? 'Starting trial…' : 'Start 7-day trial'}
+            label={submitting ? t('paywall.starting_trial') : t('paywall.start_trial')}
             disabled={submitting}
             onPress={onStartTrial}
           />
@@ -88,7 +89,7 @@ export default function Paywall() {
             style={{ alignSelf: 'center', marginTop: spacing.md }}
           >
             <Text variant="bodyMd" color="inkMuted">
-              Maybe later
+              {t('paywall.maybe_later')}
             </Text>
           </Pressable>
         </>
@@ -108,18 +109,18 @@ export default function Paywall() {
           }}
           hitSlop={12}
           accessibilityRole="button"
-          accessibilityLabel="Close paywall"
+          accessibilityLabel={t('a11y.close_paywall')}
         >
           <Glyph name="close" size={22} color="inkMuted" />
         </Pressable>
       </View>
 
-      <Eyebrow>{displayName ? `${displayName}, YOUR PLAN IS READY` : 'YOUR PLAN IS READY'}</Eyebrow>
+      <Eyebrow>{displayName ? t('paywall.eyebrow_with_name', { name: displayName }) : t('paywall.eyebrow_plain')}</Eyebrow>
       <View style={{ marginTop: spacing.md, marginBottom: spacing.huge }}>
-        <SerifHero>7 days. Then you decide.</SerifHero>
+        <SerifHero>{t('paywall.hero')}</SerifHero>
       </View>
 
-      {VALUE_BULLETS.map((b) => (
+      {getValueBullets().map((b) => (
         <View key={b.text} style={styles.bulletRow}>
           <View style={styles.bulletIcon}>
             <Glyph name={b.glyph} size={20} color="primary" />
@@ -138,7 +139,7 @@ export default function Paywall() {
           setPlan('year');
         }}
         accessibilityRole="button"
-        accessibilityLabel="Year plan $49.99"
+        accessibilityLabel={t('a11y.year_plan', { price: '$49.99' })}
       >
         <GlassCard
           variant={plan === 'year' ? 'glass' : 'paper'}
@@ -158,10 +159,10 @@ export default function Paywall() {
             <View style={{ flex: 1 }}>
               <View style={[styles.chip, { backgroundColor: colors.primaryContainer }]}>
                 <Text variant="labelMd" color="onPrimaryContainer" uppercase weight="medium">
-                  Best value · save 35%
+                  {t('paywall.best_value_save', { percent: '35' })}
                 </Text>
               </View>
-              <HeroNumber value="$49.99" size="md" label="YEAR · $0.96 / week" labelPosition="below" />
+              <HeroNumber value="$49.99" size="md" label={t('paywall.year_label', { weekPrice: '$0.96' })} labelPosition="below" />
             </View>
             <View
               style={[
@@ -183,7 +184,7 @@ export default function Paywall() {
           setPlan('month');
         }}
         accessibilityRole="button"
-        accessibilityLabel="Month plan $5.99"
+        accessibilityLabel={t('a11y.month_plan', { price: '$5.99' })}
       >
         <GlassCard
           variant={plan === 'month' ? 'glass' : 'paper'}
@@ -192,7 +193,7 @@ export default function Paywall() {
         >
           <View style={styles.row}>
             <View style={{ flex: 1 }}>
-              <HeroNumber value="$5.99" size="md" label="MONTHLY" labelPosition="below" />
+              <HeroNumber value="$5.99" size="md" label={t('paywall.monthly_label')} labelPosition="below" />
             </View>
             <View
               style={[
@@ -208,7 +209,7 @@ export default function Paywall() {
 
       <View style={{ height: spacing.xxxl }} />
 
-      <Eyebrow>7-DAY TRIAL TIMELINE</Eyebrow>
+      <Eyebrow>{t('paywall.trial_timeline')}</Eyebrow>
       <View style={{ marginTop: spacing.sm, flexDirection: 'row', justifyContent: 'flex-start' }}>
         <ProgressDots count={7} active={0} size={8} />
       </View>

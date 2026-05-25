@@ -32,6 +32,7 @@ import {
   type PlanTimes,
 } from '../../lib/notifications';
 import { useGeneratedPlan, formatPlanHour } from '../../lib/queries/plan';
+import { t } from '../../lib/i18n';
 
 const STORAGE_KEY = 'shiftrest:notification-settings:v1';
 
@@ -145,20 +146,20 @@ export default function NotificationsSettings() {
         onPress={() => safeBack('/(tabs)/profile')}
         hitSlop={12}
         accessibilityRole="button"
-        accessibilityLabel="Back"
+        accessibilityLabel={t('a11y.back')}
         style={styles.backRow}
       >
         <Glyph name="chevronLeft" size={22} color="inkMuted" />
       </Pressable>
 
-      <Eyebrow>SETTINGS</Eyebrow>
+      <Eyebrow>{t('settings_screens.eyebrow')}</Eyebrow>
       <HeroNumber
-        value="Notifications"
+        value={t('settings_screens.notifications.title')}
         size="md"
         style={{ marginTop: spacing.lg }}
       />
       <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: spacing.md }}>
-        {"Quiet, contextual nudges. Toggle anything you don't need."}
+        {t('settings_screens.notifications.sub')}
       </Text>
 
       {/* Master switch */}
@@ -170,18 +171,18 @@ export default function NotificationsSettings() {
         <View style={styles.row}>
           <View style={{ flex: 1 }}>
             <Text variant="titleMd" family="display" weight="medium" color="ink">
-              All notifications
+              {t('settings_screens.notifications.master.title')}
             </Text>
             <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
               {state.master
-                ? 'Reminders fire on your plan'
-                : 'Everything is muted'}
+                ? t('settings_screens.notifications.master.active')
+                : t('settings_screens.notifications.master.muted')}
             </Text>
           </View>
           <Toggle
             value={state.master}
             onChange={(v) => update({ master: v })}
-            accessibilityLabel="Master notifications"
+            accessibilityLabel={t('settings_screens.notifications.master.a11y')}
           />
         </View>
       </GlassCard>
@@ -203,12 +204,12 @@ export default function NotificationsSettings() {
           <Toggle
             value={state.bedReminder}
             onChange={(v) => update({ bedReminder: v })}
-            accessibilityLabel="Bed time reminder"
+            accessibilityLabel={t('a11y.bed_time_reminder')}
           />
         </View>
         {state.bedReminder && (
           <View style={{ marginTop: spacing.lg }}>
-            <Eyebrow style={{ marginBottom: spacing.md }}>LEAD TIME</Eyebrow>
+            <Eyebrow style={{ marginBottom: spacing.md }}>{t('settings_screens.notifications.lead_time')}</Eyebrow>
             <SegmentedControl<LeadMinutes>
               options={LEAD_OPTIONS}
               value={state.bedReminderLead}
@@ -235,7 +236,7 @@ export default function NotificationsSettings() {
           <Toggle
             value={state.caffeineReminder}
             onChange={(v) => update({ caffeineReminder: v })}
-            accessibilityLabel="Caffeine cutoff reminder"
+            accessibilityLabel={t('a11y.caffeine_cutoff_reminder')}
           />
         </View>
       </View>
@@ -257,13 +258,13 @@ export default function NotificationsSettings() {
           <Toggle
             value={state.melatoninReminder}
             onChange={(v) => update({ melatoninReminder: v })}
-            accessibilityLabel="Melatonin reminder"
+            accessibilityLabel={t('a11y.melatonin_reminder')}
           />
         </View>
       </View>
 
       <Text variant="bodyMd" color="inkMuted" style={{ marginTop: spacing.huge }}>
-        {"Reminders are scheduled locally and never leave the device."}
+        {t('settings_screens.notifications.local_only')}
       </Text>
 
       {scheduledCount !== null && state.master && scheduledCount > 0 && (

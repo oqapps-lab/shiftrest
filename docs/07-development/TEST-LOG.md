@@ -333,3 +333,94 @@ GestureHandlerRootView
 - **Email-confirm deeplink callback** — `shiftrest://auth/callback` is registered in `app.json` but no in-app handler reads the access_token yet.
 - **Stage 7 — Adapty** for real subscriptions instead of `mockUser.subscription`.
 - Spacing polish observations from earlier session still open (short-form screens, segmented unselected contrast, stepper +/- gap).
+
+
+---
+
+# Stage 6.6 — i18n + Deep Audit + Build #21 (2026-05-19 → 2026-05-20)
+
+## Static analysis gates ✅
+
+| Tool | Result |
+|---|---|
+| `npx tsc --noEmit` | 0 errors |
+| `npx eslint app components lib --ext .ts,.tsx` | 0 warnings |
+| `npx jest` | 42 tests / 1 suite passed in 0.557s |
+| `npm audit --omit=dev` | 6 moderate (all transitive via expo, not actionable) |
+
+## i18n parity ✅
+
+```
+$ python3 validate_i18n.py
+Used keys in source: 446
+Keys with placeholders: 33
+
+MISSING KEYS PER LOCALE:
+en       ✓ all keys resolve
+de-DE    ✓ all keys resolve
+es-ES    ✓ all keys resolve
+fr-FR    ✓ all keys resolve
+it-IT    ✓ all keys resolve
+ja       ✓ all keys resolve
+ko       ✓ all keys resolve
+nl-NL    ✓ all keys resolve
+pt-BR    ✓ all keys resolve
+sv       ✓ all keys resolve
+zh-Hant  ✓ all keys resolve
+```
+
+## Sim walkthrough ✅ (build via Expo Go on iPhone 17 Pro — Claude ShiftRest sim)
+
+| Screen | EN | DE | JA | IT | FR | PT-BR | KO | NL | SV |
+|---|---|---|---|---|---|---|---|---|---|
+| Welcome | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| Onboarding/profession | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | – | ✓ | ✓ |
+| Onboarding/schedule | ✓ | ✓ | – | – | – | – | – | – | – |
+| Onboarding/current-shift | ✓ | – | – | – | – | – | – | – | – |
+| Onboarding/chronotype | ✓ | – | – | – | – | – | – | – | – |
+| Onboarding/caffeine | ✓ | – | – | – | – | – | – | – | – |
+| Onboarding/melatonin | ✓ | – | – | – | – | – | – | – | – |
+| Onboarding/problem | ✓ | – | – | – | – | – | – | – | – |
+| Onboarding/family | ✓ | – | – | – | – | – | – | – | – |
+| Onboarding/name | ✓ | – | – | – | – | – | – | – | – |
+| Onboarding/notifications | ✓ | – | – | – | – | – | – | – | – |
+| Onboarding/social-proof-1 | ✓ | – | – | – | – | – | – | – | – |
+| Onboarding/social-proof-2 | ✓ | – | – | – | – | – | – | – | – |
+| Onboarding/loading | ✓ | – | – | – | – | – | – | – | – |
+| Onboarding/aha | ✓ | – | – | – | – | – | – | – | – |
+| Tabs/home | ✓ | – | ✓ | – | – | – | – | – | – |
+| Tabs/plan | ✓ | – | – | – | – | – | – | – | – |
+| Tabs/schedule | ✓ | – | – | – | – | – | – | – | – |
+| Tabs/profile | ✓ | – | ✓ | – | – | – | – | – | – |
+| Paywall | ✓ | – | ✓ | – | ✓ | – | – | – | – |
+| Transition modal | ✓ | – | – | – | – | – | – | – | – |
+| Auth/login | ✓ | – | – | – | – | – | – | – | – |
+| Auth/signup | ✓ | – | – | – | – | – | – | – | – |
+| Auth/forgot | ✓ | – | – | – | – | – | – | – | – |
+| Auth/confirm error | ✓ | – | – | – | – | – | – | – | – |
+| Settings/subscription | ✓ | – | ✓ | – | – | – | – | – | – |
+| Settings/notifications | ✓ | – | ✓ | – | – | – | – | – | – |
+| Settings/sleep-preferences | ✓ | – | ✓ | – | – | – | – | – | – |
+| Settings/about | ✓ | – | – | – | – | – | – | – | – |
+| Add-shift | ✓ | – | – | – | – | – | – | – | – |
+
+Note: `zh-Hant` deferred per user request.
+
+## Bugs caught and fixed (20 in this stage)
+
+See `SESSION-CHECKPOINT.md` Stage 6.6 entry for full list.
+
+## Coverage gaps (NOT tested — for next session)
+
+1. **Real-device interactive flows** — Apple Sign-In, Adapty Sandbox purchase, push delivery, ATT prompt timing.
+2. **Logic correctness outputs** — sleep window math, caffeine cutoff, melatonin timing.
+3. **Edge cases** — network failure, OpenAI timeout, cold start with empty AsyncStorage.
+4. **Device matrix** — iPhone SE, large screens, iOS 15.1, Dark Mode, Dynamic Type, VoiceOver.
+5. **Performance** — cold start time, memory, FPS, bundle size delta.
+
+## Build artifacts
+
+| Build | sha | Status | Path |
+|---|---|---|---|
+| #20 | abd300f | TestFlight Internal | (archived) |
+| #21 | 205357d | Beta App Review APPROVED → External TestFlight IN_BETA_TESTING | `build-1779280437813.ipa` |

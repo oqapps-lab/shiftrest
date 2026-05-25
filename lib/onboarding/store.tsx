@@ -109,7 +109,7 @@ const CHRONOTYPE_VALUE_SCORE: Record<string, number> = {
   strong_evening: 4,
 };
 
-/** Sum of the chosen options' values across the 3 MEQ-lite questions (3-12). */
+/** Sum of the chosen options' values across the 3 MEQ-lite questions (3-11, Q2 maxes at 3). */
 export function computeChronotypeScore(answers: Record<string, string>): number | null {
   let score = 0;
   let answered = 0;
