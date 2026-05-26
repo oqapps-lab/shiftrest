@@ -375,6 +375,10 @@ export default function SleepPreferences() {
         value={state.displayName}
         onChangeText={(v) => update({ displayName: v })}
         autoCapitalize="words"
+        autoCorrect={false}
+        spellCheck={false}
+        textContentType="name"
+        maxLength={50}
       />
 
       {/* Reset */}
