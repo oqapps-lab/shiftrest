@@ -21,6 +21,7 @@ export type GlyphName =
   | 'close'
   | 'check'
   | 'plus'
+  | 'minus'
   | 'bell'
   | 'gear'
   | 'user'
@@ -108,6 +109,9 @@ export function Glyph({ name, size = 24, color = 'ink', strokeWidth = 1.5 }: Pro
           <Line x1={12} y1={5} x2={12} y2={19} {...common} />
           <Line x1={5} y1={12} x2={19} y2={12} {...common} />
         </>
+      )}
+      {name === 'minus' && (
+        <Line x1={5} y1={12} x2={19} y2={12} {...common} />
       )}
       {name === 'bell' && (
         <>
