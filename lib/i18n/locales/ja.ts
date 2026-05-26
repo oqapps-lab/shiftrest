@@ -328,6 +328,15 @@ const ja = {
     bullet_caffeine: "一律ではなく、感受性に合わせたカフェイン制限",
     bullet_melatonin: "クロノタイプに合うメラトニンのタイミング",
     bullet_transition: "ローテ移行プラン",
+    restore_link: "購入を復元",
+    restore_loading: "復元中…",
+    restore_title: "購入を復元",
+    restore_success: "プレミアムを復元しました。お帰りなさい。",
+    restore_empty: "この Apple ID に購入履歴がありません。",
+    restore_failed: "復元できませんでした。接続をご確認のうえ再度お試しください。",
+    terms_link: "利用規約",
+    privacy_link: "プライバシーポリシー",
+    auto_renew_disclosure: "サブスクリプションは、現在の期間終了の少なくとも24時間前にキャンセルされない限り自動更新されます。App Store で管理できます。",
   },
   testimonials: {
     nurse: {

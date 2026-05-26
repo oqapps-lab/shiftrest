@@ -328,6 +328,15 @@ const ptBR = {
     bullet_caffeine: "Corte de cafeína por sensibilidade, não uma regra genérica",
     bullet_melatonin: "Horário de melatonina que combina com seu cronotipo",
     bullet_transition: "Planos de transição para turnos rotativos",
+    restore_link: "Restaurar compras",
+    restore_loading: "Restaurando…",
+    restore_title: "Restaurar compras",
+    restore_success: "Premium restaurado. Bem-vindo de volta.",
+    restore_empty: "Nenhuma compra encontrada nesta Apple ID.",
+    restore_failed: "Não foi possível restaurar. Verifique a conexão e tente novamente.",
+    terms_link: "Termos de uso",
+    privacy_link: "Política de privacidade",
+    auto_renew_disclosure: "As assinaturas são renovadas automaticamente, salvo cancelamento ao menos 24 horas antes do fim do período. Gerencie na App Store.",
   },
   testimonials: {
     nurse: {

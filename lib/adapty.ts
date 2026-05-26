@@ -44,3 +44,18 @@ export async function ensureAdaptyActivated(): Promise<void> {
 export function isAdaptyActivated(): boolean {
   return activated;
 }
+
+/**
+ * Restore previous purchases. Apple Guideline 3.1.2(c) requires this from
+ * any paywall — without it, App Review rejects.
+ *
+ * Throws if SDK was never activated or there are no prior purchases on this
+ * Apple ID. Callers should catch and show a non-alarming message
+ * ("No purchases to restore") for the empty-history case.
+ */
+export async function restorePurchases() {
+  if (!activated) {
+    await ensureAdaptyActivated();
+  }
+  return adapty.restorePurchases();
+}

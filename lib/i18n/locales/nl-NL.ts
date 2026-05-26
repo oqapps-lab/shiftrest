@@ -329,6 +329,15 @@ const nlNL = {
     bullet_caffeine: 'Cafeïne-stop op gevoeligheid, geen standaardregel',
     bullet_melatonin: 'Melatonine-tijd die past bij je chronotype',
     bullet_transition: 'Overgangsplannen voor roterende diensten',
+    restore_link: "Aankopen herstellen",
+    restore_loading: "Herstellen…",
+    restore_title: "Aankopen herstellen",
+    restore_success: "Premium hersteld. Welkom terug.",
+    restore_empty: "Geen aankopen gevonden voor dit Apple ID.",
+    restore_failed: "Herstellen mislukt. Controleer je verbinding en probeer opnieuw.",
+    terms_link: "Gebruiksvoorwaarden",
+    privacy_link: "Privacybeleid",
+    auto_renew_disclosure: "Abonnementen worden automatisch verlengd, tenzij ze minstens 24 uur vóór het einde van de huidige periode worden opgezegd. Beheer in de App Store.",
   },
   testimonials: {
     nurse: {

@@ -329,6 +329,15 @@ const deDE = {
     bullet_caffeine: 'Koffein-Stopp nach Empfindlichkeit, keine Pauschalregel',
     bullet_melatonin: 'Melatonin-Timing, das zu deinem Chronotyp passt',
     bullet_transition: 'Übergangspläne für rotierende Schichten',
+    restore_link: "Käufe wiederherstellen",
+    restore_loading: "Wiederherstellen…",
+    restore_title: "Käufe wiederherstellen",
+    restore_success: "Premium wiederhergestellt. Willkommen zurück.",
+    restore_empty: "Keine Käufe für diese Apple ID gefunden.",
+    restore_failed: "Wiederherstellung fehlgeschlagen. Prüfe die Verbindung und versuche es erneut.",
+    terms_link: "Nutzungsbedingungen",
+    privacy_link: "Datenschutz",
+    auto_renew_disclosure: "Abonnements verlängern sich automatisch, sofern sie nicht mindestens 24 Stunden vor Ablauf gekündigt werden. Verwaltung im App Store.",
   },
   testimonials: {
     nurse: {

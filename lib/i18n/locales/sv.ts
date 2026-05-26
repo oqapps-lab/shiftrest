@@ -328,6 +328,15 @@ const sv = {
     bullet_caffeine: 'Koffeinstopp efter känslighet, inte en standardregel',
     bullet_melatonin: 'Melatonin-tajming som passar din kronotyp',
     bullet_transition: 'Övergångsplaner för roterande skift',
+    restore_link: "Återställ köp",
+    restore_loading: "Återställer…",
+    restore_title: "Återställ köp",
+    restore_success: "Premium återställt. Välkommen tillbaka.",
+    restore_empty: "Inga köp hittades på detta Apple-ID.",
+    restore_failed: "Det gick inte att återställa. Kontrollera anslutningen och försök igen.",
+    terms_link: "Användarvillkor",
+    privacy_link: "Integritetspolicy",
+    auto_renew_disclosure: "Prenumerationer förnyas automatiskt om de inte avbryts minst 24 timmar före periodens slut. Hantera i App Store.",
   },
   testimonials: {
     nurse: {

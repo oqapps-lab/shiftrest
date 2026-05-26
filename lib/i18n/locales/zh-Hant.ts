@@ -327,6 +327,15 @@ const zhHant = {
     bullet_caffeine: "依敏感度設定咖啡因截止,不是一體適用的規則",
     bullet_melatonin: "配合你生理節律的褪黑激素時間",
     bullet_transition: "為輪班設計的轉換計畫",
+    restore_link: "回復購買",
+    restore_loading: "回復中…",
+    restore_title: "回復購買",
+    restore_success: "已回復 Premium。歡迎回來。",
+    restore_empty: "此 Apple ID 找不到任何購買紀錄。",
+    restore_failed: "無法回復。請檢查連線後再試一次。",
+    terms_link: "使用條款",
+    privacy_link: "隱私權政策",
+    auto_renew_disclosure: "訂閱會自動續期,除非在目前週期結束前至少 24 小時取消。可於 App Store 中管理。",
   },
   testimonials: {
     nurse: {
