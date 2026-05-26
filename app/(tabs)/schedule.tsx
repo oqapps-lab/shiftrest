@@ -115,7 +115,11 @@ function buildMockGrid(year: number, month: number): Cell[] {
 export default function Schedule() {
   const { user } = useAuth();
 
-  const today = React.useMemo(() => new Date(), []);
+  // Re-evaluate on every render so the "today" highlight stays correct
+  // when the app sits open past midnight. The previous useMemo(()=>new Date(), [])
+  // would freeze "today" at mount time and incorrectly highlight yesterday
+  // until the user re-launched.
+  const today = new Date();
   // Combined state so rapid taps near year boundary use the LATEST pair
   // in functional setters (avoid closure-captured staleness).
   const [view, setView] = React.useState(() => ({ year: today.getFullYear(), month: today.getMonth() }));
@@ -135,8 +139,10 @@ export default function Schedule() {
   const goToToday = React.useCallback(() => {
     if (isCurrentMonth) return;
     Haptics.selectionAsync();
-    setView({ year: today.getFullYear(), month: today.getMonth() });
-  }, [isCurrentMonth, today]);
+    // Fresh new Date() at call time — never stale.
+    const now = new Date();
+    setView({ year: now.getFullYear(), month: now.getMonth() });
+  }, [isCurrentMonth]);
 
   const viewedDate = React.useMemo(() => new Date(viewYear, viewMonth, 1), [viewYear, viewMonth]);
   const monthStart = localIso(new Date(viewYear, viewMonth, 1));
