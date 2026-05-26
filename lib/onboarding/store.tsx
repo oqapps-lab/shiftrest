@@ -28,6 +28,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mockChronotypeQuestions } from '../../mock/user';
 import { supabase, isSupabaseConfigured } from '../supabase';
 import { useAuth } from '../auth/store';
+import { emitPlanChanged } from '../queries/plan';
 
 const STORAGE_KEY = 'shiftrest:onboarding:v1';
 
@@ -350,7 +351,13 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       return { error: null }; // already up-to-date
     }
     const { error } = await supabase.from('profiles').upsert(row);
-    if (!error) lastSyncedRef.current = fingerprint;
+    if (!error) {
+      lastSyncedRef.current = fingerprint;
+      // M9 — tell the plan query its cache is stale. Without this, edits in
+      // Settings → Sleep preferences silently update profiles but the Plan
+      // tab keeps showing the pre-edit generated plan until app restart.
+      emitPlanChanged();
+    }
     return { error: error as Error | null };
   }, [auth.user?.id, state]);
 
