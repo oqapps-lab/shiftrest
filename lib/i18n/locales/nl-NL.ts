@@ -560,7 +560,7 @@ const nlNL = {
         cancelled_until: 'Premium tot {{date}}',
         cancelled_no_date: 'Opgezegd — je houdt premium tot het einde van de periode',
         expired: 'Sluit je opnieuw aan om je inzichten te behouden',
-        free: 'Ontgrendel het volledige plan met een proefperiode van 7 dagen',
+        free: 'Ontgrendel het volledige plan met een proefperiode van 3 dagen',
         renews_auto: 'Wordt automatisch verlengd',
       },
     },

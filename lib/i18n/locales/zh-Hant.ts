@@ -558,7 +558,7 @@ const zhHant = {
         cancelled_until: 'Premium 至 {{date}}',
         cancelled_no_date: '已取消 — 你會保留 Premium 直到本期結束',
         expired: '重新訂閱以保留你的洞察',
-        free: '透過 7 天試用解鎖完整方案',
+        free: '透過 3 天試用解鎖完整方案',
         renews_auto: '自動續訂',
       },
     },

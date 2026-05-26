@@ -560,7 +560,7 @@ const deDE = {
         cancelled_until: 'Premium bis {{date}}',
         cancelled_no_date: 'Gekündigt – Premium bleibt bis zum Ende des Zeitraums',
         expired: 'Verlängere, um deine Insights zu behalten',
-        free: 'Schalte den vollen Plan mit einer 7-tägigen Testphase frei',
+        free: 'Schalte den vollen Plan mit einer 3-tägigen Testphase frei',
         renews_auto: 'Verlängert sich automatisch',
       },
     },

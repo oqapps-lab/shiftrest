@@ -560,7 +560,7 @@ const frFR = {
         cancelled_until: 'Premium jusqu’au {{date}}',
         cancelled_no_date: 'Annulé — tu gardes premium jusqu’à la fin de la période',
         expired: 'Réabonne-toi pour garder tes insights',
-        free: 'Débloque le plan complet avec un essai de 7 jours',
+        free: 'Débloque le plan complet avec un essai de 3 jours',
         renews_auto: 'Renouvellement automatique',
       },
     },

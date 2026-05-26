@@ -560,7 +560,7 @@ const en = {
         cancelled_until: 'Premium until {{date}}',
         cancelled_no_date: 'Cancelled — you keep premium until period end',
         expired: 'Resubscribe to keep your insights',
-        free: 'Unlock the full plan with a 7-day trial',
+        free: 'Unlock the full plan with a 3-day trial',
         renews_auto: 'Renews automatically',
       },
     },

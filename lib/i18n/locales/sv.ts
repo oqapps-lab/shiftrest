@@ -559,7 +559,7 @@ const sv = {
         cancelled_until: 'Premium till {{date}}',
         cancelled_no_date: 'Avslutad — du behåller premium tills perioden tar slut',
         expired: 'Prenumerera igen för att behålla dina insikter',
-        free: 'Lås upp hela planen med en 7-dagars provperiod',
+        free: 'Lås upp hela planen med en 3-dagars provperiod',
         renews_auto: 'Förnyas automatiskt',
       },
     },

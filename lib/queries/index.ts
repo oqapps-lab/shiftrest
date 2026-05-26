@@ -262,7 +262,7 @@ export interface SubscriptionRow {
 }
 
 /**
- * Activate a self-service 7-day trial via RPC. Stage 6 placeholder until
+ * Activate a self-service 3-day trial via RPC. Stage 6 placeholder until
  * Adapty (Stage 7) replaces this with a real purchase flow.
  *
  * The RPC `public.activate_self_service_trial` runs SECURITY DEFINER and

@@ -559,7 +559,7 @@ const ko = {
         cancelled_until: '{{date}}까지 프리미엄',
         cancelled_no_date: '취소됨 — 기간 종료까지 프리미엄을 그대로 이용해요',
         expired: '다시 구독해 인사이트를 이어가세요',
-        free: '7일 체험으로 전체 플랜을 열어 보세요',
+        free: '3일 체험으로 전체 플랜을 열어 보세요',
         renews_auto: '자동으로 갱신돼요',
       },
     },

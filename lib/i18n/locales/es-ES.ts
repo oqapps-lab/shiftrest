@@ -560,7 +560,7 @@ const esES = {
         cancelled_until: 'Premium hasta {{date}}',
         cancelled_no_date: 'Cancelado — mantienes premium hasta el fin del periodo',
         expired: 'Vuelve a suscribirte para conservar tus insights',
-        free: 'Desbloquea el plan completo con una prueba de 7 días',
+        free: 'Desbloquea el plan completo con una prueba de 3 días',
         renews_auto: 'Se renueva automáticamente',
       },
     },

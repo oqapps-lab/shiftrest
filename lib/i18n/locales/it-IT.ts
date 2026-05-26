@@ -559,7 +559,7 @@ const itIT = {
         cancelled_until: 'Premium fino al {{date}}',
         cancelled_no_date: 'Annullato — mantieni premium fino alla fine del periodo',
         expired: 'Riabbonati per non perdere gli insight',
-        free: 'Sblocca il piano completo con una prova di 7 giorni',
+        free: 'Sblocca il piano completo con una prova di 3 giorni',
         renews_auto: 'Si rinnova automaticamente',
       },
     },
