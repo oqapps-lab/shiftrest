@@ -1,6 +1,6 @@
 /**
- * S06 — Social Proof break #1. Step 5 / 10.
- * Static content (no input) — big stat + serif reassurance + one testimonial card.
+ * S06 — Onboarding step 5 / 10 — research-foundation break.
+ * Replaces earlier fake-stat + testimonial layout per Apple Guideline 2.3.7 / 5.2.5.
  */
 
 import React from 'react';
@@ -8,15 +8,15 @@ import { router } from 'expo-router';
 import {
   Screen,
   GlassCard,
-  HeroNumber,
   SerifHero,
   Eyebrow,
   Text,
   PillCTA,
   ProgressDots,
+  Glyph,
 } from '../../components/ui';
-import { spacing } from '../../constants/tokens';
-import { mockTestimonials, mockSocialProofStats } from '../../mock/user';
+import { View } from 'react-native';
+import { spacing, colors, radii } from '../../constants/tokens';
 import { t } from '../../lib/i18n';
 
 export default function SocialProof1() {
@@ -33,57 +33,47 @@ export default function SocialProof1() {
         />
       }
     >
-      <Eyebrow>{t('onboarding.step_template', { n: 5, total: 10 })}</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 6, total: 11 })}</Eyebrow>
       <ProgressDots
-        count={10}
-        active={4}
+        count={11}
+        active={5}
         style={{ marginVertical: spacing.sm, justifyContent: 'flex-start' }}
       />
 
-      <HeroNumber
-        value={`${mockSocialProofStats.percentUnderslept}%`}
-        size="xxl"
-        align="center"
-        style={{ marginTop: spacing.huge }}
-      />
+      <View style={{ marginTop: spacing.huge, marginBottom: spacing.xl }}>
+        <SerifHero align="center">{t('onboarding.social_proof_1.hero')}</SerifHero>
+      </View>
 
       <Text
-        variant="titleLg"
+        variant="titleMd"
         family="display"
         weight="light"
         align="center"
         color="inkSubtle"
-        style={{ marginTop: spacing.lg }}
+        style={{ marginBottom: spacing.huge }}
       >
         {t('onboarding.social_proof_1.sub')}
       </Text>
 
-      <SerifHero align="center" style={{ marginTop: spacing.xl }}>
-        {t('onboarding.social_proof_1.hero')}
-      </SerifHero>
-
-      <GlassCard
-        variant="glass"
-        padding="xxl"
-        style={{ marginTop: spacing.huge }}
-      >
-        <Text
-          variant="serifHero"
-          family="serif"
-          weight="lightItalic"
-          color="ink"
+      <GlassCard variant="glass" padding="xxl">
+        <View
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: radii.lg,
+            backgroundColor: colors.primaryContainer,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: spacing.md,
+          }}
         >
-          {`"${mockTestimonials.nurse.quote}"`}
-        </Text>
-        <Text
-          variant="labelLg"
-          family="body"
-          weight="medium"
-          color="inkMuted"
-          uppercase
-          style={{ marginTop: spacing.lg }}
-        >
-          {`— ${mockTestimonials.nurse.author}`}
+          <Glyph name="sparkle" size={22} color="primary" />
+        </View>
+        <Eyebrow color="primary" style={{ marginBottom: spacing.sm }}>
+          {t('onboarding.social_proof_1.research_title')}
+        </Eyebrow>
+        <Text variant="bodyLg" color="ink">
+          {t('onboarding.social_proof_1.research_body')}
         </Text>
       </GlassCard>
     </Screen>

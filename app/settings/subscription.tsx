@@ -1,7 +1,7 @@
 /**
  * S53 — Subscription screen. Trial countdown + plan summary + management
- * actions. Reads from public.subscriptions via useSubscription(); falls back
- * to mockUser only when anonymous (demo mode).
+ * actions. Reads from public.subscriptions via useSubscription(); anon users
+ * default to 'free' so the screen never invents a fake trial countdown.
  */
 
 import React from 'react';
@@ -17,7 +17,6 @@ import {
   PillCTA,
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
-import { mockUser } from '../../mock/user';
 import { formatTrialRemaining } from '../../lib/derive';
 import { safeBack } from '../../lib/nav';
 import { useAuth } from '../../lib/auth/store';
@@ -38,22 +37,15 @@ export default function Subscription() {
     return formatTrialRemaining(trialEnd) === 'expired';
   };
 
-  // Map real DB row → display key. Anonymous demo mode → mock.
+  // Map real DB row → display key. Anon users have no subscription record
+  // and no trial — they get the 'free' state, same as a signed-in user who
+  // never started a trial. Showing mockUser.trialEndsAt here used to invent
+  // a fake "X days left" countdown that misled testers (live-test 2026-05-25).
   let status: DisplayStatus;
   let subtitle: string;
   if (!user) {
-    if (mockUser.subscription === 'trial' && trialIsExpired(mockUser.trialEndsAt)) {
-      status = 'expired';
-      subtitle = t('settings_screens.subscription.sub.expired');
-    } else {
-      status = mockUser.subscription === 'premium' ? 'active' : (mockUser.subscription as DisplayStatus);
-      subtitle =
-        mockUser.subscription === 'trial'
-          ? formatTrialRemaining(mockUser.trialEndsAt)
-          : mockUser.subscription === 'premium'
-          ? t('settings_screens.subscription.sub.renews_auto')
-          : t('settings_screens.subscription.sub.free');
-    }
+    status = 'free';
+    subtitle = t('settings_screens.subscription.sub.free');
   } else if (sub?.status === 'trial' && sub.trial_end) {
     if (trialIsExpired(sub.trial_end)) {
       status = 'expired';

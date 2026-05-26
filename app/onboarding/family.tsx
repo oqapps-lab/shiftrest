@@ -48,10 +48,10 @@ export default function Family() {
         />
       }
     >
-      <Eyebrow>{t('onboarding.step_template', { n: 9, total: 10 })}</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 10, total: 11 })}</Eyebrow>
       <ProgressDots
-        count={10}
-        active={8}
+        count={11}
+        active={9}
         style={{ marginVertical: spacing.sm, justifyContent: 'flex-start' }}
       />
 

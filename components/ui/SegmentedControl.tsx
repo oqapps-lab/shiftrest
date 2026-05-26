@@ -51,6 +51,9 @@ export function SegmentedControl<T extends string = string>({
               family="body"
               weight="medium"
               color={active ? 'onPrimary' : 'inkSubtle'}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.7}
             >
               {opt.label}
             </Text>

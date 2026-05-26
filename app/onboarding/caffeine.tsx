@@ -43,10 +43,10 @@ export default function Caffeine() {
         />
       }
     >
-      <Eyebrow>{t('onboarding.step_template', { n: 7, total: 10 })}</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 8, total: 11 })}</Eyebrow>
       <ProgressDots
-        count={10}
-        active={6}
+        count={11}
+        active={7}
         style={{ marginVertical: spacing.sm, justifyContent: 'flex-start' }}
       />
 

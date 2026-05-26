@@ -23,7 +23,7 @@ import {
   type SegmentOption,
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
-import { mockNotificationTypes, mockPlan } from '../../mock/user';
+import { mockNotificationTypes } from '../../mock/user';
 import { safeBack } from '../../lib/nav';
 import {
   rescheduleNotifications,
@@ -86,14 +86,14 @@ export default function NotificationsSettings() {
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => null);
   }, [state, hydrated]);
 
-  // Build PlanTimes from the live plan (when present) or mockPlan.
-  // Local "HH:MM" strings — what rescheduleNotifications() expects.
+  // Build PlanTimes from the live plan only. Without a live plan we can't
+  // honestly schedule reminders — using mockPlan here used to fire
+  // 22:00 melatonin / 14:30 caffeine cut-off pings for users who never
+  // gave us their schedule (live-test 2026-05-25 K/L class).
   const planTimes: PlanTimes = {
-    sleep_start: formatPlanHour(livePlan?.sleep_start) || mockPlan.sleepStart
-      ? formatPlanHour(livePlan?.sleep_start) || `${String(mockPlan.sleepStart).padStart(2, '0')}:00`
-      : null,
-    caffeine_cutoff: formatPlanHour(livePlan?.caffeine_cutoff_at) || mockPlan.caffeineCutoff,
-    melatonin_at: formatPlanHour(livePlan?.melatonin_at) || (mockPlan.melatoninTime ?? null),
+    sleep_start: formatPlanHour(livePlan?.sleep_start) || null,
+    caffeine_cutoff: formatPlanHour(livePlan?.caffeine_cutoff_at) || null,
+    melatonin_at: formatPlanHour(livePlan?.melatonin_at) || null,
   };
 
   // After hydration, re-schedule whenever (state, planTimes) changes.

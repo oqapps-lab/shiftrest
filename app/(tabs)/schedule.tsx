@@ -23,6 +23,7 @@ import { colors, spacing } from '../../constants/tokens';
 import { formatMonthYear } from '../../lib/derive';
 import { useShifts } from '../../lib/queries';
 import { useAuth } from '../../lib/auth/store';
+import { useLocalShifts } from '../../lib/local-shifts/store';
 import { t } from '../../lib/i18n';
 import type { Translations } from '../../lib/i18n/locales/en';
 
@@ -114,7 +115,11 @@ function buildMockGrid(year: number, month: number): Cell[] {
 export default function Schedule() {
   const { user } = useAuth();
 
-  const today = React.useMemo(() => new Date(), []);
+  // Re-evaluate on every render so the "today" highlight stays correct
+  // when the app sits open past midnight. The previous useMemo(()=>new Date(), [])
+  // would freeze "today" at mount time and incorrectly highlight yesterday
+  // until the user re-launched.
+  const today = new Date();
   // Combined state so rapid taps near year boundary use the LATEST pair
   // in functional setters (avoid closure-captured staleness).
   const [view, setView] = React.useState(() => ({ year: today.getFullYear(), month: today.getMonth() }));
@@ -134,8 +139,10 @@ export default function Schedule() {
   const goToToday = React.useCallback(() => {
     if (isCurrentMonth) return;
     Haptics.selectionAsync();
-    setView({ year: today.getFullYear(), month: today.getMonth() });
-  }, [isCurrentMonth, today]);
+    // Fresh new Date() at call time — never stale.
+    const now = new Date();
+    setView({ year: now.getFullYear(), month: now.getMonth() });
+  }, [isCurrentMonth]);
 
   const viewedDate = React.useMemo(() => new Date(viewYear, viewMonth, 1), [viewYear, viewMonth]);
   const monthStart = localIso(new Date(viewYear, viewMonth, 1));
@@ -149,9 +156,24 @@ export default function Schedule() {
     return map;
   }, [shiftRows]);
 
+  // I1: anon users — use local-shifts (persisted to AsyncStorage) instead of
+  // the static buildMockGrid cycle so Add-shift entries actually paint the
+  // calendar.
+  const localShifts = useLocalShifts();
+  const localShiftByIso = React.useMemo(() => {
+    const map = new Map<string, 'day' | 'night'>();
+    for (const [iso, kind] of Object.entries(localShifts)) {
+      if (kind === 'day' || kind === 'night') map.set(iso, kind);
+    }
+    return map;
+  }, [localShifts]);
   const grid = React.useMemo(
-    () => (user ? buildMonthGrid(viewYear, viewMonth, shiftByIso) : buildMockGrid(viewYear, viewMonth)),
-    [user, viewYear, viewMonth, shiftByIso],
+    () => user
+      ? buildMonthGrid(viewYear, viewMonth, shiftByIso)
+      : Object.keys(localShifts).length > 0
+        ? buildMonthGrid(viewYear, viewMonth, localShiftByIso)
+        : buildMockGrid(viewYear, viewMonth),
+    [user, viewYear, viewMonth, shiftByIso, localShiftByIso, localShifts],
   );
 
   const todayIso = localIso(today);

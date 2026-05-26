@@ -19,8 +19,11 @@
     },
     "production": {
       "autoIncrement": true,
+      "distribution": "store",
+      "credentialsSource": "local",
       "ios": {
-        "resourceClass": "m-medium"
+        "resourceClass": "m-medium",
+        "buildConfiguration": "Release"
       }
     }
   },
@@ -28,7 +31,10 @@
     "production": {
       "ios": {
         "appleTeamId": "6Y6BFVDS4L",
-        "ascAppId": "6766302800"
+        "ascAppId": "6766302800",
+        "ascApiKeyPath": "/Users/evgenij/.appstoreconnect/private_keys/AuthKey_787835NFD8.p8",
+        "ascApiKeyId": "787835NFD8",
+        "ascApiKeyIssuerId": "2f01e90d-40ee-4f1d-9a37-651713378b40"
       }
     }
   }

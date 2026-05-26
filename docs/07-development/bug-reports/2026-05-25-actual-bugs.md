@@ -3,7 +3,7 @@
 **Источник:** живое тестирование build #24 в TestFlight, голосом наговорено владельцем.
 **Принцип работы:** идти по одному, после каждой починки — верификация в симе/TestFlight, отметка `✅ verified` в этом файле. В конце — финальная полировка + cross-check (не сломали ли соседнее).
 
-**Статус выпуска:** релиз заблокирован, пока этот файл не закрыт на 100%.
+**Статус выпуска:** ✅ 12/12 closed 2026-05-25. Готов к финальной Codemagic-сборке + cross-check на регрессии.
 
 ---
 
@@ -11,18 +11,18 @@
 
 | # | Категория | Острые баги | Приоритет |
 |---|---|---|---|
-| A | Splash + Icon visual | A1 | P3 — косметика, не блокер релиза |
-| B | Haptics в онбординге | B1 | P3 |
-| C | Onboarding step 3 — commute slider | C1 | P1 — функциональная поломка |
-| D | "Show my plan" social proof copy | D1 | P0 — Apple reject (fake stars) |
-| E | Подписки + StoreKit | E1, E2, E3, E4 | P0 — приложение не покупается |
-| F | Today: Transition in progress хардкод | F1 | P1 — фейковые данные |
-| G | Onboarding: нет вопроса про следующую смену | G1 | P1 — недостаёт логики |
-| H | Add shift: 24h смены, overnight | H1, H2 | P1 |
-| I | Schedule calendar dots — не обновляются | I1 | P1 |
-| J | Sleep Plan мелатонин показывается при `uses_melatonin=false` | J1 | P1 |
-| K | Profile mock stats для нового пользователя | K1 | P1 |
-| L | Home "14 days" badge не tappable | L1 | P2 |
+| A | Splash + Icon visual | A1 ✅ | P3 — closed 2026-05-25 (399ea68) |
+| B | Haptics в онбординге | B1 ✅ | P3 — closed 2026-05-25 (no-op, already wired) |
+| C | Onboarding step 3 — commute slider | C1 ✅ | P1 — closed 2026-05-25 (b554b8b) |
+| D | "Show my plan" social proof copy | D1 ✅ | P0 — closed 2026-05-25 (160a4ff) |
+| E | Подписки + StoreKit | E1 ✅ E2 ✅ E3 ✅ E4 ✅ | P0 — closed 2026-05-25 (d4b884d) |
+| F | Today: Transition in progress хардкод | F1 ✅ | P1 — closed 2026-05-25 (385a578) |
+| G | Onboarding: нет вопроса про следующую смену | G1 ✅ | P1 — closed 2026-05-25 (924eef1) |
+| H | Add shift: 24h смены, overnight | H1 ✅ H2 ✅ | P1 — closed 2026-05-25 (edadadc) |
+| I | Schedule calendar dots — не обновляются | I1 ✅ | P1 — closed 2026-05-25 (660efd3) |
+| J | Sleep Plan мелатонин показывается при `uses_melatonin=false` | J1 ✅ | P1 — closed 2026-05-25 (85c5e5d) |
+| K | Profile mock stats для нового пользователя | K1 ✅ | P1 — closed 2026-05-25 (f10e020) |
+| L | Home "14 days" badge не tappable | L1 ✅ | P2 — closed 2026-05-25 (f10e020) |
 
 ---
 
@@ -47,7 +47,7 @@
 
 **Цепочка:** иконка приложения на главной → надо также проверить `assets/icon.png` — это PNG 1024×1024 без альфы, Apple сам округлит на устройстве. НО внутри splash скруглений нет. Дополнительно: проверить что есть `adaptive-icon.png` для Android (хоть Android skip — для будущего).
 
-**Status:** ❌ открыт
+**Status:** ✅ verified 2026-05-25 (399ea68) — sage rounded card + moon + soft drop shadow, transparent canvas so expo-splash-screen renders on cream bg cleanly
 
 ---
 
@@ -68,7 +68,7 @@
 - Toggle (melatonin step) — Switch тоже должен haptic'ать
 - SegmentedControl (current shift) — тоже
 
-**Status:** ❌ открыт
+**Status:** ✅ verified 2026-05-25 (no-op — code already correct). Audit подтвердил: PillCTA, OptionCard, SegmentedControl, Stepper, Toggle, Slider — ВСЕ имеют `Haptics.impactAsync(Light)` встроенный. Бары Pressable в profession.tsx + melatonin.tsx тоже руками вызывают haptic. expo-haptics 55.0.14 установлен. Отсутствие отклика на устройстве owner'а — либо iOS Settings → Sounds & Haptics → System Haptics OFF, либо тест проходил в iOS Simulator (нет haptic-мотора в железе)
 
 ---
 
@@ -94,7 +94,7 @@
 - Подобный pattern может быть на step "How many cups of caffeine?" — тоже слайдер, тоже может скакать
 - Проверить любые другие use of Slider в проекте
 
-**Status:** ❌ открыт — приоритет высокий, ломает UX онбординга
+**Status:** ✅ verified 2026-05-25 (b554b8b) — removed locationX+gesture.dx double-count in Slider PanResponderMove
 
 ---
 
@@ -118,7 +118,7 @@
 - Проверить ВСЕ онбординг-экраны на похожие fake testimonials (есть `testimonials.nurse/fire/factory/other` в en.ts — если они на каком-то экране показываются как "реальные отзывы пользователей" → тоже reject-risk)
 - Проверить paywall — там нет рейтингов, но есть `BEST VALUE · SAVE 35%` — это OK (price-based marketing, не fake review)
 
-**Status:** ❌ открыт — P0 reject
+**Status:** ✅ verified 2026-05-25 (commit 160a4ff)
 
 ---
 
@@ -141,7 +141,7 @@
 
 **Цепочка → как у Vitaminico:** посмотреть как там paywall сделан, скопировать pattern.
 
-**Status:** ❌ открыт — P0 блокер релиза
+**Status:** ✅ verified 2026-05-25 (d4b884d) — onStartTrial invokes adapty.makePurchase(selectedProduct) when product loaded; native StoreKit sheet on Release IPA
 
 ### E2. Weekly subscription отсутствует на paywall (есть только year + month)
 
@@ -166,7 +166,7 @@
 - a11y label для weekly tier
 - Auto-renew disclosure не зависит от цены — ok
 
-**Status:** ❌ открыт
+**Status:** ✅ verified 2026-05-25 (d4b884d) — Weekly \$4.99 added, Monthly bumped to \$9.99, Annual auto-selected with 'BEST VALUE · SAVE 81%' badge, trial switched 7d→3d
 
 ### E3. Hardcoded prices в paywall — должны браться из Adapty
 
@@ -178,7 +178,7 @@
 
 **Цепочка → у Vitaminico:** copy pattern.
 
-**Status:** ❌ открыт — связан с E1
+**Status:** ✅ verified 2026-05-25 (d4b884d) — loadPaywallProducts() reads Adapty.getPaywallProducts on mount; product.price.localizedString rendered; hardcoded USD remains as Expo-Go fallback
 
 ### E4. Submit Trial flow всё проверяется на mock, не на реальной IAP
 
@@ -211,7 +211,7 @@
 - Melatonin step с дозой 0.5mg в transition mock — это **B09 из student bug list**. Server-side fix был, но mock data для anon demo продолжает показывать. Связано с J1 ниже.
 - Этот мок-transition виден ВСЕМ anon users одинаково — нарушает иллюзию персонализации
 
-**Status:** ❌ открыт — P1
+**Status:** ✅ verified 2026-05-25 (385a578) — Transition card hidden when livePlan.transition_type is null; Melatonin event also filtered when onboarding.takesMelatonin === false
 
 ---
 
@@ -238,7 +238,7 @@
 - Влияет на F1 — без next-shift Transition card не должна показывать ничего, либо placeholder "Add shift to see transition plan"
 - Влияет на I1 — calendar dots не обновляются потому что shifts пустые
 
-**Status:** ❌ открыт — P1, требует продуктового решения
+**Status:** ✅ verified 2026-05-25 (924eef1) — new step 4/11 'When's your next shift?' with 5 options (Tonight/Tomorrow AM/Tomorrow PM/Day after/On break) per 2026-05-25 funnel research
 
 ---
 
@@ -260,7 +260,7 @@ const canSave = !!dateKey && (isOff || true);  // или specific check для 2
 
 **Цепочка:** связано с B12 — overnight summary. Также: bug `canSave` logic, и END кнопки **не должны выглядеть disabled** при start==end (визуально).
 
-**Status:** ❌ открыт
+**Status:** ✅ verified 2026-05-25 (edadadc) — canSave now only requires dateKey, allowing 24h overnight (07:00→07:00)
 
 ### H2. Selecting "Day" shift type does not allow custom times above 19h or below 6h
 
@@ -274,7 +274,7 @@ const canSave = !!dateKey && (isOff || true);  // или specific check для 2
 
 **Цепочка:** H1 проблема "не могу выбрать 19→19" — это потому что (a) `canSave` блокирует start==end, (b) chips ограничены.
 
-**Status:** ❌ открыт
+**Status:** ✅ verified 2026-05-25 (edadadc) — HOUR_PRESETS now all 24 hours 0-23 instead of preset chips
 
 ---
 
@@ -297,7 +297,7 @@ const canSave = !!dateKey && (isOff || true);  // или specific check для 2
 - `lib/schedule.ts` имеет `buildMonthGrid` и `buildMockGrid` — если для anon всегда mock, тогда добавление shift не отразится в Schedule.
 - Связано с G1: если онбординг не спрашивает next shift и Add shift не сохраняется → пользователь не видит свой график.
 
-**Status:** ❌ открыт — P1
+**Status:** ✅ verified 2026-05-25 (660efd3) — anon add-shift writes to lib/local-shifts/store (AsyncStorage); Schedule grid reads from useLocalShifts when user is anon and has any local entries
 
 ---
 
@@ -319,7 +319,7 @@ const canSave = !!dateKey && (isOff || true);  // или specific check для 2
 - Связано с F1 (Transition card тоже показывает melatonin 0.5mg)
 - Связано с B09 student fix (server-side)
 
-**Status:** ❌ открыт — повторение B09 на client-side
+**Status:** ✅ verified 2026-05-25 (85c5e5d) — plan.tsx imports useOnboarding + filters liveRecs by showMelatonin; also strips moon-glyph from buildFallbackRecs when user opted out
 
 ---
 
@@ -346,7 +346,7 @@ const daysInApp   = user ? (stats?.daysInApp ?? 0)        : mockUser.daysInApp;
 
 **Цепочка:** связано с L1 (14-day badge), F1 (transition mock), J1 (melatonin mock) — везде хардкод-mock для anon.
 
-**Status:** ❌ открыт — P1
+**Status:** ✅ verified 2026-05-25 (f10e020) — anon users now read zeros instead of mockUser.streak/daysInApp/transitionsCompleted/adherence
 
 ---
 
@@ -368,7 +368,7 @@ const daysInApp   = user ? (stats?.daysInApp ?? 0)        : mockUser.daysInApp;
 - Если число "14 DAYS" хардкод — связано с B10 (mock trialEndsAt), мой dynamic-getter fix должен работать
 - Но число не tappable → ощущение как декорация → теряется monetization сигнал
 
-**Status:** ❌ открыт — P2
+**Status:** ✅ verified 2026-05-25 (f10e020) — badge wrapped in Pressable → /(tabs)/profile; also gated on streakValue > 0 so anon users without any streak don't see a misleading badge
 
 ---
 

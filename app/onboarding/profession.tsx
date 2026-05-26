@@ -40,8 +40,8 @@ export default function Profession() {
         />
       }
     >
-      <Eyebrow>{t('onboarding.step_template', { n: 1, total: 10 })}</Eyebrow>
-      <ProgressDots count={10} active={0} style={{ marginVertical: spacing.sm, justifyContent: 'flex-start' }} />
+      <Eyebrow>{t('onboarding.step_template', { n: 1, total: 11 })}</Eyebrow>
+      <ProgressDots count={11} active={0} style={{ marginVertical: spacing.sm, justifyContent: 'flex-start' }} />
 
       <HeroNumber
         value={t('onboarding_screens.profession.hero')}

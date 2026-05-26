@@ -11,9 +11,16 @@
  * — never on the client.
  */
 
-import { adapty } from 'react-native-adapty';
+import { adapty, type AdaptyPaywallProduct, type AdaptyPaywall } from 'react-native-adapty';
 
 let activated = false;
+
+// Default Adapty placement (configured in dashboard). Override via env if needed.
+export const PAYWALL_PLACEMENT_ID =
+  process.env.EXPO_PUBLIC_ADAPTY_PLACEMENT_ID ?? 'main';
+
+// Single-flight cache so repeated useEffect renders don't refetch.
+let paywallCache: { paywall: AdaptyPaywall; products: AdaptyPaywallProduct[] } | null = null;
 
 export async function ensureAdaptyActivated(): Promise<void> {
   if (activated) return;
@@ -58,4 +65,51 @@ export async function restorePurchases() {
     await ensureAdaptyActivated();
   }
   return adapty.restorePurchases();
+}
+
+/**
+ * Fetch the paywall + its products for {@link PAYWALL_PLACEMENT_ID}.
+ *
+ * Returns null on Expo Go (no native module) or when no public key is set —
+ * callers should fall back to hardcoded prices. Throws only for genuine
+ * Adapty errors so the paywall surface can surface a friendly message.
+ *
+ * Results are cached per session (single-flight) so render-driven calls
+ * don't refetch the placement.
+ */
+export async function loadPaywallProducts(): Promise<
+  { paywall: AdaptyPaywall; products: AdaptyPaywallProduct[] } | null
+> {
+  if (paywallCache) return paywallCache;
+  if (!activated) {
+    await ensureAdaptyActivated();
+    if (!activated) return null;
+  }
+  try {
+    const paywall = await adapty.getPaywall(PAYWALL_PLACEMENT_ID);
+    const products = await adapty.getPaywallProducts(paywall);
+    paywallCache = { paywall, products };
+    return paywallCache;
+  } catch (err) {
+    if (__DEV__) {
+      console.log('[adapty] loadPaywallProducts failed:', err);
+    }
+    return null;
+  }
+}
+
+/**
+ * Invoke StoreKit purchase for a product loaded via {@link loadPaywallProducts}.
+ * Returns the resulting profile (with accessLevels) on success.
+ * Throws on user cancel or transaction failure — caller must catch.
+ */
+export async function purchaseProduct(product: AdaptyPaywallProduct) {
+  if (!activated) {
+    await ensureAdaptyActivated();
+  }
+  const result = await adapty.makePurchase(product);
+  // After purchase: invalidate cache so the next paywall open re-reads the
+  // post-purchase profile.
+  paywallCache = null;
+  return result;
 }
