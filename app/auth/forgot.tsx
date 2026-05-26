@@ -135,10 +135,10 @@ export default function Forgot() {
         </View>
       )}
 
-      {!configured && (
+      {__DEV__ && !configured && (
         <View style={styles.demoBox}>
           <Text variant="labelMd" color="inkMuted" uppercase weight="medium">
-            DEMO MODE
+            {t('auth.demo_mode_label')}
           </Text>
           <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 4 }}>
             {t('auth.signup_demo_sub')}

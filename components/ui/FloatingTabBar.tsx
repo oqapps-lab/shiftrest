@@ -53,7 +53,11 @@ export function FloatingTabBar({ state, navigation }: TabBarProps) {
             StyleSheet.absoluteFill,
             {
               borderRadius: radii.pill,
-              backgroundColor: Platform.OS === 'ios' ? 'rgba(253,250,247,0.78)' : 'rgba(253,250,247,0.95)',
+              // B17 fix: tab-bar bg used to be 0.78 alpha on iOS — the
+              // screen background bled through and the pill changed color
+              // per-tab. Raised to 0.94 so the blur stays subtle but the
+              // pill reads as one consistent cream across all 4 tabs.
+              backgroundColor: Platform.OS === 'ios' ? 'rgba(253,250,247,0.94)' : 'rgba(253,250,247,0.97)',
             },
           ]}
         />

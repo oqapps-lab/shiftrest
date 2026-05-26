@@ -159,7 +159,7 @@ export default function Login() {
         </View>
       )}
 
-      {!configured && (
+      {__DEV__ && !configured && (
         <View style={styles.demoBox}>
           <Text variant="labelMd" color="inkMuted" uppercase weight="medium">
             {t('auth.demo_mode_label')}
