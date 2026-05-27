@@ -38,11 +38,22 @@ export default function Profile() {
   // story without any backend.
   const daysInApp = user ? (stats?.daysInApp ?? 0) : 0;
   const adherencePct = user ? (stats?.onPlanPct ?? 0) : 0;
-  // G4 + J1: live journal counter + recent 14 days for the heatmap
+  // G4 + J1 + L1: live journal counter + recent 14 days for the heatmap
+  // + per-bucket tally for the new summary line under the heatmap.
   useSleepJournal();
   const journalDays = journaledDayCount();
   const recentJournal = recentJournalDays(STREAK_LENGTH);
   const hasJournalHistory = recentJournal.some((d) => d.rating !== null);
+  const recentTally = recentJournal.reduce(
+    (acc, d) => {
+      if (d.rating === 'good') acc.good++;
+      else if (d.rating === 'ok') acc.ok++;
+      else if (d.rating === 'bad') acc.bad++;
+      else acc.empty++;
+      return acc;
+    },
+    { good: 0, ok: 0, bad: 0, empty: 0 },
+  );
 
   // Display name preference:
   //   onboarding.displayName (set in S11) →
@@ -211,6 +222,13 @@ export default function Profile() {
               );
             })}
           </View>
+          <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: spacing.sm }}>
+            {t('profile.journal_tally', {
+              good: recentTally.good,
+              ok: recentTally.ok,
+              bad: recentTally.bad,
+            })}
+          </Text>
         </>
       )}
 
