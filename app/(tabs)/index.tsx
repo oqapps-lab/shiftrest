@@ -212,8 +212,9 @@ export default function Home() {
         </GlassCard>
       ))}
 
-      {/* F1: Transition card only when a real live plan has transition_type — never show the mock Night→Day for anon */}
-      {livePlan?.transition_type && (
+      {/* F1: Transition card when a live plan exists. Otherwise show a
+          CTA to plan one — the killer feature is now reachable from UI. */}
+      {livePlan?.transition_type ? (
         <Pressable
           onPress={() => router.push('/transition')}
           style={{ marginTop: spacing.md }}
@@ -230,6 +231,35 @@ export default function Home() {
                 </Text>
               </View>
               <Glyph name="chevronRight" size={20} color="duskDim" />
+            </View>
+          </GlassCard>
+        </Pressable>
+      ) : (
+        <Pressable
+          onPress={() => router.push('/transition-create')}
+          style={{ marginTop: spacing.md }}
+        >
+          <GlassCard variant="paper" padding="xxl">
+            <View style={styles.eventRow}>
+              <View style={[styles.eventIcon, { backgroundColor: colors.primaryContainer }]}>
+                <Glyph name="sparkle" size={22} color="primary" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Eyebrow>{t('today.plan_transition_eyebrow')}</Eyebrow>
+                <Text
+                  variant="titleLg"
+                  family="display"
+                  weight="light"
+                  color="ink"
+                  style={{ marginTop: 2 }}
+                >
+                  {t('today.plan_transition_title')}
+                </Text>
+                <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
+                  {t('today.plan_transition_sub')}
+                </Text>
+              </View>
+              <Glyph name="chevronRight" size={20} color="inkMuted" />
             </View>
           </GlassCard>
         </Pressable>
