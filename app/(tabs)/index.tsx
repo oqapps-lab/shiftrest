@@ -3,8 +3,15 @@
  * Eyebrow greeting + streak pill + Soft hero line + TimelineRing + ShiftBar + 3 next-event cards.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
 import { router } from 'expo-router';
 import {
   Screen,
@@ -39,6 +46,12 @@ import {
 import { useStreak, useActiveTransitionPlan } from '../../lib/queries';
 import { useGeneratedPlan, planHourAsFloat } from '../../lib/queries/plan';
 import { useAuth } from '../../lib/auth/store';
+import {
+  useCaffeineLog,
+  logCaffeine,
+  caffeineCutoffFromLog,
+} from '../../lib/caffeine-log/store';
+import * as Haptics from 'expo-haptics';
 import { t } from '../../lib/i18n';
 
 // Event styles per slot. The "hour" for each slot comes from the live
@@ -52,6 +65,22 @@ const EVENT_STYLES = {
 
 export default function Home() {
   const { state: onboarding, update } = useOnboarding();
+
+  // G5: subtle breathing on the Transition CTA so it draws gentle attention
+  // without being aggressive. 4s in / 4s out, opacity 1 → 0.6 on the icon
+  // container only — keeps the rest of the card stable.
+  const transitionPulse = useSharedValue(1);
+  useEffect(() => {
+    transitionPulse.value = withRepeat(
+      withTiming(0.55, { duration: 2400, easing: Easing.bezier(0.4, 0, 0.2, 1) }),
+      -1,
+      true,
+    );
+  }, [transitionPulse]);
+  const transitionPulseStyle = useAnimatedStyle(() => ({
+    opacity: transitionPulse.value,
+  }));
+
   const shiftOptions: SegmentOption<ShiftKind>[] = [
     { value: 'day', label: t('shift_kind.day_long') },
     { value: 'night', label: t('shift_kind.night_long') },
@@ -74,7 +103,13 @@ export default function Home() {
     const [h, m] = hhmm.split(':').map(Number);
     return (h || 0) + (m || 0) / 60;
   };
-  const caffeineHour = planHourAsFloat(generatedPlan?.caffeine_cutoff_at)
+  // G1: caffeine logger — when user taps "I just had coffee", the cutoff
+  // shifts to lastCup+6h so the event card reflects real intake, not a
+  // static daily estimate.
+  const caffLog = useCaffeineLog();
+  const loggedCutoff = caffeineCutoffFromLog();
+  const caffeineHour = loggedCutoff
+    ?? planHourAsFloat(generatedPlan?.caffeine_cutoff_at)
     ?? parseFloatHour(suggested.caffeineCutoff);
   const melatoninHour = planHourAsFloat(generatedPlan?.melatonin_at)
     ?? parseFloatHour(suggested.melatoninTime);
@@ -195,22 +230,44 @@ export default function Home() {
       <Eyebrow>{t('today.section_next')}</Eyebrow>
       <View style={{ height: spacing.md }} />
 
-      {events.map((e) => (
-        <GlassCard key={e.labelKey} variant="glass" padding="xxl" style={{ marginBottom: spacing.md }}>
-          <View style={styles.eventRow}>
-            <View style={[styles.eventIcon, { backgroundColor: e.tintBg }]}>
-              <Glyph name={e.glyph} size={22} color={e.tintFg} />
+      {events.map((e) => {
+        const isCaffeine = e.glyph === 'coffee';
+        return (
+          <GlassCard key={e.labelKey} variant="glass" padding="xxl" style={{ marginBottom: spacing.md }}>
+            <View style={styles.eventRow}>
+              <View style={[styles.eventIcon, { backgroundColor: e.tintBg }]}>
+                <Glyph name={e.glyph} size={22} color={e.tintFg} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Eyebrow>{t(e.labelKey)}</Eyebrow>
+                <HeroNumber value={formatHour(e.hour)} size="md" style={{ marginTop: 2 }} />
+                <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
+                  {formatRelativeTime(nowHour, e.hour)}
+                </Text>
+                {isCaffeine && caffLog && (
+                  <Text variant="bodyMd" color="primary" style={{ marginTop: 2 }}>
+                    {t('today.caffeine_logged', { cups: caffLog.cups })}
+                  </Text>
+                )}
+              </View>
+              {isCaffeine && (
+                <Pressable
+                  onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    logCaffeine();
+                  }}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('today.log_caffeine_a11y')}
+                  hitSlop={10}
+                  style={styles.logBtn}
+                >
+                  <Glyph name="plus" size={18} color="primary" />
+                </Pressable>
+              )}
             </View>
-            <View style={{ flex: 1 }}>
-              <Eyebrow>{t(e.labelKey)}</Eyebrow>
-              <HeroNumber value={formatHour(e.hour)} size="md" style={{ marginTop: 2 }} />
-              <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
-                {formatRelativeTime(nowHour, e.hour)}
-              </Text>
-            </View>
-          </View>
-        </GlassCard>
-      ))}
+          </GlassCard>
+        );
+      })}
 
       {/* F1: Transition card when a live plan exists. Otherwise show a
           CTA to plan one — the killer feature is now reachable from UI. */}
@@ -241,9 +298,15 @@ export default function Home() {
         >
           <GlassCard variant="paper" padding="xxl">
             <View style={styles.eventRow}>
-              <View style={[styles.eventIcon, { backgroundColor: colors.primaryContainer }]}>
+              <Animated.View
+                style={[
+                  styles.eventIcon,
+                  { backgroundColor: colors.primaryContainer },
+                  transitionPulseStyle,
+                ]}
+              >
                 <Glyph name="sparkle" size={22} color="primary" />
-              </View>
+              </Animated.View>
               <View style={{ flex: 1 }}>
                 <Eyebrow>{t('today.plan_transition_eyebrow')}</Eyebrow>
                 <Text
@@ -293,5 +356,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: spacing.lg,
+  },
+  logBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: radii.lg,
+    backgroundColor: colors.primaryContainer,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: spacing.md,
   },
 });

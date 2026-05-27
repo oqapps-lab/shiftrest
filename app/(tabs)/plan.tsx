@@ -21,6 +21,7 @@ import {
   suggestedPlanFromOnboarding,
   lightWindowsForShift,
   formatHourRange,
+  napWindowForShift,
 } from '../../lib/derive';
 import { useGeneratedPlan, planHourAsFloat, type PlanRecommendation } from '../../lib/queries/plan';
 import { useOnboarding, chronotypeBucket, computeChronotypeScore } from '../../lib/onboarding/store';
@@ -93,14 +94,31 @@ function buildFallbackRecs(
       tintBg: colors.sunriseGlow,
       tintFg: 'sunriseDim',
     },
-    {
-      glyph: 'bed',
-      eyebrow: t('plan.cards.nap.eyebrow'),
-      hero: t('plan.cards.nap.hero'),
-      body: t('plan.cards.nap.body'),
-      tintBg: colors.primaryContainer,
-      tintFg: 'primary',
-    },
+    // G2: shift-aware nap recommendation
+    (() => {
+      const nap = napWindowForShift(shift);
+      if (!nap) {
+        return {
+          glyph: 'bed' as const,
+          eyebrow: t('plan.cards.nap.eyebrow'),
+          hero: t('plan.cards.nap.hero'),
+          body: t('plan.cards.nap.body'),
+          tintBg: colors.primaryContainer,
+          tintFg: 'primary' as const,
+        };
+      }
+      return {
+        glyph: 'bed' as const,
+        eyebrow: t(`plan.cards.nap.eyebrow_${nap.kind}`),
+        hero: t('plan.cards.nap.hero_template', {
+          duration: nap.durationMin,
+          time: formatHour(nap.hour),
+        }),
+        body: t(`plan.cards.nap.body_${nap.kind}`),
+        tintBg: colors.primaryContainer,
+        tintFg: 'primary' as const,
+      };
+    })(),
   ];
 }
 
