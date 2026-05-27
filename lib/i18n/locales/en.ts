@@ -175,6 +175,13 @@ const en = {
     journal_heatmap_label: 'JOURNAL · LAST 14',
     journal_tally: '{{good}} great · {{ok}} ok · {{bad}} rough',
     journal_heatmap_open_a11y: 'Open sleep history',
+    adapt_eyebrow: 'ADAPT SCORE · LAST 14',
+    adapt_well: 'Adapting beautifully',
+    adapt_steady: 'Holding steady',
+    adapt_rough: 'Rough patch — be kind to yourself',
+    adapt_tough: 'Tough stretch — recovery first',
+    adapt_sub: 'Direction of your week. Tap for details.',
+    adapt_open_a11y: 'Open sleep history',
     settings: 'SETTINGS',
     subscription: {
       free: 'Free tier',

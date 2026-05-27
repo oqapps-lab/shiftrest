@@ -10,6 +10,7 @@ import {
   journaledDayCount,
   clearSleepRating,
   getSleepJournal,
+  weeklyAdaptScore,
   type SleepRating,
 } from '../lib/sleep-journal/store';
 
@@ -138,6 +139,72 @@ describe('sleep-journal/store — recentJournalDays', () => {
   test('n=30 returns 30 days', () => {
     const days = recentJournalDays(30);
     expect(days).toHaveLength(30);
+  });
+});
+
+describe('sleep-journal/store — weeklyAdaptScore (F9)', () => {
+  test('null when fewer than 3 entries', () => {
+    expect(weeklyAdaptScore()).toBeNull();
+    setSleepRating('good');
+    expect(weeklyAdaptScore()).toBeNull();
+    setSleepRating('ok', new Date(Date.now() - 86400000));
+    expect(weeklyAdaptScore()).toBeNull();
+  });
+
+  test('all-good across 5 days yields high score', () => {
+    for (let i = 0; i < 5; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      setSleepRating('good', d);
+    }
+    const score = weeklyAdaptScore();
+    expect(score).not.toBeNull();
+    expect(score!).toBeGreaterThan(80);
+  });
+
+  test('all-bad across 5 days yields low score', () => {
+    for (let i = 0; i < 5; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      setSleepRating('bad', d);
+    }
+    const score = weeklyAdaptScore();
+    expect(score).not.toBeNull();
+    expect(score!).toBeLessThan(20);
+  });
+
+  test('mixed entries land somewhere in middle', () => {
+    setSleepRating('good', new Date(Date.now() - 0));
+    setSleepRating('ok', new Date(Date.now() - 86400000));
+    setSleepRating('bad', new Date(Date.now() - 2 * 86400000));
+    setSleepRating('good', new Date(Date.now() - 3 * 86400000));
+    const score = weeklyAdaptScore();
+    expect(score).not.toBeNull();
+    expect(score!).toBeGreaterThan(0);
+    expect(score!).toBeLessThan(100);
+  });
+
+  test('returned integer in [0..100]', () => {
+    for (let i = 0; i < 7; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      setSleepRating(i % 2 === 0 ? 'good' : 'bad', d);
+    }
+    const score = weeklyAdaptScore();
+    expect(score).not.toBeNull();
+    expect(Number.isInteger(score!)).toBe(true);
+    expect(score!).toBeGreaterThanOrEqual(0);
+    expect(score!).toBeLessThanOrEqual(100);
+  });
+
+  test('entries older than 14 days do NOT count', () => {
+    setSleepRating('good');
+    setSleepRating('good', new Date(Date.now() - 86400000));
+    setSleepRating('good', new Date(Date.now() - 2 * 86400000));
+    // Far-past entry — should NOT affect today's score
+    setSleepRating('bad', new Date(Date.now() - 30 * 86400000));
+    const score = weeklyAdaptScore();
+    expect(score!).toBeGreaterThan(80);
   });
 });
 
