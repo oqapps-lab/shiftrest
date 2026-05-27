@@ -40,6 +40,11 @@ const deDE = {
     plan_transition_sub: 'Erhalte einen 2-Tage-Plan für deinen nächsten Nacht ↔ Tag-Wechsel.',
     caffeine_logged: 'Letzte Tasse erfasst · {{cups}} heute',
     log_caffeine_a11y: 'Habe gerade Kaffee getrunken',
+    journal_prompt: 'WIE HAST DU GESCHLAFEN?',
+    journal_logged: 'HEUTE · ERFASST',
+    journal_good: 'Top',
+    journal_ok: 'OK',
+    journal_bad: 'Hart',
   },
   plan: {
     yesterday: 'GESTERN',
@@ -181,6 +186,7 @@ const deDE = {
     anonymous_hint:
       'Anonymer Modus — deine Daten bleiben nur auf diesem Gerät, bis du ein Konto speicherst.',
     stats_empty_hint: 'Dein erster Plan schaltet diese Zahlen frei. Tippe Sleep Plan zum Start.',
+    stat_journal: 'TAGEBUCH',
   },
   sleep_prefs: {
     eyebrow: 'EINSTELLUNGEN',

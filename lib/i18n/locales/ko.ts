@@ -39,6 +39,11 @@ const ko = {
     plan_transition_sub: '다음 야간 ↔ 주간 전환을 위한 2일 단계 계획을 받으세요.',
     caffeine_logged: '마지막 잔 기록 · 오늘 {{cups}}잔',
     log_caffeine_a11y: '방금 커피를 마셨어요',
+    journal_prompt: '잘 주무셨나요?',
+    journal_logged: '오늘 · 기록됨',
+    journal_good: '좋음',
+    journal_ok: '보통',
+    journal_bad: '힘듦',
   },
   plan: {
     yesterday: "어제",
@@ -180,6 +185,7 @@ const ko = {
     anonymous_hint:
       "익명 모드 — 계정을 저장하기 전까지 데이터는 이 기기에만 보관돼요.",
     stats_empty_hint: '첫 계획이 이 숫자들을 잠금 해제합니다. Sleep Plan 탭하여 시작.',
+    stat_journal: '저널',
   },
   sleep_prefs: {
     eyebrow: "설정",

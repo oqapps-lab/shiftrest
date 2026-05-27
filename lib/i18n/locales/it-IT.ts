@@ -39,6 +39,11 @@ const itIT = {
     plan_transition_sub: 'Ottieni un piano di 2 giorni per il prossimo cambio notte ↔ giorno.',
     caffeine_logged: 'Ultima tazza registrata · {{cups}} oggi',
     log_caffeine_a11y: 'Ho appena preso un caffè',
+    journal_prompt: 'COME HAI DORMITO?',
+    journal_logged: 'OGGI · REGISTRATO',
+    journal_good: 'Top',
+    journal_ok: 'OK',
+    journal_bad: 'Duro',
   },
   plan: {
     yesterday: "IERI",
@@ -180,6 +185,7 @@ const itIT = {
     anonymous_hint:
       "Modalità anonima — i tuoi dati restano solo su questo dispositivo finché non salvi un account.",
     stats_empty_hint: 'Il tuo primo piano sblocca questi numeri. Tocca Sleep Plan per iniziare.',
+    stat_journal: 'DIARIO',
   },
   sleep_prefs: {
     eyebrow: "IMPOSTAZIONI",

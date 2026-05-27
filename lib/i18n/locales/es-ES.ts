@@ -40,6 +40,11 @@ const esES = {
     plan_transition_sub: 'Obtén un plan de 2 días para tu próximo cambio noche ↔ día.',
     caffeine_logged: 'Última taza registrada · {{cups}} hoy',
     log_caffeine_a11y: 'Acabo de tomar café',
+    journal_prompt: '¿CÓMO DORMISTE?',
+    journal_logged: 'HOY · REGISTRADO',
+    journal_good: 'Genial',
+    journal_ok: 'OK',
+    journal_bad: 'Mal',
   },
   plan: {
     yesterday: 'AYER',
@@ -181,6 +186,7 @@ const esES = {
     anonymous_hint:
       'Modo anónimo — tus datos están solo en este dispositivo hasta que guardes una cuenta.',
     stats_empty_hint: 'Tu primer plan desbloquea estos números. Toca Sleep Plan para empezar.',
+    stat_journal: 'DIARIO',
   },
   sleep_prefs: {
     eyebrow: 'AJUSTES',

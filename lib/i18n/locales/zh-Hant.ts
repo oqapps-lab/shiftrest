@@ -39,6 +39,11 @@ const zhHant = {
     plan_transition_sub: '為下次夜 ↔ 日切換取得 2 天計畫。',
     caffeine_logged: '最後一杯已記錄 · 今日 {{cups}} 杯',
     log_caffeine_a11y: '我剛喝了咖啡',
+    journal_prompt: '今天睡得如何？',
+    journal_logged: '今天 · 已記錄',
+    journal_good: '很好',
+    journal_ok: '普通',
+    journal_bad: '糟',
   },
   plan: {
     yesterday: "昨天",
@@ -179,6 +184,7 @@ const zhHant = {
     },
     anonymous_hint: "匿名模式 — 你的資料只存在這台裝置上,直到你儲存帳號為止。",
     stats_empty_hint: '你的第一個計畫會解鎖這些數字。點擊 Sleep Plan 開始。',
+    stat_journal: '日誌',
   },
   sleep_prefs: {
     eyebrow: "設定",

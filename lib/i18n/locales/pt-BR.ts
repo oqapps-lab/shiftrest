@@ -39,6 +39,11 @@ const ptBR = {
     plan_transition_sub: 'Obtenha um plano de 2 dias para a próxima troca noite ↔ dia.',
     caffeine_logged: 'Última xícara registrada · {{cups}} hoje',
     log_caffeine_a11y: 'Acabei de tomar café',
+    journal_prompt: 'COMO VOCÊ DORMIU?',
+    journal_logged: 'HOJE · REGISTRADO',
+    journal_good: 'Ótimo',
+    journal_ok: 'OK',
+    journal_bad: 'Ruim',
   },
   plan: {
     yesterday: "ONTEM",
@@ -180,6 +185,7 @@ const ptBR = {
     anonymous_hint:
       "Modo anônimo — seus dados ficam só neste dispositivo até você salvar uma conta.",
     stats_empty_hint: 'Seu primeiro plano desbloqueia esses números. Toque Sleep Plan para começar.',
+    stat_journal: 'DIÁRIO',
   },
   sleep_prefs: {
     eyebrow: "AJUSTES",

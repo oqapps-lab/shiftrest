@@ -39,6 +39,11 @@ const ja = {
     plan_transition_sub: '次の夜 ↔ 昼の切替に向けた2日間プランを取得。',
     caffeine_logged: '最後の一杯を記録 · 今日{{cups}}杯',
     log_caffeine_a11y: 'コーヒーを飲んだ',
+    journal_prompt: 'よく眠れた？',
+    journal_logged: '今日 · 記録済み',
+    journal_good: 'よい',
+    journal_ok: '普通',
+    journal_bad: '悪い',
   },
   plan: {
     yesterday: "昨日",
@@ -180,6 +185,7 @@ const ja = {
     anonymous_hint:
       "匿名モード — アカウントを保存するまで、データはこの端末のみに残ります。",
     stats_empty_hint: '最初のプランで数値が解放されます。Sleep Plan をタップして開始。',
+    stat_journal: 'ジャーナル',
   },
   sleep_prefs: {
     eyebrow: "設定",

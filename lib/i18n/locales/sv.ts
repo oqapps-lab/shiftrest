@@ -39,6 +39,11 @@ const sv = {
     plan_transition_sub: 'Få en 2-dagars plan för nästa natt ↔ dag-byte.',
     caffeine_logged: 'Senaste koppen loggad · {{cups}} idag',
     log_caffeine_a11y: 'Tog precis kaffe',
+    journal_prompt: 'HUR SOV DU?',
+    journal_logged: 'IDAG · LOGGAD',
+    journal_good: 'Toppen',
+    journal_ok: 'OK',
+    journal_bad: 'Tufft',
   },
   plan: {
     yesterday: 'IGÅR',
@@ -180,6 +185,7 @@ const sv = {
     anonymous_hint:
       'Anonymt läge — dina data finns bara på denna enhet tills du sparar ett konto.',
     stats_empty_hint: 'Din första plan låser upp dessa siffror. Tryck Sleep Plan för att börja.',
+    stat_journal: 'DAGBOK',
   },
   sleep_prefs: {
     eyebrow: 'INSTÄLLNINGAR',

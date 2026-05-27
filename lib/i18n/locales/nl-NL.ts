@@ -40,6 +40,11 @@ const nlNL = {
     plan_transition_sub: 'Krijg een 2-daags plan voor je volgende nacht ↔ dag-wissel.',
     caffeine_logged: 'Laatste kop geregistreerd · {{cups}} vandaag',
     log_caffeine_a11y: 'Net koffie gehad',
+    journal_prompt: 'HOE HEB JE GESLAPEN?',
+    journal_logged: 'VANDAAG · GELOGD',
+    journal_good: 'Top',
+    journal_ok: 'OK',
+    journal_bad: 'Slecht',
   },
   plan: {
     yesterday: 'GISTEREN',
@@ -181,6 +186,7 @@ const nlNL = {
     anonymous_hint:
       'Anonieme modus — je gegevens staan alleen op dit toestel tot je een account opslaat.',
     stats_empty_hint: 'Je eerste plan ontgrendelt deze cijfers. Tik Sleep Plan om te starten.',
+    stat_journal: 'DAGBOEK',
   },
   sleep_prefs: {
     eyebrow: 'INSTELLINGEN',

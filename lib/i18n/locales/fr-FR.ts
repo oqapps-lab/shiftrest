@@ -40,6 +40,11 @@ const frFR = {
     plan_transition_sub: 'Obtiens un plan de 2 jours pour ton prochain passage nuit ↔ jour.',
     caffeine_logged: 'Dernière tasse enregistrée · {{cups}} aujourd’hui',
     log_caffeine_a11y: 'Je viens de prendre un café',
+    journal_prompt: 'COMMENT AS-TU DORMI ?',
+    journal_logged: 'AUJOURD’HUI · ENREGISTRÉ',
+    journal_good: 'Top',
+    journal_ok: 'OK',
+    journal_bad: 'Dur',
   },
   plan: {
     yesterday: 'HIER',
@@ -181,6 +186,7 @@ const frFR = {
     anonymous_hint:
       'Mode anonyme — tes données restent sur cet appareil tant que tu n’as pas créé de compte.',
     stats_empty_hint: 'Ton premier plan débloque ces chiffres. Touche Sleep Plan pour démarrer.',
+    stat_journal: 'JOURNAL',
   },
   sleep_prefs: {
     eyebrow: 'RÉGLAGES',
