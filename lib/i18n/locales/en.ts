@@ -346,6 +346,11 @@ const en = {
       subtitle: 'School pickup, partner schedules — anything we should plan around.',
       commitments_label: 'OTHER COMMITMENTS',
       commitments_placeholder: 'e.g. yoga Tue/Thu 18:00',
+      share_eyebrow: 'NOTIFY HOUSEHOLD',
+      share_title: 'Share your sleep window',
+      share_sub: 'Send a quick "I’m sleeping {{start}}–{{end}}" note so partner / kids know not to wake you.',
+      share_cta: 'Share via Messages, Apple Mail, etc.',
+      share_message: 'I’m sleeping {{start}}–{{end}}. Please keep it quiet — I’ll catch up after. (Sent via ShiftRest)',
     },
     goals: {
       eyebrow: 'YOUR GOAL',
