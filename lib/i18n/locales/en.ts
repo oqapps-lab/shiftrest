@@ -173,6 +173,7 @@ const en = {
     stat_journal: 'JOURNAL',
     stat_on_plan: 'ON PLAN',
     journal_heatmap_label: 'JOURNAL · LAST 14',
+    journal_tally: '{{good}} great · {{ok}} ok · {{bad}} rough',
     settings: 'SETTINGS',
     subscription: {
       free: 'Free tier',

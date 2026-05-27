@@ -69,6 +69,14 @@ function buildMonthGrid(year: number, month: number, shiftByIso: Map<string, 'da
   const today = new Date();
   const todayIso = localIso(today);
 
+  // QA-BUG-4 follow-up: when the user has no shifts in their map at all,
+  // paint future dates with no dot (kind='empty' but keep the label).
+  // Otherwise every future cell defaulted to 'off' which conflicted with
+  // the K1 'NO SHIFTS YET' CTA. With at least one explicit shift, fall
+  // through to the legacy 'off' default for unmapped future days so the
+  // legend (Off · Recovery window) still makes sense.
+  const hasAnyMapped = shiftByIso.size > 0;
+
   const cells: Cell[] = [];
   for (let i = 0; i < offset; i++) cells.push({ label: '', kind: 'empty' });
 
@@ -79,6 +87,9 @@ function buildMonthGrid(year: number, month: number, shiftByIso: Map<string, 'da
     let kind: Kind;
     if (realKind) {
       kind = realKind;
+    } else if (!hasAnyMapped) {
+      // No shifts at all → render every cell as a plain date number.
+      kind = 'empty';
     } else if (iso < todayIso) {
       kind = 'past';
     } else {
@@ -92,30 +103,10 @@ function buildMonthGrid(year: number, month: number, shiftByIso: Map<string, 'da
   return cells;
 }
 
-// Stage-5 fallback so unauthenticated demo screens still tell the story.
-function buildMockGrid(year: number, month: number): Cell[] {
-  const firstOfMonth = new Date(year, month, 1);
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const offset = (firstOfMonth.getDay() + 6) % 7;
-  const today = new Date();
-  const todayIso = localIso(today);
-  const cycle: ('day' | 'night' | 'off')[] = [
-    'day', 'day', 'day', 'off', 'off', 'night', 'night',
-    'night', 'off', 'off', 'day', 'day',
-  ];
-  const cells: Cell[] = [];
-  for (let i = 0; i < offset; i++) cells.push({ label: '', kind: 'empty' });
-  for (let d = 1; d <= daysInMonth; d++) {
-    const iso = localIso(new Date(year, month, d));
-    if (iso < todayIso) {
-      cells.push({ label: d, kind: 'past', iso });
-      continue;
-    }
-    cells.push({ label: d, kind: cycle[(d - today.getDate()) % cycle.length] ?? 'off', iso });
-  }
-  while (cells.length % 7 !== 0) cells.push({ label: '', kind: 'empty' });
-  return cells;
-}
+// buildMockGrid removed (QA-BUG-4): the Stage-5 demo cycle painted fake
+// day/night dots that conflicted with the K1 empty-state CTA. buildMonthGrid
+// is now used in all paths — when no shifts exist, future cells render as
+// kind='empty' (date number, no dot).
 
 export default function Schedule() {
   const { user } = useAuth();
@@ -174,13 +165,15 @@ export default function Schedule() {
     }
     return map;
   }, [localShifts]);
+  // QA-BUG-4: never fall back to buildMockGrid when localShifts is empty.
+  // Mock dots painted on top of the K1 'NO SHIFTS YET' CTA created a
+  // contradiction (calendar says "you have shifts" while card says you
+  // don't). Truly empty grid is honest and pairs naturally with the CTA.
   const grid = React.useMemo(
     () => user
       ? buildMonthGrid(viewYear, viewMonth, shiftByIso)
-      : Object.keys(localShifts).length > 0
-        ? buildMonthGrid(viewYear, viewMonth, localShiftByIso)
-        : buildMockGrid(viewYear, viewMonth),
-    [user, viewYear, viewMonth, shiftByIso, localShiftByIso, localShifts],
+      : buildMonthGrid(viewYear, viewMonth, localShiftByIso),
+    [user, viewYear, viewMonth, shiftByIso, localShiftByIso],
   );
 
   const todayIso = localIso(today);
@@ -318,8 +311,14 @@ export default function Schedule() {
       {/* Month grid */}
       <View style={styles.grid}>
         {grid.map((d, i) => {
-          const isToday = d.kind !== 'empty' && d.iso === todayIso;
-          const isInteractive = d.kind !== 'empty' && d.kind !== 'past';
+          // QA-BUG-4 follow-up: distinguish two "empty" forms —
+          //  - leading offset (label === '') → render nothing
+          //  - date cell with no shift assigned (label > 0, kind='empty')
+          //    → render date number without a dot.
+          const isLeadingOffset = d.label === '';
+          const isToday = !isLeadingOffset && d.iso === todayIso;
+          const isInteractive = !isLeadingOffset && d.kind !== 'past';
+          if (isLeadingOffset) return <View key={i} style={styles.cell} />;
           return (
             <Pressable
               key={i}
@@ -330,25 +329,23 @@ export default function Schedule() {
               accessibilityLabel={d.iso}
             >
               {d.kind !== 'empty' && (
-                <>
-                  <View
-                    style={[
-                      styles.dot,
-                      { backgroundColor: dotColor[d.kind], opacity: d.kind === 'past' ? 0.5 : 1 },
-                      isToday && styles.dotToday,
-                    ]}
-                  />
-                  <Text
-                    variant="mono"
-                    family="mono"
-                    color={isToday ? 'primary' : d.kind === 'past' ? 'inkGhost' : 'inkMuted'}
-                    weight={isToday ? 'medium' : undefined}
-                    style={{ marginTop: 4 }}
-                  >
-                    {String(d.label).padStart(2, '0')}
-                  </Text>
-                </>
+                <View
+                  style={[
+                    styles.dot,
+                    { backgroundColor: dotColor[d.kind], opacity: d.kind === 'past' ? 0.5 : 1 },
+                    isToday && styles.dotToday,
+                  ]}
+                />
               )}
+              <Text
+                variant="mono"
+                family="mono"
+                color={isToday ? 'primary' : d.kind === 'past' ? 'inkGhost' : 'inkMuted'}
+                weight={isToday ? 'medium' : undefined}
+                style={{ marginTop: d.kind === 'empty' ? 0 : 4 }}
+              >
+                {String(d.label).padStart(2, '0')}
+              </Text>
             </Pressable>
           );
         })}
