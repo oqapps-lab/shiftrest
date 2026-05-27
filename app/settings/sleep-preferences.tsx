@@ -155,6 +155,12 @@ export default function SleepPreferences() {
       onPress: () => router.push('/settings/light'),
     },
     {
+      glyph: 'pulse',
+      label: t('settings_sub.menu.health'),
+      summary: t('settings_sub.menu.health_sub'),
+      onPress: () => router.push('/settings/health'),
+    },
+    {
       glyph: 'user',
       label: t('settings_sub.menu.family'),
       summary: familySummary(state),

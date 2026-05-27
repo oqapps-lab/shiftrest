@@ -16,6 +16,7 @@ export default function SettingsLayout() {
       <Stack.Screen name="caffeine" />
       <Stack.Screen name="melatonin" />
       <Stack.Screen name="light" />
+      <Stack.Screen name="health" />
       <Stack.Screen name="family" />
       <Stack.Screen name="goals" />
       <Stack.Screen name="name" />

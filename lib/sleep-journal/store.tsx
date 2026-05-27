@@ -82,6 +82,34 @@ export function journaledDayCount(): number {
 }
 
 /**
+ * F9 — Non-Judgmental Sleep Score.
+ *
+ * Computes a 0-100 score from the last 14 days of journal entries.
+ * Scale is positive (never penalises daytime sleep, never compares to a
+ * fixed bedtime). Returns null when too few entries to be meaningful
+ * (need at least 3 logged days).
+ *
+ * Math: good=+2, ok=+1, bad=-1, empty=0. Sum capped to [0..max] where
+ * max = entries * 2. Normalised to 0-100 ratio against max possible.
+ */
+export function weeklyAdaptScore(): number | null {
+  const days = recentJournalDays(14);
+  const logged = days.filter((d) => d.rating !== null);
+  if (logged.length < 3) return null;
+  const raw = logged.reduce((acc, d) => {
+    if (d.rating === 'good') return acc + 2;
+    if (d.rating === 'ok') return acc + 1;
+    if (d.rating === 'bad') return acc - 1;
+    return acc;
+  }, 0);
+  const maxPossible = logged.length * 2;
+  // Map raw [-N..+2N] → [0..100] linearly. Bad week (all 'bad') = 0,
+  // mixed = ~50, all great = 100.
+  const normalised = ((raw + logged.length) / (maxPossible + logged.length)) * 100;
+  return Math.round(Math.max(0, Math.min(100, normalised)));
+}
+
+/**
  * Last N days of journal entries (oldest → newest), each item carries the
  * rating or null when not logged. Drives the Profile heatmap.
  */

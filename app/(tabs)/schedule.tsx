@@ -409,11 +409,30 @@ export default function Schedule() {
         ))}
       </GlassCard>
 
+      {/* F13: Calendar import entry point */}
+      <Pressable
+        onPress={() => router.push('/schedule/import')}
+        accessibilityRole="button"
+        accessibilityLabel={t('schedule.import_a11y')}
+        style={{ marginTop: spacing.lg, alignSelf: 'center' }}
+      >
+        <View style={styles.importLinkRow}>
+          <Glyph name="calendar" size={16} color="primary" />
+          <Text variant="bodyMd" color="primary" weight="medium" style={{ marginLeft: spacing.sm }}>
+            {t('schedule.import_from_calendar')}
+          </Text>
+        </View>
+      </Pressable>
+
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
+  importLinkRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   emptyCtaRow: {
     flexDirection: 'row',
     alignItems: 'center',

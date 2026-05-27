@@ -24,6 +24,7 @@ import {
   Glyph,
   HeroNumber,
   SegmentedControl,
+  PlanUpdatedBanner,
   type SegmentOption,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
@@ -195,6 +196,7 @@ export default function Home() {
 
   return (
     <Screen orbs="normal" scroll>
+      <PlanUpdatedBanner />
       <View style={styles.headerRow}>
         <View style={{ flex: 1 }}>
           <Eyebrow>{displayName ? `${getGreeting(nowHour)}, ${displayName}` : getGreeting(nowHour)}</Eyebrow>

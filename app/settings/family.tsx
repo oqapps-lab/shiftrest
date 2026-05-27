@@ -3,7 +3,8 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Share } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import {
   Screen,
   Eyebrow,
@@ -13,12 +14,18 @@ import {
   Toggle,
   SegmentedControl,
   TextField,
+  GlassCard,
+  PillCTA,
 } from '../../components/ui';
-import { spacing } from '../../constants/tokens';
+import { colors, spacing, radii } from '../../constants/tokens';
 import {
   useOnboarding,
+  chronotypeBucket,
+  computeChronotypeScore,
   type PickupTime,
 } from '../../lib/onboarding/store';
+import { suggestedPlanFromOnboarding, formatHour } from '../../lib/derive';
+import { useGeneratedPlan, planHourAsFloat } from '../../lib/queries/plan';
 import { safeBack } from '../../lib/nav';
 import { t } from '../../lib/i18n';
 
@@ -31,6 +38,31 @@ const PICKUP_OPTIONS: { value: PickupTime; label: string }[] = [
 
 export default function FamilySettings() {
   const { state, update } = useOnboarding();
+  const { data: livePlan } = useGeneratedPlan();
+  const suggested = suggestedPlanFromOnboarding(
+    state.currentShift,
+    chronotypeBucket(computeChronotypeScore(state.chronotypeAnswers)),
+  );
+  const sleepStartHour = planHourAsFloat(livePlan?.sleep_start) ?? suggested.sleepStart;
+  const sleepEndHour = planHourAsFloat(livePlan?.sleep_end) ?? suggested.sleepEnd;
+
+  // F14 — Family Coordination teaser. iOS share sheet with a short
+  // "I'm sleeping…" message + window. Recipient can save to their own
+  // calendar manually. No server, no backend needed.
+  const onShareWindow = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const startStr = formatHour(sleepStartHour);
+    const endStr = formatHour(sleepEndHour);
+    const message = t('settings_sub.family.share_message', {
+      start: startStr,
+      end: endStr,
+    });
+    try {
+      await Share.share({ message });
+    } catch {
+      // user cancelled
+    }
+  };
 
   return (
     <Screen orbs="subtle" scroll keyboardAvoiding tabBarClearance={false}>
@@ -86,6 +118,36 @@ export default function FamilySettings() {
         autoCapitalize="sentences"
       />
 
+      {/* F14: Family Coordination teaser — Share current sleep window */}
+      <GlassCard variant="paper" padding="xxl" style={{ marginTop: spacing.huge }}>
+        <View style={styles.shareIconRow}>
+          <Glyph name="moon" size={22} color="primary" />
+        </View>
+        <View style={{ height: spacing.md }} />
+        <Eyebrow>{t('settings_sub.family.share_eyebrow')}</Eyebrow>
+        <Text
+          variant="titleMd"
+          family="display"
+          weight="medium"
+          color="ink"
+          style={{ marginTop: spacing.sm }}
+        >
+          {t('settings_sub.family.share_title')}
+        </Text>
+        <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: spacing.sm }}>
+          {t('settings_sub.family.share_sub', {
+            start: formatHour(sleepStartHour),
+            end: formatHour(sleepEndHour),
+          })}
+        </Text>
+        <View style={{ height: spacing.md }} />
+        <PillCTA
+          variant="primary"
+          label={t('settings_sub.family.share_cta')}
+          onPress={onShareWindow}
+        />
+      </GlassCard>
+
       <View style={{ height: spacing.huge }} />
     </Screen>
   );
@@ -102,5 +164,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: spacing.md,
+  },
+  shareIconRow: {
+    width: 48,
+    height: 48,
+    borderRadius: radii.lg,
+    backgroundColor: colors.primaryContainer,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

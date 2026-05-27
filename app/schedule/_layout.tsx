@@ -11,6 +11,7 @@ export default function ScheduleStackLayout() {
       }}
     >
       <Stack.Screen name="add-shift" />
+      <Stack.Screen name="import" />
     </Stack>
   );
 }
