@@ -49,7 +49,6 @@ import { useAuth } from '../../lib/auth/store';
 import {
   useCaffeineLog,
   logCaffeine,
-  caffeineCutoffFromLog,
 } from '../../lib/caffeine-log/store';
 import {
   useSleepJournal,
@@ -57,6 +56,8 @@ import {
   ratingForToday,
   type SleepRating,
 } from '../../lib/sleep-journal/store';
+import { useLocalShifts } from '../../lib/local-shifts/store';
+import { detectTransitionOpportunity } from '../../lib/transition/generate';
 import * as Haptics from 'expo-haptics';
 import { t } from '../../lib/i18n';
 
@@ -114,17 +115,18 @@ export default function Home() {
   useSleepJournal();
   const todayRating = ratingForToday();
 
-  // G1: caffeine logger — when user taps "I just had coffee", the cutoff
-  // shifts to lastCup+6h so the event card reflects real intake, not a
-  // static daily estimate.
+  // QA-BUG-1: caffeine logger no longer overrides the cutoff hero time
+  // — that's the suggested 'don't drink after' time (sleep − 6h), a
+  // schedule recommendation, not a per-cup recalculation. Logger now only
+  // contributes a "cups today" counter shown in the card body. Avoids the
+  // confusing 22:00 cap collision with a 22:30 sleep window.
   const caffLog = useCaffeineLog();
-  const loggedCutoff = caffeineCutoffFromLog();
-  const caffeineHour = loggedCutoff
-    ?? planHourAsFloat(generatedPlan?.caffeine_cutoff_at)
+  const sleepStartHour = planHourAsFloat(generatedPlan?.sleep_start) ?? suggested.sleepStart;
+  const caffeineHour =
+    planHourAsFloat(generatedPlan?.caffeine_cutoff_at)
     ?? parseFloatHour(suggested.caffeineCutoff);
   const melatoninHour = planHourAsFloat(generatedPlan?.melatonin_at)
     ?? parseFloatHour(suggested.melatoninTime);
-  const sleepStartHour = planHourAsFloat(generatedPlan?.sleep_start) ?? suggested.sleepStart;
 
   // J1/F1 — exclude melatonin event when user opted out in onboarding
   const showMelatonin = onboarding.takesMelatonin !== false;
@@ -162,6 +164,21 @@ export default function Home() {
   // demo-fixed 14:30 from mockPlan.
   const now = new Date();
   const nowHour = now.getHours() + now.getMinutes() / 60;
+
+  // D1 + QA-BUG-2: scan the next 7 days of shifts for a night→day or
+  // day→night pivot. When detected, the CTA card hero becomes a SMART
+  // suggestion ("Upcoming: night → day") rather than a generic prompt.
+  const localShiftsMap = useLocalShifts();
+  const shiftByIsoForDetect = new Map<string, ShiftKind>();
+  for (const [iso, kind] of Object.entries(localShiftsMap)) {
+    if (kind === 'day' || kind === 'night' || kind === 'off') {
+      shiftByIsoForDetect.set(iso, kind);
+    }
+  }
+  const todayIsoForDetect = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const detected = !livePlan?.transition_type
+    ? detectTransitionOpportunity(shiftByIsoForDetect, todayIsoForDetect)
+    : null;
 
   // Mirror Profile's fallback chain so the greeting never says "MARINA"
   // when the real signed-in user has a different display_name. Use just
@@ -365,7 +382,11 @@ export default function Home() {
                 <Glyph name="sparkle" size={22} color="primary" />
               </Animated.View>
               <View style={{ flex: 1 }}>
-                <Eyebrow>{t('today.plan_transition_eyebrow')}</Eyebrow>
+                <Eyebrow>
+                  {detected
+                    ? t('today.plan_transition_detected_eyebrow')
+                    : t('today.plan_transition_eyebrow')}
+                </Eyebrow>
                 <Text
                   variant="titleLg"
                   family="display"
@@ -373,7 +394,11 @@ export default function Home() {
                   color="ink"
                   style={{ marginTop: 2 }}
                 >
-                  {t('today.plan_transition_title')}
+                  {detected
+                    ? detected.type === 'night_to_day'
+                      ? t('today.plan_transition_n2d_title')
+                      : t('today.plan_transition_d2n_title')
+                    : t('today.plan_transition_title')}
                 </Text>
                 <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
                   {t('today.plan_transition_sub')}
