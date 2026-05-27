@@ -186,6 +186,7 @@ const ja = {
       "匿名モード — アカウントを保存するまで、データはこの端末のみに残ります。",
     stats_empty_hint: '最初のプランで数値が解放されます。Sleep Plan をタップして開始。',
     stat_journal: 'ジャーナル',
+    journal_heatmap_label: 'ジャーナル · 直近14日',
   },
   sleep_prefs: {
     eyebrow: "設定",

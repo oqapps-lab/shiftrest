@@ -187,6 +187,7 @@ const deDE = {
       'Anonymer Modus — deine Daten bleiben nur auf diesem Gerät, bis du ein Konto speicherst.',
     stats_empty_hint: 'Dein erster Plan schaltet diese Zahlen frei. Tippe Sleep Plan zum Start.',
     stat_journal: 'TAGEBUCH',
+    journal_heatmap_label: 'TAGEBUCH · LETZTE 14',
   },
   sleep_prefs: {
     eyebrow: 'EINSTELLUNGEN',

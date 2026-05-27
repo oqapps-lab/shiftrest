@@ -187,6 +187,7 @@ const nlNL = {
       'Anonieme modus — je gegevens staan alleen op dit toestel tot je een account opslaat.',
     stats_empty_hint: 'Je eerste plan ontgrendelt deze cijfers. Tik Sleep Plan om te starten.',
     stat_journal: 'DAGBOEK',
+    journal_heatmap_label: 'DAGBOEK · LAATSTE 14',
   },
   sleep_prefs: {
     eyebrow: 'INSTELLINGEN',

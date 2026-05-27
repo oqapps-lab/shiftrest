@@ -185,6 +185,7 @@ const zhHant = {
     anonymous_hint: "匿名模式 — 你的資料只存在這台裝置上,直到你儲存帳號為止。",
     stats_empty_hint: '你的第一個計畫會解鎖這些數字。點擊 Sleep Plan 開始。',
     stat_journal: '日誌',
+    journal_heatmap_label: '日誌 · 最近 14 天',
   },
   sleep_prefs: {
     eyebrow: "設定",

@@ -187,6 +187,7 @@ const frFR = {
       'Mode anonyme — tes données restent sur cet appareil tant que tu n’as pas créé de compte.',
     stats_empty_hint: 'Ton premier plan débloque ces chiffres. Touche Sleep Plan pour démarrer.',
     stat_journal: 'JOURNAL',
+    journal_heatmap_label: 'JOURNAL · 14 DERNIERS',
   },
   sleep_prefs: {
     eyebrow: 'RÉGLAGES',

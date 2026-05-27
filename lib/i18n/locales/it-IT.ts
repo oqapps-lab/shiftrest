@@ -186,6 +186,7 @@ const itIT = {
       "Modalità anonima — i tuoi dati restano solo su questo dispositivo finché non salvi un account.",
     stats_empty_hint: 'Il tuo primo piano sblocca questi numeri. Tocca Sleep Plan per iniziare.',
     stat_journal: 'DIARIO',
+    journal_heatmap_label: 'DIARIO · ULTIMI 14',
   },
   sleep_prefs: {
     eyebrow: "IMPOSTAZIONI",

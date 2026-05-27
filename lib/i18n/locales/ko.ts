@@ -186,6 +186,7 @@ const ko = {
       "익명 모드 — 계정을 저장하기 전까지 데이터는 이 기기에만 보관돼요.",
     stats_empty_hint: '첫 계획이 이 숫자들을 잠금 해제합니다. Sleep Plan 탭하여 시작.',
     stat_journal: '저널',
+    journal_heatmap_label: '저널 · 최근 14일',
   },
   sleep_prefs: {
     eyebrow: "설정",

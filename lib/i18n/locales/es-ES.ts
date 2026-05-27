@@ -187,6 +187,7 @@ const esES = {
       'Modo anónimo — tus datos están solo en este dispositivo hasta que guardes una cuenta.',
     stats_empty_hint: 'Tu primer plan desbloquea estos números. Toca Sleep Plan para empezar.',
     stat_journal: 'DIARIO',
+    journal_heatmap_label: 'DIARIO · ÚLTIMOS 14',
   },
   sleep_prefs: {
     eyebrow: 'AJUSTES',

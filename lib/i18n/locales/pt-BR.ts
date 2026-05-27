@@ -186,6 +186,7 @@ const ptBR = {
       "Modo anônimo — seus dados ficam só neste dispositivo até você salvar uma conta.",
     stats_empty_hint: 'Seu primeiro plano desbloqueia esses números. Toque Sleep Plan para começar.',
     stat_journal: 'DIÁRIO',
+    journal_heatmap_label: 'DIÁRIO · ÚLTIMOS 14',
   },
   sleep_prefs: {
     eyebrow: "AJUSTES",

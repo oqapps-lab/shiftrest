@@ -186,6 +186,7 @@ const sv = {
       'Anonymt läge — dina data finns bara på denna enhet tills du sparar ett konto.',
     stats_empty_hint: 'Din första plan låser upp dessa siffror. Tryck Sleep Plan för att börja.',
     stat_journal: 'DAGBOK',
+    journal_heatmap_label: 'DAGBOK · SENASTE 14',
   },
   sleep_prefs: {
     eyebrow: 'INSTÄLLNINGAR',
