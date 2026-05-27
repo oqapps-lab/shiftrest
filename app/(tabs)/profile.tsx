@@ -191,12 +191,18 @@ export default function Profile() {
         })}
       </View>
 
-      {/* J1: Sleep journal 14-day heatmap. Only render when user has any
-          ratings — keeps the screen quiet for brand-new users. */}
+      {/* J1 + F11: 14-day heatmap is a tap-target → /history full view */}
       {hasJournalHistory && (
-        <>
+        <Pressable
+          onPress={() => router.push('/history')}
+          accessibilityRole="button"
+          accessibilityLabel={t('profile.journal_heatmap_open_a11y')}
+        >
           <View style={{ height: spacing.lg }} />
-          <Eyebrow>{t('profile.journal_heatmap_label')}</Eyebrow>
+          <View style={styles.heatmapHeader}>
+            <Eyebrow>{t('profile.journal_heatmap_label')}</Eyebrow>
+            <Glyph name="chevronRight" size={16} color="inkMuted" />
+          </View>
           <View style={styles.streakRow}>
             {recentJournal.map((d, i) => {
               const isToday = i === recentJournal.length - 1;
@@ -229,7 +235,7 @@ export default function Profile() {
               bad: recentTally.bad,
             })}
           </Text>
-        </>
+        </Pressable>
       )}
 
       <View style={{ height: spacing.huge }} />
@@ -309,6 +315,11 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
+  heatmapHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   streakRow: {
     flexDirection: 'row',
     marginTop: spacing.md,

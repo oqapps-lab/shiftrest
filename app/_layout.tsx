@@ -85,6 +85,7 @@ export default function RootLayout() {
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="transition" options={{ presentation: 'pageSheet' }} />
             <Stack.Screen name="transition-create" options={{ presentation: 'pageSheet' }} />
+            <Stack.Screen name="history" />
             <Stack.Screen name="paywall" options={{ presentation: 'pageSheet' }} />
           </Stack>
           </OnboardingProvider>
