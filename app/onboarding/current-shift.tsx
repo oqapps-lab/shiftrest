@@ -53,13 +53,13 @@ export default function CurrentShift() {
         <PillCTA
           variant="primary"
           label={t('onboarding.continue')}
-          onPress={() => router.push('/onboarding/problem')}
+          onPress={() => router.push('/onboarding/next-shift')}
         />
       }
     >
-      <Eyebrow>{t('onboarding.step_template', { n: 3, total: 10 })}</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 3, total: 11 })}</Eyebrow>
       <ProgressDots
-        count={10}
+        count={11}
         active={2}
         style={{ marginVertical: spacing.sm, justifyContent: 'flex-start' }}
       />

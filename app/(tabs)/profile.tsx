@@ -15,29 +15,45 @@ import {
   Glyph,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
-import { mockUser, mockProfessions } from '../../mock/user';
+import { mockProfessions } from '../../mock/user';
 import { formatTrialRemaining, clampDisplayName } from '../../lib/derive';
 import { useAuth } from '../../lib/auth/store';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useProfileStats, useSubscription } from '../../lib/queries';
+import { useSleepJournal, journaledDayCount, recentJournalDays } from '../../lib/sleep-journal/store';
 import { t } from '../../lib/i18n';
 
 const STREAK_LENGTH = 14;
 
 export default function Profile() {
   const { user, signOut } = useAuth();
-  const { state: onboarding, reset: resetOnboarding } = useOnboarding();
+  const { state: onboarding } = useOnboarding();
   const { data: streak } = useStreak();
   const { data: stats } = useProfileStats();
   const { data: subscription } = useSubscription();
-  const streakValue = user ? (streak?.current_streak ?? 0) : mockUser.streak;
+  const streakValue = user ? (streak?.current_streak ?? 0) : 0;
 
   // For signed-in users always show their real numbers (0 is honest).
   // Anonymous demo mode falls through to mockUser so the screen tells a
   // story without any backend.
-  const daysInApp = user ? (stats?.daysInApp ?? 0) : mockUser.daysInApp;
-  const plansCompleted = user ? (stats?.plansCompleted ?? 0) : mockUser.transitionsCompleted;
-  const adherencePct = user ? (stats?.onPlanPct ?? 0) : mockUser.adherence;
+  const daysInApp = user ? (stats?.daysInApp ?? 0) : 0;
+  const adherencePct = user ? (stats?.onPlanPct ?? 0) : 0;
+  // G4 + J1 + L1: live journal counter + recent 14 days for the heatmap
+  // + per-bucket tally for the new summary line under the heatmap.
+  useSleepJournal();
+  const journalDays = journaledDayCount();
+  const recentJournal = recentJournalDays(STREAK_LENGTH);
+  const hasJournalHistory = recentJournal.some((d) => d.rating !== null);
+  const recentTally = recentJournal.reduce(
+    (acc, d) => {
+      if (d.rating === 'good') acc.good++;
+      else if (d.rating === 'ok') acc.ok++;
+      else if (d.rating === 'bad') acc.bad++;
+      else acc.empty++;
+      return acc;
+    },
+    { good: 0, ok: 0, bad: 0, empty: 0 },
+  );
 
   // Display name preference:
   //   onboarding.displayName (set in S11) →
@@ -102,29 +118,6 @@ export default function Profile() {
         onPress: () => router.push('/auth/signup'),
       };
 
-  const restartOnboardingRow = {
-    glyph: 'sparkle' as const,
-    label: t('profile.rows.restart_dev'),
-    subtitle: t('profile.rows.restart_dev_sub'),
-    onPress: () => {
-      Alert.alert(
-        t('profile.restart.title'),
-        t('profile.restart.body'),
-        [
-          { text: t('profile.restart.cancel'), style: 'cancel' },
-          {
-            text: t('profile.restart.confirm'),
-            style: 'destructive',
-            onPress: () => {
-              resetOnboarding();
-              router.replace('/onboarding/profession');
-            },
-          },
-        ],
-      );
-    },
-  };
-
   const SETTINGS: {
     glyph: 'gear' | 'bell' | 'sparkle' | 'user';
     label: string;
@@ -156,7 +149,6 @@ export default function Profile() {
       subtitle: t('profile.rows.about_sub'),
       onPress: () => router.push('/settings/about'),
     },
-    ...(__DEV__ ? [restartOnboardingRow] : []),
   ];
   return (
     <Screen orbs="subtle" variant="dim" scroll>
@@ -199,6 +191,53 @@ export default function Profile() {
         })}
       </View>
 
+      {/* J1 + F11: 14-day heatmap is a tap-target → /history full view */}
+      {hasJournalHistory && (
+        <Pressable
+          onPress={() => router.push('/history')}
+          accessibilityRole="button"
+          accessibilityLabel={t('profile.journal_heatmap_open_a11y')}
+        >
+          <View style={{ height: spacing.lg }} />
+          <View style={styles.heatmapHeader}>
+            <Eyebrow>{t('profile.journal_heatmap_label')}</Eyebrow>
+            <Glyph name="chevronRight" size={16} color="inkMuted" />
+          </View>
+          <View style={styles.streakRow}>
+            {recentJournal.map((d, i) => {
+              const isToday = i === recentJournal.length - 1;
+              const color =
+                d.rating === 'good'
+                  ? colors.primary
+                  : d.rating === 'ok'
+                  ? colors.sunriseDim
+                  : d.rating === 'bad'
+                  ? colors.duskDim
+                  : null;
+              return (
+                <View
+                  key={d.iso}
+                  style={[
+                    styles.streakDot,
+                    color
+                      ? { backgroundColor: color }
+                      : styles.streakDotEmpty,
+                    color && isToday && styles.streakDotActive,
+                  ]}
+                />
+              );
+            })}
+          </View>
+          <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: spacing.sm }}>
+            {t('profile.journal_tally', {
+              good: recentTally.good,
+              ok: recentTally.ok,
+              bad: recentTally.bad,
+            })}
+          </Text>
+        </Pressable>
+      )}
+
       <View style={{ height: spacing.huge }} />
 
       <View style={styles.statsRow}>
@@ -208,8 +247,8 @@ export default function Profile() {
         </GlassCard>
         <View style={{ width: spacing.sm }} />
         <GlassCard variant="glass" padding="lg" style={styles.stat}>
-          <Eyebrow size="md">{t('profile.stat_plans')}</Eyebrow>
-          <HeroNumber value={plansCompleted} size="md" />
+          <Eyebrow size="md">{t('profile.stat_journal')}</Eyebrow>
+          <HeroNumber value={journalDays} size="md" />
         </GlassCard>
         <View style={{ width: spacing.sm }} />
         <GlassCard variant="glass" padding="lg" style={styles.stat}>
@@ -217,6 +256,18 @@ export default function Profile() {
           <HeroNumber value={adherencePct} size="md" unit="%" />
         </GlassCard>
       </View>
+
+      {/* F2: empty-state hint when all stats are zero (brand-new user) */}
+      {daysInApp === 0 && journalDays === 0 && (
+        <Text
+          variant="bodyMd"
+          color="inkMuted"
+          align="center"
+          style={{ marginTop: spacing.md }}
+        >
+          {t('profile.stats_empty_hint')}
+        </Text>
+      )}
 
       <View style={{ height: spacing.huge }} />
 
@@ -264,6 +315,11 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
+  heatmapHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   streakRow: {
     flexDirection: 'row',
     marginTop: spacing.md,

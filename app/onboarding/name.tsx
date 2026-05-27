@@ -38,10 +38,10 @@ export default function Name() {
         />
       }
     >
-      <Eyebrow>{t('onboarding.step_template', { n: 10, total: 10 })}</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 11, total: 11 })}</Eyebrow>
       <ProgressDots
-        count={10}
-        active={9}
+        count={11}
+        active={10}
         style={{ marginVertical: spacing.sm, justifyContent: 'flex-start' }}
       />
 
@@ -64,6 +64,8 @@ export default function Name() {
         placeholder={t('onboarding_screens.name.placeholder')}
         autoCapitalize="words"
         autoCorrect={false}
+        spellCheck={false}
+        textContentType="name"
         maxLength={50}
         value={name}
         onChangeText={(v) => update({ displayName: v })}

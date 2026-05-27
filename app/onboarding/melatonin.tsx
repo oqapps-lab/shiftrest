@@ -47,10 +47,10 @@ export default function Melatonin() {
         />
       }
     >
-      <Eyebrow>{t('onboarding.step_template', { n: 8, total: 10 })}</Eyebrow>
+      <Eyebrow>{t('onboarding.step_template', { n: 9, total: 11 })}</Eyebrow>
       <ProgressDots
-        count={10}
-        active={7}
+        count={11}
+        active={8}
         style={{ marginVertical: spacing.sm, justifyContent: 'flex-start' }}
       />
 
@@ -140,12 +140,13 @@ const styles = StyleSheet.create({
   },
   chipRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     gap: spacing.sm,
   },
+  // B15 fix: each chip flex:1 so the 5 doses spread across the full row
+  // instead of clumping left with empty right-side space.
   chip: {
-    minWidth: 56,
-    paddingHorizontal: spacing.lg,
+    flex: 1,
+    paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
     borderRadius: radii.pill,
     alignItems: 'center',

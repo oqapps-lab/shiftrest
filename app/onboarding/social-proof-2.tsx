@@ -1,6 +1,8 @@
 /**
- * S12 — Social proof break #2. Filler before the loading → aha chain.
- * No step dots (onboarding questions are done); final CTA leads into loading.
+ * S12 — Onboarding research break #2 (no step dots — questions are done).
+ * Replaces fake "★ 4.8 · N reviews" + fabricated testimonial per Apple
+ * Guideline 2.3.7 / 5.2.5. Evidence-based copy, no star ratings, no
+ * fabricated review counts.
  */
 
 import React from 'react';
@@ -15,13 +17,9 @@ import {
   PillCTA,
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
-import { mockTestimonials, mockSocialProofStats } from '../../mock/user';
 import { t } from '../../lib/i18n';
 
 export default function SocialProof2() {
-  // Intentional: SP1 shows `.nurse`, SP2 shows `.fire` — different voice/angle.
-  const testimonial = mockTestimonials.fire;
-
   return (
     <Screen
       orbs="normal"
@@ -38,34 +36,15 @@ export default function SocialProof2() {
       <View style={styles.headWrap}>
         <Eyebrow>{t('onboarding_screens.social_proof_2.eyebrow')}</Eyebrow>
         <View style={{ marginTop: spacing.md }}>
-          <SerifHero align="center">
-            {t('onboarding_screens.social_proof_2.hero_template', { n: mockSocialProofStats.totalUsers.toLocaleString() })}
-          </SerifHero>
+          <SerifHero align="center">{t('onboarding_screens.social_proof_2.hero')}</SerifHero>
         </View>
       </View>
 
-      <GlassCard
-        variant="glass"
-        padding="xxl"
-        style={{ marginBottom: spacing.xl }}
-      >
-        <Text
-          variant="titleMd"
-          family="serif"
-          weight="lightItalic"
-          color="ink"
-          style={{ marginBottom: spacing.md }}
-        >
-          {`"${testimonial.quote}"`}
-        </Text>
-        <Text variant="labelLg" family="body" weight="medium" color="inkMuted" uppercase>
-          {testimonial.author}
+      <GlassCard variant="glass" padding="xxl">
+        <Text variant="bodyLg" color="ink">
+          {t('onboarding_screens.social_proof_2.body')}
         </Text>
       </GlassCard>
-
-      <Text variant="bodyMd" color="inkSubtle" align="center">
-        {t('onboarding_screens.social_proof_2.reviews_template', { rating: mockSocialProofStats.appStoreRating, n: mockSocialProofStats.totalReviews.toLocaleString() })}
-      </Text>
     </Screen>
   );
 }

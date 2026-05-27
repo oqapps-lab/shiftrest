@@ -15,11 +15,13 @@ import { t } from '../i18n';
 import { DeviceEventEmitter } from 'react-native';
 import { supabase, isSupabaseConfigured } from '../supabase';
 import { useAuth } from '../auth/store';
+import { useLocalTransitionPlan } from '../local-transition/store';
 
 export const EVENTS = {
   shiftsChanged: 'shifts:changed',
   streakChanged: 'streak:changed',
   transitionChanged: 'transition:changed',
+  plansChanged: 'plans:changed',
   profileStatsChanged: 'profile-stats:changed',
   subscriptionChanged: 'subscription:changed',
 } as const;
@@ -164,6 +166,7 @@ export interface TransitionPlanWithSteps {
 
 export function useActiveTransitionPlan(): QueryResult<TransitionPlanWithSteps | null> {
   const { user } = useAuth();
+  const local = useLocalTransitionPlan();
   const [data, setData] = useState<TransitionPlanWithSteps | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -171,9 +174,17 @@ export function useActiveTransitionPlan(): QueryResult<TransitionPlanWithSteps |
 
   const refetch = useCallback(() => setTick((t) => t + 1), []);
 
+  // QA-BUG-5: when anonymous, return the local store snapshot DIRECTLY so
+  // updates from setLocalTransitionPlan re-render consumers. Earlier
+  // setData(local) inside the supabase useEffect captured `local` in a
+  // closure that didn't re-run on local changes, leaving the Home card
+  // stuck on the CTA after the user generated a plan.
+  const anon = !isSupabaseConfigured || !supabase || !user?.id;
+
   useEffect(() => {
-    if (!isSupabaseConfigured || !supabase || !user?.id) {
-      setData(null);
+    // Anonymous user (or no Supabase): use the local in-memory store so
+    // the Home transition card and modal still work in demo mode.
+    if (anon) {
       return;
     }
     let alive = true;
@@ -245,13 +256,21 @@ export function useActiveTransitionPlan(): QueryResult<TransitionPlanWithSteps |
     return () => sub.remove();
   }, [refetch]);
 
-  return { data, loading, error, refetch };
+  // QA-BUG-5: for anon, expose the live `local` snapshot — useLocalTransitionPlan
+  // already subscribes to its DeviceEventEmitter, so re-renders happen
+  // automatically on setLocalTransitionPlan/toggleLocalTransitionStep.
+  return {
+    data: anon ? local : data,
+    loading,
+    error,
+    refetch,
+  };
 }
 
 // ─── Subscription state ────────────────────────────────────────────────────
 
 export type SubscriptionStatus = 'free' | 'trial' | 'active' | 'expired' | 'cancelled' | 'grace_period';
-export type SubscriptionPlan = 'free' | 'premium_monthly' | 'premium_annual';
+export type SubscriptionPlan = 'free' | 'premium_weekly' | 'premium_monthly' | 'premium_annual';
 
 export interface SubscriptionRow {
   status: SubscriptionStatus;
@@ -262,7 +281,7 @@ export interface SubscriptionRow {
 }
 
 /**
- * Activate a self-service 7-day trial via RPC. Stage 6 placeholder until
+ * Activate a self-service 3-day trial via RPC. Stage 6 placeholder until
  * Adapty (Stage 7) replaces this with a real purchase flow.
  *
  * The RPC `public.activate_self_service_trial` runs SECURITY DEFINER and

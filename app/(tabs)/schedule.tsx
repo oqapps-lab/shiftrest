@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Alert } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import {
   Screen,
@@ -23,6 +23,12 @@ import { colors, spacing } from '../../constants/tokens';
 import { formatMonthYear } from '../../lib/derive';
 import { useShifts } from '../../lib/queries';
 import { useAuth } from '../../lib/auth/store';
+import { useLocalShifts, removeLocalShift } from '../../lib/local-shifts/store';
+import { supabase, isSupabaseConfigured } from '../../lib/supabase';
+import { emitChange, EVENTS } from '../../lib/queries';
+import { useOnboarding } from '../../lib/onboarding/store';
+import { applyScheduleTemplate } from '../../lib/schedule/apply-template';
+import { mockScheduleTemplates } from '../../mock/user';
 import { t } from '../../lib/i18n';
 import type { Translations } from '../../lib/i18n/locales/en';
 
@@ -63,6 +69,14 @@ function buildMonthGrid(year: number, month: number, shiftByIso: Map<string, 'da
   const today = new Date();
   const todayIso = localIso(today);
 
+  // QA-BUG-4 follow-up: when the user has no shifts in their map at all,
+  // paint future dates with no dot (kind='empty' but keep the label).
+  // Otherwise every future cell defaulted to 'off' which conflicted with
+  // the K1 'NO SHIFTS YET' CTA. With at least one explicit shift, fall
+  // through to the legacy 'off' default for unmapped future days so the
+  // legend (Off · Recovery window) still makes sense.
+  const hasAnyMapped = shiftByIso.size > 0;
+
   const cells: Cell[] = [];
   for (let i = 0; i < offset; i++) cells.push({ label: '', kind: 'empty' });
 
@@ -73,6 +87,9 @@ function buildMonthGrid(year: number, month: number, shiftByIso: Map<string, 'da
     let kind: Kind;
     if (realKind) {
       kind = realKind;
+    } else if (!hasAnyMapped) {
+      // No shifts at all → render every cell as a plain date number.
+      kind = 'empty';
     } else if (iso < todayIso) {
       kind = 'past';
     } else {
@@ -86,35 +103,21 @@ function buildMonthGrid(year: number, month: number, shiftByIso: Map<string, 'da
   return cells;
 }
 
-// Stage-5 fallback so unauthenticated demo screens still tell the story.
-function buildMockGrid(year: number, month: number): Cell[] {
-  const firstOfMonth = new Date(year, month, 1);
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const offset = (firstOfMonth.getDay() + 6) % 7;
-  const today = new Date();
-  const todayIso = localIso(today);
-  const cycle: ('day' | 'night' | 'off')[] = [
-    'day', 'day', 'day', 'off', 'off', 'night', 'night',
-    'night', 'off', 'off', 'day', 'day',
-  ];
-  const cells: Cell[] = [];
-  for (let i = 0; i < offset; i++) cells.push({ label: '', kind: 'empty' });
-  for (let d = 1; d <= daysInMonth; d++) {
-    const iso = localIso(new Date(year, month, d));
-    if (iso < todayIso) {
-      cells.push({ label: d, kind: 'past', iso });
-      continue;
-    }
-    cells.push({ label: d, kind: cycle[(d - today.getDate()) % cycle.length] ?? 'off', iso });
-  }
-  while (cells.length % 7 !== 0) cells.push({ label: '', kind: 'empty' });
-  return cells;
-}
+// buildMockGrid removed (QA-BUG-4): the Stage-5 demo cycle painted fake
+// day/night dots that conflicted with the K1 empty-state CTA. buildMonthGrid
+// is now used in all paths — when no shifts exist, future cells render as
+// kind='empty' (date number, no dot).
 
 export default function Schedule() {
   const { user } = useAuth();
+  const { state: onboarding } = useOnboarding();
+  const [applying, setApplying] = React.useState(false);
 
-  const today = React.useMemo(() => new Date(), []);
+  // Re-evaluate on every render so the "today" highlight stays correct
+  // when the app sits open past midnight. The previous useMemo(()=>new Date(), [])
+  // would freeze "today" at mount time and incorrectly highlight yesterday
+  // until the user re-launched.
+  const today = new Date();
   // Combined state so rapid taps near year boundary use the LATEST pair
   // in functional setters (avoid closure-captured staleness).
   const [view, setView] = React.useState(() => ({ year: today.getFullYear(), month: today.getMonth() }));
@@ -134,8 +137,10 @@ export default function Schedule() {
   const goToToday = React.useCallback(() => {
     if (isCurrentMonth) return;
     Haptics.selectionAsync();
-    setView({ year: today.getFullYear(), month: today.getMonth() });
-  }, [isCurrentMonth, today]);
+    // Fresh new Date() at call time — never stale.
+    const now = new Date();
+    setView({ year: now.getFullYear(), month: now.getMonth() });
+  }, [isCurrentMonth]);
 
   const viewedDate = React.useMemo(() => new Date(viewYear, viewMonth, 1), [viewYear, viewMonth]);
   const monthStart = localIso(new Date(viewYear, viewMonth, 1));
@@ -149,12 +154,108 @@ export default function Schedule() {
     return map;
   }, [shiftRows]);
 
+  // I1: anon users — use local-shifts (persisted to AsyncStorage) instead of
+  // the static buildMockGrid cycle so Add-shift entries actually paint the
+  // calendar.
+  const localShifts = useLocalShifts();
+  const localShiftByIso = React.useMemo(() => {
+    const map = new Map<string, 'day' | 'night'>();
+    for (const [iso, kind] of Object.entries(localShifts)) {
+      if (kind === 'day' || kind === 'night') map.set(iso, kind);
+    }
+    return map;
+  }, [localShifts]);
+  // QA-BUG-4: never fall back to buildMockGrid when localShifts is empty.
+  // Mock dots painted on top of the K1 'NO SHIFTS YET' CTA created a
+  // contradiction (calendar says "you have shifts" while card says you
+  // don't). Truly empty grid is honest and pairs naturally with the CTA.
   const grid = React.useMemo(
-    () => (user ? buildMonthGrid(viewYear, viewMonth, shiftByIso) : buildMockGrid(viewYear, viewMonth)),
-    [user, viewYear, viewMonth, shiftByIso],
+    () => user
+      ? buildMonthGrid(viewYear, viewMonth, shiftByIso)
+      : buildMonthGrid(viewYear, viewMonth, localShiftByIso),
+    [user, viewYear, viewMonth, shiftByIso, localShiftByIso],
   );
 
   const todayIso = localIso(today);
+
+  // K1: Empty-state detection — true when the user has a chosen rotation
+  // pattern but no shifts populated yet in the next 14 days. Surface a
+  // one-tap "apply template" CTA so brand-new users don't see a dead
+  // calendar full of off-day dots.
+  const isViewingCurrentMonth = isCurrentMonth;
+  const hasAnyShifts = (user
+    ? shiftRows.length
+    : Object.keys(localShifts).length) > 0;
+  const showEmptyTemplateCTA =
+    isViewingCurrentMonth &&
+    !hasAnyShifts &&
+    !!onboarding.scheduleId &&
+    onboarding.scheduleId !== 'custom' &&
+    !applying;
+  const emptyTemplate = mockScheduleTemplates.find((tpl) => tpl.id === onboarding.scheduleId);
+
+  const onApplyTemplate = React.useCallback(() => {
+    if (!onboarding.scheduleId) return;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    setApplying(true);
+    (async () => {
+      try {
+        await applyScheduleTemplate(onboarding.scheduleId!, {
+          weeks: 4,
+          userId: user?.id ?? null,
+        });
+        emitChange(EVENTS.shiftsChanged);
+      } finally {
+        setApplying(false);
+      }
+    })();
+  }, [onboarding.scheduleId, user?.id]);
+
+  // H1: Calendar tap handler — open Add Shift for empty days, or
+  // offer Delete for days that already have a shift. Past days are
+  // read-only (you can't change history).
+  const onCellTap = React.useCallback((cell: Cell) => {
+    if (cell.kind === 'empty' || !cell.iso) return;
+    if (cell.kind === 'past') return;
+
+    Haptics.selectionAsync();
+    const hasShift = cell.kind === 'day' || cell.kind === 'night';
+
+    if (!hasShift) {
+      // Empty future day → open Add Shift with date pre-filled
+      router.push({ pathname: '/schedule/add-shift', params: { iso: cell.iso } });
+      return;
+    }
+
+    // Already has a shift → confirm delete
+    Alert.alert(
+      t('schedule.cell_action_title'),
+      t('schedule.cell_action_body', { date: cell.iso }),
+      [
+        { text: t('schedule.cell_cancel'), style: 'cancel' },
+        {
+          text: t('schedule.cell_delete'),
+          style: 'destructive',
+          onPress: async () => {
+            if (!isSupabaseConfigured || !supabase || !user?.id) {
+              removeLocalShift(cell.iso!);
+              return;
+            }
+            const { error } = await supabase
+              .from('shifts')
+              .update({ deleted_at: new Date().toISOString() })
+              .eq('user_id', user.id)
+              .eq('date', cell.iso!);
+            if (error) {
+              Alert.alert(t('schedule.cell_delete_failed'), error.message);
+              return;
+            }
+            emitChange(EVENTS.shiftsChanged);
+          },
+        },
+      ],
+    );
+  }, [user?.id]);
 
   return (
     <Screen
@@ -210,35 +311,81 @@ export default function Schedule() {
       {/* Month grid */}
       <View style={styles.grid}>
         {grid.map((d, i) => {
-          const isToday = d.kind !== 'empty' && d.iso === todayIso;
+          // QA-BUG-4 follow-up: distinguish two "empty" forms —
+          //  - leading offset (label === '') → render nothing
+          //  - date cell with no shift assigned (label > 0, kind='empty')
+          //    → render date number without a dot.
+          const isLeadingOffset = d.label === '';
+          const isToday = !isLeadingOffset && d.iso === todayIso;
+          const isInteractive = !isLeadingOffset && d.kind !== 'past';
+          if (isLeadingOffset) return <View key={i} style={styles.cell} />;
           return (
-            <View key={i} style={styles.cell}>
+            <Pressable
+              key={i}
+              style={styles.cell}
+              onPress={() => onCellTap(d)}
+              disabled={!isInteractive}
+              accessibilityRole={isInteractive ? 'button' : undefined}
+              accessibilityLabel={d.iso}
+            >
               {d.kind !== 'empty' && (
-                <>
-                  <View
-                    style={[
-                      styles.dot,
-                      { backgroundColor: dotColor[d.kind], opacity: d.kind === 'past' ? 0.5 : 1 },
-                      isToday && styles.dotToday,
-                    ]}
-                  />
-                  <Text
-                    variant="mono"
-                    family="mono"
-                    color={isToday ? 'primary' : d.kind === 'past' ? 'inkGhost' : 'inkMuted'}
-                    weight={isToday ? 'medium' : undefined}
-                    style={{ marginTop: 4 }}
-                  >
-                    {String(d.label).padStart(2, '0')}
-                  </Text>
-                </>
+                <View
+                  style={[
+                    styles.dot,
+                    { backgroundColor: dotColor[d.kind], opacity: d.kind === 'past' ? 0.5 : 1 },
+                    isToday && styles.dotToday,
+                  ]}
+                />
               )}
-            </View>
+              <Text
+                variant="mono"
+                family="mono"
+                color={isToday ? 'primary' : d.kind === 'past' ? 'inkGhost' : 'inkMuted'}
+                weight={isToday ? 'medium' : undefined}
+                style={{ marginTop: d.kind === 'empty' ? 0 : 4 }}
+              >
+                {String(d.label).padStart(2, '0')}
+              </Text>
+            </Pressable>
           );
         })}
       </View>
 
       <View style={{ height: spacing.huge }} />
+
+      {/* K1: Apply-template CTA when the calendar is empty and the user
+          already picked a rotation in onboarding. One tap, 28 days, done. */}
+      {showEmptyTemplateCTA && emptyTemplate && (
+        <Pressable
+          onPress={onApplyTemplate}
+          accessibilityRole="button"
+          accessibilityLabel={t('schedule.empty_cta_a11y')}
+          style={{ marginBottom: spacing.lg }}
+        >
+          <GlassCard variant="dusk" padding="xxl">
+            <Eyebrow color="duskDim">{t('schedule.empty_eyebrow')}</Eyebrow>
+            <Text
+              variant="titleLg"
+              family="display"
+              weight="light"
+              color="ink"
+              style={{ marginTop: spacing.sm }}
+            >
+              {t('schedule.empty_title', { template: emptyTemplate.title })}
+            </Text>
+            <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: spacing.sm }}>
+              {t('schedule.empty_sub')}
+            </Text>
+            <View style={{ height: spacing.md }} />
+            <View style={styles.emptyCtaRow}>
+              <Text variant="labelMd" weight="medium" color="primary" uppercase>
+                {t('schedule.empty_cta')}
+              </Text>
+              <Glyph name="chevronRight" size={18} color="primary" />
+            </View>
+          </GlassCard>
+        </Pressable>
+      )}
 
       <GlassCard variant="paper" padding="xxl">
         <Eyebrow>{t('schedule.legend')}</Eyebrow>
@@ -267,6 +414,11 @@ export default function Schedule() {
 }
 
 const styles = StyleSheet.create({
+  emptyCtaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',

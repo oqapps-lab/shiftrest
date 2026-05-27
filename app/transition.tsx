@@ -17,7 +17,10 @@ import {
 } from '../components/ui';
 import { colors, spacing, radii } from '../constants/tokens';
 import { getMockTransition } from '../mock/user';
-import { useActiveTransitionPlan } from '../lib/queries';
+import { useActiveTransitionPlan, EVENTS, emitChange } from '../lib/queries';
+import { toggleLocalTransitionStep } from '../lib/local-transition/store';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { useAuth } from '../lib/auth/store';
 import { t } from '../lib/i18n';
 import type { Translations } from '../lib/i18n/locales/en';
 
@@ -73,8 +76,15 @@ function dayLabel(dateIso: string): string {
 
 export default function Transition() {
   const { data: livePlan } = useActiveTransitionPlan();
-  // Resolve at render time so locale changes between batches re-translate.
-  const mockTransition = getMockTransition();
+  const { user } = useAuth();
+  // B22: getMockTransition() returns a fresh object literal every call.
+  // Calling it on every render made `mockTransition.days` a new reference
+  // each render → the initialDays useMemo below recomputes every render →
+  // the useEffect that re-seeds `days` fires every render → infinite
+  // setState loop ("Maximum update depth exceeded"). Memoise per mount so
+  // the ref is stable; the modal re-mounts on each open anyway, so we
+  // don't need locale-on-change re-eval here.
+  const mockTransition = useMemo(() => getMockTransition(), []);
 
   // Build UiDay[] from either the live plan or mockTransition fallback.
   const initialDays = useMemo<UiDay[]>(() => {
@@ -102,17 +112,26 @@ export default function Transition() {
           return { label: dayLabel(iso), steps };
         });
     }
-    // Fallback: hardcoded mock so the demo + signed-out UX still tells a story.
-    return mockTransition.days.map((d) => ({
-      label: d.label,
-      steps: d.steps.map((s, i) => ({
-        id: `mock-${d.label}-${i}`,
-        time: s.time,
-        action: s.action,
-        tip: s.tip,
-        done: s.done,
-      })),
-    }));
+    // B23: fallback now uses TODAY and TOMORROW for the day labels instead
+    // of the static "WED 22 / THU 23" baked into the mock. The mock's
+    // step content (action, time, tip) is still demo copy, but the dates
+    // surface as reality so they don't read as bugs to reviewers.
+    const today = new Date();
+    return mockTransition.days.map((d, dayIdx) => {
+      const date = new Date(today);
+      date.setDate(today.getDate() + dayIdx);
+      const iso = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      return {
+        label: dayLabel(iso),
+        steps: d.steps.map((s, i) => ({
+          id: `mock-${dayIdx}-${i}`,
+          time: s.time,
+          action: s.action,
+          tip: s.tip,
+          done: s.done,
+        })),
+      };
+    });
   }, [livePlan, mockTransition.days]);
 
   const [days, setDays] = useState<UiDay[]>(initialDays);
@@ -131,16 +150,41 @@ export default function Transition() {
 
   const toggleStep = (dayIdx: number, stepIdx: number) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const stepRef = days[dayIdx]?.steps[stepIdx];
+    if (!stepRef) return;
+    const nextDone = !stepRef.done;
+
+    // QA-BUG-7: optimistic local toggle for instant feedback…
     setDays((prev) =>
       prev.map((d, i) =>
         i === dayIdx
           ? {
               ...d,
-              steps: d.steps.map((s, j) => (j === stepIdx ? { ...s, done: !s.done } : s)),
+              steps: d.steps.map((s, j) => (j === stepIdx ? { ...s, done: nextDone } : s)),
             }
           : d,
       ),
     );
+
+    // …then persist to whichever backend the live plan came from. Without
+    // this, the next time the modal mounts useActiveTransitionPlan re-reads
+    // unchanged data and the checkmark vanishes.
+    const isAnon = !isSupabaseConfigured || !supabase || !user?.id;
+    if (isAnon) {
+      // Anon plan: id is a local-step-* string. The store keeps the
+      // canonical state and emits its own change event for re-render.
+      toggleLocalTransitionStep(stepRef.id);
+      return;
+    }
+    // Signed-in plan: writes to transition_steps so re-fetches see the
+    // updated row. Fire-and-forget — local optimistic state covers the
+    // UI; a failure leaves the persisted state stale, but we surface no
+    // error toast here (consistent with the rest of this modal).
+    void supabase!
+      .from('transition_steps')
+      .update({ is_completed: nextDone })
+      .eq('id', stepRef.id)
+      .then(() => emitChange(EVENTS.transitionChanged));
   };
 
   return (

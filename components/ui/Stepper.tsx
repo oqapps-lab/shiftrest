@@ -55,7 +55,7 @@ export function Stepper({
         accessibilityRole="button"
         accessibilityLabel={t('a11y.decrease')}
       >
-        <Glyph name="close" size={18} color="primary" />
+        <Glyph name="minus" size={18} color="primary" />
       </Pressable>
 
       <View style={styles.valueWrap}>

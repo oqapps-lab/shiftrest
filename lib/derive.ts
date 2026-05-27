@@ -18,13 +18,22 @@ export function getGreeting(nowHour: number): string {
 }
 
 export function formatRelativeTime(nowHour: number, targetHour: number): string {
+  // diff is signed; positive = future, negative = past today.
+  // We render "ago" for past within ±12h; outside that window we roll
+  // forward 24h so a 13:30 cutoff at 17:00 shows "4h ago", not "20h away".
   let diff = targetHour - nowHour;
-  if (diff < 0) diff += 24;
-  if (diff === 0) return t('rel.now');
+  if (diff < -12) diff += 24;
   const totalMins = Math.round(diff * 60);
-  if (totalMins === 0) return t('rel.now'); // sub-minute differences
-  const h = Math.floor(totalMins / 60);
-  const m = totalMins % 60;
+  if (totalMins === 0) return t('rel.now');
+  const past = totalMins < 0;
+  const abs = Math.abs(totalMins);
+  const h = Math.floor(abs / 60);
+  const m = abs % 60;
+  if (past) {
+    if (h === 0) return t('rel.m_ago', { m });
+    if (m === 0) return t('rel.h_ago', { h });
+    return t('rel.hm_ago', { h, m });
+  }
   if (h === 0) return t('rel.m_away', { m });
   if (m === 0) return t('rel.h_away', { h });
   return t('rel.hm_away', { h, m });
@@ -105,4 +114,144 @@ export function hoursBetween(from: number, to: number): number {
   let diff = to - from;
   if (diff < 0) diff += 24;
   return diff;
+}
+
+/**
+ * Suggested plan times derived from onboarding answers.
+ *
+ * Used when there's no live `generated_plan` yet (anon users, or signed-in
+ * users before the OpenAI plan generator has run). Replaces the old habit
+ * of falling back to `mockPlan` — which surfaced "Caffeine cutoff 14:30 /
+ * Melatonin 22:00" to users who never gave us a schedule (live-test
+ * 2026-05-25 hardcode complaint).
+ *
+ * Rules (clinically informed):
+ * - Day shift (07-19): sleep 23-07, caffeine cutoff at 14:00 (~6h pre-bed),
+ *   melatonin 21:30 (~90 min pre-bed).
+ * - Night shift (19-07): sleep 09-17, caffeine cutoff at 02:00 (last hr of
+ *   shift), melatonin 07:30 (anchor adaptation).
+ * - Off (no shift today): default to day-shift defaults.
+ *
+ * Chronotype shifts by ±30 min: lark earlier, owl later.
+ */
+export interface SuggestedPlan {
+  sleepStart: number;
+  sleepEnd: number;
+  caffeineCutoff: string;
+  melatoninTime: string;
+  shiftStart: number;
+  shiftEnd: number;
+}
+
+const DAY_DEFAULTS: SuggestedPlan = {
+  sleepStart: 23,
+  sleepEnd: 7,
+  caffeineCutoff: '14:00',
+  melatoninTime: '21:30',
+  shiftStart: 7,
+  shiftEnd: 19,
+};
+
+const NIGHT_DEFAULTS: SuggestedPlan = {
+  sleepStart: 9,
+  sleepEnd: 17,
+  caffeineCutoff: '02:00',
+  melatoninTime: '07:30',
+  shiftStart: 19,
+  shiftEnd: 7,
+};
+
+function shiftHours(p: SuggestedPlan, deltaHours: number): SuggestedPlan {
+  const wrap = (h: number) => ((h + deltaHours) % 24 + 24) % 24;
+  // deltaHours can be fractional (e.g. ±0.5). For string times we have to
+  // shift via total minutes — naive `wrap(h)` returns 13.5 for 14h - 0.5h
+  // and renders as "13.5:00" instead of "13:30".
+  const wrapStr = (s: string) => {
+    const [h, m] = s.split(':').map(Number);
+    const totalMins = h * 60 + m + Math.round(deltaHours * 60);
+    const norm = ((totalMins % (24 * 60)) + 24 * 60) % (24 * 60);
+    const hh = Math.floor(norm / 60);
+    const mm = norm % 60;
+    return `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
+  };
+  return {
+    sleepStart: wrap(p.sleepStart),
+    sleepEnd: wrap(p.sleepEnd),
+    caffeineCutoff: wrapStr(p.caffeineCutoff),
+    melatoninTime: wrapStr(p.melatoninTime),
+    shiftStart: p.shiftStart,
+    shiftEnd: p.shiftEnd,
+  };
+}
+
+export function suggestedPlanFromOnboarding(
+  shift: 'day' | 'night' | 'off',
+  chronotype: 'lark' | 'intermediate' | 'owl' | null,
+): SuggestedPlan {
+  const base = shift === 'night' ? NIGHT_DEFAULTS : DAY_DEFAULTS;
+  if (chronotype === 'lark') return shiftHours(base, -0.5);
+  if (chronotype === 'owl') return shiftHours(base, 0.5);
+  return base;
+}
+
+/** Light therapy recommendation for the day, by current shift type. The
+ *  windows are evidence-aligned to CDC/NIOSH guidance: bright light during
+ *  active hours promotes alertness, dark exposure on the commute home from
+ *  a night shift prevents a circadian reset toward the wrong direction. */
+export interface LightWindow {
+  /** Translation key for the eyebrow ("SEEK LIGHT" / "AVOID LIGHT"). */
+  eyebrowKey: 'plan.cards.light.seek' | 'plan.cards.light.avoid';
+  /** Local 24h start hour. */
+  startHour: number;
+  /** Local 24h end hour. */
+  endHour: number;
+}
+
+/** Nap recommendation for the day, by current shift type.
+ *  - Day shift: optional 20 min siesta around 14:00 (post-lunch dip)
+ *  - Night shift: 90-min full-cycle nap before shift at 14:00, OR power nap
+ *    20 min mid-shift around 03:00 if commute is short.
+ *  - Off day: optional recovery 90 min at 13:00 if user is in transition. */
+export interface NapWindow {
+  kind: 'power' | 'recovery' | 'full_cycle';
+  /** Local 24h hour (decimal). */
+  hour: number;
+  durationMin: number;
+}
+
+export function napWindowForShift(
+  shift: 'day' | 'night' | 'off',
+): NapWindow | null {
+  if (shift === 'night') {
+    return { kind: 'full_cycle', hour: 14, durationMin: 90 };
+  }
+  if (shift === 'day') {
+    return { kind: 'power', hour: 14, durationMin: 20 };
+  }
+  return { kind: 'recovery', hour: 13, durationMin: 90 };
+}
+
+export function lightWindowsForShift(
+  shift: 'day' | 'night' | 'off',
+): LightWindow[] {
+  if (shift === 'night') {
+    return [
+      // First half of night shift — bright light to stay alert
+      { eyebrowKey: 'plan.cards.light.seek', startHour: 19, endHour: 1 },
+      // Commute home — dark glasses to avoid resetting the body clock
+      { eyebrowKey: 'plan.cards.light.avoid', startHour: 7, endHour: 9 },
+    ];
+  }
+  if (shift === 'day') {
+    return [
+      // Morning light advances rhythm earlier and reinforces day pattern
+      { eyebrowKey: 'plan.cards.light.seek', startHour: 7, endHour: 9 },
+      // Evening dim-down — prepare melatonin release
+      { eyebrowKey: 'plan.cards.light.avoid', startHour: 21, endHour: 23 },
+    ];
+  }
+  // Off day — anchor circadian rhythm with morning sun
+  return [
+    { eyebrowKey: 'plan.cards.light.seek', startHour: 8, endHour: 10 },
+  ];
 }

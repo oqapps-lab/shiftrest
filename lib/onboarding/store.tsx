@@ -28,12 +28,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { mockChronotypeQuestions } from '../../mock/user';
 import { supabase, isSupabaseConfigured } from '../supabase';
 import { useAuth } from '../auth/store';
+import { emitPlanChanged } from '../queries/plan';
 
 const STORAGE_KEY = 'shiftrest:onboarding:v1';
 
 export type Profession = 'nurse' | 'firefighter' | 'factory' | 'other';
 export type ScheduleId = '3x12-day-night' | '24-48' | '48-96' | 'continental' | 'custom';
 export type ShiftKind = 'day' | 'night' | 'off';
+export type NextShift = 'tonight' | 'tomorrow_am' | 'tomorrow_pm' | 'day_after' | 'on_break';
 export type MainProblem = 'falling-asleep' | 'transitions' | 'fatigue' | 'caffeine';
 export type CaffeineType = 'coffee' | 'tea' | 'energy';
 export type CaffeineSensitivity = 'normal' | 'slow' | 'unknown';
@@ -51,7 +53,10 @@ export interface OnboardingState {
   currentShift: ShiftKind;
   commuteMinutes: number;
 
-  // S05 main problem
+  // S05 next-shift — when's the next shift starting (drives 36h pre-shift plan)
+  nextShift: NextShift | null;
+
+  // S06 main problem
   mainProblem: MainProblem | null;
 
   // S07 chronotype (3-question MEQ — answers keyed by question id)
@@ -75,6 +80,10 @@ export interface OnboardingState {
   // S11 name
   displayName: string;
 
+  // Settings-only: bright-light therapy opt-in (Plan tab shows light cards
+  // when true). Not yet persisted to profiles table; local-only.
+  usesLightTherapy: boolean;
+
   // Funnel completion marker (true after notifications screen exits)
   completed: boolean;
 }
@@ -84,6 +93,7 @@ const INITIAL: OnboardingState = {
   scheduleId: null,
   currentShift: 'day',
   commuteMinutes: 30,
+  nextShift: null,
   mainProblem: null,
   chronotypeAnswers: {},
   caffeineCupsPerDay: 2,
@@ -96,6 +106,10 @@ const INITIAL: OnboardingState = {
   pickupTime: '15',
   otherCommitments: '',
   displayName: '',
+  // Default ON for new users — bright light therapy is the strongest
+  // evidence-based intervention for shift adaptation and costs nothing to
+  // display. Users can turn it off from Settings → Light therapy.
+  usesLightTherapy: true,
   completed: false,
 };
 
@@ -345,7 +359,13 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       return { error: null }; // already up-to-date
     }
     const { error } = await supabase.from('profiles').upsert(row);
-    if (!error) lastSyncedRef.current = fingerprint;
+    if (!error) {
+      lastSyncedRef.current = fingerprint;
+      // M9 — tell the plan query its cache is stale. Without this, edits in
+      // Settings → Sleep preferences silently update profiles but the Plan
+      // tab keeps showing the pre-edit generated plan until app restart.
+      emitPlanChanged();
+    }
     return { error: error as Error | null };
   }, [auth.user?.id, state]);
 

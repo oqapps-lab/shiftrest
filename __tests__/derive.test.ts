@@ -64,11 +64,20 @@ describe('formatRelativeTime', () => {
   test('3h 30m ahead', () => {
     expect(formatRelativeTime(10.5, 14)).toBe('[rel.hm_away{h=3,m=30}]');
   });
-  test('wraps past midnight (14 → 10 next day = 20h)', () => {
-    expect(formatRelativeTime(14, 10)).toBe('[rel.h_away{h=20}]');
+  test('past today within 12h shows ago (was: 4h forward = 20h away)', () => {
+    // QA-BUG-3 — previously wrapped forward-only, showing "20h away" for
+    // a 4h-ago event. Now shows "4h ago" if within ±12h.
+    expect(formatRelativeTime(14, 10)).toBe('[rel.h_ago{h=4}]');
+  });
+  test('beyond 12h past wraps forward to next day', () => {
+    // Example: now=22, target=8 → diff=-14, wraps to +10 next morning.
+    expect(formatRelativeTime(22, 8)).toBe('[rel.h_away{h=10}]');
   });
   test('23.99 → 0 (1 minute past midnight)', () => {
     expect(formatRelativeTime(23.99, 0)).toBe('[rel.m_away{m=1}]');
+  });
+  test('past 30 min shows m_ago', () => {
+    expect(formatRelativeTime(10, 9.5)).toBe('[rel.m_ago{m=30}]');
   });
 });
 
