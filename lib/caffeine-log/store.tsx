@@ -90,13 +90,18 @@ export function useCaffeineLog(): LogEntry | null {
 }
 
 /** Returns the recommended cutoff (in fractional local hours, e.g. 19.5)
- *  given the last cup time. Default rule: lastCup + 6h, clamped to 22:00.
+ *  given the last cup time. Rule: lastCup + 6h, capped 30 min before the
+ *  caller-supplied sleep window. Falls back to 22:00 if no sleep target.
  *  Returns null if no log entry today. */
-export function caffeineCutoffFromLog(): number | null {
+export function caffeineCutoffFromLog(sleepStartHour?: number): number | null {
   const log = getCaffeineLog();
   if (!log) return null;
   const last = new Date(log.lastCupAt);
-  // Same day cutoff
   const cutoff = last.getHours() + last.getMinutes() / 60 + 6;
-  return Math.min(cutoff, 22);
+  // QA-BUG-1: cap based on actual sleep window, not hardcoded 22:00.
+  // Without context we keep 22 as a safety net.
+  const ceiling = typeof sleepStartHour === 'number'
+    ? sleepStartHour - 0.5
+    : 22;
+  return Math.min(cutoff, ceiling);
 }
