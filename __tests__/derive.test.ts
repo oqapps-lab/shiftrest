@@ -16,6 +16,9 @@ import {
   hoursBetween,
   formatMonthYear,
   formatDayMonth,
+  suggestedPlanFromOnboarding,
+  lightWindowsForShift,
+  napWindowForShift,
 } from '../lib/derive';
 
 // Mock t() so tests don't depend on i18n setup
@@ -223,5 +226,81 @@ describe('formatDayMonth', () => {
     const may15 = new Date(2026, 4, 15);
     const out = formatDayMonth(may15);
     expect(out).toContain('15');
+  });
+});
+
+describe('suggestedPlanFromOnboarding', () => {
+  test('day shift baseline (no chronotype)', () => {
+    const p = suggestedPlanFromOnboarding('day', null);
+    expect(p.sleepStart).toBeGreaterThan(20);
+    expect(p.sleepEnd).toBeLessThan(p.sleepStart + 12); // night-wraps
+    expect(p.caffeineCutoff).toMatch(/^\d{2}:\d{2}$/);
+    expect(p.melatoninTime).toMatch(/^\d{2}:\d{2}$/);
+  });
+  test('night shift baseline', () => {
+    const p = suggestedPlanFromOnboarding('night', null);
+    // Night workers sleep during the day; sleepStart should be morning-ish
+    expect(p.sleepStart).toBeGreaterThanOrEqual(7);
+    expect(p.sleepStart).toBeLessThan(12);
+  });
+  test('lark shifts everything 30 min earlier', () => {
+    const base = suggestedPlanFromOnboarding('day', null);
+    const lark = suggestedPlanFromOnboarding('day', 'lark');
+    expect(lark.sleepStart).toBeCloseTo(base.sleepStart - 0.5, 5);
+  });
+  test('owl shifts everything 30 min later', () => {
+    const base = suggestedPlanFromOnboarding('day', null);
+    const owl = suggestedPlanFromOnboarding('day', 'owl');
+    expect(owl.sleepStart).toBeCloseTo(base.sleepStart + 0.5, 5);
+  });
+  test('intermediate chronotype = baseline', () => {
+    const base = suggestedPlanFromOnboarding('day', null);
+    const intr = suggestedPlanFromOnboarding('day', 'intermediate');
+    expect(intr.sleepStart).toBe(base.sleepStart);
+  });
+});
+
+describe('lightWindowsForShift', () => {
+  test('night shift returns 2 windows (seek + avoid)', () => {
+    const w = lightWindowsForShift('night');
+    expect(w).toHaveLength(2);
+    expect(w[0].eyebrowKey).toBe('plan.cards.light.seek');
+    expect(w[1].eyebrowKey).toBe('plan.cards.light.avoid');
+  });
+  test('night seek is evening hours', () => {
+    const w = lightWindowsForShift('night');
+    expect(w[0].startHour).toBe(19);
+    expect(w[0].endHour).toBe(1); // crosses midnight
+  });
+  test('night avoid is morning commute', () => {
+    const w = lightWindowsForShift('night');
+    expect(w[1].startHour).toBe(7);
+    expect(w[1].endHour).toBe(9);
+  });
+  test('day shift returns 2 windows', () => {
+    const w = lightWindowsForShift('day');
+    expect(w).toHaveLength(2);
+    expect(w[0].eyebrowKey).toBe('plan.cards.light.seek');
+    expect(w[0].startHour).toBe(7);
+  });
+  test('off day returns 1 window (anchor only)', () => {
+    const w = lightWindowsForShift('off');
+    expect(w).toHaveLength(1);
+    expect(w[0].eyebrowKey).toBe('plan.cards.light.seek');
+  });
+});
+
+describe('napWindowForShift', () => {
+  test('night shift = 90 min full-cycle pre-shift', () => {
+    const n = napWindowForShift('night');
+    expect(n).toEqual({ kind: 'full_cycle', hour: 14, durationMin: 90 });
+  });
+  test('day shift = 20 min power nap mid-day', () => {
+    const n = napWindowForShift('day');
+    expect(n).toEqual({ kind: 'power', hour: 14, durationMin: 20 });
+  });
+  test('off day = 90 min recovery', () => {
+    const n = napWindowForShift('off');
+    expect(n).toEqual({ kind: 'recovery', hour: 13, durationMin: 90 });
   });
 });
