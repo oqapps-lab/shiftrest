@@ -20,7 +20,7 @@ import { formatTrialRemaining, clampDisplayName } from '../../lib/derive';
 import { useAuth } from '../../lib/auth/store';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useProfileStats, useSubscription } from '../../lib/queries';
-import { useSleepJournal, journaledDayCount } from '../../lib/sleep-journal/store';
+import { useSleepJournal, journaledDayCount, recentJournalDays } from '../../lib/sleep-journal/store';
 import { t } from '../../lib/i18n';
 
 const STREAK_LENGTH = 14;
@@ -38,9 +38,11 @@ export default function Profile() {
   // story without any backend.
   const daysInApp = user ? (stats?.daysInApp ?? 0) : 0;
   const adherencePct = user ? (stats?.onPlanPct ?? 0) : 0;
-  // G4: live journal counter — re-renders on tap via useSleepJournal subscribe
+  // G4 + J1: live journal counter + recent 14 days for the heatmap
   useSleepJournal();
   const journalDays = journaledDayCount();
+  const recentJournal = recentJournalDays(STREAK_LENGTH);
+  const hasJournalHistory = recentJournal.some((d) => d.rating !== null);
 
   // Display name preference:
   //   onboarding.displayName (set in S11) →
@@ -177,6 +179,40 @@ export default function Profile() {
           );
         })}
       </View>
+
+      {/* J1: Sleep journal 14-day heatmap. Only render when user has any
+          ratings — keeps the screen quiet for brand-new users. */}
+      {hasJournalHistory && (
+        <>
+          <View style={{ height: spacing.lg }} />
+          <Eyebrow>{t('profile.journal_heatmap_label')}</Eyebrow>
+          <View style={styles.streakRow}>
+            {recentJournal.map((d, i) => {
+              const isToday = i === recentJournal.length - 1;
+              const color =
+                d.rating === 'good'
+                  ? colors.primary
+                  : d.rating === 'ok'
+                  ? colors.sunriseDim
+                  : d.rating === 'bad'
+                  ? colors.duskDim
+                  : null;
+              return (
+                <View
+                  key={d.iso}
+                  style={[
+                    styles.streakDot,
+                    color
+                      ? { backgroundColor: color }
+                      : styles.streakDotEmpty,
+                    color && isToday && styles.streakDotActive,
+                  ]}
+                />
+              );
+            })}
+          </View>
+        </>
+      )}
 
       <View style={{ height: spacing.huge }} />
 

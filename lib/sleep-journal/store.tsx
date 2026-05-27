@@ -80,3 +80,19 @@ export function useSleepJournal(): JournalMap {
 export function journaledDayCount(): number {
   return Object.keys(memCache.entries).length;
 }
+
+/**
+ * Last N days of journal entries (oldest → newest), each item carries the
+ * rating or null when not logged. Drives the Profile heatmap.
+ */
+export function recentJournalDays(n = 14): { iso: string; rating: SleepRating | null }[] {
+  const today = new Date();
+  const out: { iso: string; rating: SleepRating | null }[] = [];
+  for (let i = n - 1; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const iso = localDateKey(d);
+    out.push({ iso, rating: memCache.entries[iso] ?? null });
+  }
+  return out;
+}

@@ -169,6 +169,7 @@ const en = {
     stat_plans: 'PLANS',
     stat_journal: 'JOURNAL',
     stat_on_plan: 'ON PLAN',
+    journal_heatmap_label: 'JOURNAL · LAST 14',
     settings: 'SETTINGS',
     subscription: {
       free: 'Free tier',
