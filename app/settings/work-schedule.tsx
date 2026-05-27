@@ -36,7 +36,7 @@ export default function WorkScheduleSettings() {
     if (!state.scheduleId) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     Alert.alert(
-      t('settings_sub.schedule.autofill_alert_title'),
+      t('settings_sub.schedule.autofill_alert_title', { weeks: 4 }),
       t('settings_sub.schedule.autofill_alert_body', { weeks: 4 }),
       [
         { text: t('settings_sub.schedule.autofill_cancel'), style: 'cancel' },
