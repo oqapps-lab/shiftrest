@@ -184,3 +184,41 @@ export function suggestedPlanFromOnboarding(
   if (chronotype === 'owl') return shiftHours(base, 0.5);
   return base;
 }
+
+/** Light therapy recommendation for the day, by current shift type. The
+ *  windows are evidence-aligned to CDC/NIOSH guidance: bright light during
+ *  active hours promotes alertness, dark exposure on the commute home from
+ *  a night shift prevents a circadian reset toward the wrong direction. */
+export interface LightWindow {
+  /** Translation key for the eyebrow ("SEEK LIGHT" / "AVOID LIGHT"). */
+  eyebrowKey: 'plan.cards.light.seek' | 'plan.cards.light.avoid';
+  /** Local 24h start hour. */
+  startHour: number;
+  /** Local 24h end hour. */
+  endHour: number;
+}
+
+export function lightWindowsForShift(
+  shift: 'day' | 'night' | 'off',
+): LightWindow[] {
+  if (shift === 'night') {
+    return [
+      // First half of night shift — bright light to stay alert
+      { eyebrowKey: 'plan.cards.light.seek', startHour: 19, endHour: 1 },
+      // Commute home — dark glasses to avoid resetting the body clock
+      { eyebrowKey: 'plan.cards.light.avoid', startHour: 7, endHour: 9 },
+    ];
+  }
+  if (shift === 'day') {
+    return [
+      // Morning light advances rhythm earlier and reinforces day pattern
+      { eyebrowKey: 'plan.cards.light.seek', startHour: 7, endHour: 9 },
+      // Evening dim-down — prepare melatonin release
+      { eyebrowKey: 'plan.cards.light.avoid', startHour: 21, endHour: 23 },
+    ];
+  }
+  // Off day — anchor circadian rhythm with morning sun
+  return [
+    { eyebrowKey: 'plan.cards.light.seek', startHour: 8, endHour: 10 },
+  ];
+}

@@ -106,7 +106,10 @@ const INITIAL: OnboardingState = {
   pickupTime: '15',
   otherCommitments: '',
   displayName: '',
-  usesLightTherapy: false,
+  // Default ON for new users — bright light therapy is the strongest
+  // evidence-based intervention for shift adaptation and costs nothing to
+  // display. Users can turn it off from Settings → Light therapy.
+  usesLightTherapy: true,
   completed: false,
 };
 

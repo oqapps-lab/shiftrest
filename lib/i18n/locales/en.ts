@@ -67,6 +67,12 @@ const en = {
         eyebrow: 'LIGHT',
         hero: 'Seek 07:30 – 08:30',
         body: 'Bright outdoor light locks your circadian rhythm.',
+        seek: 'SEEK LIGHT',
+        avoid: 'AVOID LIGHT',
+        seek_template: 'Bright light · {{range}}',
+        avoid_template: 'Dark glasses · {{range}}',
+        body_seek: 'Later: catch more light {{range}} to reinforce the shift.',
+        body_avoid: 'After: wear dark glasses {{range}} so your body clock doesn’t drift.',
       },
       nap: {
         eyebrow: 'OPTIONAL NAP',
@@ -165,6 +171,8 @@ const en = {
     },
     anonymous_hint:
       'Anonymous mode — your data lives only on this device until you save an account.',
+    stats_empty_hint:
+      'Your first plan unlocks these numbers. Tap Sleep Plan to start.',
   },
   sleep_prefs: {
     eyebrow: 'SETTINGS',

@@ -194,6 +194,18 @@ export default function Profile() {
         </GlassCard>
       </View>
 
+      {/* F2: empty-state hint when all stats are zero (brand-new user) */}
+      {daysInApp === 0 && plansCompleted === 0 && (
+        <Text
+          variant="bodyMd"
+          color="inkMuted"
+          align="center"
+          style={{ marginTop: spacing.md }}
+        >
+          {t('profile.stats_empty_hint')}
+        </Text>
+      )}
+
       <View style={{ height: spacing.huge }} />
 
       <Eyebrow>{t('profile.settings')}</Eyebrow>

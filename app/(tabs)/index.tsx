@@ -82,8 +82,10 @@ export default function Home() {
 
   // J1/F1 — exclude melatonin event when user opted out in onboarding
   const showMelatonin = onboarding.takesMelatonin !== false;
+  // C2 — exclude caffeine event when user doesn't drink caffeine (cups=0)
+  const showCaffeine = onboarding.caffeineCupsPerDay > 0;
   const events = [
-    { ...EVENT_STYLES.caffeine,  hour: caffeineHour },
+    ...(showCaffeine ? [{ ...EVENT_STYLES.caffeine, hour: caffeineHour }] : []),
     ...(showMelatonin ? [{ ...EVENT_STYLES.melatonin, hour: melatoninHour }] : []),
     { ...EVENT_STYLES.sleep,     hour: sleepStartHour },
   ];
