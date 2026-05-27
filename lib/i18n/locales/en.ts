@@ -30,6 +30,7 @@ const en = {
   today: {
     hero: 'Rest is gathering.',
     label_today: 'TODAY',
+    shift_label: "TODAY'S SHIFT",
     section_24h: 'YOUR 24 HOURS',
     section_next: 'NEXT',
     event_caffeine: 'CAFFEINE CUTOFF',

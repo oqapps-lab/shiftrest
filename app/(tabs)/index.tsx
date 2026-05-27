@@ -16,6 +16,8 @@ import {
   Text,
   Glyph,
   HeroNumber,
+  SegmentedControl,
+  type SegmentOption,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockShiftBlocks, getMockTransition } from '../../mock/user';
@@ -32,6 +34,7 @@ import {
   useOnboarding,
   chronotypeBucket,
   computeChronotypeScore,
+  type ShiftKind,
 } from '../../lib/onboarding/store';
 import { useStreak, useActiveTransitionPlan } from '../../lib/queries';
 import { useGeneratedPlan, planHourAsFloat } from '../../lib/queries/plan';
@@ -48,7 +51,12 @@ const EVENT_STYLES = {
 };
 
 export default function Home() {
-  const { state: onboarding } = useOnboarding();
+  const { state: onboarding, update } = useOnboarding();
+  const shiftOptions: SegmentOption<ShiftKind>[] = [
+    { value: 'day', label: t('shift_kind.day_long') },
+    { value: 'night', label: t('shift_kind.night_long') },
+    { value: 'off', label: t('shift_kind.off_long') },
+  ];
   const { user } = useAuth();
   const { data: streak } = useStreak();
   const { data: livePlan } = useActiveTransitionPlan();
@@ -149,9 +157,19 @@ export default function Home() {
         )}
       </View>
 
-      <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
+      <View style={{ marginTop: spacing.lg, marginBottom: spacing.lg }}>
         <SerifHero>{t('today.hero')}</SerifHero>
       </View>
+
+      {/* A9: Where you are today — daily state card, moved out of Settings */}
+      <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.huge }}>
+        <Eyebrow style={{ marginBottom: spacing.sm }}>{t('today.shift_label')}</Eyebrow>
+        <SegmentedControl<ShiftKind>
+          options={shiftOptions}
+          value={onboarding.currentShift}
+          onChange={(v) => update({ currentShift: v })}
+        />
+      </GlassCard>
 
       <View style={{ alignItems: 'center', marginBottom: spacing.huge }}>
         <TimelineRing
