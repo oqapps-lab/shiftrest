@@ -1,94 +1,103 @@
 /**
- * S51 — Sleep preferences (edit). Compound form of every quiz answer.
+ * Settings → Sleep preferences (drill-down menu).
  *
- * Reads + writes via the shared OnboardingProvider, so changes here are
- * the same source-of-truth as Profile, Home greeting, and (eventually)
- * the Supabase profiles row. Auto-save on every interaction — no
- * "Save" button required since we're updating a live store.
+ * Each row navigates to a focused sub-screen for one cluster of settings:
+ * profession, schedule, chronotype, caffeine, melatonin, light, family,
+ * goals, name. Auto-save happens on each sub-screen, so this menu only
+ * displays the current value as a one-line summary.
  *
- * Sections mirror the onboarding step order so users coming from the
- * funnel recognise the layout. Each block is a labelled card with the
- * primitive that the original step used (segmented / chips / option /
- * stepper / textfield).
+ * "Where you are today" (currentShift) was REMOVED from settings — daily
+ * state belongs on Home, not in long-lived preferences.
  */
 
 import React from 'react';
-import { View, Pressable, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Pressable, Alert } from 'react-native';
 import { router } from 'expo-router';
-import * as Haptics from 'expo-haptics';
 import {
   Screen,
   Eyebrow,
-  HeroNumber,
-  Text,
+  SerifHero,
   GlassCard,
+  Text,
   Glyph,
-  OptionCard,
-  Toggle,
-  SegmentedControl,
-  Slider,
-  Stepper,
-  TextField,
-  type SegmentOption,
+  type GlyphName,
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
 import {
   mockProfessions,
   mockScheduleTemplates,
   mockMainProblems,
-  mockChronotypeQuestions,
   mockCaffeineTypes,
   mockCaffeineSensitivities,
-  mockMelatoninDoses,
 } from '../../mock/user';
 import {
   useOnboarding,
-  type Profession,
-  type ScheduleId,
-  type ShiftKind,
-  type MainProblem,
-  type CaffeineType,
-  type CaffeineSensitivity,
-  type MelatoninTime,
-  type PickupTime,
+  computeChronotypeScore,
+  chronotypeBucket,
 } from '../../lib/onboarding/store';
 import { safeBack } from '../../lib/nav';
 import { t } from '../../lib/i18n';
 
-const getShiftOptions = (): SegmentOption<ShiftKind>[] => [
-  { value: 'day', label: t('shift_kind.day_long') },
-  { value: 'night', label: t('shift_kind.night_long') },
-  { value: 'off', label: t('shift_kind.off_long') },
-];
+interface SettingsRow {
+  glyph: GlyphName;
+  label: string;
+  summary: string;
+  onPress: () => void;
+}
 
-const MELATONIN_TIME_OPTIONS: { value: MelatoninTime; label: string }[] = [
-  { value: '20', label: '20:00' },
-  { value: '22', label: '22:00' },
-  { value: '00', label: '00:00' },
-];
+function professionSummary(state: ReturnType<typeof useOnboarding>['state']): string {
+  if (!state.profession) return t('settings_sub.menu.not_set');
+  return mockProfessions.find((p) => p.id === state.profession)?.title ?? t('settings_sub.menu.not_set');
+}
 
-const PICKUP_OPTIONS: { value: PickupTime; label: string }[] = [
-  { value: '14', label: '14:00' },
-  { value: '15', label: '15:00' },
-  { value: '16', label: '16:00' },
-  { value: '17', label: '17:00' },
-];
+function scheduleSummary(state: ReturnType<typeof useOnboarding>['state']): string {
+  if (!state.scheduleId) return t('settings_sub.menu.not_set');
+  return mockScheduleTemplates.find((s) => s.id === state.scheduleId)?.title ?? t('settings_sub.menu.not_set');
+}
 
-function SectionHeader({ label, subtitle }: { label: string; subtitle?: string }) {
-  return (
-    <View style={{ marginTop: spacing.huge, marginBottom: spacing.md }}>
-      <Eyebrow>{label}</Eyebrow>
-      {subtitle ? (
-        <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 4 }}>
-          {subtitle}
-        </Text>
-      ) : null}
-    </View>
-  );
+function chronotypeSummary(state: ReturnType<typeof useOnboarding>['state']): string {
+  const score = computeChronotypeScore(state.chronotypeAnswers);
+  const bucket = chronotypeBucket(score);
+  if (!bucket) return t('settings_sub.menu.not_set');
+  return t(`settings_sub.chronotype.bucket_${bucket}`);
+}
+
+function caffeineSummary(state: ReturnType<typeof useOnboarding>['state']): string {
+  if (state.caffeineCupsPerDay === 0) return t('settings_sub.menu.caffeine_none');
+  const cups = `${state.caffeineCupsPerDay} ${state.caffeineCupsPerDay === 1 ? t('settings_sub.menu.cup') : t('settings_sub.menu.cups')}`;
+  const type = state.caffeineType
+    ? mockCaffeineTypes.find((c) => c.id === state.caffeineType)?.label ?? ''
+    : '';
+  return type ? `${cups} · ${type}` : cups;
+}
+
+function melatoninSummary(state: ReturnType<typeof useOnboarding>['state']): string {
+  if (!state.takesMelatonin) return t('settings_sub.menu.melatonin_none');
+  const dose = state.melatoninDoseMg ? `${state.melatoninDoseMg} mg` : '';
+  const time = `${state.melatoninTime}:00`;
+  return dose ? `${dose} · ${time}` : time;
+}
+
+function lightSummary(state: ReturnType<typeof useOnboarding>['state']): string {
+  return state.usesLightTherapy ? t('settings_sub.menu.on') : t('settings_sub.menu.off');
+}
+
+function familySummary(state: ReturnType<typeof useOnboarding>['state']): string {
+  if (!state.hasChildren) return t('settings_sub.menu.no_kids');
+  return t('settings_sub.menu.kids_pickup', { time: `${state.pickupTime}:00` });
+}
+
+function goalsSummary(state: ReturnType<typeof useOnboarding>['state']): string {
+  if (!state.mainProblem) return t('settings_sub.menu.not_set');
+  return mockMainProblems.find((p) => p.id === state.mainProblem)?.title ?? t('settings_sub.menu.not_set');
+}
+
+function nameSummary(state: ReturnType<typeof useOnboarding>['state']): string {
+  return state.displayName?.trim() || t('settings_sub.menu.not_set');
 }
 
 export default function SleepPreferences() {
-  const { state, update, reset } = useOnboarding();
+  const { state, reset } = useOnboarding();
 
   const onResetAlert = () => {
     Alert.alert(
@@ -108,8 +117,65 @@ export default function SleepPreferences() {
     );
   };
 
+  const rows: SettingsRow[] = [
+    {
+      glyph: 'pulse',
+      label: t('settings_sub.menu.profession'),
+      summary: professionSummary(state),
+      onPress: () => router.push('/settings/profession'),
+    },
+    {
+      glyph: 'gear',
+      label: t('settings_sub.menu.schedule'),
+      summary: scheduleSummary(state),
+      onPress: () => router.push('/settings/work-schedule'),
+    },
+    {
+      glyph: 'sparkle',
+      label: t('settings_sub.menu.chronotype'),
+      summary: chronotypeSummary(state),
+      onPress: () => router.push('/settings/chronotype'),
+    },
+    {
+      glyph: 'coffee',
+      label: t('settings_sub.menu.caffeine'),
+      summary: caffeineSummary(state),
+      onPress: () => router.push('/settings/caffeine'),
+    },
+    {
+      glyph: 'moon',
+      label: t('settings_sub.menu.melatonin'),
+      summary: melatoninSummary(state),
+      onPress: () => router.push('/settings/melatonin'),
+    },
+    {
+      glyph: 'sun',
+      label: t('settings_sub.menu.light'),
+      summary: lightSummary(state),
+      onPress: () => router.push('/settings/light'),
+    },
+    {
+      glyph: 'user',
+      label: t('settings_sub.menu.family'),
+      summary: familySummary(state),
+      onPress: () => router.push('/settings/family'),
+    },
+    {
+      glyph: 'flame',
+      label: t('settings_sub.menu.goals'),
+      summary: goalsSummary(state),
+      onPress: () => router.push('/settings/goals'),
+    },
+    {
+      glyph: 'user',
+      label: t('settings_sub.menu.name'),
+      summary: nameSummary(state),
+      onPress: () => router.push('/settings/name'),
+    },
+  ];
+
   return (
-    <Screen orbs="subtle" scroll keyboardAvoiding tabBarClearance={false}>
+    <Screen orbs="subtle" scroll tabBarClearance={false}>
       <Pressable
         onPress={() => safeBack('/(tabs)/profile')}
         hitSlop={12}
@@ -121,267 +187,40 @@ export default function SleepPreferences() {
       </Pressable>
 
       <Eyebrow>{t('sleep_prefs.eyebrow')}</Eyebrow>
-      <HeroNumber
-        value={t('sleep_prefs.title')}
-        size="md"
-        style={{ marginTop: spacing.lg }}
-      />
-      <Text
-        variant="bodyMd"
-        color="inkSubtle"
-        style={{ marginTop: spacing.md }}
-      >
+      <View style={{ marginTop: spacing.lg, marginBottom: spacing.md }}>
+        <SerifHero>{t('sleep_prefs.title')}</SerifHero>
+      </View>
+      <Text variant="bodyMd" color="inkSubtle" style={{ marginBottom: spacing.huge }}>
         {t('sleep_prefs.subtitle')}
       </Text>
 
-      {/* Profession */}
-      <SectionHeader label={t('sleep_prefs.section_profession')} />
-      {mockProfessions.map((p) => (
-        <OptionCard
-          key={p.id}
-          title={p.title}
-          subtitle={p.subtitle}
-          glyph={p.glyph}
-          selected={state.profession === p.id}
-          onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            update({ profession: p.id as Profession });
-          }}
-          accessibilityLabel={p.title}
-        />
+      {rows.map((row) => (
+        <Pressable
+          key={row.label}
+          onPress={row.onPress}
+          accessibilityRole="button"
+          accessibilityLabel={row.label}
+          style={{ marginBottom: spacing.sm }}
+        >
+          <GlassCard variant="whisper" padding="xl">
+            <View style={styles.row}>
+              <View style={styles.icon}>
+                <Glyph name={row.glyph} size={20} color="primary" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text variant="titleMd" family="display" weight="medium" color="ink">
+                  {row.label}
+                </Text>
+                <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
+                  {row.summary}
+                </Text>
+              </View>
+              <Glyph name="chevronRight" size={18} color="inkMuted" />
+            </View>
+          </GlassCard>
+        </Pressable>
       ))}
 
-      {/* Schedule template */}
-      <SectionHeader label={t('sleep_prefs.section_schedule')} />
-      {mockScheduleTemplates.map((s) => (
-        <OptionCard
-          key={s.id}
-          title={s.title}
-          subtitle={s.subtitle}
-          glyph={s.glyph}
-          selected={state.scheduleId === s.id}
-          onPress={() => update({ scheduleId: s.id as ScheduleId })}
-          accessibilityLabel={s.title}
-        />
-      ))}
-
-      {/* Current shift */}
-      <SectionHeader
-        label={t('sleep_prefs.section_today')}
-        subtitle={t('sleep_prefs.anchor_plan_sub')}
-      />
-      <SegmentedControl<ShiftKind>
-        options={getShiftOptions()}
-        value={state.currentShift}
-        onChange={(v) => update({ currentShift: v })}
-      />
-      <View style={styles.commuteHeader}>
-        <Eyebrow>{t('sleep_prefs.commute')}</Eyebrow>
-        <Text variant="titleMd" family="display" weight="medium" color="ink">
-          {`${state.commuteMinutes} min`}
-        </Text>
-      </View>
-      <Slider
-        min={0}
-        max={90}
-        step={5}
-        value={state.commuteMinutes}
-        onChange={(v) => update({ commuteMinutes: v })}
-        accessibilityLabel={t('a11y.commute_time_minutes')}
-        style={{ marginTop: spacing.sm }}
-      />
-
-      {/* Main problem */}
-      <SectionHeader label={t('sleep_prefs.section_problem')} />
-      {mockMainProblems.map((p) => (
-        <OptionCard
-          key={p.id}
-          title={p.title}
-          subtitle={p.subtitle}
-          glyph={p.glyph}
-          selected={state.mainProblem === p.id}
-          onPress={() => update({ mainProblem: p.id as MainProblem })}
-          accessibilityLabel={p.title}
-        />
-      ))}
-
-      {/* Chronotype quiz */}
-      <SectionHeader
-        label={t('sleep_prefs.section_chronotype')}
-        subtitle={t('sleep_prefs.tap_to_update_sub')}
-      />
-      {mockChronotypeQuestions.map((q, qIdx) => (
-        <View key={q.id} style={{ marginBottom: spacing.lg }}>
-          <Text
-            variant="titleMd"
-            family="display"
-            weight="medium"
-            color="ink"
-            style={{ marginBottom: spacing.sm }}
-          >
-            {`Q${qIdx + 1}. ${q.question}`}
-          </Text>
-          {q.options.map((opt) => (
-            <OptionCard
-              key={opt.id}
-              title={opt.label}
-              selected={state.chronotypeAnswers[q.id] === opt.id}
-              onPress={() =>
-                update({
-                  chronotypeAnswers: {
-                    ...state.chronotypeAnswers,
-                    [q.id]: opt.id,
-                  },
-                })
-              }
-              accessibilityLabel={`${q.question} — ${opt.label}`}
-            />
-          ))}
-        </View>
-      ))}
-
-      {/* Caffeine */}
-      <SectionHeader label={t('sleep_prefs.section_caffeine')} />
-      <View style={{ marginBottom: spacing.lg }}>
-        <Stepper
-          value={state.caffeineCupsPerDay}
-          min={0}
-          max={8}
-          step={1}
-          unit="cups/day"
-          onChange={(v) => update({ caffeineCupsPerDay: v })}
-          accessibilityLabel={t('a11y.cups_per_day')}
-        />
-      </View>
-      <Eyebrow style={{ marginBottom: spacing.md }}>{t('sleep_prefs.usual_type')}</Eyebrow>
-      {mockCaffeineTypes.map((c) => (
-        <OptionCard
-          key={c.id}
-          title={c.label}
-          glyph={c.glyph}
-          selected={state.caffeineType === c.id}
-          onPress={() => update({ caffeineType: c.id as CaffeineType })}
-          accessibilityLabel={c.label}
-        />
-      ))}
-      <Eyebrow style={{ marginTop: spacing.lg, marginBottom: spacing.md }}>{t('sleep_prefs.sensitivity')}</Eyebrow>
-      {mockCaffeineSensitivities.map((s) => (
-        <OptionCard
-          key={s.id}
-          title={s.label}
-          subtitle={s.subtitle}
-          selected={state.caffeineSensitivity === s.id}
-          onPress={() =>
-            update({ caffeineSensitivity: s.id as CaffeineSensitivity })
-          }
-          accessibilityLabel={s.label}
-        />
-      ))}
-
-      {/* Melatonin */}
-      <SectionHeader label={t('sleep_prefs.section_melatonin')} />
-      <View style={styles.toggleRow}>
-        <Text variant="titleMd" family="display" weight="medium" color="ink">
-          I take it
-        </Text>
-        <Toggle
-          value={state.takesMelatonin}
-          onChange={(v) => update({ takesMelatonin: v })}
-          accessibilityLabel={t('a11y.take_melatonin')}
-        />
-      </View>
-      {state.takesMelatonin && (
-        <View style={{ marginTop: spacing.md }}>
-          <Eyebrow style={{ marginBottom: spacing.md }}>{t('sleep_prefs.dose_mg')}</Eyebrow>
-          <View style={styles.chipRow}>
-            {mockMelatoninDoses.map((d) => {
-              const active = state.melatoninDoseMg === d;
-              return (
-                <Pressable
-                  key={d}
-                  onPress={() => {
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    update({ melatoninDoseMg: d });
-                  }}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: active }}
-                  accessibilityLabel={`${d} mg`}
-                  style={[
-                    styles.chip,
-                    {
-                      backgroundColor: active ? colors.primary : colors.surfaceHigh,
-                    },
-                  ]}
-                >
-                  <Text
-                    variant="titleMd"
-                    family="body"
-                    weight="medium"
-                    color={active ? 'onPrimary' : 'ink'}
-                  >
-                    {d}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </View>
-          <Eyebrow style={{ marginTop: spacing.lg, marginBottom: spacing.md }}>
-            USUAL TIME
-          </Eyebrow>
-          <SegmentedControl<MelatoninTime>
-            options={MELATONIN_TIME_OPTIONS}
-            value={state.melatoninTime}
-            onChange={(v) => update({ melatoninTime: v })}
-          />
-        </View>
-      )}
-
-      {/* Family */}
-      <SectionHeader label={t('sleep_prefs.section_family')} />
-      <View style={styles.toggleRow}>
-        <Text variant="titleMd" family="display" weight="medium" color="ink">
-          {t('sleep_prefs.kids_at_home')}
-        </Text>
-        <Toggle
-          value={state.hasChildren}
-          onChange={(v) => update({ hasChildren: v })}
-          accessibilityLabel={t('a11y.have_kids_at_home')}
-        />
-      </View>
-      {state.hasChildren && (
-        <View style={{ marginTop: spacing.md }}>
-          <Eyebrow style={{ marginBottom: spacing.md }}>{t('sleep_prefs.pickup_time')}</Eyebrow>
-          <SegmentedControl<PickupTime>
-            options={PICKUP_OPTIONS}
-            value={state.pickupTime}
-            onChange={(v) => update({ pickupTime: v })}
-          />
-        </View>
-      )}
-      <Eyebrow style={{ marginTop: spacing.xl, marginBottom: spacing.md }}>
-        OTHER COMMITMENTS
-      </Eyebrow>
-      <TextField
-        placeholder="e.g. yoga Tue/Thu 18:00"
-        value={state.otherCommitments}
-        onChangeText={(v) => update({ otherCommitments: v })}
-        autoCapitalize="sentences"
-      />
-
-      {/* Display name */}
-      <SectionHeader label={t('sleep_prefs.section_name')} />
-      <TextField
-        placeholder={t('sleep_prefs.name_placeholder')}
-        value={state.displayName}
-        onChangeText={(v) => update({ displayName: v })}
-        autoCapitalize="words"
-        autoCorrect={false}
-        spellCheck={false}
-        textContentType="name"
-        maxLength={50}
-      />
-
-      {/* Reset */}
       <View style={{ height: spacing.huge }} />
       <GlassCard variant="paper" padding="xl">
         <View style={styles.resetRow}>
@@ -401,7 +240,7 @@ export default function SleepPreferences() {
             style={styles.resetButton}
           >
             <Text variant="labelMd" weight="medium" color="coralDim" uppercase>
-              Reset
+              {t('settings_sub.menu.reset_cta')}
             </Text>
           </Pressable>
         </View>
@@ -418,30 +257,18 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
     marginBottom: spacing.sm,
   },
-  commuteHeader: {
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: spacing.xl,
   },
-  toggleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: spacing.md,
-  },
-  chipRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-  },
-  chip: {
-    minWidth: 56,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-    borderRadius: radii.pill,
+  icon: {
+    width: 40,
+    height: 40,
+    borderRadius: radii.lg,
+    backgroundColor: colors.primaryContainer,
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: spacing.md,
   },
   resetRow: {
     flexDirection: 'row',

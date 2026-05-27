@@ -80,6 +80,10 @@ export interface OnboardingState {
   // S11 name
   displayName: string;
 
+  // Settings-only: bright-light therapy opt-in (Plan tab shows light cards
+  // when true). Not yet persisted to profiles table; local-only.
+  usesLightTherapy: boolean;
+
   // Funnel completion marker (true after notifications screen exits)
   completed: boolean;
 }
@@ -102,6 +106,7 @@ const INITIAL: OnboardingState = {
   pickupTime: '15',
   otherCommitments: '',
   displayName: '',
+  usesLightTherapy: false,
   completed: false,
 };
 

@@ -26,7 +26,7 @@ const STREAK_LENGTH = 14;
 
 export default function Profile() {
   const { user, signOut } = useAuth();
-  const { state: onboarding, reset: resetOnboarding } = useOnboarding();
+  const { state: onboarding } = useOnboarding();
   const { data: streak } = useStreak();
   const { data: stats } = useProfileStats();
   const { data: subscription } = useSubscription();
@@ -102,29 +102,6 @@ export default function Profile() {
         onPress: () => router.push('/auth/signup'),
       };
 
-  const restartOnboardingRow = {
-    glyph: 'sparkle' as const,
-    label: t('profile.rows.restart_dev'),
-    subtitle: t('profile.rows.restart_dev_sub'),
-    onPress: () => {
-      Alert.alert(
-        t('profile.restart.title'),
-        t('profile.restart.body'),
-        [
-          { text: t('profile.restart.cancel'), style: 'cancel' },
-          {
-            text: t('profile.restart.confirm'),
-            style: 'destructive',
-            onPress: () => {
-              resetOnboarding();
-              router.replace('/onboarding/profession');
-            },
-          },
-        ],
-      );
-    },
-  };
-
   const SETTINGS: {
     glyph: 'gear' | 'bell' | 'sparkle' | 'user';
     label: string;
@@ -156,7 +133,6 @@ export default function Profile() {
       subtitle: t('profile.rows.about_sub'),
       onPress: () => router.push('/settings/about'),
     },
-    ...(__DEV__ ? [restartOnboardingRow] : []),
   ];
   return (
     <Screen orbs="subtle" variant="dim" scroll>
