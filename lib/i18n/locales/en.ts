@@ -43,6 +43,11 @@ const en = {
     plan_transition_sub: 'Get a 2-day step plan for your next night ↔ day switch.',
     caffeine_logged: 'Last cup logged · {{cups}} today',
     log_caffeine_a11y: 'I just had coffee',
+    journal_prompt: 'HOW DID YOU SLEEP?',
+    journal_logged: 'TODAY · LOGGED',
+    journal_good: 'Great',
+    journal_ok: 'OK',
+    journal_bad: 'Rough',
   },
   transition_create: {
     eyebrow: 'NEW TRANSITION',
@@ -162,6 +167,7 @@ const en = {
     fallback_name: 'Friend',
     stat_days: 'DAYS',
     stat_plans: 'PLANS',
+    stat_journal: 'JOURNAL',
     stat_on_plan: 'ON PLAN',
     settings: 'SETTINGS',
     subscription: {

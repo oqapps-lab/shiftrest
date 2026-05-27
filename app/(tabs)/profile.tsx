@@ -20,6 +20,7 @@ import { formatTrialRemaining, clampDisplayName } from '../../lib/derive';
 import { useAuth } from '../../lib/auth/store';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useProfileStats, useSubscription } from '../../lib/queries';
+import { useSleepJournal, journaledDayCount } from '../../lib/sleep-journal/store';
 import { t } from '../../lib/i18n';
 
 const STREAK_LENGTH = 14;
@@ -36,8 +37,10 @@ export default function Profile() {
   // Anonymous demo mode falls through to mockUser so the screen tells a
   // story without any backend.
   const daysInApp = user ? (stats?.daysInApp ?? 0) : 0;
-  const plansCompleted = user ? (stats?.plansCompleted ?? 0) : 0;
   const adherencePct = user ? (stats?.onPlanPct ?? 0) : 0;
+  // G4: live journal counter — re-renders on tap via useSleepJournal subscribe
+  useSleepJournal();
+  const journalDays = journaledDayCount();
 
   // Display name preference:
   //   onboarding.displayName (set in S11) →
@@ -184,8 +187,8 @@ export default function Profile() {
         </GlassCard>
         <View style={{ width: spacing.sm }} />
         <GlassCard variant="glass" padding="lg" style={styles.stat}>
-          <Eyebrow size="md">{t('profile.stat_plans')}</Eyebrow>
-          <HeroNumber value={plansCompleted} size="md" />
+          <Eyebrow size="md">{t('profile.stat_journal')}</Eyebrow>
+          <HeroNumber value={journalDays} size="md" />
         </GlassCard>
         <View style={{ width: spacing.sm }} />
         <GlassCard variant="glass" padding="lg" style={styles.stat}>
@@ -195,7 +198,7 @@ export default function Profile() {
       </View>
 
       {/* F2: empty-state hint when all stats are zero (brand-new user) */}
-      {daysInApp === 0 && plansCompleted === 0 && (
+      {daysInApp === 0 && journalDays === 0 && (
         <Text
           variant="bodyMd"
           color="inkMuted"

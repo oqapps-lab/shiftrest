@@ -51,6 +51,12 @@ import {
   logCaffeine,
   caffeineCutoffFromLog,
 } from '../../lib/caffeine-log/store';
+import {
+  useSleepJournal,
+  setSleepRating,
+  ratingForToday,
+  type SleepRating,
+} from '../../lib/sleep-journal/store';
 import * as Haptics from 'expo-haptics';
 import { t } from '../../lib/i18n';
 
@@ -103,6 +109,11 @@ export default function Home() {
     const [h, m] = hhmm.split(':').map(Number);
     return (h || 0) + (m || 0) / 60;
   };
+  // G4: sleep journal — one-tap rating after sleep. Subscribed for live
+  // re-render when user taps an emoji button.
+  useSleepJournal();
+  const todayRating = ratingForToday();
+
   // G1: caffeine logger — when user taps "I just had coffee", the cutoff
   // shifts to lastCup+6h so the event card reflects real intake, not a
   // static daily estimate.
@@ -199,13 +210,59 @@ export default function Home() {
       </View>
 
       {/* A9: Where you are today — daily state card, moved out of Settings */}
-      <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.huge }}>
+      <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.md }}>
         <Eyebrow style={{ marginBottom: spacing.sm }}>{t('today.shift_label')}</Eyebrow>
         <SegmentedControl<ShiftKind>
           options={shiftOptions}
           value={onboarding.currentShift}
           onChange={(v) => update({ currentShift: v })}
         />
+      </GlassCard>
+
+      {/* G4: Sleep journal — one-tap morning rating */}
+      <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.huge }}>
+        <Eyebrow style={{ marginBottom: spacing.sm }}>
+          {todayRating ? t('today.journal_logged') : t('today.journal_prompt')}
+        </Eyebrow>
+        <View style={styles.journalRow}>
+          {(['good', 'ok', 'bad'] as const).map((rating) => {
+            const active = todayRating === rating;
+            return (
+              <Pressable
+                key={rating}
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  setSleepRating(rating);
+                }}
+                accessibilityRole="button"
+                accessibilityState={{ selected: active }}
+                accessibilityLabel={t(`today.journal_${rating}`)}
+                style={[
+                  styles.journalChip,
+                  {
+                    backgroundColor: active
+                      ? rating === 'good'
+                        ? colors.primary
+                        : rating === 'ok'
+                        ? colors.sunriseGlow
+                        : colors.duskGlow
+                      : colors.surfaceLow,
+                  },
+                ]}
+              >
+                <Text
+                  variant="labelMd"
+                  family="body"
+                  weight="medium"
+                  color={active && rating === 'good' ? 'onPrimary' : 'ink'}
+                  uppercase
+                >
+                  {t(`today.journal_${rating}`)}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
       </GlassCard>
 
       <View style={{ alignItems: 'center', marginBottom: spacing.huge }}>
@@ -365,5 +422,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: spacing.md,
+  },
+  journalRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  journalChip: {
+    flex: 1,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+    borderRadius: radii.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
