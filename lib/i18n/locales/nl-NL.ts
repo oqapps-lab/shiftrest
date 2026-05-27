@@ -424,6 +424,9 @@ const nlNL = {
     m_away: 'over {{m}}m',
     h_away: 'over {{h}}u',
     hm_away: 'over {{h}}u {{m}}m',
+    m_ago: '{{m}}m geleden',
+    h_ago: '{{h}}u geleden',
+    hm_ago: '{{h}}u {{m}}m geleden',
   },
   trial: {
     ends_today: 'eindigt vandaag',

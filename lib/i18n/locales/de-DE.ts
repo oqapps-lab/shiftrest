@@ -424,6 +424,9 @@ const deDE = {
     m_away: 'in {{m}} Min.',
     h_away: 'in {{h}} Std.',
     hm_away: 'in {{h}} Std. {{m}} Min.',
+    m_ago: 'vor {{m}}m',
+    h_ago: 'vor {{h}}h',
+    hm_ago: 'vor {{h}}h {{m}}m',
   },
   trial: {
     ends_today: 'endet heute',

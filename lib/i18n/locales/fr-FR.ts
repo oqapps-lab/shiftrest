@@ -424,6 +424,9 @@ const frFR = {
     m_away: 'dans {{m}} min',
     h_away: 'dans {{h}} h',
     hm_away: 'dans {{h}} h {{m}} min',
+    m_ago: 'il y a {{m}}m',
+    h_ago: 'il y a {{h}}h',
+    hm_ago: 'il y a {{h}}h {{m}}m',
   },
   trial: {
     ends_today: 'se termine aujourd’hui',

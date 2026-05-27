@@ -552,6 +552,9 @@ const en = {
     m_away: '{{m}}m away',
     h_away: '{{h}}h away',
     hm_away: '{{h}}h {{m}}m away',
+    m_ago: '{{m}}m ago',
+    h_ago: '{{h}}h ago',
+    hm_ago: '{{h}}h {{m}}m ago',
   },
   trial: {
     ends_today: 'ends today',

@@ -422,6 +422,9 @@ const zhHant = {
     m_away: "{{m}}分後",
     h_away: "{{h}}小時後",
     hm_away: "{{h}}小時{{m}}分後",
+    m_ago: '{{m}}分鐘前',
+    h_ago: '{{h}}小時前',
+    hm_ago: '{{h}}小時{{m}}分鐘前',
   },
   trial: {
     ends_today: "今日結束",

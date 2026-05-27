@@ -423,6 +423,9 @@ const itIT = {
     m_away: "tra {{m}}m",
     h_away: "tra {{h}}h",
     hm_away: "tra {{h}}h {{m}}m",
+    m_ago: '{{m}}m fa',
+    h_ago: '{{h}}h fa',
+    hm_ago: '{{h}}h {{m}}m fa',
   },
   trial: {
     ends_today: "termina oggi",

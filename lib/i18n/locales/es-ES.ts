@@ -424,6 +424,9 @@ const esES = {
     m_away: 'en {{m}}m',
     h_away: 'en {{h}}h',
     hm_away: 'en {{h}}h {{m}}m',
+    m_ago: 'hace {{m}}m',
+    h_ago: 'hace {{h}}h',
+    hm_ago: 'hace {{h}}h {{m}}m',
   },
   trial: {
     ends_today: 'termina hoy',
