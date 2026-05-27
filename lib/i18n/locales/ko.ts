@@ -423,6 +423,9 @@ const ko = {
     m_away: "{{m}}분 후",
     h_away: "{{h}}시간 후",
     hm_away: "{{h}}시간 {{m}}분 후",
+    m_ago: '{{m}}분 전',
+    h_ago: '{{h}}시간 전',
+    hm_ago: '{{h}}시간 {{m}}분 전',
   },
   trial: {
     ends_today: "오늘 종료",

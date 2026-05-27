@@ -18,13 +18,22 @@ export function getGreeting(nowHour: number): string {
 }
 
 export function formatRelativeTime(nowHour: number, targetHour: number): string {
+  // diff is signed; positive = future, negative = past today.
+  // We render "ago" for past within ±12h; outside that window we roll
+  // forward 24h so a 13:30 cutoff at 17:00 shows "4h ago", not "20h away".
   let diff = targetHour - nowHour;
-  if (diff < 0) diff += 24;
-  if (diff === 0) return t('rel.now');
+  if (diff < -12) diff += 24;
   const totalMins = Math.round(diff * 60);
-  if (totalMins === 0) return t('rel.now'); // sub-minute differences
-  const h = Math.floor(totalMins / 60);
-  const m = totalMins % 60;
+  if (totalMins === 0) return t('rel.now');
+  const past = totalMins < 0;
+  const abs = Math.abs(totalMins);
+  const h = Math.floor(abs / 60);
+  const m = abs % 60;
+  if (past) {
+    if (h === 0) return t('rel.m_ago', { m });
+    if (m === 0) return t('rel.h_ago', { h });
+    return t('rel.hm_ago', { h, m });
+  }
   if (h === 0) return t('rel.m_away', { m });
   if (m === 0) return t('rel.h_away', { h });
   return t('rel.hm_away', { h, m });

@@ -423,6 +423,9 @@ const ja = {
     m_away: "{{m}}分後",
     h_away: "{{h}}時間後",
     hm_away: "{{h}}時間{{m}}分後",
+    m_ago: '{{m}}分前',
+    h_ago: '{{h}}時間前',
+    hm_ago: '{{h}}時間{{m}}分前',
   },
   trial: {
     ends_today: "今日終了",

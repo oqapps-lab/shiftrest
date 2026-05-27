@@ -423,6 +423,9 @@ const ptBR = {
     m_away: "em {{m}}min",
     h_away: "em {{h}}h",
     hm_away: "em {{h}}h {{m}}min",
+    m_ago: 'há {{m}}m',
+    h_ago: 'há {{h}}h',
+    hm_ago: 'há {{h}}h {{m}}m',
   },
   trial: {
     ends_today: "termina hoje",

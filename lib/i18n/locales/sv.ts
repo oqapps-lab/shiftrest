@@ -423,6 +423,9 @@ const sv = {
     m_away: 'om {{m}} min',
     h_away: 'om {{h}} tim',
     hm_away: 'om {{h}} tim {{m}} min',
+    m_ago: '{{m}}m sedan',
+    h_ago: '{{h}}h sedan',
+    hm_ago: '{{h}}h {{m}}m sedan',
   },
   trial: {
     ends_today: 'slutar idag',
