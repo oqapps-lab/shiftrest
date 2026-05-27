@@ -269,6 +269,11 @@ const nlNL = {
     prev_month: 'Vorige maand',
     next_month: 'Volgende maand',
     weekday_initials: ['M', 'D', 'W', 'D', 'V', 'Z', 'Z'],
+    cell_action_title: 'Deze dienst bewerken?',
+    cell_action_body: 'Tik op Verwijderen om de dienst van {{date}} te verwijderen.',
+    cell_cancel: 'Annuleren',
+    cell_delete: 'Verwijderen',
+    cell_delete_failed: 'Dienst kon niet worden verwijderd',
   },
   caffeine_types: {
     coffee: 'Koffie',

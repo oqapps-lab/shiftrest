@@ -268,6 +268,11 @@ const itIT = {
     prev_month: "Mese precedente",
     next_month: "Mese successivo",
     weekday_initials: ["L", "M", "M", "G", "V", "S", "D"],
+    cell_action_title: 'Modificare questo turno?',
+    cell_action_body: 'Tocca Elimina per rimuovere il turno del {{date}}.',
+    cell_cancel: 'Annulla',
+    cell_delete: 'Elimina',
+    cell_delete_failed: 'Impossibile eliminare il turno',
   },
   caffeine_types: {
     coffee: "Caffè",

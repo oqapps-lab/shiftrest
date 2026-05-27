@@ -267,6 +267,11 @@ const zhHant = {
     prev_month: "上個月",
     next_month: "下個月",
     weekday_initials: ["一", "二", "三", "四", "五", "六", "日"],
+    cell_action_title: '要編輯這個班次嗎？',
+    cell_action_body: '點擊「刪除」以移除 {{date}} 的班次。',
+    cell_cancel: '取消',
+    cell_delete: '刪除',
+    cell_delete_failed: '無法刪除班次',
   },
   caffeine_types: {
     coffee: "咖啡",

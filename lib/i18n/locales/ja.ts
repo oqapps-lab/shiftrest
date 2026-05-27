@@ -268,6 +268,11 @@ const ja = {
     prev_month: "前の月",
     next_month: "次の月",
     weekday_initials: ["月", "火", "水", "木", "金", "土", "日"],
+    cell_action_title: 'このシフトを編集しますか？',
+    cell_action_body: '{{date}} のシフトを削除するには「削除」をタップ。',
+    cell_cancel: 'キャンセル',
+    cell_delete: '削除',
+    cell_delete_failed: 'シフトを削除できませんでした',
   },
   caffeine_types: {
     coffee: "コーヒー",

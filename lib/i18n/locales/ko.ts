@@ -268,6 +268,11 @@ const ko = {
     prev_month: "이전 달",
     next_month: "다음 달",
     weekday_initials: ["월", "화", "수", "목", "금", "토", "일"],
+    cell_action_title: '이 근무를 편집하시겠습니까?',
+    cell_action_body: '{{date}}의 근무를 제거하려면 삭제를 탭하세요.',
+    cell_cancel: '취소',
+    cell_delete: '삭제',
+    cell_delete_failed: '근무를 삭제할 수 없습니다',
   },
   caffeine_types: {
     coffee: "커피",

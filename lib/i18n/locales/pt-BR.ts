@@ -268,6 +268,11 @@ const ptBR = {
     prev_month: "Mês anterior",
     next_month: "Próximo mês",
     weekday_initials: ["S", "T", "Q", "Q", "S", "S", "D"],
+    cell_action_title: 'Editar este turno?',
+    cell_action_body: 'Toque em Excluir para remover o turno de {{date}}.',
+    cell_cancel: 'Cancelar',
+    cell_delete: 'Excluir',
+    cell_delete_failed: 'Não foi possível excluir o turno',
   },
   caffeine_types: {
     coffee: "Café",

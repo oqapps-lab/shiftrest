@@ -269,6 +269,11 @@ const deDE = {
     prev_month: 'Vorheriger Monat',
     next_month: 'Nächster Monat',
     weekday_initials: ['M', 'D', 'M', 'D', 'F', 'S', 'S'],
+    cell_action_title: 'Diese Schicht bearbeiten?',
+    cell_action_body: 'Tippe Löschen, um die Schicht am {{date}} zu entfernen.',
+    cell_cancel: 'Abbrechen',
+    cell_delete: 'Löschen',
+    cell_delete_failed: 'Schicht konnte nicht gelöscht werden',
   },
   caffeine_types: {
     coffee: 'Kaffee',
