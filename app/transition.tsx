@@ -17,7 +17,10 @@ import {
 } from '../components/ui';
 import { colors, spacing, radii } from '../constants/tokens';
 import { getMockTransition } from '../mock/user';
-import { useActiveTransitionPlan } from '../lib/queries';
+import { useActiveTransitionPlan, EVENTS, emitChange } from '../lib/queries';
+import { toggleLocalTransitionStep } from '../lib/local-transition/store';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { useAuth } from '../lib/auth/store';
 import { t } from '../lib/i18n';
 import type { Translations } from '../lib/i18n/locales/en';
 
@@ -73,6 +76,7 @@ function dayLabel(dateIso: string): string {
 
 export default function Transition() {
   const { data: livePlan } = useActiveTransitionPlan();
+  const { user } = useAuth();
   // B22: getMockTransition() returns a fresh object literal every call.
   // Calling it on every render made `mockTransition.days` a new reference
   // each render → the initialDays useMemo below recomputes every render →
@@ -146,16 +150,41 @@ export default function Transition() {
 
   const toggleStep = (dayIdx: number, stepIdx: number) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const stepRef = days[dayIdx]?.steps[stepIdx];
+    if (!stepRef) return;
+    const nextDone = !stepRef.done;
+
+    // QA-BUG-7: optimistic local toggle for instant feedback…
     setDays((prev) =>
       prev.map((d, i) =>
         i === dayIdx
           ? {
               ...d,
-              steps: d.steps.map((s, j) => (j === stepIdx ? { ...s, done: !s.done } : s)),
+              steps: d.steps.map((s, j) => (j === stepIdx ? { ...s, done: nextDone } : s)),
             }
           : d,
       ),
     );
+
+    // …then persist to whichever backend the live plan came from. Without
+    // this, the next time the modal mounts useActiveTransitionPlan re-reads
+    // unchanged data and the checkmark vanishes.
+    const isAnon = !isSupabaseConfigured || !supabase || !user?.id;
+    if (isAnon) {
+      // Anon plan: id is a local-step-* string. The store keeps the
+      // canonical state and emits its own change event for re-render.
+      toggleLocalTransitionStep(stepRef.id);
+      return;
+    }
+    // Signed-in plan: writes to transition_steps so re-fetches see the
+    // updated row. Fire-and-forget — local optimistic state covers the
+    // UI; a failure leaves the persisted state stale, but we surface no
+    // error toast here (consistent with the rest of this modal).
+    void supabase!
+      .from('transition_steps')
+      .update({ is_completed: nextDone })
+      .eq('id', stepRef.id)
+      .then(() => emitChange(EVENTS.transitionChanged));
   };
 
   return (
