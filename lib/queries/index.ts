@@ -174,11 +174,17 @@ export function useActiveTransitionPlan(): QueryResult<TransitionPlanWithSteps |
 
   const refetch = useCallback(() => setTick((t) => t + 1), []);
 
+  // QA-BUG-5: when anonymous, return the local store snapshot DIRECTLY so
+  // updates from setLocalTransitionPlan re-render consumers. Earlier
+  // setData(local) inside the supabase useEffect captured `local` in a
+  // closure that didn't re-run on local changes, leaving the Home card
+  // stuck on the CTA after the user generated a plan.
+  const anon = !isSupabaseConfigured || !supabase || !user?.id;
+
   useEffect(() => {
     // Anonymous user (or no Supabase): use the local in-memory store so
     // the Home transition card and modal still work in demo mode.
-    if (!isSupabaseConfigured || !supabase || !user?.id) {
-      setData(local);
+    if (anon) {
       return;
     }
     let alive = true;
@@ -250,7 +256,15 @@ export function useActiveTransitionPlan(): QueryResult<TransitionPlanWithSteps |
     return () => sub.remove();
   }, [refetch]);
 
-  return { data, loading, error, refetch };
+  // QA-BUG-5: for anon, expose the live `local` snapshot — useLocalTransitionPlan
+  // already subscribes to its DeviceEventEmitter, so re-renders happen
+  // automatically on setLocalTransitionPlan/toggleLocalTransitionStep.
+  return {
+    data: anon ? local : data,
+    loading,
+    error,
+    refetch,
+  };
 }
 
 // ─── Subscription state ────────────────────────────────────────────────────
