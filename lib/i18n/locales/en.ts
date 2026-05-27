@@ -388,6 +388,11 @@ const en = {
     add_shift: 'Add shift',
     prev_month: 'Previous month',
     next_month: 'Next month',
+    cell_action_title: 'Edit this shift?',
+    cell_action_body: 'Tap Delete to remove the shift on {{date}}.',
+    cell_cancel: 'Cancel',
+    cell_delete: 'Delete',
+    cell_delete_failed: 'Could not delete shift',
     weekday_initials: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
   },
   caffeine_types: {

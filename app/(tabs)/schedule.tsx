@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Alert } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import {
   Screen,
@@ -23,7 +23,9 @@ import { colors, spacing } from '../../constants/tokens';
 import { formatMonthYear } from '../../lib/derive';
 import { useShifts } from '../../lib/queries';
 import { useAuth } from '../../lib/auth/store';
-import { useLocalShifts } from '../../lib/local-shifts/store';
+import { useLocalShifts, removeLocalShift } from '../../lib/local-shifts/store';
+import { supabase, isSupabaseConfigured } from '../../lib/supabase';
+import { emitChange, EVENTS } from '../../lib/queries';
 import { t } from '../../lib/i18n';
 import type { Translations } from '../../lib/i18n/locales/en';
 
@@ -178,6 +180,52 @@ export default function Schedule() {
 
   const todayIso = localIso(today);
 
+  // H1: Calendar tap handler — open Add Shift for empty days, or
+  // offer Delete for days that already have a shift. Past days are
+  // read-only (you can't change history).
+  const onCellTap = React.useCallback((cell: Cell) => {
+    if (cell.kind === 'empty' || !cell.iso) return;
+    if (cell.kind === 'past') return;
+
+    Haptics.selectionAsync();
+    const hasShift = cell.kind === 'day' || cell.kind === 'night';
+
+    if (!hasShift) {
+      // Empty future day → open Add Shift with date pre-filled
+      router.push({ pathname: '/schedule/add-shift', params: { iso: cell.iso } });
+      return;
+    }
+
+    // Already has a shift → confirm delete
+    Alert.alert(
+      t('schedule.cell_action_title'),
+      t('schedule.cell_action_body', { date: cell.iso }),
+      [
+        { text: t('schedule.cell_cancel'), style: 'cancel' },
+        {
+          text: t('schedule.cell_delete'),
+          style: 'destructive',
+          onPress: async () => {
+            if (!isSupabaseConfigured || !supabase || !user?.id) {
+              removeLocalShift(cell.iso!);
+              return;
+            }
+            const { error } = await supabase
+              .from('shifts')
+              .update({ deleted_at: new Date().toISOString() })
+              .eq('user_id', user.id)
+              .eq('date', cell.iso!);
+            if (error) {
+              Alert.alert(t('schedule.cell_delete_failed'), error.message);
+              return;
+            }
+            emitChange(EVENTS.shiftsChanged);
+          },
+        },
+      ],
+    );
+  }, [user?.id]);
+
   return (
     <Screen
       orbs="subtle"
@@ -233,8 +281,16 @@ export default function Schedule() {
       <View style={styles.grid}>
         {grid.map((d, i) => {
           const isToday = d.kind !== 'empty' && d.iso === todayIso;
+          const isInteractive = d.kind !== 'empty' && d.kind !== 'past';
           return (
-            <View key={i} style={styles.cell}>
+            <Pressable
+              key={i}
+              style={styles.cell}
+              onPress={() => onCellTap(d)}
+              disabled={!isInteractive}
+              accessibilityRole={isInteractive ? 'button' : undefined}
+              accessibilityLabel={d.iso}
+            >
               {d.kind !== 'empty' && (
                 <>
                   <View
@@ -255,7 +311,7 @@ export default function Schedule() {
                   </Text>
                 </>
               )}
-            </View>
+            </Pressable>
           );
         })}
       </View>

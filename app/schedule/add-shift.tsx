@@ -9,6 +9,7 @@
 
 import React, { useState } from 'react';
 import { View, Pressable, StyleSheet, Alert } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import {
   Screen,
@@ -87,8 +88,15 @@ function formatSummary(kind: Kind, startsAt: Date, endsAt: Date): string {
 
 export default function AddShift() {
   const { user } = useAuth();
+  // H1: when tapped from calendar, the `iso` query param pre-fills the
+  // start date so the user doesn't have to re-pick what they already
+  // tapped. Fallback: today.
+  const params = useLocalSearchParams<{ iso?: string }>();
+  const isoParam = typeof params.iso === 'string' ? params.iso : null;
 
-  const baseDate = new Date();
+  const baseDate = isoParam
+    ? new Date(isoParam + 'T00:00:00')
+    : new Date();
   const [kind, setKind] = useState<Kind>('day');
   const [startsAt, setStartsAt] = useState<Date>(snapToTopOfHour(baseDate, 7));
   const [endsAt, setEndsAt] = useState<Date>(snapToTopOfHour(baseDate, 19));
