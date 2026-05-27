@@ -394,6 +394,11 @@ const en = {
     cell_cancel: 'Cancel',
     cell_delete: 'Delete',
     cell_delete_failed: 'Could not delete shift',
+    empty_eyebrow: 'NO SHIFTS YET',
+    empty_title: 'Apply your {{template}} rotation?',
+    empty_sub: 'One tap fills the next 4 weeks based on the pattern you picked in Settings.',
+    empty_cta: 'Apply to next 4 weeks',
+    empty_cta_a11y: 'Apply rotation template to schedule',
     weekday_initials: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
   },
   caffeine_types: {
