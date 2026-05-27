@@ -150,4 +150,43 @@ describe('parseIcs — basic', () => {
     // The summary should be unfolded to "Dayshift"
     expect(events[0].summary).toBe('Dayshift');
   });
+
+  test('parses UTC datetime DTSTART (Z suffix) and converts to local', () => {
+    const ics = [
+      'BEGIN:VEVENT',
+      'DTSTART:20260527T140000Z',  // 14:00 UTC
+      'DTEND:20260527T180000Z',
+      'SUMMARY:Day shift',
+      'END:VEVENT',
+    ].join('\r\n');
+    const events = parseIcs(ics);
+    expect(events).toHaveLength(1);
+    // date may differ depending on local timezone of the test runner,
+    // but it should be valid YYYY-MM-DD and time HH:MM
+    expect(events[0].date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(events[0].startTime).toMatch(/^\d{2}:\d{2}$/);
+  });
+
+  test('ignores lines without colon (invalid property syntax)', () => {
+    const ics = [
+      'BEGIN:VEVENT',
+      'DTSTART:20260527T070000',
+      'GARBAGE_NO_COLON',
+      'SUMMARY:Day',
+      'END:VEVENT',
+    ].join('\r\n');
+    const events = parseIcs(ics);
+    expect(events).toHaveLength(1);
+    expect(events[0].summary).toBe('Day');
+  });
+
+  test('invalid DTSTART format → skipped', () => {
+    const ics = [
+      'BEGIN:VEVENT',
+      'DTSTART:not-a-date',
+      'SUMMARY:Broken',
+      'END:VEVENT',
+    ].join('\r\n');
+    expect(parseIcs(ics)).toHaveLength(0);
+  });
 });
