@@ -55,6 +55,16 @@ export function clearLocalShifts(): void {
   emitChange(EVENTS.shiftsChanged);
 }
 
+/** Remove a single date's local shift entry. */
+export function removeLocalShift(iso: string): void {
+  if (!(iso in memCache)) return;
+  const next = { ...memCache };
+  delete next[iso];
+  memCache = next;
+  void AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(memCache));
+  emitChange(EVENTS.shiftsChanged);
+}
+
 /**
  * React hook returning the current local-shifts map. Re-renders when
  * EVENTS.shiftsChanged fires.

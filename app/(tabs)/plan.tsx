@@ -19,9 +19,13 @@ import {
   formatHour,
   hoursBetween,
   suggestedPlanFromOnboarding,
+  lightWindowsForShift,
+  formatHourRange,
+  napWindowForShift,
 } from '../../lib/derive';
 import { useGeneratedPlan, planHourAsFloat, type PlanRecommendation } from '../../lib/queries/plan';
 import { useOnboarding, chronotypeBucket, computeChronotypeScore } from '../../lib/onboarding/store';
+import { useLocalShifts } from '../../lib/local-shifts/store';
 import type { GlyphName } from '../../components/ui';
 import { t } from '../../lib/i18n';
 
@@ -40,9 +44,31 @@ interface UiRec {
  * against the CURRENT locale. Module-level const evaluation would freeze
  * the strings at load time and never update across locale switches.
  */
-function buildFallbackRecs(suggested: ReturnType<typeof suggestedPlanFromOnboarding>): UiRec[] {
+function buildFallbackRecs(
+  suggested: ReturnType<typeof suggestedPlanFromOnboarding>,
+  shift: 'day' | 'night' | 'off',
+): UiRec[] {
   const caffeineHour = Number(suggested.caffeineCutoff.split(':')[0]);
   const hoursBeforeSleep = hoursBetween(caffeineHour, suggested.sleepStart);
+
+  // E1: light therapy fallback — pick the FIRST window of the day as the
+  // hero. If the shift is night, that's evening bright light. If day, it's
+  // the morning sun. Tip in body summarises the secondary window when
+  // present (e.g. dark glasses on commute home).
+  const lightWindows = lightWindowsForShift(shift);
+  const primary = lightWindows[0];
+  const secondary = lightWindows[1];
+  const lightHero = primary
+    ? primary.eyebrowKey === 'plan.cards.light.seek'
+      ? t('plan.cards.light.seek_template', { range: formatHourRange(primary.startHour, primary.endHour) })
+      : t('plan.cards.light.avoid_template', { range: formatHourRange(primary.startHour, primary.endHour) })
+    : t('plan.cards.light.hero');
+  const lightBody = secondary
+    ? secondary.eyebrowKey === 'plan.cards.light.seek'
+      ? t('plan.cards.light.body_seek', { range: formatHourRange(secondary.startHour, secondary.endHour) })
+      : t('plan.cards.light.body_avoid', { range: formatHourRange(secondary.startHour, secondary.endHour) })
+    : t('plan.cards.light.body');
+
   return [
     {
       glyph: 'coffee',
@@ -64,19 +90,36 @@ function buildFallbackRecs(suggested: ReturnType<typeof suggestedPlanFromOnboard
     {
       glyph: 'sun',
       eyebrow: t('plan.cards.light.eyebrow'),
-      hero: t('plan.cards.light.hero'),
-      body: t('plan.cards.light.body'),
+      hero: lightHero,
+      body: lightBody,
       tintBg: colors.sunriseGlow,
       tintFg: 'sunriseDim',
     },
-    {
-      glyph: 'bed',
-      eyebrow: t('plan.cards.nap.eyebrow'),
-      hero: t('plan.cards.nap.hero'),
-      body: t('plan.cards.nap.body'),
-      tintBg: colors.primaryContainer,
-      tintFg: 'primary',
-    },
+    // G2: shift-aware nap recommendation
+    (() => {
+      const nap = napWindowForShift(shift);
+      if (!nap) {
+        return {
+          glyph: 'bed' as const,
+          eyebrow: t('plan.cards.nap.eyebrow'),
+          hero: t('plan.cards.nap.hero'),
+          body: t('plan.cards.nap.body'),
+          tintBg: colors.primaryContainer,
+          tintFg: 'primary' as const,
+        };
+      }
+      return {
+        glyph: 'bed' as const,
+        eyebrow: t(`plan.cards.nap.eyebrow_${nap.kind}`),
+        hero: t('plan.cards.nap.hero_template', {
+          duration: nap.durationMin,
+          time: formatHour(nap.hour),
+        }),
+        body: t(`plan.cards.nap.body_${nap.kind}`),
+        tintBg: colors.primaryContainer,
+        tintFg: 'primary' as const,
+      };
+    })(),
   ];
 }
 
@@ -94,15 +137,30 @@ export default function Plan() {
   const pagerLabels = [t('plan.yesterday'), `${t('plan.today')} · ${formatDayMonth()}`, t('plan.tomorrow')];
   const { data: livePlan } = useGeneratedPlan();
   const { state: onboarding } = useOnboarding();
+
+  // K2: per-day shift kind. Read shifts for the date offset by (day-1),
+  // so Yesterday/Today/Tomorrow all surface their own timings instead of
+  // just relabelling the same numbers. Falls back to currentShift if no
+  // real shift recorded for that date.
+  const offsetDays = day - 1; // -1, 0, +1
+  const localShiftsMap = useLocalShifts();
+  const targetDate = new Date();
+  targetDate.setDate(targetDate.getDate() + offsetDays);
+  const targetIso = `${targetDate.getFullYear()}-${String(targetDate.getMonth() + 1).padStart(2, '0')}-${String(targetDate.getDate()).padStart(2, '0')}`;
+  const dayShiftKind: 'day' | 'night' | 'off' =
+    (localShiftsMap[targetIso] as 'day' | 'night' | 'off' | undefined)
+    ?? (day === 1 ? onboarding.currentShift : 'off');
   // J1: hide melatonin card when user opted out in onboarding
   const showMelatonin = onboarding.takesMelatonin !== false;
+  // C2: hide caffeine card when user doesn't drink caffeine
+  const showCaffeine = onboarding.caffeineCupsPerDay > 0;
+  // E1: show light therapy card when user enabled it in settings
+  const showLight = onboarding.usesLightTherapy === true;
 
-  // Suggested plan derived from the user's onboarding answers (current
-  // shift + chronotype). Replaces the old mockPlan fallback which leaked
-  // generic "Caffeine cutoff 14:30, Melatonin 22:00" to users who never
-  // gave us their schedule (live-test 2026-05-25 hardcode complaint).
+  // Suggested plan derived from THIS day's shift kind + chronotype. So
+  // Yesterday/Today/Tomorrow each render their own honest timings.
   const suggested = suggestedPlanFromOnboarding(
-    onboarding.currentShift,
+    dayShiftKind,
     chronotypeBucket(computeChronotypeScore(onboarding.chronotypeAnswers)),
   );
 
@@ -110,6 +168,8 @@ export default function Plan() {
   const baseRecs: UiRec[] = liveRecs && liveRecs.length > 0
     ? liveRecs
         .filter((r) => showMelatonin || r.type !== 'melatonin')
+        .filter((r) => showCaffeine || r.type !== 'caffeine')
+        .filter((r) => showLight || r.type !== 'light')
         .map((r) => ({
           ...REC_STYLE[r.type],
           eyebrow: r.locked ? `${r.eyebrow} · ${t('plan.premium_suffix')}` : r.eyebrow,
@@ -117,12 +177,14 @@ export default function Plan() {
           body: r.body,
           locked: r.locked,
         }))
-    : buildFallbackRecs(suggested);
-  // Strip melatonin card from fallback when user opted out — buildFallbackRecs
-  // always includes it for the demo "looks rich" effect; honesty wins here.
-  const recs: UiRec[] = showMelatonin
-    ? baseRecs
-    : baseRecs.filter((r) => r.glyph !== 'moon');
+    : buildFallbackRecs(suggested, dayShiftKind);
+  // Strip cards from fallback list when user opted out of that substance —
+  // buildFallbackRecs always returns the full 4 for the demo "looks rich"
+  // effect; honesty wins once user has set their prefs.
+  const recs: UiRec[] = baseRecs
+    .filter((r) => showMelatonin || r.glyph !== 'moon')
+    .filter((r) => showCaffeine || r.glyph !== 'coffee')
+    .filter((r) => showLight || r.glyph !== 'sun');
 
   const sleepStartHour =
     planHourAsFloat(livePlan?.sleep_start) ?? suggested.sleepStart;

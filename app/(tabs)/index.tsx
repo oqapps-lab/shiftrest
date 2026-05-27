@@ -3,8 +3,15 @@
  * Eyebrow greeting + streak pill + Soft hero line + TimelineRing + ShiftBar + 3 next-event cards.
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
 import { router } from 'expo-router';
 import {
   Screen,
@@ -16,6 +23,8 @@ import {
   Text,
   Glyph,
   HeroNumber,
+  SegmentedControl,
+  type SegmentOption,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockShiftBlocks, getMockTransition } from '../../mock/user';
@@ -32,10 +41,23 @@ import {
   useOnboarding,
   chronotypeBucket,
   computeChronotypeScore,
+  type ShiftKind,
 } from '../../lib/onboarding/store';
 import { useStreak, useActiveTransitionPlan } from '../../lib/queries';
 import { useGeneratedPlan, planHourAsFloat } from '../../lib/queries/plan';
 import { useAuth } from '../../lib/auth/store';
+import {
+  useCaffeineLog,
+  logCaffeine,
+  caffeineCutoffFromLog,
+} from '../../lib/caffeine-log/store';
+import {
+  useSleepJournal,
+  setSleepRating,
+  ratingForToday,
+  type SleepRating,
+} from '../../lib/sleep-journal/store';
+import * as Haptics from 'expo-haptics';
 import { t } from '../../lib/i18n';
 
 // Event styles per slot. The "hour" for each slot comes from the live
@@ -48,7 +70,28 @@ const EVENT_STYLES = {
 };
 
 export default function Home() {
-  const { state: onboarding } = useOnboarding();
+  const { state: onboarding, update } = useOnboarding();
+
+  // G5: subtle breathing on the Transition CTA so it draws gentle attention
+  // without being aggressive. 4s in / 4s out, opacity 1 → 0.6 on the icon
+  // container only — keeps the rest of the card stable.
+  const transitionPulse = useSharedValue(1);
+  useEffect(() => {
+    transitionPulse.value = withRepeat(
+      withTiming(0.55, { duration: 2400, easing: Easing.bezier(0.4, 0, 0.2, 1) }),
+      -1,
+      true,
+    );
+  }, [transitionPulse]);
+  const transitionPulseStyle = useAnimatedStyle(() => ({
+    opacity: transitionPulse.value,
+  }));
+
+  const shiftOptions: SegmentOption<ShiftKind>[] = [
+    { value: 'day', label: t('shift_kind.day_long') },
+    { value: 'night', label: t('shift_kind.night_long') },
+    { value: 'off', label: t('shift_kind.off_long') },
+  ];
   const { user } = useAuth();
   const { data: streak } = useStreak();
   const { data: livePlan } = useActiveTransitionPlan();
@@ -66,7 +109,18 @@ export default function Home() {
     const [h, m] = hhmm.split(':').map(Number);
     return (h || 0) + (m || 0) / 60;
   };
-  const caffeineHour = planHourAsFloat(generatedPlan?.caffeine_cutoff_at)
+  // G4: sleep journal — one-tap rating after sleep. Subscribed for live
+  // re-render when user taps an emoji button.
+  useSleepJournal();
+  const todayRating = ratingForToday();
+
+  // G1: caffeine logger — when user taps "I just had coffee", the cutoff
+  // shifts to lastCup+6h so the event card reflects real intake, not a
+  // static daily estimate.
+  const caffLog = useCaffeineLog();
+  const loggedCutoff = caffeineCutoffFromLog();
+  const caffeineHour = loggedCutoff
+    ?? planHourAsFloat(generatedPlan?.caffeine_cutoff_at)
     ?? parseFloatHour(suggested.caffeineCutoff);
   const melatoninHour = planHourAsFloat(generatedPlan?.melatonin_at)
     ?? parseFloatHour(suggested.melatoninTime);
@@ -74,8 +128,10 @@ export default function Home() {
 
   // J1/F1 — exclude melatonin event when user opted out in onboarding
   const showMelatonin = onboarding.takesMelatonin !== false;
+  // C2 — exclude caffeine event when user doesn't drink caffeine (cups=0)
+  const showCaffeine = onboarding.caffeineCupsPerDay > 0;
   const events = [
-    { ...EVENT_STYLES.caffeine,  hour: caffeineHour },
+    ...(showCaffeine ? [{ ...EVENT_STYLES.caffeine, hour: caffeineHour }] : []),
     ...(showMelatonin ? [{ ...EVENT_STYLES.melatonin, hour: melatoninHour }] : []),
     { ...EVENT_STYLES.sleep,     hour: sleepStartHour },
   ];
@@ -149,9 +205,65 @@ export default function Home() {
         )}
       </View>
 
-      <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
+      <View style={{ marginTop: spacing.lg, marginBottom: spacing.lg }}>
         <SerifHero>{t('today.hero')}</SerifHero>
       </View>
+
+      {/* A9: Where you are today — daily state card, moved out of Settings */}
+      <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.md }}>
+        <Eyebrow style={{ marginBottom: spacing.sm }}>{t('today.shift_label')}</Eyebrow>
+        <SegmentedControl<ShiftKind>
+          options={shiftOptions}
+          value={onboarding.currentShift}
+          onChange={(v) => update({ currentShift: v })}
+        />
+      </GlassCard>
+
+      {/* G4: Sleep journal — one-tap morning rating */}
+      <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.huge }}>
+        <Eyebrow style={{ marginBottom: spacing.sm }}>
+          {todayRating ? t('today.journal_logged') : t('today.journal_prompt')}
+        </Eyebrow>
+        <View style={styles.journalRow}>
+          {(['good', 'ok', 'bad'] as const).map((rating) => {
+            const active = todayRating === rating;
+            return (
+              <Pressable
+                key={rating}
+                onPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                  setSleepRating(rating);
+                }}
+                accessibilityRole="button"
+                accessibilityState={{ selected: active }}
+                accessibilityLabel={t(`today.journal_${rating}`)}
+                style={[
+                  styles.journalChip,
+                  {
+                    backgroundColor: active
+                      ? rating === 'good'
+                        ? colors.primary
+                        : rating === 'ok'
+                        ? colors.sunriseGlow
+                        : colors.duskGlow
+                      : colors.surfaceLow,
+                  },
+                ]}
+              >
+                <Text
+                  variant="labelMd"
+                  family="body"
+                  weight="medium"
+                  color={active && rating === 'good' ? 'onPrimary' : 'ink'}
+                  uppercase
+                >
+                  {t(`today.journal_${rating}`)}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </GlassCard>
 
       <View style={{ alignItems: 'center', marginBottom: spacing.huge }}>
         <TimelineRing
@@ -175,25 +287,48 @@ export default function Home() {
       <Eyebrow>{t('today.section_next')}</Eyebrow>
       <View style={{ height: spacing.md }} />
 
-      {events.map((e) => (
-        <GlassCard key={e.labelKey} variant="glass" padding="xxl" style={{ marginBottom: spacing.md }}>
-          <View style={styles.eventRow}>
-            <View style={[styles.eventIcon, { backgroundColor: e.tintBg }]}>
-              <Glyph name={e.glyph} size={22} color={e.tintFg} />
+      {events.map((e) => {
+        const isCaffeine = e.glyph === 'coffee';
+        return (
+          <GlassCard key={e.labelKey} variant="glass" padding="xxl" style={{ marginBottom: spacing.md }}>
+            <View style={styles.eventRow}>
+              <View style={[styles.eventIcon, { backgroundColor: e.tintBg }]}>
+                <Glyph name={e.glyph} size={22} color={e.tintFg} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Eyebrow>{t(e.labelKey)}</Eyebrow>
+                <HeroNumber value={formatHour(e.hour)} size="md" style={{ marginTop: 2 }} />
+                <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
+                  {formatRelativeTime(nowHour, e.hour)}
+                </Text>
+                {isCaffeine && caffLog && (
+                  <Text variant="bodyMd" color="primary" style={{ marginTop: 2 }}>
+                    {t('today.caffeine_logged', { cups: caffLog.cups })}
+                  </Text>
+                )}
+              </View>
+              {isCaffeine && (
+                <Pressable
+                  onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    logCaffeine();
+                  }}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('today.log_caffeine_a11y')}
+                  hitSlop={10}
+                  style={styles.logBtn}
+                >
+                  <Glyph name="plus" size={18} color="primary" />
+                </Pressable>
+              )}
             </View>
-            <View style={{ flex: 1 }}>
-              <Eyebrow>{t(e.labelKey)}</Eyebrow>
-              <HeroNumber value={formatHour(e.hour)} size="md" style={{ marginTop: 2 }} />
-              <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
-                {formatRelativeTime(nowHour, e.hour)}
-              </Text>
-            </View>
-          </View>
-        </GlassCard>
-      ))}
+          </GlassCard>
+        );
+      })}
 
-      {/* F1: Transition card only when a real live plan has transition_type — never show the mock Night→Day for anon */}
-      {livePlan?.transition_type && (
+      {/* F1: Transition card when a live plan exists. Otherwise show a
+          CTA to plan one — the killer feature is now reachable from UI. */}
+      {livePlan?.transition_type ? (
         <Pressable
           onPress={() => router.push('/transition')}
           style={{ marginTop: spacing.md }}
@@ -210,6 +345,41 @@ export default function Home() {
                 </Text>
               </View>
               <Glyph name="chevronRight" size={20} color="duskDim" />
+            </View>
+          </GlassCard>
+        </Pressable>
+      ) : (
+        <Pressable
+          onPress={() => router.push('/transition-create')}
+          style={{ marginTop: spacing.md }}
+        >
+          <GlassCard variant="paper" padding="xxl">
+            <View style={styles.eventRow}>
+              <Animated.View
+                style={[
+                  styles.eventIcon,
+                  { backgroundColor: colors.primaryContainer },
+                  transitionPulseStyle,
+                ]}
+              >
+                <Glyph name="sparkle" size={22} color="primary" />
+              </Animated.View>
+              <View style={{ flex: 1 }}>
+                <Eyebrow>{t('today.plan_transition_eyebrow')}</Eyebrow>
+                <Text
+                  variant="titleLg"
+                  family="display"
+                  weight="light"
+                  color="ink"
+                  style={{ marginTop: 2 }}
+                >
+                  {t('today.plan_transition_title')}
+                </Text>
+                <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
+                  {t('today.plan_transition_sub')}
+                </Text>
+              </View>
+              <Glyph name="chevronRight" size={20} color="inkMuted" />
             </View>
           </GlassCard>
         </Pressable>
@@ -243,5 +413,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: spacing.lg,
+  },
+  logBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: radii.lg,
+    backgroundColor: colors.primaryContainer,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: spacing.md,
+  },
+  journalRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  journalChip: {
+    flex: 1,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+    borderRadius: radii.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

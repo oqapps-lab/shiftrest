@@ -1,10 +1,11 @@
 /**
  * S52 — Notifications settings.
  *
- * Stage 5 scope: UI-only. Toggles persist to AsyncStorage via a small
- * NotificationSettings store. Wiring to expo-notifications scheduling
- * lands in Stage 6.6 — see TODO at bottom of file. Ships now so users
- * can express preferences during the trial window.
+ * Persists toggles to AsyncStorage, requests iOS notification permissions,
+ * and schedules daily local notifications via expo-notifications. Uses the
+ * generated Supabase plan when available, falls back to suggestedPlanFromOnboarding
+ * so anonymous and freshly-onboarded users still get honest, schedule-aware
+ * reminders without a backend round-trip.
  */
 
 import React, { useEffect, useState } from 'react';
@@ -32,6 +33,12 @@ import {
   type PlanTimes,
 } from '../../lib/notifications';
 import { useGeneratedPlan, formatPlanHour } from '../../lib/queries/plan';
+import {
+  useOnboarding,
+  computeChronotypeScore,
+  chronotypeBucket,
+} from '../../lib/onboarding/store';
+import { suggestedPlanFromOnboarding } from '../../lib/derive';
 import { t } from '../../lib/i18n';
 
 const STORAGE_KEY = 'shiftrest:notification-settings:v1';
@@ -65,6 +72,7 @@ export default function NotificationsSettings() {
   const [hydrated, setHydrated] = useState(false);
   const [scheduledCount, setScheduledCount] = useState<number | null>(null);
   const { data: livePlan } = useGeneratedPlan();
+  const { state: onboarding } = useOnboarding();
 
   useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEY)
@@ -86,15 +94,34 @@ export default function NotificationsSettings() {
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => null);
   }, [state, hydrated]);
 
-  // Build PlanTimes from the live plan only. Without a live plan we can't
-  // honestly schedule reminders — using mockPlan here used to fire
-  // 22:00 melatonin / 14:30 caffeine cut-off pings for users who never
-  // gave us their schedule (live-test 2026-05-25 K/L class).
-  const planTimes: PlanTimes = {
-    sleep_start: formatPlanHour(livePlan?.sleep_start) || null,
-    caffeine_cutoff: formatPlanHour(livePlan?.caffeine_cutoff_at) || null,
-    melatonin_at: formatPlanHour(livePlan?.melatonin_at) || null,
+  // Build PlanTimes from the live plan when available, fall back to a
+  // schedule-aware estimate from the user's onboarding answers. That keeps
+  // anonymous + freshly-onboarded users on a real timing rhythm without
+  // needing a backend round-trip. We still gate per-substance toggles by
+  // user preference (no melatonin push for someone who doesn't take it,
+  // no caffeine push for someone who's caffeine-free).
+  const suggested = suggestedPlanFromOnboarding(
+    onboarding.currentShift,
+    chronotypeBucket(computeChronotypeScore(onboarding.chronotypeAnswers)),
+  );
+  // The suggested helper returns numeric/string mix; format consistently
+  // as HH:MM for the notifications layer.
+  const fmtFromHour = (h: number): string => {
+    const hi = Math.floor(h);
+    const mi = Math.round((h - hi) * 60);
+    return `${String(hi).padStart(2, '0')}:${String(mi).padStart(2, '0')}`;
   };
+  const planTimes: PlanTimes = {
+    sleep_start: formatPlanHour(livePlan?.sleep_start) || fmtFromHour(suggested.sleepStart),
+    caffeine_cutoff: formatPlanHour(livePlan?.caffeine_cutoff_at) || suggested.caffeineCutoff,
+    melatonin_at:
+      formatPlanHour(livePlan?.melatonin_at) ||
+      (onboarding.takesMelatonin ? suggested.melatoninTime : null),
+  };
+  // Respect substance opt-out: a melatonin notif would be nonsense if the
+  // user toggled melatonin off in Settings → Melatonin.
+  if (!onboarding.takesMelatonin) planTimes.melatonin_at = null;
+  if (onboarding.caffeineCupsPerDay === 0) planTimes.caffeine_cutoff = null;
 
   // After hydration, re-schedule whenever (state, planTimes) changes.
   // If master is ON but permission hasn't been granted yet, request it

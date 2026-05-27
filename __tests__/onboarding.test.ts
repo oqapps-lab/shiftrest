@@ -185,6 +185,7 @@ describe('mapToProfileRow', () => {
     pickupTime: '15' as const,
     otherCommitments: '',
     displayName: 'Marina',
+    usesLightTherapy: false,
     completed: false,
   };
 

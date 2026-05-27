@@ -20,13 +20,14 @@ import { formatTrialRemaining, clampDisplayName } from '../../lib/derive';
 import { useAuth } from '../../lib/auth/store';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useProfileStats, useSubscription } from '../../lib/queries';
+import { useSleepJournal, journaledDayCount, recentJournalDays } from '../../lib/sleep-journal/store';
 import { t } from '../../lib/i18n';
 
 const STREAK_LENGTH = 14;
 
 export default function Profile() {
   const { user, signOut } = useAuth();
-  const { state: onboarding, reset: resetOnboarding } = useOnboarding();
+  const { state: onboarding } = useOnboarding();
   const { data: streak } = useStreak();
   const { data: stats } = useProfileStats();
   const { data: subscription } = useSubscription();
@@ -36,8 +37,12 @@ export default function Profile() {
   // Anonymous demo mode falls through to mockUser so the screen tells a
   // story without any backend.
   const daysInApp = user ? (stats?.daysInApp ?? 0) : 0;
-  const plansCompleted = user ? (stats?.plansCompleted ?? 0) : 0;
   const adherencePct = user ? (stats?.onPlanPct ?? 0) : 0;
+  // G4 + J1: live journal counter + recent 14 days for the heatmap
+  useSleepJournal();
+  const journalDays = journaledDayCount();
+  const recentJournal = recentJournalDays(STREAK_LENGTH);
+  const hasJournalHistory = recentJournal.some((d) => d.rating !== null);
 
   // Display name preference:
   //   onboarding.displayName (set in S11) →
@@ -102,29 +107,6 @@ export default function Profile() {
         onPress: () => router.push('/auth/signup'),
       };
 
-  const restartOnboardingRow = {
-    glyph: 'sparkle' as const,
-    label: t('profile.rows.restart_dev'),
-    subtitle: t('profile.rows.restart_dev_sub'),
-    onPress: () => {
-      Alert.alert(
-        t('profile.restart.title'),
-        t('profile.restart.body'),
-        [
-          { text: t('profile.restart.cancel'), style: 'cancel' },
-          {
-            text: t('profile.restart.confirm'),
-            style: 'destructive',
-            onPress: () => {
-              resetOnboarding();
-              router.replace('/onboarding/profession');
-            },
-          },
-        ],
-      );
-    },
-  };
-
   const SETTINGS: {
     glyph: 'gear' | 'bell' | 'sparkle' | 'user';
     label: string;
@@ -156,7 +138,6 @@ export default function Profile() {
       subtitle: t('profile.rows.about_sub'),
       onPress: () => router.push('/settings/about'),
     },
-    ...(__DEV__ ? [restartOnboardingRow] : []),
   ];
   return (
     <Screen orbs="subtle" variant="dim" scroll>
@@ -199,6 +180,40 @@ export default function Profile() {
         })}
       </View>
 
+      {/* J1: Sleep journal 14-day heatmap. Only render when user has any
+          ratings — keeps the screen quiet for brand-new users. */}
+      {hasJournalHistory && (
+        <>
+          <View style={{ height: spacing.lg }} />
+          <Eyebrow>{t('profile.journal_heatmap_label')}</Eyebrow>
+          <View style={styles.streakRow}>
+            {recentJournal.map((d, i) => {
+              const isToday = i === recentJournal.length - 1;
+              const color =
+                d.rating === 'good'
+                  ? colors.primary
+                  : d.rating === 'ok'
+                  ? colors.sunriseDim
+                  : d.rating === 'bad'
+                  ? colors.duskDim
+                  : null;
+              return (
+                <View
+                  key={d.iso}
+                  style={[
+                    styles.streakDot,
+                    color
+                      ? { backgroundColor: color }
+                      : styles.streakDotEmpty,
+                    color && isToday && styles.streakDotActive,
+                  ]}
+                />
+              );
+            })}
+          </View>
+        </>
+      )}
+
       <View style={{ height: spacing.huge }} />
 
       <View style={styles.statsRow}>
@@ -208,8 +223,8 @@ export default function Profile() {
         </GlassCard>
         <View style={{ width: spacing.sm }} />
         <GlassCard variant="glass" padding="lg" style={styles.stat}>
-          <Eyebrow size="md">{t('profile.stat_plans')}</Eyebrow>
-          <HeroNumber value={plansCompleted} size="md" />
+          <Eyebrow size="md">{t('profile.stat_journal')}</Eyebrow>
+          <HeroNumber value={journalDays} size="md" />
         </GlassCard>
         <View style={{ width: spacing.sm }} />
         <GlassCard variant="glass" padding="lg" style={styles.stat}>
@@ -217,6 +232,18 @@ export default function Profile() {
           <HeroNumber value={adherencePct} size="md" unit="%" />
         </GlassCard>
       </View>
+
+      {/* F2: empty-state hint when all stats are zero (brand-new user) */}
+      {daysInApp === 0 && journalDays === 0 && (
+        <Text
+          variant="bodyMd"
+          color="inkMuted"
+          align="center"
+          style={{ marginTop: spacing.md }}
+        >
+          {t('profile.stats_empty_hint')}
+        </Text>
+      )}
 
       <View style={{ height: spacing.huge }} />
 

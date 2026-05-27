@@ -184,3 +184,65 @@ export function suggestedPlanFromOnboarding(
   if (chronotype === 'owl') return shiftHours(base, 0.5);
   return base;
 }
+
+/** Light therapy recommendation for the day, by current shift type. The
+ *  windows are evidence-aligned to CDC/NIOSH guidance: bright light during
+ *  active hours promotes alertness, dark exposure on the commute home from
+ *  a night shift prevents a circadian reset toward the wrong direction. */
+export interface LightWindow {
+  /** Translation key for the eyebrow ("SEEK LIGHT" / "AVOID LIGHT"). */
+  eyebrowKey: 'plan.cards.light.seek' | 'plan.cards.light.avoid';
+  /** Local 24h start hour. */
+  startHour: number;
+  /** Local 24h end hour. */
+  endHour: number;
+}
+
+/** Nap recommendation for the day, by current shift type.
+ *  - Day shift: optional 20 min siesta around 14:00 (post-lunch dip)
+ *  - Night shift: 90-min full-cycle nap before shift at 14:00, OR power nap
+ *    20 min mid-shift around 03:00 if commute is short.
+ *  - Off day: optional recovery 90 min at 13:00 if user is in transition. */
+export interface NapWindow {
+  kind: 'power' | 'recovery' | 'full_cycle';
+  /** Local 24h hour (decimal). */
+  hour: number;
+  durationMin: number;
+}
+
+export function napWindowForShift(
+  shift: 'day' | 'night' | 'off',
+): NapWindow | null {
+  if (shift === 'night') {
+    return { kind: 'full_cycle', hour: 14, durationMin: 90 };
+  }
+  if (shift === 'day') {
+    return { kind: 'power', hour: 14, durationMin: 20 };
+  }
+  return { kind: 'recovery', hour: 13, durationMin: 90 };
+}
+
+export function lightWindowsForShift(
+  shift: 'day' | 'night' | 'off',
+): LightWindow[] {
+  if (shift === 'night') {
+    return [
+      // First half of night shift — bright light to stay alert
+      { eyebrowKey: 'plan.cards.light.seek', startHour: 19, endHour: 1 },
+      // Commute home — dark glasses to avoid resetting the body clock
+      { eyebrowKey: 'plan.cards.light.avoid', startHour: 7, endHour: 9 },
+    ];
+  }
+  if (shift === 'day') {
+    return [
+      // Morning light advances rhythm earlier and reinforces day pattern
+      { eyebrowKey: 'plan.cards.light.seek', startHour: 7, endHour: 9 },
+      // Evening dim-down — prepare melatonin release
+      { eyebrowKey: 'plan.cards.light.avoid', startHour: 21, endHour: 23 },
+    ];
+  }
+  // Off day — anchor circadian rhythm with morning sun
+  return [
+    { eyebrowKey: 'plan.cards.light.seek', startHour: 8, endHour: 10 },
+  ];
+}

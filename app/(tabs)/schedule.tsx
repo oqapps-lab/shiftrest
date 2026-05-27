@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Alert } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import {
   Screen,
@@ -23,7 +23,12 @@ import { colors, spacing } from '../../constants/tokens';
 import { formatMonthYear } from '../../lib/derive';
 import { useShifts } from '../../lib/queries';
 import { useAuth } from '../../lib/auth/store';
-import { useLocalShifts } from '../../lib/local-shifts/store';
+import { useLocalShifts, removeLocalShift } from '../../lib/local-shifts/store';
+import { supabase, isSupabaseConfigured } from '../../lib/supabase';
+import { emitChange, EVENTS } from '../../lib/queries';
+import { useOnboarding } from '../../lib/onboarding/store';
+import { applyScheduleTemplate } from '../../lib/schedule/apply-template';
+import { mockScheduleTemplates } from '../../mock/user';
 import { t } from '../../lib/i18n';
 import type { Translations } from '../../lib/i18n/locales/en';
 
@@ -114,6 +119,8 @@ function buildMockGrid(year: number, month: number): Cell[] {
 
 export default function Schedule() {
   const { user } = useAuth();
+  const { state: onboarding } = useOnboarding();
+  const [applying, setApplying] = React.useState(false);
 
   // Re-evaluate on every render so the "today" highlight stays correct
   // when the app sits open past midnight. The previous useMemo(()=>new Date(), [])
@@ -178,6 +185,85 @@ export default function Schedule() {
 
   const todayIso = localIso(today);
 
+  // K1: Empty-state detection — true when the user has a chosen rotation
+  // pattern but no shifts populated yet in the next 14 days. Surface a
+  // one-tap "apply template" CTA so brand-new users don't see a dead
+  // calendar full of off-day dots.
+  const isViewingCurrentMonth = isCurrentMonth;
+  const hasAnyShifts = (user
+    ? shiftRows.length
+    : Object.keys(localShifts).length) > 0;
+  const showEmptyTemplateCTA =
+    isViewingCurrentMonth &&
+    !hasAnyShifts &&
+    !!onboarding.scheduleId &&
+    onboarding.scheduleId !== 'custom' &&
+    !applying;
+  const emptyTemplate = mockScheduleTemplates.find((tpl) => tpl.id === onboarding.scheduleId);
+
+  const onApplyTemplate = React.useCallback(() => {
+    if (!onboarding.scheduleId) return;
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    setApplying(true);
+    (async () => {
+      try {
+        await applyScheduleTemplate(onboarding.scheduleId!, {
+          weeks: 4,
+          userId: user?.id ?? null,
+        });
+        emitChange(EVENTS.shiftsChanged);
+      } finally {
+        setApplying(false);
+      }
+    })();
+  }, [onboarding.scheduleId, user?.id]);
+
+  // H1: Calendar tap handler — open Add Shift for empty days, or
+  // offer Delete for days that already have a shift. Past days are
+  // read-only (you can't change history).
+  const onCellTap = React.useCallback((cell: Cell) => {
+    if (cell.kind === 'empty' || !cell.iso) return;
+    if (cell.kind === 'past') return;
+
+    Haptics.selectionAsync();
+    const hasShift = cell.kind === 'day' || cell.kind === 'night';
+
+    if (!hasShift) {
+      // Empty future day → open Add Shift with date pre-filled
+      router.push({ pathname: '/schedule/add-shift', params: { iso: cell.iso } });
+      return;
+    }
+
+    // Already has a shift → confirm delete
+    Alert.alert(
+      t('schedule.cell_action_title'),
+      t('schedule.cell_action_body', { date: cell.iso }),
+      [
+        { text: t('schedule.cell_cancel'), style: 'cancel' },
+        {
+          text: t('schedule.cell_delete'),
+          style: 'destructive',
+          onPress: async () => {
+            if (!isSupabaseConfigured || !supabase || !user?.id) {
+              removeLocalShift(cell.iso!);
+              return;
+            }
+            const { error } = await supabase
+              .from('shifts')
+              .update({ deleted_at: new Date().toISOString() })
+              .eq('user_id', user.id)
+              .eq('date', cell.iso!);
+            if (error) {
+              Alert.alert(t('schedule.cell_delete_failed'), error.message);
+              return;
+            }
+            emitChange(EVENTS.shiftsChanged);
+          },
+        },
+      ],
+    );
+  }, [user?.id]);
+
   return (
     <Screen
       orbs="subtle"
@@ -233,8 +319,16 @@ export default function Schedule() {
       <View style={styles.grid}>
         {grid.map((d, i) => {
           const isToday = d.kind !== 'empty' && d.iso === todayIso;
+          const isInteractive = d.kind !== 'empty' && d.kind !== 'past';
           return (
-            <View key={i} style={styles.cell}>
+            <Pressable
+              key={i}
+              style={styles.cell}
+              onPress={() => onCellTap(d)}
+              disabled={!isInteractive}
+              accessibilityRole={isInteractive ? 'button' : undefined}
+              accessibilityLabel={d.iso}
+            >
               {d.kind !== 'empty' && (
                 <>
                   <View
@@ -255,12 +349,46 @@ export default function Schedule() {
                   </Text>
                 </>
               )}
-            </View>
+            </Pressable>
           );
         })}
       </View>
 
       <View style={{ height: spacing.huge }} />
+
+      {/* K1: Apply-template CTA when the calendar is empty and the user
+          already picked a rotation in onboarding. One tap, 28 days, done. */}
+      {showEmptyTemplateCTA && emptyTemplate && (
+        <Pressable
+          onPress={onApplyTemplate}
+          accessibilityRole="button"
+          accessibilityLabel={t('schedule.empty_cta_a11y')}
+          style={{ marginBottom: spacing.lg }}
+        >
+          <GlassCard variant="dusk" padding="xxl">
+            <Eyebrow color="duskDim">{t('schedule.empty_eyebrow')}</Eyebrow>
+            <Text
+              variant="titleLg"
+              family="display"
+              weight="light"
+              color="ink"
+              style={{ marginTop: spacing.sm }}
+            >
+              {t('schedule.empty_title', { template: emptyTemplate.title })}
+            </Text>
+            <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: spacing.sm }}>
+              {t('schedule.empty_sub')}
+            </Text>
+            <View style={{ height: spacing.md }} />
+            <View style={styles.emptyCtaRow}>
+              <Text variant="labelMd" weight="medium" color="primary" uppercase>
+                {t('schedule.empty_cta')}
+              </Text>
+              <Glyph name="chevronRight" size={18} color="primary" />
+            </View>
+          </GlassCard>
+        </Pressable>
+      )}
 
       <GlassCard variant="paper" padding="xxl">
         <Eyebrow>{t('schedule.legend')}</Eyebrow>
@@ -289,6 +417,11 @@ export default function Schedule() {
 }
 
 const styles = StyleSheet.create({
+  emptyCtaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',

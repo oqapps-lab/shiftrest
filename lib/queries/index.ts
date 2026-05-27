@@ -15,11 +15,13 @@ import { t } from '../i18n';
 import { DeviceEventEmitter } from 'react-native';
 import { supabase, isSupabaseConfigured } from '../supabase';
 import { useAuth } from '../auth/store';
+import { useLocalTransitionPlan } from '../local-transition/store';
 
 export const EVENTS = {
   shiftsChanged: 'shifts:changed',
   streakChanged: 'streak:changed',
   transitionChanged: 'transition:changed',
+  plansChanged: 'plans:changed',
   profileStatsChanged: 'profile-stats:changed',
   subscriptionChanged: 'subscription:changed',
 } as const;
@@ -164,6 +166,7 @@ export interface TransitionPlanWithSteps {
 
 export function useActiveTransitionPlan(): QueryResult<TransitionPlanWithSteps | null> {
   const { user } = useAuth();
+  const local = useLocalTransitionPlan();
   const [data, setData] = useState<TransitionPlanWithSteps | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -172,8 +175,10 @@ export function useActiveTransitionPlan(): QueryResult<TransitionPlanWithSteps |
   const refetch = useCallback(() => setTick((t) => t + 1), []);
 
   useEffect(() => {
+    // Anonymous user (or no Supabase): use the local in-memory store so
+    // the Home transition card and modal still work in demo mode.
     if (!isSupabaseConfigured || !supabase || !user?.id) {
-      setData(null);
+      setData(local);
       return;
     }
     let alive = true;
