@@ -255,3 +255,51 @@ export function lightWindowsForShift(
     { eyebrowKey: 'plan.cards.light.seek', startHour: 8, endHour: 10 },
   ];
 }
+
+/**
+ * F15 — Meal Timing window per shift.
+ *
+ * Returns the recommended main-meal window + the cutoff time
+ * for the last substantial meal before sleep. Based on Delphi
+ * Consensus 2023 on shift-work nutrition + circadian rhythm
+ * studies showing that eating during your biological night
+ * disrupts glucose handling.
+ */
+export interface MealWindow {
+  /** Translation key for the eyebrow (e.g. plan.cards.meal.eyebrow_night). */
+  eyebrowKey: string;
+  /** Translation key for the body text. */
+  bodyKey: string;
+  /** Recommended start hour for the main meal (0..23). */
+  mainMealHour: number;
+  /** Last-meal cutoff hour (0..23). Past this point: water only. */
+  cutoffHour: number;
+}
+
+export function mealTimingForShift(
+  shift: 'day' | 'night' | 'off',
+  sleepStartHour: number,
+): MealWindow {
+  if (shift === 'night') {
+    return {
+      eyebrowKey: 'plan.cards.meal.eyebrow_night',
+      bodyKey: 'plan.cards.meal.body_night',
+      mainMealHour: 17,
+      cutoffHour: 2,
+    };
+  }
+  if (shift === 'day') {
+    return {
+      eyebrowKey: 'plan.cards.meal.eyebrow_day',
+      bodyKey: 'plan.cards.meal.body_day',
+      mainMealHour: 13,
+      cutoffHour: Math.max(17, Math.floor(sleepStartHour) - 3),
+    };
+  }
+  return {
+    eyebrowKey: 'plan.cards.meal.eyebrow_off',
+    bodyKey: 'plan.cards.meal.body_off',
+    mainMealHour: 13,
+    cutoffHour: Math.max(19, Math.floor(sleepStartHour) - 3),
+  };
+}

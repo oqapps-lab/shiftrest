@@ -4,7 +4,7 @@
  * Display style matches GlassCard primitives (whisper variant).
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -12,6 +12,8 @@ import {
   Modal,
   TouchableWithoutFeedback,
   Platform,
+  Animated,
+  Easing,
 } from 'react-native';
 import DateTimePicker, {
   type DateTimePickerEvent,
@@ -29,13 +31,15 @@ interface Props {
   value: Date;
   onChange: (next: Date) => void;
   accessibilityLabel?: string;
+  mode?: 'datetime' | 'time';
 }
 
-function formatDateTime(d: Date): string {
+function formatDateTime(d: Date, mode: 'datetime' | 'time'): string {
+  const time = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  if (mode === 'time') return time;
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const date = `${weekdays[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
-  const time = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
   return `${date} · ${time}`;
 }
 
@@ -44,9 +48,24 @@ export function DateTimePickerField({
   value,
   onChange,
   accessibilityLabel,
+  mode = 'datetime',
 }: Props) {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<Date>(value);
+  const fade = React.useRef(new Animated.Value(0)).current;
+  const slide = React.useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    if (open) {
+      Animated.parallel([
+        Animated.timing(fade, { toValue: 1, duration: 220, useNativeDriver: true, easing: Easing.out(Easing.cubic) }),
+        Animated.timing(slide, { toValue: 0, duration: 260, useNativeDriver: true, easing: Easing.out(Easing.cubic) }),
+      ]).start();
+    } else {
+      fade.setValue(0);
+      slide.setValue(1);
+    }
+  }, [open, fade, slide]);
 
   const openSheet = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -87,7 +106,7 @@ export function DateTimePickerField({
                 color="ink"
                 style={{ marginTop: 2 }}
               >
-                {formatDateTime(value)}
+                {formatDateTime(value, mode)}
               </Text>
             </View>
             <Glyph name="chevronRight" size={18} color="inkMuted" />
@@ -95,11 +114,25 @@ export function DateTimePickerField({
         </GlassCard>
       </Pressable>
 
-      <Modal visible={open} transparent animationType="slide" onRequestClose={cancel}>
+      <Modal visible={open} transparent animationType="none" onRequestClose={cancel}>
         <TouchableWithoutFeedback onPress={cancel}>
-          <View style={styles.backdrop} />
+          <Animated.View style={[styles.backdrop, { opacity: fade }]} />
         </TouchableWithoutFeedback>
-        <View style={styles.sheet}>
+        <Animated.View
+          style={[
+            styles.sheet,
+            {
+              transform: [
+                {
+                  translateY: slide.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, 400],
+                  }),
+                },
+              ],
+            },
+          ]}
+        >
           <View style={styles.handle} />
           <View style={styles.headerRow}>
             <Pressable onPress={cancel} hitSlop={12} accessibilityRole="button">
@@ -120,7 +153,7 @@ export function DateTimePickerField({
           {Platform.OS === 'ios' ? (
             <DateTimePicker
               value={draft}
-              mode="datetime"
+              mode={mode}
               display="spinner"
               minuteInterval={5}
               onChange={handleChange}
@@ -130,12 +163,12 @@ export function DateTimePickerField({
           ) : (
             <DateTimePicker
               value={draft}
-              mode="datetime"
+              mode={mode}
               display="default"
               onChange={handleChange}
             />
           )}
-        </View>
+        </Animated.View>
       </Modal>
     </>
   );

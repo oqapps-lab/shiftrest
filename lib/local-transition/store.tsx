@@ -46,6 +46,13 @@ export function setLocalTransitionPlan(plan: TransitionPlanWithSteps): void {
   DeviceEventEmitter.emit(EVT);
 }
 
+/** Direct read of the current local transition plan (snapshot, not a hook).
+ *  Primarily used by unit tests to assert mutations without going through
+ *  the React subscription. */
+export function getLocalTransitionPlan(): TransitionPlanWithSteps | null {
+  return _state;
+}
+
 export function clearLocalTransitionPlan(): void {
   _state = null;
   persist();

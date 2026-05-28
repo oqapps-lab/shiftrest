@@ -317,6 +317,32 @@ export default function Profile() {
         </Pressable>
       )}
 
+      {/* F20-P1: tap-target to the Sleep Tips library */}
+      <Pressable
+        onPress={() => router.push('/tips')}
+        accessibilityRole="button"
+        accessibilityLabel={t('profile.tips_a11y')}
+        style={{ marginTop: spacing.lg }}
+      >
+        <GlassCard variant="paper" padding="xxl">
+          <View style={styles.adaptRow}>
+            <View style={[styles.adaptScoreWrap, { backgroundColor: colors.sunriseGlow }]}>
+              <Glyph name="book" size={26} color="sunriseDim" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Eyebrow>{t('profile.tips_eyebrow')}</Eyebrow>
+              <Text variant="titleLg" family="display" weight="light" color="ink" style={{ marginTop: 2 }}>
+                {t('profile.tips_title')}
+              </Text>
+              <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
+                {t('profile.tips_sub')}
+              </Text>
+            </View>
+            <Glyph name="chevronRight" size={18} color="inkMuted" />
+          </View>
+        </GlassCard>
+      </Pressable>
+
       <View style={{ height: spacing.huge }} />
 
       <Eyebrow>{t('profile.settings')}</Eyebrow>

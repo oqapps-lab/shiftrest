@@ -22,7 +22,7 @@ import { useAuth } from '../auth/store';
 import { EVENTS } from './index';
 
 export interface PlanRecommendation {
-  type: 'caffeine' | 'melatonin' | 'light' | 'nap' | 'sleep_window' | 'wind_down';
+  type: 'caffeine' | 'melatonin' | 'light' | 'nap' | 'sleep_window' | 'wind_down' | 'meal';
   eyebrow: string;
   hero: string;
   body: string;

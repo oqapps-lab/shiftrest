@@ -81,24 +81,39 @@ export default function CalendarImport() {
       return;
     }
 
-    // Signed-in: bulk insert with start/end timestamps.
-    const inserts = events
-      .filter((e) => e.shiftType !== 'off' || e.startTime) // keep off as off; events without time → off
-      .map((e) => {
-        const start = new Date(e.date + 'T' + (e.startTime ?? '07:00') + ':00');
-        const end = new Date(e.date + 'T' + (e.endTime ?? '19:00') + ':00');
-        if (end <= start) end.setDate(end.getDate() + 1);
-        return {
-          user_id: user!.id,
-          date: e.date,
-          start_time: start.toISOString(),
-          end_time: end.toISOString(),
-          shift_type: e.shiftType,
-          is_manual: false,
-          notes: e.summary || null,
-        };
-      });
-    const { error } = await supabase!.from('shifts').insert(inserts);
+    // SR1 fix: signed-in bulk insert — all-day off events (vacation,
+    // holiday) have startTime=null. The old filter was dropping them
+    // silently. Keep them, pad with 00:00 / 23:59. Off shifts are still
+    // off regardless of times.
+    const inserts = events.map((e) => {
+      const start = new Date(e.date + 'T' + (e.startTime ?? '00:00') + ':00');
+      const end = new Date(e.date + 'T' + (e.endTime ?? '23:59') + ':00');
+      if (end <= start) end.setDate(end.getDate() + 1);
+      return {
+        user_id: user!.id,
+        date: e.date,
+        start_time: start.toISOString(),
+        end_time: end.toISOString(),
+        shift_type: e.shiftType,
+        is_manual: false,
+        notes: e.summary || null,
+      };
+    });
+
+    // SR2 fix: pre-fetch existing dates and filter so a double-tap on
+    // Import (or a re-import after editing the .ics) does not duplicate
+    // rows. Mirrors lib/schedule/apply-template.ts logic.
+    const { data: existing } = await supabase!
+      .from('shifts')
+      .select('date')
+      .eq('user_id', user!.id)
+      .in('date', inserts.map((i) => i.date));
+    const existingDates = new Set((existing ?? []).map((r) => r.date));
+    const newInserts = inserts.filter((i) => !existingDates.has(i.date));
+
+    const { error } = newInserts.length > 0
+      ? await supabase!.from('shifts').insert(newInserts)
+      : { error: null };
     setImporting(false);
     if (error) {
       Alert.alert(t('calendar_import.import_failed_title'), error.message);

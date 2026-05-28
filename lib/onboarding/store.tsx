@@ -40,7 +40,10 @@ export type MainProblem = 'falling-asleep' | 'transitions' | 'fatigue' | 'caffei
 export type CaffeineType = 'coffee' | 'tea' | 'energy';
 export type CaffeineSensitivity = 'normal' | 'slow' | 'unknown';
 export type PickupTime = '14' | '15' | '16' | '17';
-export type MelatoninTime = '20' | '22' | '00';
+// Standard presets are 20/22/00. Anything else stored as raw "HH:MM"
+// (custom wheel pick). Code that compares should test against the
+// preset literals; everything else is custom.
+export type MelatoninTime = '20' | '22' | '00' | string;
 
 export interface OnboardingState {
   // S02 profession
@@ -51,6 +54,11 @@ export interface OnboardingState {
 
   // S04 current-shift
   currentShift: ShiftKind;
+  // Start/end of current shift as "HH:MM" strings (24-hour). Allows wheel
+  // time picker to write user-chosen values instead of relying on static
+  // SHIFT_TIMES presets.
+  currentShiftStart: string;
+  currentShiftEnd: string;
   commuteMinutes: number;
 
   // S05 next-shift — when's the next shift starting (drives 36h pre-shift plan)
@@ -92,6 +100,8 @@ const INITIAL: OnboardingState = {
   profession: null,
   scheduleId: null,
   currentShift: 'day',
+  currentShiftStart: '07:00',
+  currentShiftEnd: '19:00',
   commuteMinutes: 30,
   nextShift: null,
   mainProblem: null,
