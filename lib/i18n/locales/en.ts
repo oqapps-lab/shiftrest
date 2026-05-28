@@ -161,6 +161,15 @@ const en = {
         body_full_cycle: 'A full 90-min cycle stocks one block of REM before your night shift.',
         body_recovery: 'Compensates for sleep debt accumulated on a long stretch.',
       },
+      meal: {
+        eyebrow_night: 'MEAL TIMING · BEFORE NIGHT',
+        eyebrow_day: 'MEAL TIMING · DAY',
+        eyebrow_off: 'MEAL TIMING · OFF',
+        hero_template: 'Main meal {{main}} · stop eating by {{cutoff}}',
+        body_night: 'Eat substantial BEFORE your shift. Insulin sensitivity bottoms out 02-06; a heavy meal then disrupts glucose handling for days. Light protein snack mid-shift is fine.',
+        body_day: 'Anchor your largest meal at lunch when digestion peaks. Last solid food ≥3h before sleep keeps reflux + sleep-onset latency low.',
+        body_off: 'Keep three meals on your shift-day schedule, not the off-day one. Off-day drift makes Monday harder than it should be.',
+      },
     },
   },
   aha: {

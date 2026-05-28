@@ -19,6 +19,7 @@ import {
   suggestedPlanFromOnboarding,
   lightWindowsForShift,
   napWindowForShift,
+  mealTimingForShift,
 } from '../lib/derive';
 
 // Mock t() so tests don't depend on i18n setup
@@ -302,5 +303,28 @@ describe('napWindowForShift', () => {
   test('off day = 90 min recovery', () => {
     const n = napWindowForShift('off');
     expect(n).toEqual({ kind: 'recovery', hour: 13, durationMin: 90 });
+  });
+});
+
+describe('mealTimingForShift', () => {
+  test('night shift = main meal at 17, cutoff at 02', () => {
+    const m = mealTimingForShift('night', 8);
+    expect(m.mainMealHour).toBe(17);
+    expect(m.cutoffHour).toBe(2);
+    expect(m.eyebrowKey).toBe('plan.cards.meal.eyebrow_night');
+  });
+  test('day shift sleeping at 22 = cutoff at 19 (sleep-3, clamped >=17)', () => {
+    const m = mealTimingForShift('day', 22);
+    expect(m.mainMealHour).toBe(13);
+    expect(m.cutoffHour).toBe(19);
+  });
+  test('day shift early sleeper at 19 = cutoff clamped to 17 not 16', () => {
+    const m = mealTimingForShift('day', 19);
+    expect(m.cutoffHour).toBe(17);
+  });
+  test('off day defaults reasonable', () => {
+    const m = mealTimingForShift('off', 23);
+    expect(m.mainMealHour).toBe(13);
+    expect(m.cutoffHour).toBe(20);
   });
 });

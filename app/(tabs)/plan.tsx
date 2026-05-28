@@ -22,6 +22,7 @@ import {
   lightWindowsForShift,
   formatHourRange,
   napWindowForShift,
+  mealTimingForShift,
 } from '../../lib/derive';
 import { useGeneratedPlan, planHourAsFloat, type PlanRecommendation } from '../../lib/queries/plan';
 import { useOnboarding, chronotypeBucket, computeChronotypeScore } from '../../lib/onboarding/store';
@@ -121,6 +122,21 @@ function buildFallbackRecs(
         tintFg: 'primary' as const,
       };
     })(),
+    // F15 — Meal Timing card
+    (() => {
+      const meal = mealTimingForShift(shift, suggested.sleepStart);
+      return {
+        glyph: 'fork' as const,
+        eyebrow: t(meal.eyebrowKey),
+        hero: t('plan.cards.meal.hero_template', {
+          main: formatHour(meal.mainMealHour),
+          cutoff: formatHour(meal.cutoffHour),
+        }),
+        body: t(meal.bodyKey),
+        tintBg: colors.sunriseGlow,
+        tintFg: 'sunriseDim' as const,
+      };
+    })(),
   ];
 }
 
@@ -131,6 +147,7 @@ const REC_STYLE: Record<PlanRecommendation['type'], { glyph: GlyphName; tintBg: 
   nap:         { glyph: 'bed',     tintBg: colors.primaryContainer, tintFg: 'primary'   },
   sleep_window:{ glyph: 'bed',     tintBg: colors.primaryContainer, tintFg: 'primary'   },
   wind_down:   { glyph: 'sparkle', tintBg: colors.duskGlow,        tintFg: 'duskDim'    },
+  meal:        { glyph: 'fork',    tintBg: colors.sunriseGlow,     tintFg: 'sunriseDim' },
 };
 
 export default function Plan() {
