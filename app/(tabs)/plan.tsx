@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Alert } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import {
   Screen,
   Eyebrow,
@@ -28,6 +28,7 @@ import { useOnboarding, chronotypeBucket, computeChronotypeScore } from '../../l
 import { useLocalShifts } from '../../lib/local-shifts/store';
 import type { GlyphName } from '../../components/ui';
 import { t } from '../../lib/i18n';
+import { WhyTheseTimesSheet } from '../../components/plan/WhyTheseTimesSheet';
 
 interface UiRec {
   glyph: GlyphName;
@@ -134,6 +135,7 @@ const REC_STYLE: Record<PlanRecommendation['type'], { glyph: GlyphName; tintBg: 
 
 export default function Plan() {
   const [day, setDay] = useState(1);
+  const [whyOpen, setWhyOpen] = useState(false);
   const pagerLabels = [t('plan.yesterday'), `${t('plan.today')} · ${formatDayMonth()}`, t('plan.tomorrow')];
   const { data: livePlan } = useGeneratedPlan();
   const { state: onboarding } = useOnboarding();
@@ -271,16 +273,24 @@ export default function Plan() {
         style={{ marginTop: spacing.xl, alignSelf: 'center' }}
         accessibilityRole="button"
         accessibilityLabel={t('plan.why_title')}
-        onPress={() => {
-          const explanation =
-            livePlan?.explanation?.trim() || t('plan.why_default');
-          Alert.alert(t('plan.why_title'), explanation);
-        }}
+        onPress={() => setWhyOpen(true)}
       >
         <Text variant="bodyMd" color="primary" weight="medium">
           {t('plan.why_link')}
         </Text>
       </Pressable>
+
+      <WhyTheseTimesSheet
+        visible={whyOpen}
+        onClose={() => setWhyOpen(false)}
+        explanation={livePlan?.explanation ?? null}
+        sleepStart={formatHour(sleepStartHour)}
+        sleepEnd={formatHour(sleepEndHour)}
+        caffeineCutoff={suggested.caffeineCutoff}
+        melatoninTime={showMelatonin ? suggested.melatoninTime : null}
+        chronotypeLabel={t(`chronotype.${chronotypeBucket(computeChronotypeScore(onboarding.chronotypeAnswers))}`)}
+        shiftLabel={t(`shift_kind.${dayShiftKind}_long`)}
+      />
     </Screen>
   );
 }

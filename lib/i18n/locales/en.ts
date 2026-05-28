@@ -110,6 +110,22 @@ const en = {
     why_title: 'Why these times?',
     why_default:
       "We anchor your sleep window to your shift end so the longest unbroken block lands when you're already winding down. Caffeine cutoff is set 6 hours before bed because that's roughly half-life. Melatonin (when used) goes 1–2 hours before sleep — early enough to nudge your circadian phase, not so late that you sleep through it.",
+    why: {
+      eyebrow: 'YOUR PLAN, EXPLAINED',
+      hero: 'Why these times?',
+      sub: 'Tuned to a {{chrono}} chronotype working a {{shift}}. Each anchor below has a research-backed reason.',
+      sleep_title: 'Sleep {{start}} → {{end}}',
+      sleep_body: 'Longest unbroken block anchored after your shift ends. A {{chrono}} chronotype on a {{shift}} hits deepest sleep here.',
+      caffeine_title: 'Last cup by {{time}}',
+      caffeine_body: '~6 hours before sleep. That covers the half-life of caffeine in a typical body — earlier cups keep your sleep latency short.',
+      melatonin_title: 'Melatonin at {{time}}',
+      melatonin_body: '1–2 hours before bed. Acts as a phase-shift signal more than a sedative — too late and you sleep through its effect.',
+      light_title: 'Light exposure timed to your shift',
+      light_body: 'Bright light in the morning anchors your day-shift rhythm; dim light + dark glasses on the commute home protect a night-shift sleep window.',
+      tuned_label: 'TUNED FOR YOU',
+      citation: 'Based on circadian-rhythm research and shift-work sleep medicine.',
+      close: 'Got it',
+    },
     premium_suffix: 'PREMIUM',
     cards: {
       caffeine: {
@@ -844,6 +860,12 @@ const en = {
     },
   },
   number_words: ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven'],
+  chronotype: {
+    lark: 'lark',
+    intermediate: 'balanced',
+    owl: 'owl',
+    null: 'mixed',
+  },
   shift_kind: {
     day: 'Day',
     night: 'Night',
