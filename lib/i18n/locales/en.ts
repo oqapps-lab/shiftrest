@@ -406,6 +406,8 @@ const en = {
       toggle_a11y: 'Take melatonin',
       dose_label: 'DOSE (MG)',
       usual_time_label: 'USUAL TIME TAKEN',
+      custom_label: 'Custom',
+      custom_a11y: 'Pick a custom melatonin time',
     },
     social_proof_1: {
       sub: "Designed using circadian research applied to rotating, night, and on-call schedules.",

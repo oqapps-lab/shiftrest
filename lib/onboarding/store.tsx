@@ -40,7 +40,10 @@ export type MainProblem = 'falling-asleep' | 'transitions' | 'fatigue' | 'caffei
 export type CaffeineType = 'coffee' | 'tea' | 'energy';
 export type CaffeineSensitivity = 'normal' | 'slow' | 'unknown';
 export type PickupTime = '14' | '15' | '16' | '17';
-export type MelatoninTime = '20' | '22' | '00';
+// Standard presets are 20/22/00. Anything else stored as raw "HH:MM"
+// (custom wheel pick). Code that compares should test against the
+// preset literals; everything else is custom.
+export type MelatoninTime = '20' | '22' | '00' | string;
 
 export interface OnboardingState {
   // S02 profession
