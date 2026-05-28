@@ -80,6 +80,22 @@ export function clearCaffeineLog(): void {
   DeviceEventEmitter.emit(EVT);
 }
 
+/** USER-BUG-10: decrement the day's cup count by 1. Used by the Undo
+ *  affordance after a "Cup logged" toast / confirmation. If we drop
+ *  to 0 we wipe the log entry entirely so the UI returns to the
+ *  pre-log state. lastCupAt is left as-is (the previous tap stamp is
+ *  no longer meaningful but harmless). */
+export function undoCaffeine(): void {
+  if (!memCache) return;
+  if (memCache.cups <= 1) {
+    clearCaffeineLog();
+    return;
+  }
+  memCache = { ...memCache, cups: memCache.cups - 1 };
+  void AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(memCache));
+  DeviceEventEmitter.emit(EVT);
+}
+
 export function useCaffeineLog(): LogEntry | null {
   const [snap, setSnap] = useState<LogEntry | null>(getCaffeineLog());
   useEffect(() => {

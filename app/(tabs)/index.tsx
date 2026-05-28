@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Alert } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -330,14 +330,27 @@ export default function Home() {
                 <Pressable
                   onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    logCaffeine();
+                    const cups = (caffLog?.cups ?? 0) + 1;
+                    Alert.alert(
+                      t('today.caffeine_confirm_title'),
+                      t('today.caffeine_confirm_body', { cups }),
+                      [
+                        { text: t('today.caffeine_cancel'), style: 'cancel' },
+                        { text: t('today.caffeine_log_cta'), onPress: () => logCaffeine() },
+                      ],
+                    );
                   }}
                   accessibilityRole="button"
                   accessibilityLabel={t('today.log_caffeine_a11y')}
                   hitSlop={10}
-                  style={styles.logBtn}
+                  style={styles.logBtnCol}
                 >
-                  <Glyph name="plus" size={18} color="primary" />
+                  <View style={styles.logBtn}>
+                    <Glyph name="plus" size={18} color="primary" />
+                  </View>
+                  <Text variant="labelMd" color="primary" style={{ marginTop: 4, fontSize: 10 }}>
+                    {t('today.log_caffeine_label')}
+                  </Text>
                 </Pressable>
               )}
             </View>
@@ -431,6 +444,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: spacing.lg,
+  },
+  logBtnCol: {
+    alignItems: 'center',
   },
   logBtn: {
     width: 40,
