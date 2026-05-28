@@ -1,52 +1,66 @@
 /**
  * S13 — Loading / Analysis. Builds perceived value before Aha.
- * Breathing orb + cycling text + progress dots.
+ * USER-BUG-3: was a static screen with a cycling label that felt
+ * inert. Now: breathing orb (pulses) + giant 0→100% counter that
+ * fills smoothly across the analysis window so the user sees
+ * progress and feels work is happening before the plan reveal.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import {
   Screen,
   BreathingOrb,
   Eyebrow,
+  Text,
   HeroNumber,
-  ProgressDots,
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
 import { t } from '../../lib/i18n';
 
 const getMessages = (): string[] => t('onboarding_screens.loading_steps') as unknown as string[];
 const MESSAGES_LEN = 4;
+const TICK_MS = 40; // 25fps counter
+const TOTAL_MS = 4200; // 4 messages × ~1s + ~200ms tail
+const STEP_MS = TOTAL_MS / MESSAGES_LEN;
 
 export default function Loading() {
-  const [step, setStep] = useState(0);
+  const [pct, setPct] = useState(0);
+  const startedAt = useRef<number | null>(null);
 
   useEffect(() => {
-    if (step >= MESSAGES_LEN) {
-      const t = setTimeout(() => router.replace('/onboarding/aha'), 600);
-      return () => clearTimeout(t);
-    }
-    const t = setTimeout(() => setStep((s) => s + 1), 900);
-    return () => clearTimeout(t);
-  }, [step]);
+    startedAt.current = Date.now();
+    const id = setInterval(() => {
+      const elapsed = Date.now() - (startedAt.current ?? Date.now());
+      const next = Math.min(100, Math.round((elapsed / TOTAL_MS) * 100));
+      setPct(next);
+      if (next >= 100) {
+        clearInterval(id);
+        setTimeout(() => router.replace('/onboarding/aha'), 350);
+      }
+    }, TICK_MS);
+    return () => clearInterval(id);
+  }, []);
 
-  const currentMessage = getMessages()[Math.min(step, MESSAGES_LEN - 1)];
+  const messageIdx = Math.min(MESSAGES_LEN - 1, Math.floor((pct / 100) * MESSAGES_LEN));
+  const currentMessage = getMessages()[messageIdx];
 
   return (
     <Screen scroll={false} tabBarClearance={false} orbs="strong">
       <View style={styles.body}>
         <Eyebrow>{t('onboarding_screens.loading.eyebrow')}</Eyebrow>
 
-        <View style={styles.orb}>
-          <BreathingOrb size={320} pulse />
+        <View style={styles.orbWrap}>
+          <BreathingOrb size={300} pulse />
+          <View style={styles.pctOverlay} pointerEvents="none">
+            <HeroNumber value={`${pct}%`} size="lg" align="center" />
+          </View>
         </View>
 
-        <HeroNumber value={currentMessage} size="md" align="center" />
-
-        <View style={{ height: spacing.xxxl }} />
-
-        <ProgressDots count={MESSAGES_LEN} active={Math.min(step, MESSAGES_LEN - 1)} />
+        <Text variant="bodyLg" color="inkSubtle" align="center" style={{ marginTop: spacing.xl }}>
+          {currentMessage}
+        </Text>
       </View>
     </Screen>
   );
@@ -59,7 +73,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 40,
   },
-  orb: {
+  orbWrap: {
     marginVertical: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pctOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
