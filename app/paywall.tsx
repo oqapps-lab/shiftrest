@@ -306,15 +306,7 @@ export default function Paywall() {
     >
       <View style={styles.closeRow}>
         <Pressable
-          onPress={() => {
-            if (router.canDismiss?.()) {
-              router.dismiss();
-            } else if (router.canGoBack()) {
-              router.back();
-            } else {
-              router.replace('/(tabs)');
-            }
-          }}
+          onPress={() => router.replace('/onboarding/notifications')}
           hitSlop={12}
           accessibilityRole="button"
           accessibilityLabel={t('a11y.close_paywall')}
