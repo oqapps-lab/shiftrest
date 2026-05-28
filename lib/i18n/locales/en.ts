@@ -235,6 +235,10 @@ const en = {
     adapt_tough: 'Tough stretch — recovery first',
     adapt_sub: 'Direction of your week. Tap for details.',
     adapt_open_a11y: 'Open sleep history',
+    tips_eyebrow: 'SLEEP LIBRARY',
+    tips_title: 'Tonight, try one small thing',
+    tips_sub: '28 research-backed ideas to get you to sleep faster.',
+    tips_a11y: 'Open sleep tips',
     settings: 'SETTINGS',
     subscription: {
       free: 'Free tier',
@@ -874,6 +878,133 @@ const en = {
     intermediate: 'balanced',
     owl: 'owl',
     null: 'mixed',
+  },
+  tips: {
+    screen_eyebrow: 'SLEEP LIBRARY',
+    screen_hero: 'Small things that move the dial.',
+    screen_sub: 'Research-backed ideas you can try tonight. Tap a card to read more.',
+    category_environment: 'Environment',
+    category_nutrition: 'Nutrition',
+    category_pre_sleep: 'Pre-sleep ritual',
+    category_mental: 'Mental',
+    category_post_shift: 'After your shift',
+    category_all: 'All',
+    open_a11y: 'Open tip',
+    citation_label: 'SOURCE',
+    today_eyebrow: "TONIGHT'S TIP",
+    today_cta: 'See all',
+    warm_socks: {
+      title: 'Wear warm socks to bed',
+      body: 'Warming your feet dilates surface blood vessels — heat dumps faster from your core, which is the same drop that signals your brain to release melatonin. 30% faster sleep onset on cold nights.',
+    },
+    weighted_blanket: {
+      title: 'Try a 7-10kg weighted blanket',
+      body: 'Deep-pressure stimulation reduces cortisol and increases serotonin. Trials show ~50% fewer night awakenings in insomnia patients after 4 weeks.',
+    },
+    blackout_curtains: {
+      title: 'Blackout curtains, no LEDs',
+      body: 'Even 5 lux of bedroom light (a smoke-detector LED) cuts melatonin by ~50%. For day-sleepers, blackout drapes are non-negotiable. Tape over LEDs you can’t unplug.',
+    },
+    cool_room: {
+      title: 'Set the room to 16-19°C',
+      body: 'Your core temperature drops 1°C overnight. A bedroom at 21°C+ blocks that drop and fragments sleep. 16-19 is the sweet spot for most adults.',
+    },
+    phone_charger_outside: {
+      title: 'Charge your phone in another room',
+      body: 'You won’t scroll if it’s not there. The "I’ll just check the time" lookups light up your retina and reset 30 minutes of wind-down in 4 seconds.',
+    },
+    white_noise: {
+      title: 'Brown or pink noise > silence',
+      body: 'Silence is bad — your brain alerts to every micro-sound. A steady 50dB brown-noise floor masks sirens, slamming doors, household traffic. Pink noise has shown deeper SWS in EEG studies.',
+    },
+    eye_mask_earplugs: {
+      title: 'Eye mask + foam earplugs',
+      body: 'For day-shift recovery sleep, masks block 100% of light reaching the retina. Foam earplugs cut ~30dB. Free and more effective than most apps.',
+    },
+    no_caffeine_after_2pm: {
+      title: 'No caffeine 6h before bed',
+      body: 'Half-life is ~5h. A 14:00 espresso leaves a meaningful dose at 20:00. Adenosine receptors stay blocked even if you don’t feel "wired" — sleep is still shallower.',
+    },
+    tart_cherry_juice: {
+      title: 'Tart cherry juice 1h before bed',
+      body: 'Natural melatonin source plus tryptophan. Two cups daily added ~85 minutes to total sleep time in a small randomized trial. Cheaper than pills.',
+    },
+    magnesium_glycinate: {
+      title: 'Magnesium glycinate, 200-400mg',
+      body: 'Magnesium binds GABA receptors and lowers cortisol. Glycinate form is the gentlest on the gut. Don’t take citrate — laxative effect mid-sleep is exactly what you don’t want.',
+    },
+    valerian_root: {
+      title: 'Valerian root, 300-600mg',
+      body: 'Mild GABA agonist. Effect builds over 2-4 weeks of nightly use, not single doses. Smells terrible — capsules over tea.',
+    },
+    chamomile_tea: {
+      title: 'Chamomile tea is real, not just a meme',
+      body: 'Apigenin in chamomile binds the same receptors as benzodiazepines, weakly. Effect is small but real, and the ritual of brewing + sipping anchors wind-down.',
+    },
+    protein_breakfast: {
+      title: 'Protein-heavy first meal',
+      body: 'Tryptophan from your morning eggs becomes serotonin by mid-afternoon and melatonin by night. Carb-heavy breakfasts spike then crash insulin — energy dip is bigger.',
+    },
+    no_alcohol_pre_sleep: {
+      title: 'Alcohol fragments your sleep',
+      body: 'A nightcap makes you fall asleep faster but slashes REM and triggers ~3am micro-awakenings as it metabolizes. You feel rested, but you aren’t. Stop 3h before bed.',
+    },
+    walk_10min: {
+      title: '10-minute walk after dinner',
+      body: 'Mild aerobic activity lowers blood sugar, drops cortisol, and adds a gentle temperature spike that reverses into the sleep-inducing drop. No need for intensity.',
+    },
+    warm_shower: {
+      title: 'Warm shower 90 min before bed',
+      body: 'Counter-intuitively, a 10-min warm shower COOLS you. Vasodilation = faster heat loss after the shower. Studies show 36% faster sleep onset.',
+    },
+    breathing_478: {
+      title: '4-7-8 breathing for 4 cycles',
+      body: 'Inhale 4s, hold 7s, exhale 8s. Activates parasympathetic. Done lying in bed it shifts you from sympathetic alertness in under a minute. Free, instant.',
+    },
+    dim_lights_1hr: {
+      title: 'Dim all lights 1 hour pre-sleep',
+      body: 'Bright overhead light delays melatonin release by 90+ minutes. Salt lamps, dim sconces, candles. If you only own bright bulbs — turn them off and use phone flashlight upside-down.',
+    },
+    read_paper_book: {
+      title: 'Read a paper book in bed',
+      body: 'Print doesn’t emit blue light, doesn’t notify you, doesn’t end on a cliffhanger algorithm. 6 minutes of reading drops stress 68%. Boring books help more.',
+    },
+    stretching_5min: {
+      title: '5 min hip + neck stretches',
+      body: 'Shift work + standing all day = locked hip flexors and neck. Gentle stretches release physical tension before it shows up as restless legs.',
+    },
+    worry_journal: {
+      title: 'Brain-dump tomorrow’s tasks',
+      body: 'Spend 5 min writing tomorrow’s to-do list before bed. Trials show this cuts sleep-onset latency by ~9 minutes. Externalizing the loop is enough.',
+    },
+    gratitude_three: {
+      title: 'Name 3 specific things',
+      body: 'Not "family" — what your kid said at dinner. Specificity rewires evaluation away from threat-scanning. Sleep-onset latency drops in adults practicing 2 weeks.',
+    },
+    cognitive_shuffle: {
+      title: 'Cognitive shuffle: random words',
+      body: 'Pick a word ("garage"). Visualize every word starting with G: garden, ghost, glue. Then a word starting with A. The brain’s linear narrative breaks down — that’s sleep.',
+    },
+    no_clock_watching: {
+      title: 'Turn the clock away',
+      body: 'Every glance at "03:47" triggers stress arithmetic ("only 3 hours left"). Cortisol spikes, sleep evaporates. Hide the clock — alarms still work.',
+    },
+    sunglasses_commute: {
+      title: 'Sunglasses on the morning commute home',
+      body: 'After a night shift, bright morning sun resets your circadian clock to "day mode" right when you need to sleep. Wraparound sunglasses on the drive home preserve your melatonin window.',
+    },
+    caffeine_pre_drive: {
+      title: 'Small coffee 30 min before the drive home',
+      body: 'A 50-100mg dose blunts post-shift drowsiness JUST long enough to get home safely. Drink it before leaving — peak effect at the wheel. Then nothing else until you’ve slept.',
+    },
+    no_screens_30min: {
+      title: 'No phone the first 30 min home',
+      body: 'Decompression matters. Phone = scrolling = stimulation = delayed sleep onset by 60+ min. Shower, eat something small, then sleep.',
+    },
+    wind_down_with_tea: {
+      title: 'Replace post-shift wine with herbal tea',
+      body: 'Alcohol fragments daytime sleep even worse than night sleep — the circadian misalignment compounds. Chamomile + lemon balm + a quiet ritual works just as well.',
+    },
   },
   shift_kind: {
     day: 'Day',
