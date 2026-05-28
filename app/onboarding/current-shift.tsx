@@ -85,7 +85,7 @@ function TimeCard({
   return (
     <>
       <Pressable onPress={openSheet} style={{ flex: 1 }} accessibilityRole="button">
-        <GlassCard variant="paper" padding="lg" style={styles.timeCard}>
+        <GlassCard variant="glass" padding="lg" style={styles.timeCard}>
           <Eyebrow size="md">{label}</Eyebrow>
           <Text
             variant="headlineLg"
