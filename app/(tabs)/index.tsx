@@ -59,6 +59,7 @@ import {
   type SleepRating,
 } from '../../lib/sleep-journal/store';
 import { useLocalShifts } from '../../lib/local-shifts/store';
+import { TodayIntroSheet } from '../../components/today/TodayIntroSheet';
 import { detectTransitionOpportunity } from '../../lib/transition/generate';
 import * as Haptics from 'expo-haptics';
 import { t } from '../../lib/i18n';
@@ -198,6 +199,7 @@ export default function Home() {
   return (
     <Screen orbs="normal" scroll>
       <PlanUpdatedBanner />
+      <TodayIntroSheet />
       <View style={styles.headerRow}>
         <View style={{ flex: 1 }}>
           <Eyebrow>{displayName ? `${getGreeting(nowHour)}, ${displayName}` : getGreeting(nowHour)}</Eyebrow>
