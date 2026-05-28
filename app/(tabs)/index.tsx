@@ -55,6 +55,7 @@ import {
   useSleepJournal,
   setSleepRating,
   ratingForToday,
+  weeklyTally,
   type SleepRating,
 } from '../../lib/sleep-journal/store';
 import { useLocalShifts } from '../../lib/local-shifts/store';
@@ -238,7 +239,7 @@ export default function Home() {
         />
       </GlassCard>
 
-      {/* G4: Sleep journal — one-tap morning rating */}
+      {/* G4: Sleep journal — one-tap morning rating + USER-BUG-9 stats reveal */}
       <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.huge }}>
         <Eyebrow style={{ marginBottom: spacing.sm }}>
           {todayRating ? t('today.journal_logged') : t('today.journal_prompt')}
@@ -282,6 +283,26 @@ export default function Home() {
             );
           })}
         </View>
+        {todayRating && (() => {
+          const tally = weeklyTally();
+          if (!tally) return null;
+          const trendArrow = tally.trend === 'up' ? '↑' : tally.trend === 'down' ? '↓' : tally.trend === 'flat' ? '→' : '';
+          return (
+            <Pressable
+              onPress={() => router.push('/history')}
+              style={{ marginTop: spacing.md }}
+              accessibilityRole="button"
+              accessibilityLabel={t('today.journal_stats_a11y')}
+            >
+              <Text variant="bodyMd" color="inkSubtle">
+                {t('today.journal_tally_inline', { good: tally.good, ok: tally.ok, bad: tally.bad })}
+              </Text>
+              <Text variant="bodyMd" color="primary" style={{ marginTop: 2 }}>
+                {trendArrow ? `${trendArrow} ${t(`today.journal_trend_${tally.trend ?? 'flat'}`)} · ${t('today.journal_tap_history')}` : t('today.journal_tap_history')}
+              </Text>
+            </Pressable>
+          );
+        })()}
       </GlassCard>
 
       <View style={{ alignItems: 'center', marginBottom: spacing.huge }}>

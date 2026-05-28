@@ -124,3 +124,28 @@ export function recentJournalDays(n = 14): { iso: string; rating: SleepRating | 
   }
   return out;
 }
+
+/**
+ * USER-BUG-9: last-7-days tally so the Today card can reveal visible
+ * feedback after the user logs a mood. Returns counts (good/ok/bad)
+ * + a trend symbol comparing this week vs. the 7 prior days. Null
+ * when there's nothing logged yet (let the caller hide the row).
+ */
+export function weeklyTally(): { good: number; ok: number; bad: number; trend: 'up' | 'down' | 'flat' | null } | null {
+  const last14 = recentJournalDays(14);
+  const cur = last14.slice(7);
+  const prev = last14.slice(0, 7);
+  const score = (ds: { rating: SleepRating | null }[]) => ds.reduce((a, d) => {
+    if (d.rating === 'good') return a + 2;
+    if (d.rating === 'ok') return a + 1;
+    if (d.rating === 'bad') return a - 1;
+    return a;
+  }, 0);
+  const good = cur.filter((d) => d.rating === 'good').length;
+  const ok = cur.filter((d) => d.rating === 'ok').length;
+  const bad = cur.filter((d) => d.rating === 'bad').length;
+  if (good + ok + bad === 0) return null;
+  const prevLogged = prev.filter((d) => d.rating !== null).length;
+  const trend = prevLogged === 0 ? null : score(cur) > score(prev) ? 'up' : score(cur) < score(prev) ? 'down' : 'flat';
+  return { good, ok, bad, trend };
+}
