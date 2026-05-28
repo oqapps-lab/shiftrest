@@ -490,6 +490,8 @@ const en = {
     saved_title: 'Shift saved',
     save_failed_title: 'Could not save shift',
     ok: 'OK',
+    cancel: 'Cancel',
+    done: 'Done',
     when_label: "WHEN",
     shift_type: "SHIFT TYPE",
     start: "START",

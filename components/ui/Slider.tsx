@@ -46,6 +46,14 @@ export function Slider({
       return PanResponder.create({
         onStartShouldSetPanResponder: () => true,
         onMoveShouldSetPanResponder: () => true,
+        // C2 fix: capture variants ensure the slider claims the gesture
+        // BEFORE a parent ScrollView's gesture handler claims it. Without
+        // these, ScrollView's vertical-pan handler swallows touches as
+        // soon as the user moves > a few px, so the knob feels unresponsive
+        // and "lags" because input events fire intermittently.
+        onStartShouldSetPanResponderCapture: () => true,
+        onMoveShouldSetPanResponderCapture: () => true,
+        onPanResponderTerminationRequest: () => false,
         onPanResponderGrant: (evt) => {
           if (width === 0) return;
           const x = evt.nativeEvent.locationX;
