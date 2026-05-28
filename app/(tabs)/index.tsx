@@ -374,15 +374,6 @@ export default function Home() {
         >
           <GlassCard variant="paper" padding="xxl">
             <View style={styles.eventRow}>
-              <Animated.View
-                style={[
-                  styles.eventIcon,
-                  { backgroundColor: colors.primaryContainer },
-                  transitionPulseStyle,
-                ]}
-              >
-                <Glyph name="sparkle" size={22} color="primary" />
-              </Animated.View>
               <View style={{ flex: 1 }}>
                 <Eyebrow>
                   {detected
