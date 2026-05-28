@@ -41,6 +41,10 @@ beforeEach(() => {
   lastInsertPayload = [];
   nextSelectReturn = { data: [] };
   nextInsertError = null;
+  // SR5: reset jest.fn() call histories so future
+  // toHaveBeenCalledTimes assertions are not contaminated
+  // by previous tests in the suite.
+  jest.clearAllMocks();
 });
 
 describe('applyScheduleTemplate — signed path', () => {

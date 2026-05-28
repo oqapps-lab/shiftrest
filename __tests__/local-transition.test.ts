@@ -7,6 +7,7 @@ import {
   setLocalTransitionPlan,
   clearLocalTransitionPlan,
   toggleLocalTransitionStep,
+  getLocalTransitionPlan,
 } from '../lib/local-transition/store';
 import type { TransitionPlanWithSteps } from '../lib/queries';
 
@@ -38,15 +39,16 @@ beforeEach(() => {
 });
 
 describe('local-transition/store — setLocalTransitionPlan', () => {
-  test('stores the plan', () => {
+  test('stores the plan and toggles persist on the stored row', () => {
     const plan = makePlan();
     setLocalTransitionPlan(plan);
-    // Verify via toggle (which reads state) — single step toggle should
-    // mark one step completed.
+    expect(getLocalTransitionPlan()?.id).toBe(plan.id);
     toggleLocalTransitionStep('s1');
-    // No direct getter — we test indirectly via toggle behaviour.
-    // The next toggle should still find the plan present.
     toggleLocalTransitionStep('s2');
+    const after = getLocalTransitionPlan();
+    expect(after?.steps.find((s) => s.id === 's1')?.is_completed).toBe(true);
+    expect(after?.steps.find((s) => s.id === 's2')?.is_completed).toBe(true);
+    expect(after?.completed_steps).toBe(2);
   });
 });
 
@@ -75,10 +77,10 @@ describe('local-transition/store — toggleLocalTransitionStep', () => {
     const plan = makePlan();
     setLocalTransitionPlan(plan);
     toggleLocalTransitionStep('s1');
+    expect(getLocalTransitionPlan()?.steps.find((s) => s.id === 's1')?.is_completed).toBe(true);
     toggleLocalTransitionStep('s1');
+    expect(getLocalTransitionPlan()?.steps.find((s) => s.id === 's1')?.is_completed).toBe(false);
     toggleLocalTransitionStep('s1');
-    // After 3 toggles: completed → not → completed
-    // Test passes if no crash and call sequence completes.
-    expect(true).toBe(true);
+    expect(getLocalTransitionPlan()?.steps.find((s) => s.id === 's1')?.is_completed).toBe(true);
   });
 });

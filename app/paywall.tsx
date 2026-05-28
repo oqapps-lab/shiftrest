@@ -136,7 +136,15 @@ export default function Paywall() {
       );
       if (hasPremium) {
         emitChange(EVENTS.subscriptionChanged);
-        router.back();
+        // BN3: paywall may be the root screen (onboarding deeplink, push
+        // notification entry). After successful restore, router.back() is
+        // a silent no-op in that case — fall back to /(tabs) so the user
+        // actually leaves the paywall.
+        if (router.canGoBack()) {
+          router.back();
+        } else {
+          router.replace('/(tabs)');
+        }
       }
     } catch {
       Alert.alert(t('paywall.restore_title'), t('paywall.restore_failed'));

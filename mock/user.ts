@@ -54,12 +54,20 @@ export const mockShiftBlocks = [
 ];
 
 export function getMockTransition() {
+  // B27: previously hardcoded "WED 22 / THU 23" — looked like a stale plan
+  // from May 22 to anyone using the app later. Derive labels from today's
+  // date so the demo always reads as "today/tomorrow".
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  const weekdays = (t('date.weekdays_short') as unknown as string[]) ?? ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  const fmt = (d: Date) => `${weekdays[d.getDay()] ?? ''} ${d.getDate()}`.trim();
   return {
     fromShift: t('transition.shift.night'),
     toShift: t('transition.shift.day'),
     days: [
       {
-        label: `${(t('date.weekdays_short') as any)[3] ?? 'WED'} 22`,
+        label: fmt(today),
         steps: [
           { time: '06:00', action: t('transition.steps.bright_light'), done: true, tip: t('transition.steps.walk_outside') },
           { time: '09:00', action: t('transition.steps.melatonin_05'), done: true, tip: t('transition.steps.phase_advance') },
@@ -68,7 +76,7 @@ export function getMockTransition() {
         ],
       },
       {
-        label: `${(t('date.weekdays_short') as any)[4] ?? 'THU'} 23`,
+        label: fmt(tomorrow),
         steps: [
           { time: '05:30', action: t('transition.steps.wake_bright_light'), done: false, tip: t('transition.steps.ten_min_window') },
           { time: '08:30', action: t('transition.steps.melatonin_05'), done: false, tip: '' },
