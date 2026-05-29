@@ -471,7 +471,7 @@ const deDE = {
       sub: 'Wir setzen es in deinem Plan an erste Stelle.',
     },
     family: {
-      hero: 'Familiäre Verpflichtungen?',
+      hero: 'Pflichten zu Hause?',
       sub: 'Feste Verpflichtungen ändern unseren Plan (Schule abholen usw.).',
       kids_a11y: 'Kinder zu Hause',
       kids_label: 'Ich habe Kinder zu Hause',
