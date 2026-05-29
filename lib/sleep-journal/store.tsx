@@ -82,6 +82,38 @@ export function journaledDayCount(): number {
 }
 
 /**
+ * R7-1 — Local-only current streak.
+ *
+ * Consecutive days with ANY journal entry ending TODAY (or YESTERDAY
+ * if today not yet logged). Returns 0 if today/yesterday both empty.
+ *
+ * Used by Profile + Today for anonymous users (signed-in users get
+ * the authoritative streak from Supabase via useStreak()).
+ */
+export function localCurrentStreak(): number {
+  const today = new Date();
+  const todayKey = localDateKey(today);
+  let streak = 0;
+  // Allow yesterday-only streaks (user hasnt logged today yet)
+  const startOffset = memCache.entries[todayKey] ? 0 : 1;
+  if (startOffset === 1) {
+    const yest = new Date(today);
+    yest.setDate(today.getDate() - 1);
+    if (!memCache.entries[localDateKey(yest)]) return 0;
+  }
+  for (let i = startOffset; i < 365; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    if (memCache.entries[localDateKey(d)]) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+
+/**
  * F9 — Non-Judgmental Sleep Score.
  *
  * Computes a 0-100 score from the last 14 days of journal entries.

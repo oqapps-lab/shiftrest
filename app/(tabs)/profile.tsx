@@ -20,7 +20,7 @@ import { formatTrialRemaining, clampDisplayName } from '../../lib/derive';
 import { useAuth } from '../../lib/auth/store';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useProfileStats, useSubscription } from '../../lib/queries';
-import { useSleepJournal, journaledDayCount, recentJournalDays, weeklyAdaptScore } from '../../lib/sleep-journal/store';
+import { useSleepJournal, journaledDayCount, recentJournalDays, weeklyAdaptScore, localCurrentStreak } from '../../lib/sleep-journal/store';
 import { t } from '../../lib/i18n';
 
 const STREAK_LENGTH = 14;
@@ -31,17 +31,18 @@ export default function Profile() {
   const { data: streak } = useStreak();
   const { data: stats } = useProfileStats();
   const { data: subscription } = useSubscription();
-  const streakValue = user ? (streak?.current_streak ?? 0) : 0;
-
-  // For signed-in users always show their real numbers (0 is honest).
-  // Anonymous demo mode falls through to mockUser so the screen tells a
-  // story without any backend.
-  const daysInApp = user ? (stats?.daysInApp ?? 0) : 0;
-  const adherencePct = user ? (stats?.onPlanPct ?? 0) : 0;
   // G4 + J1 + L1 + F9: live journal counter + recent 14 days for the heatmap
   // + per-bucket tally + non-judgemental adapt score.
   useSleepJournal();
   const journalDays = journaledDayCount();
+  // R7-1/2: anonymous users now get streak + daysInApp from local journal
+  // (was always 0 before, even with logged days). Signed-in users keep
+  // the authoritative Supabase numbers.
+  const streakValue = user
+    ? (streak?.current_streak ?? 0)
+    : localCurrentStreak();
+  const daysInApp = user ? (stats?.daysInApp ?? 0) : journalDays;
+  const adherencePct = user ? (stats?.onPlanPct ?? 0) : 0;
   const recentJournal = recentJournalDays(STREAK_LENGTH);
   const hasJournalHistory = recentJournal.some((d) => d.rating !== null);
   const adaptScore = weeklyAdaptScore();
