@@ -127,6 +127,22 @@ Per round before claiming "done":
 - 15 rounds × ~30 min = ~7.5 hours total
 - Distributed across multiple sessions (each session = 1-3 rounds)
 
+## Closure summary (2026-05-29)
+
+**Status:** All 15 rounds (R1, R3–R15) complete. R2 invalidated (no `ru.ts` — pivoted to R9 de-DE walk).
+
+**Totals:** **26 real bugs fixed + 1 systemic + CI guardrail** across **8 stack layers** (i18n, layout, store, data, navigation, UI errors, premium gating, interrupt handling).
+
+**Deferred (infra-blocked, low risk):**
+- R10 physical narrow-sim live walk — Mac was OOM-tight; code audit passed
+- R11 physical wide-sim live walk — owned sims in use; code audit passed
+- R8 premium=true visual verification — Adapty sandbox / Supabase subscription row injection needed
+- Delete-account flow — feature not yet built (R14 gap obs)
+
+**CI guardrail in place:** `__tests__/i18n-coverage.test.ts` locks current locale-coverage gap (de-DE 203 / others 244 missing keys) — any new EN key without translation fails CI.
+
+**218/218 tests pass.** All commits live in `origin/main` ([latest 50](https://github.com/oqapps-lab/shiftrest/commits/main)).
+
 ## Round log
 
 | # | Date | Profile / locale / state | Bugs found | Fix commits |
