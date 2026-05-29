@@ -1,7 +1,18 @@
-import React from 'react';
-import { Stack } from 'expo-router';
+import React, { useEffect } from 'react';
+import { Stack, usePathname } from 'expo-router';
+import { useOnboarding } from '../../lib/onboarding/store';
 
 export default function OnboardingLayout() {
+  // R13-1: persist the last onboarding route so Welcome can resume the
+  // user after an app kill / cold-launch. Read pathname on every nav.
+  const { update, state } = useOnboarding();
+  const pathname = usePathname();
+  useEffect(() => {
+    if (pathname?.startsWith('/onboarding/') && pathname !== state.lastOnboardingRoute) {
+      update({ lastOnboardingRoute: pathname });
+    }
+  }, [pathname, state.lastOnboardingRoute, update]);
+
   return (
     <Stack
       screenOptions={{

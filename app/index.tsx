@@ -37,8 +37,18 @@ export default function Welcome() {
   useEffect(() => {
     if (hydrated && state.completed) {
       router.replace('/(tabs)');
+      return;
     }
-  }, [hydrated, state.completed]);
+    // R13-1: resume mid-onboarding after app kill / cold-launch.
+    // If user has stepped into onboarding before (lastOnboardingRoute
+    // set) and hasn't completed, send them back to where they left off
+    // instead of restarting from S01.
+    if (hydrated && !state.completed && state.lastOnboardingRoute) {
+      // String → Href cast: lastOnboardingRoute is always set by
+      // onboarding/_layout.tsx from pathname, so it's a valid route.
+      router.replace(state.lastOnboardingRoute as never);
+    }
+  }, [hydrated, state.completed, state.lastOnboardingRoute]);
 
   // Avoid flashing Welcome at returning users:
   // - while AsyncStorage hydration in flight (`!hydrated`)

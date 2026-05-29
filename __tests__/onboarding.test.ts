@@ -189,6 +189,7 @@ describe('mapToProfileRow', () => {
     displayName: 'Marina',
     usesLightTherapy: false,
     completed: false,
+    lastOnboardingRoute: null,
   };
 
   test('roundtrips main_problem to DB enum', () => {

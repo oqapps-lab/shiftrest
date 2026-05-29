@@ -94,6 +94,10 @@ export interface OnboardingState {
 
   // Funnel completion marker (true after notifications screen exits)
   completed: boolean;
+
+  // R13-1: last onboarding route visited so Welcome can resume the
+  // user after an app kill instead of restarting from S01.
+  lastOnboardingRoute: string | null;
 }
 
 const INITIAL: OnboardingState = {
@@ -121,6 +125,7 @@ const INITIAL: OnboardingState = {
   // display. Users can turn it off from Settings → Light therapy.
   usesLightTherapy: true,
   completed: false,
+  lastOnboardingRoute: null,
 };
 
 // ─── Profile-row mapping ────────────────────────────────────────────────────
@@ -346,7 +351,9 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const markCompleted = useCallback(() => {
-    setState((prev) => ({ ...prev, completed: true }));
+    // R13-1: clear the resume marker so a future re-open with a stale
+    // route doesn't bounce a completed user back into /onboarding.
+    setState((prev) => ({ ...prev, completed: true, lastOnboardingRoute: null }));
   }, []);
 
   const reset = useCallback(() => {
