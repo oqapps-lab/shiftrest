@@ -143,6 +143,16 @@ Per round before claiming "done":
 
 **218/218 tests pass.** All commits live in `origin/main` ([latest 50](https://github.com/oqapps-lab/shiftrest/commits/main)).
 
+## Deeper-pass rounds (R16-R18)
+
+After the R1-R15 backlog closed, ran 3 deeper-rigour passes per user request "глубже":
+
+- **R16 (Premium=true live):** temporarily flipped `isPremium` literal to `true` in `app/(tabs)/plan.tsx`, injected `takesMelatonin:true` state, walked Plan → confirmed MELATONIN card eyebrow plain (no "· PREMIUM" suffix), full 1.0 opacity (no 0.62 fade). Reverted. R8-1 fix end-to-end verified for premium tier.
+
+- **R17 (Adversarial code review of R3-R15 commits):** spawned `general-purpose` agent to diff `main~30..main`. Returned 3 HIGH + 4 MED findings. Fixed 4 (resume-route race on completion, future-dated journal entries, blind route cast, overly-broad typeerror match) + added 11 new unit tests for `localCurrentStreak` (DST gap, today-only, yesterday-fallback, etc.) and `setSleepRating` future-guard. Commit `1ca7d51`. 229/229 tests pass.
+
+- **R18 (Adversarial input — long name):** typed 60-char sentence "The quick brown fox jumps over the lazy dog. Marina is here." into S11 name field. `clampDisplayName(max=24)` correctly truncated to "The quick brown fox..." on Profile. `firstName()` extracted "The" → Today greeting "GOOD EVENING, THE" + Paywall "THE, YOUR PLAN IS READY". Mathematically correct; UX-awkward for adversarial input but acceptable for real names. **R18-OBS-1:** No real bug, but if user types a sentence the greeting looks bad. Could add a "looks-like-real-name" heuristic (≥2 chars per word, no trailing punctuation) but scope creep for tradeoff.
+
 ## Round log
 
 | # | Date | Profile / locale / state | Bugs found | Fix commits |
