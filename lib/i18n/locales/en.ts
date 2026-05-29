@@ -96,6 +96,8 @@ const en = {
     saved_title: 'Transition plan ready',
     saved_body: 'Your steps are on the Today screen. Tap the card to start.',
     failed_title: 'Could not generate plan',
+    failed_offline: "You're offline. We'll save your plan as soon as you reconnect.",
+    failed_unknown: 'Something went wrong while saving. Try again in a moment.',
     ok: 'OK',
   },
   plan: {

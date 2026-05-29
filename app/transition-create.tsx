@@ -138,8 +138,15 @@ export default function TransitionCreate() {
         }},
       ]);
     } catch (e: unknown) {
+      // R12-2: was showing raw e.message (often English Supabase code) —
+      // localise by error-shape. Network failures get a friendly retry
+      // message; everything else falls back to "unknown" generic.
       const msg = e instanceof Error ? e.message : String(e);
-      Alert.alert(t('transition_create.failed_title'), msg, [{ text: t('transition_create.ok') }]);
+      const isNetwork = /network request failed|fetch|TypeError/i.test(msg);
+      const body = isNetwork
+        ? t('transition_create.failed_offline')
+        : t('transition_create.failed_unknown');
+      Alert.alert(t('transition_create.failed_title'), body, [{ text: t('transition_create.ok') }]);
     } finally {
       setSubmitting(false);
     }
