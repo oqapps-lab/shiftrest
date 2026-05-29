@@ -28,7 +28,9 @@ export type GlyphName =
   | 'calendar'
   | 'home'
   | 'bed'
-  | 'flame';
+  | 'flame'
+  | 'fork'
+  | 'book';
 
 interface Props {
   name: GlyphName;
@@ -153,6 +155,21 @@ export function Glyph({ name, size = 24, color = 'ink', strokeWidth = 1.5 }: Pro
       )}
       {name === 'flame' && (
         <Path d="M12 3c0 3-4 5-4 9a4 4 0 0 0 8 0c0-2-1-3-1-5 2 1 3 3 3 6a6 6 0 1 1-12 0c0-5 6-5 6-10z" {...common} />
+      )}
+      {name === 'fork' && (
+        <>
+          <Path d="M7 3v7a2 2 0 0 0 2 2v9" {...common} />
+          <Line x1={5} y1={3} x2={5} y2={9} {...common} />
+          <Line x1={9} y1={3} x2={9} y2={9} {...common} />
+          <Path d="M17 3v8c0 1.1-1 2-2 2v8" {...common} />
+          <Path d="M15 3v8" {...common} />
+        </>
+      )}
+      {name === 'book' && (
+        <>
+          <Path d="M4 4h7a3 3 0 0 1 3 3v14a3 3 0 0 0-3-3H4V4z" {...common} />
+          <Path d="M20 4h-7a3 3 0 0 0-3 3v14a3 3 0 0 1 3-3h7V4z" {...common} />
+        </>
       )}
     </Svg>
   );

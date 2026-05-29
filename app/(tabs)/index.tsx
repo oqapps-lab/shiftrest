@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Alert } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -24,6 +24,7 @@ import {
   Glyph,
   HeroNumber,
   SegmentedControl,
+  PlanUpdatedBanner,
   type SegmentOption,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
@@ -54,9 +55,12 @@ import {
   useSleepJournal,
   setSleepRating,
   ratingForToday,
+  weeklyTally,
   type SleepRating,
 } from '../../lib/sleep-journal/store';
 import { useLocalShifts } from '../../lib/local-shifts/store';
+import { TodayIntroSheet } from '../../components/today/TodayIntroSheet';
+import { StoriesCoverFlow } from '../../components/community/StoriesCoverFlow';
 import { detectTransitionOpportunity } from '../../lib/transition/generate';
 import * as Haptics from 'expo-haptics';
 import { t } from '../../lib/i18n';
@@ -195,6 +199,8 @@ export default function Home() {
 
   return (
     <Screen orbs="normal" scroll>
+      <PlanUpdatedBanner />
+      <TodayIntroSheet />
       <View style={styles.headerRow}>
         <View style={{ flex: 1 }}>
           <Eyebrow>{displayName ? `${getGreeting(nowHour)}, ${displayName}` : getGreeting(nowHour)}</Eyebrow>
@@ -236,7 +242,7 @@ export default function Home() {
         />
       </GlassCard>
 
-      {/* G4: Sleep journal — one-tap morning rating */}
+      {/* G4: Sleep journal — one-tap morning rating + USER-BUG-9 stats reveal */}
       <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.huge }}>
         <Eyebrow style={{ marginBottom: spacing.sm }}>
           {todayRating ? t('today.journal_logged') : t('today.journal_prompt')}
@@ -280,6 +286,26 @@ export default function Home() {
             );
           })}
         </View>
+        {todayRating && (() => {
+          const tally = weeklyTally();
+          if (!tally) return null;
+          const trendArrow = tally.trend === 'up' ? '↑' : tally.trend === 'down' ? '↓' : tally.trend === 'flat' ? '→' : '';
+          return (
+            <Pressable
+              onPress={() => router.push('/history')}
+              style={{ marginTop: spacing.md }}
+              accessibilityRole="button"
+              accessibilityLabel={t('today.journal_stats_a11y')}
+            >
+              <Text variant="bodyMd" color="inkSubtle">
+                {t('today.journal_tally_inline', { good: tally.good, ok: tally.ok, bad: tally.bad })}
+              </Text>
+              <Text variant="bodyMd" color="primary" style={{ marginTop: 2 }}>
+                {trendArrow ? `${trendArrow} ${t(`today.journal_trend_${tally.trend ?? 'flat'}`)} · ${t('today.journal_tap_history')}` : t('today.journal_tap_history')}
+              </Text>
+            </Pressable>
+          );
+        })()}
       </GlassCard>
 
       <View style={{ alignItems: 'center', marginBottom: spacing.huge }}>
@@ -328,14 +354,27 @@ export default function Home() {
                 <Pressable
                   onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    logCaffeine();
+                    const cups = (caffLog?.cups ?? 0) + 1;
+                    Alert.alert(
+                      t('today.caffeine_confirm_title'),
+                      t('today.caffeine_confirm_body', { cups }),
+                      [
+                        { text: t('today.caffeine_cancel'), style: 'cancel' },
+                        { text: t('today.caffeine_log_cta'), onPress: () => logCaffeine() },
+                      ],
+                    );
                   }}
                   accessibilityRole="button"
                   accessibilityLabel={t('today.log_caffeine_a11y')}
                   hitSlop={10}
-                  style={styles.logBtn}
+                  style={styles.logBtnCol}
                 >
-                  <Glyph name="plus" size={18} color="primary" />
+                  <View style={styles.logBtn}>
+                    <Glyph name="plus" size={18} color="primary" />
+                  </View>
+                  <Text variant="labelMd" color="primary" style={{ marginTop: 4, fontSize: 10 }}>
+                    {t('today.log_caffeine_label')}
+                  </Text>
                 </Pressable>
               )}
             </View>
@@ -372,15 +411,6 @@ export default function Home() {
         >
           <GlassCard variant="paper" padding="xxl">
             <View style={styles.eventRow}>
-              <Animated.View
-                style={[
-                  styles.eventIcon,
-                  { backgroundColor: colors.primaryContainer },
-                  transitionPulseStyle,
-                ]}
-              >
-                <Glyph name="sparkle" size={22} color="primary" />
-              </Animated.View>
               <View style={{ flex: 1 }}>
                 <Eyebrow>
                   {detected
@@ -409,6 +439,9 @@ export default function Home() {
           </GlassCard>
         </Pressable>
       )}
+
+      {/* F20-P3: Community stories cover-flow carousel */}
+      <StoriesCoverFlow />
     </Screen>
   );
 }
@@ -438,6 +471,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: spacing.lg,
+  },
+  logBtnCol: {
+    alignItems: 'center',
   },
   logBtn: {
     width: 40,

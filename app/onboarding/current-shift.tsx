@@ -1,8 +1,14 @@
 /**
- * S04 — Current Shift anchor. Step 3 / 10.
- * Segmented control (day/night/off) + two time cards + commute slider.
- * Time values are static mocks — a real TimePicker primitive is not yet in the design system,
- * so we render read-only display cards. Replace with picker when primitive lands.
+ * S04 — Current Shift anchor. Step 3 / 11.
+ * Segmented control (day/night/off) + two tappable wheel time pickers
+ * (DateTimePickerField, mode='time') + commute slider.
+ *
+ * History: earlier attempts wrapped a custom TimeCard inside GlassCard
+ * variants — paper/glass/elevated all rendered as invisible against the
+ * orbs gradient. Switched to the SAME DateTimePickerField that
+ * add-shift.tsx uses (whisper variant with chevron + a known-good label
+ * + value layout). One source of truth for the picker UI, predictable
+ * render across screens.
  */
 
 import React from 'react';
@@ -11,7 +17,6 @@ import { router } from 'expo-router';
 import { useOnboarding } from '../../lib/onboarding/store';
 import {
   Screen,
-  GlassCard,
   HeroNumber,
   Eyebrow,
   Text,
@@ -19,6 +24,7 @@ import {
   ProgressDots,
   SegmentedControl,
   Slider,
+  DateTimePickerField,
   type SegmentOption,
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
@@ -32,22 +38,26 @@ const getSegmentOptions = (): SegmentOption<ShiftKind>[] => [
   { value: 'off', label: t('onboarding_screens.current_shift.off_day') },
 ];
 
-const SHIFT_TIMES: Record<ShiftKind, { start: string; end: string }> = {
-  day: { start: '07:00', end: '19:00' },
-  night: { start: '19:00', end: '07:00' },
-  off: { start: '—', end: '—' },
-};
+function parseHHMM(s: string): Date {
+  const [h, m] = s.split(':').map((n) => parseInt(n, 10) || 0);
+  const d = new Date();
+  d.setHours(h, m, 0, 0);
+  return d;
+}
+
+function formatHHMM(d: Date): string {
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+}
 
 export default function CurrentShift() {
   const { state, update } = useOnboarding();
   const shift = state.currentShift;
-  const commute = state.commuteMinutes;
-  const times = SHIFT_TIMES[shift];
+  const isOff = shift === 'off';
 
   return (
     <Screen
       orbs="subtle"
-      scroll
+      scroll={false}
       tabBarClearance={false}
       floatingFooter={
         <PillCTA
@@ -81,70 +91,68 @@ export default function CurrentShift() {
       <SegmentedControl<ShiftKind>
         options={getSegmentOptions()}
         value={shift}
-        onChange={(v) => update({ currentShift: v })}
+        onChange={(v) => {
+          // R4-1: flip START/END defaults when shift kind changes so the
+          // picker doesnt show 07:00 — 19:00 for Night shift. We only
+          // reset the times if they still match the canonical defaults
+          // for the OUTGOING kind, so user edits arent silently wiped.
+          const patch: { currentShift: ShiftKind; currentShiftStart?: string; currentShiftEnd?: string } = {
+            currentShift: v,
+          };
+          if (v === 'night' && state.currentShiftStart === '07:00' && state.currentShiftEnd === '19:00') {
+            patch.currentShiftStart = '19:00';
+            patch.currentShiftEnd = '07:00';
+          } else if (v === 'day' && state.currentShiftStart === '19:00' && state.currentShiftEnd === '07:00') {
+            patch.currentShiftStart = '07:00';
+            patch.currentShiftEnd = '19:00';
+          }
+          update(patch);
+        }}
       />
 
-      <View style={styles.timeRow}>
-        <GlassCard variant="paper" padding="lg" style={styles.timeCard}>
-          <Eyebrow size="md">{t('onboarding_screens.current_shift.start')}</Eyebrow>
-          <Text
-            variant="headlineLg"
-            family="display"
-            weight="extraLight"
-            color="ink"
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            style={{ marginTop: spacing.xs }}
-          >
-            {times.start}
-          </Text>
-        </GlassCard>
-        <GlassCard variant="paper" padding="lg" style={styles.timeCard}>
-          <Eyebrow size="md">{t('onboarding_screens.current_shift.end')}</Eyebrow>
-          <Text
-            variant="headlineLg"
-            family="display"
-            weight="extraLight"
-            color="ink"
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            style={{ marginTop: spacing.xs }}
-          >
-            {times.end}
-          </Text>
-        </GlassCard>
-      </View>
+      {!isOff && (
+        <>
+          <View style={{ marginTop: spacing.xl }}>
+            <DateTimePickerField
+              label={t('onboarding_screens.current_shift.start')}
+              mode="time"
+              value={parseHHMM(state.currentShiftStart)}
+              onChange={(d) => update({ currentShiftStart: formatHHMM(d) })}
+              accessibilityLabel={t('onboarding_screens.current_shift.start')}
+            />
+            <DateTimePickerField
+              label={t('onboarding_screens.current_shift.end')}
+              mode="time"
+              value={parseHHMM(state.currentShiftEnd)}
+              onChange={(d) => update({ currentShiftEnd: formatHHMM(d) })}
+              accessibilityLabel={t('onboarding_screens.current_shift.end')}
+            />
+          </View>
 
-      <View style={{ marginTop: spacing.xl }}>
-        <View style={styles.commuteHeader}>
-          <Eyebrow>{t('onboarding_screens.current_shift.commute_label')}</Eyebrow>
-          <Text variant="titleMd" family="display" weight="medium" color="ink">
-            {commute} min
-          </Text>
-        </View>
-        <Slider
-          min={0}
-          max={90}
-          step={5}
-          value={commute}
-          onChange={(v) => update({ commuteMinutes: v })}
-          accessibilityLabel={t('onboarding_screens.current_shift.commute_a11y')}
-          style={{ marginTop: spacing.sm }}
-        />
-      </View>
+          <View style={{ marginTop: spacing.xl }}>
+            <View style={styles.commuteHeader}>
+              <Eyebrow>{t('onboarding_screens.current_shift.commute_label')}</Eyebrow>
+              <Text variant="titleMd" family="display" weight="medium" color="ink">
+                {state.commuteMinutes} min
+              </Text>
+            </View>
+            <Slider
+              min={0}
+              max={90}
+              step={5}
+              value={state.commuteMinutes}
+              onChange={(v) => update({ commuteMinutes: v })}
+              accessibilityLabel={t('onboarding_screens.current_shift.commute_a11y')}
+              style={{ marginTop: spacing.sm }}
+            />
+          </View>
+        </>
+      )}
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  timeRow: {
-    flexDirection: 'row',
-    gap: spacing.md,
-    marginTop: spacing.xl,
-  },
-  timeCard: {
-    flex: 1,
-  },
   commuteHeader: {
     flexDirection: 'row',
     alignItems: 'center',

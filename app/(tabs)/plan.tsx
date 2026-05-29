@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Alert } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import {
   Screen,
   Eyebrow,
@@ -22,12 +22,15 @@ import {
   lightWindowsForShift,
   formatHourRange,
   napWindowForShift,
+  mealTimingForShift,
 } from '../../lib/derive';
 import { useGeneratedPlan, planHourAsFloat, type PlanRecommendation } from '../../lib/queries/plan';
+import { useSubscription } from '../../lib/queries';
 import { useOnboarding, chronotypeBucket, computeChronotypeScore } from '../../lib/onboarding/store';
 import { useLocalShifts } from '../../lib/local-shifts/store';
 import type { GlyphName } from '../../components/ui';
 import { t } from '../../lib/i18n';
+import { WhyTheseTimesSheet } from '../../components/plan/WhyTheseTimesSheet';
 
 interface UiRec {
   glyph: GlyphName;
@@ -47,6 +50,7 @@ interface UiRec {
 function buildFallbackRecs(
   suggested: ReturnType<typeof suggestedPlanFromOnboarding>,
   shift: 'day' | 'night' | 'off',
+  isPremium: boolean,
 ): UiRec[] {
   const caffeineHour = Number(suggested.caffeineCutoff.split(':')[0]);
   const hoursBeforeSleep = hoursBetween(caffeineHour, suggested.sleepStart);
@@ -80,12 +84,14 @@ function buildFallbackRecs(
     },
     {
       glyph: 'moon',
-      eyebrow: `${t('plan.cards.melatonin.eyebrow')} · ${t('plan.premium_suffix')}`,
+      eyebrow: isPremium
+        ? t('plan.cards.melatonin.eyebrow')
+        : `${t('plan.cards.melatonin.eyebrow')} · ${t('plan.premium_suffix')}`,
       hero: t('plan.cards.melatonin.hero', { time: suggested.melatoninTime }),
       body: t('plan.cards.melatonin.body'),
       tintBg: colors.duskGlow,
       tintFg: 'duskDim',
-      locked: true,
+      locked: !isPremium,
     },
     {
       glyph: 'sun',
@@ -120,6 +126,21 @@ function buildFallbackRecs(
         tintFg: 'primary' as const,
       };
     })(),
+    // F15 — Meal Timing card
+    (() => {
+      const meal = mealTimingForShift(shift, suggested.sleepStart);
+      return {
+        glyph: 'fork' as const,
+        eyebrow: t(meal.eyebrowKey),
+        hero: t('plan.cards.meal.hero_template', {
+          main: formatHour(meal.mainMealHour),
+          cutoff: formatHour(meal.cutoffHour),
+        }),
+        body: t(meal.bodyKey),
+        tintBg: colors.sunriseGlow,
+        tintFg: 'sunriseDim' as const,
+      };
+    })(),
   ];
 }
 
@@ -130,10 +151,18 @@ const REC_STYLE: Record<PlanRecommendation['type'], { glyph: GlyphName; tintBg: 
   nap:         { glyph: 'bed',     tintBg: colors.primaryContainer, tintFg: 'primary'   },
   sleep_window:{ glyph: 'bed',     tintBg: colors.primaryContainer, tintFg: 'primary'   },
   wind_down:   { glyph: 'sparkle', tintBg: colors.duskGlow,        tintFg: 'duskDim'    },
+  meal:        { glyph: 'fork',    tintBg: colors.sunriseGlow,     tintFg: 'sunriseDim' },
 };
 
 export default function Plan() {
   const [day, setDay] = useState(1);
+  const { data: subscription } = useSubscription();
+  // R8-1: Melatonin card was hardcoded locked. Unlock for paid tiers.
+  const isPremium =
+    subscription?.status === 'active' ||
+    subscription?.status === 'trial' ||
+    subscription?.status === 'grace_period';
+  const [whyOpen, setWhyOpen] = useState(false);
   const pagerLabels = [t('plan.yesterday'), `${t('plan.today')} · ${formatDayMonth()}`, t('plan.tomorrow')];
   const { data: livePlan } = useGeneratedPlan();
   const { state: onboarding } = useOnboarding();
@@ -170,14 +199,17 @@ export default function Plan() {
         .filter((r) => showMelatonin || r.type !== 'melatonin')
         .filter((r) => showCaffeine || r.type !== 'caffeine')
         .filter((r) => showLight || r.type !== 'light')
-        .map((r) => ({
-          ...REC_STYLE[r.type],
-          eyebrow: r.locked ? `${r.eyebrow} · ${t('plan.premium_suffix')}` : r.eyebrow,
-          hero: r.hero,
-          body: r.body,
-          locked: r.locked,
-        }))
-    : buildFallbackRecs(suggested, dayShiftKind);
+        .map((r) => {
+          const effectiveLocked = r.locked && !isPremium;
+          return {
+            ...REC_STYLE[r.type],
+            eyebrow: effectiveLocked ? `${r.eyebrow} · ${t('plan.premium_suffix')}` : r.eyebrow,
+            hero: r.hero,
+            body: r.body,
+            locked: effectiveLocked,
+          };
+        })
+    : buildFallbackRecs(suggested, dayShiftKind, isPremium);
   // Strip cards from fallback list when user opted out of that substance —
   // buildFallbackRecs always returns the full 4 for the demo "looks rich"
   // effect; honesty wins once user has set their prefs.
@@ -271,16 +303,24 @@ export default function Plan() {
         style={{ marginTop: spacing.xl, alignSelf: 'center' }}
         accessibilityRole="button"
         accessibilityLabel={t('plan.why_title')}
-        onPress={() => {
-          const explanation =
-            livePlan?.explanation?.trim() || t('plan.why_default');
-          Alert.alert(t('plan.why_title'), explanation);
-        }}
+        onPress={() => setWhyOpen(true)}
       >
         <Text variant="bodyMd" color="primary" weight="medium">
           {t('plan.why_link')}
         </Text>
       </Pressable>
+
+      <WhyTheseTimesSheet
+        visible={whyOpen}
+        onClose={() => setWhyOpen(false)}
+        explanation={livePlan?.explanation ?? null}
+        sleepStart={formatHour(sleepStartHour)}
+        sleepEnd={formatHour(sleepEndHour)}
+        caffeineCutoff={suggested.caffeineCutoff}
+        melatoninTime={showMelatonin ? suggested.melatoninTime : null}
+        chronotypeLabel={t(`chronotype.${chronotypeBucket(computeChronotypeScore(onboarding.chronotypeAnswers))}`)}
+        shiftLabel={t(`shift_kind.${dayShiftKind}_long`)}
+      />
     </Screen>
   );
 }

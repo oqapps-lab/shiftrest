@@ -20,7 +20,7 @@ import { formatTrialRemaining, clampDisplayName } from '../../lib/derive';
 import { useAuth } from '../../lib/auth/store';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useProfileStats, useSubscription } from '../../lib/queries';
-import { useSleepJournal, journaledDayCount, recentJournalDays } from '../../lib/sleep-journal/store';
+import { useSleepJournal, journaledDayCount, recentJournalDays, weeklyAdaptScore, localCurrentStreak } from '../../lib/sleep-journal/store';
 import { t } from '../../lib/i18n';
 
 const STREAK_LENGTH = 14;
@@ -31,19 +31,33 @@ export default function Profile() {
   const { data: streak } = useStreak();
   const { data: stats } = useProfileStats();
   const { data: subscription } = useSubscription();
-  const streakValue = user ? (streak?.current_streak ?? 0) : 0;
-
-  // For signed-in users always show their real numbers (0 is honest).
-  // Anonymous demo mode falls through to mockUser so the screen tells a
-  // story without any backend.
-  const daysInApp = user ? (stats?.daysInApp ?? 0) : 0;
-  const adherencePct = user ? (stats?.onPlanPct ?? 0) : 0;
-  // G4 + J1 + L1: live journal counter + recent 14 days for the heatmap
-  // + per-bucket tally for the new summary line under the heatmap.
+  // G4 + J1 + L1 + F9: live journal counter + recent 14 days for the heatmap
+  // + per-bucket tally + non-judgemental adapt score.
   useSleepJournal();
   const journalDays = journaledDayCount();
+  // R7-1/2: anonymous users now get streak + daysInApp from local journal
+  // (was always 0 before, even with logged days). Signed-in users keep
+  // the authoritative Supabase numbers.
+  const streakValue = user
+    ? (streak?.current_streak ?? 0)
+    : localCurrentStreak();
+  const daysInApp = user ? (stats?.daysInApp ?? 0) : journalDays;
+  const adherencePct = user ? (stats?.onPlanPct ?? 0) : 0;
   const recentJournal = recentJournalDays(STREAK_LENGTH);
   const hasJournalHistory = recentJournal.some((d) => d.rating !== null);
+  const adaptScore = weeklyAdaptScore();
+  // Map score → positive copy. Never frames a low score as "bad sleep"
+  // — we describe direction-of-adaptation, not performance.
+  const adaptLabelKey =
+    adaptScore == null
+      ? null
+      : adaptScore >= 75
+      ? 'profile.adapt_well'
+      : adaptScore >= 50
+      ? 'profile.adapt_steady'
+      : adaptScore >= 25
+      ? 'profile.adapt_rough'
+      : 'profile.adapt_tough';
   const recentTally = recentJournal.reduce(
     (acc, d) => {
       if (d.rating === 'good') acc.good++;
@@ -73,7 +87,7 @@ export default function Profile() {
   // user picked one in S02, else fall back to mockUser.profession label.
   const professionLabel =
     mockProfessions.find((p) => p.id === onboarding.profession)?.title ??
-    t('professions.nurse');
+    t('professions.other');
 
   // Subscription subtitle: prefer real DB row over mock. Anonymous users
   // are always on the free tier until signup (mockUser irrelevant).
@@ -269,6 +283,67 @@ export default function Profile() {
         </Text>
       )}
 
+      {/* F9: Adapt Score — non-judgemental positive framing. Only render
+          once user has ≥3 journal entries (else weeklyAdaptScore=null). */}
+      {adaptScore != null && adaptLabelKey && (
+        <Pressable
+          onPress={() => router.push('/history')}
+          accessibilityRole="button"
+          accessibilityLabel={t('profile.adapt_open_a11y')}
+          style={{ marginTop: spacing.huge }}
+        >
+          <GlassCard variant="paper" padding="xxl">
+            <View style={styles.adaptRow}>
+              <View style={styles.adaptScoreWrap}>
+                <HeroNumber value={adaptScore} size="lg" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Eyebrow>{t('profile.adapt_eyebrow')}</Eyebrow>
+                <Text
+                  variant="titleLg"
+                  family="display"
+                  weight="light"
+                  color="ink"
+                  style={{ marginTop: 2 }}
+                >
+                  {t(adaptLabelKey)}
+                </Text>
+                <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
+                  {t('profile.adapt_sub')}
+                </Text>
+              </View>
+              <Glyph name="chevronRight" size={18} color="inkMuted" />
+            </View>
+          </GlassCard>
+        </Pressable>
+      )}
+
+      {/* F20-P1: tap-target to the Sleep Tips library */}
+      <Pressable
+        onPress={() => router.push('/tips')}
+        accessibilityRole="button"
+        accessibilityLabel={t('profile.tips_a11y')}
+        style={{ marginTop: spacing.lg }}
+      >
+        <GlassCard variant="paper" padding="xxl">
+          <View style={styles.adaptRow}>
+            <View style={[styles.adaptScoreWrap, { backgroundColor: colors.sunriseGlow }]}>
+              <Glyph name="book" size={26} color="sunriseDim" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Eyebrow>{t('profile.tips_eyebrow')}</Eyebrow>
+              <Text variant="titleLg" family="display" weight="light" color="ink" style={{ marginTop: 2 }}>
+                {t('profile.tips_title')}
+              </Text>
+              <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
+                {t('profile.tips_sub')}
+              </Text>
+            </View>
+            <Glyph name="chevronRight" size={18} color="inkMuted" />
+          </View>
+        </GlassCard>
+      </Pressable>
+
       <View style={{ height: spacing.huge }} />
 
       <Eyebrow>{t('profile.settings')}</Eyebrow>
@@ -345,6 +420,14 @@ const styles = StyleSheet.create({
   statsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  adaptRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  adaptScoreWrap: {
+    width: 88,
+    marginRight: spacing.lg,
   },
   stat: {
     flex: 1,

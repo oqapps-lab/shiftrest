@@ -171,6 +171,8 @@ describe('mapToProfileRow', () => {
     profession: 'nurse' as const,
     scheduleId: '3x12-day-night' as const,
     currentShift: 'day' as const,
+    currentShiftStart: '07:00',
+    currentShiftEnd: '19:00',
     commuteMinutes: 30,
     nextShift: null,
     mainProblem: 'falling-asleep' as const,
