@@ -39,9 +39,17 @@ const PROFESSION_TINT: Record<string, [string, string]> = {
   factory: [colors.duskGlow, colors.surfaceLow],
 };
 
+const PROFESSION_PLURAL: Record<string, string> = {
+  nurse: 'NURSES',
+  firefighter: 'FIREFIGHTERS',
+  factory: 'FACTORY WORKERS',
+  other: 'SHIFT WORKERS',
+};
+
 function ProfessionLabel(profession: string | null): string {
   if (!profession) return t('community.eyebrow_universal');
-  return t('community.eyebrow', { profession: profession.toUpperCase() });
+  const plural = PROFESSION_PLURAL[profession] ?? profession.toUpperCase();
+  return t('community.eyebrow', { profession: plural });
 }
 
 function StoryCard({ story, index, scrollX, cardW, snap }: {

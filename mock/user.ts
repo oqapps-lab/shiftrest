@@ -93,7 +93,7 @@ export const mockTransition = getMockTransition();
 export function getMockProfessions() {
   return [
     { id: 'nurse', title: t('professions.nurse'), subtitle: t('professions.nurse_sub'), glyph: 'pulse' as GlyphName },
-    { id: 'fire', title: t('professions.firefighter'), subtitle: t('professions.firefighter_sub'), glyph: 'flame' as GlyphName },
+    { id: 'firefighter', title: t('professions.firefighter'), subtitle: t('professions.firefighter_sub'), glyph: 'flame' as GlyphName },
     { id: 'factory', title: t('professions.factory'), subtitle: t('professions.factory_sub'), glyph: 'gear' as GlyphName },
     { id: 'other', title: t('professions.other'), subtitle: t('professions.other_sub'), glyph: 'sparkle' as GlyphName },
   ];
