@@ -665,6 +665,7 @@ const en = {
     done_title: 'Done',
     done_body: '{{count}} shifts imported. Tap any cell on the calendar to edit or delete.',
     parse_failed_title: 'Could not parse file',
+    parse_failed_body: "We couldn't read the .ics file. Make sure it's a valid calendar export.",
     import_failed_title: 'Import failed',
     ok: 'OK',
   },

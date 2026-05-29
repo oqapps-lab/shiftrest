@@ -54,7 +54,10 @@ export default function CalendarImport() {
       const parsed = parseIcs(raw);
       setEvents(parsed);
     } catch (e: unknown) {
-      Alert.alert(t('calendar_import.parse_failed_title'), e instanceof Error ? e.message : String(e));
+      // R12-4: was dumping raw parser exception into Alert body.
+      // Generic localised body — actual error logged for dev (LogBox).
+      if (__DEV__) console.warn('[calendar-import]', e);
+      Alert.alert(t('calendar_import.parse_failed_title'), t('calendar_import.parse_failed_body'));
     } finally {
       setPicking(false);
     }
