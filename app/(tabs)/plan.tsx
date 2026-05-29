@@ -25,6 +25,7 @@ import {
   mealTimingForShift,
 } from '../../lib/derive';
 import { useGeneratedPlan, planHourAsFloat, type PlanRecommendation } from '../../lib/queries/plan';
+import { useSubscription } from '../../lib/queries';
 import { useOnboarding, chronotypeBucket, computeChronotypeScore } from '../../lib/onboarding/store';
 import { useLocalShifts } from '../../lib/local-shifts/store';
 import type { GlyphName } from '../../components/ui';
@@ -49,6 +50,7 @@ interface UiRec {
 function buildFallbackRecs(
   suggested: ReturnType<typeof suggestedPlanFromOnboarding>,
   shift: 'day' | 'night' | 'off',
+  isPremium: boolean,
 ): UiRec[] {
   const caffeineHour = Number(suggested.caffeineCutoff.split(':')[0]);
   const hoursBeforeSleep = hoursBetween(caffeineHour, suggested.sleepStart);
@@ -82,12 +84,14 @@ function buildFallbackRecs(
     },
     {
       glyph: 'moon',
-      eyebrow: `${t('plan.cards.melatonin.eyebrow')} · ${t('plan.premium_suffix')}`,
+      eyebrow: isPremium
+        ? t('plan.cards.melatonin.eyebrow')
+        : `${t('plan.cards.melatonin.eyebrow')} · ${t('plan.premium_suffix')}`,
       hero: t('plan.cards.melatonin.hero', { time: suggested.melatoninTime }),
       body: t('plan.cards.melatonin.body'),
       tintBg: colors.duskGlow,
       tintFg: 'duskDim',
-      locked: true,
+      locked: !isPremium,
     },
     {
       glyph: 'sun',
@@ -152,6 +156,12 @@ const REC_STYLE: Record<PlanRecommendation['type'], { glyph: GlyphName; tintBg: 
 
 export default function Plan() {
   const [day, setDay] = useState(1);
+  const { data: subscription } = useSubscription();
+  // R8-1: Melatonin card was hardcoded locked. Unlock for paid tiers.
+  const isPremium =
+    subscription?.status === 'active' ||
+    subscription?.status === 'trial' ||
+    subscription?.status === 'grace_period';
   const [whyOpen, setWhyOpen] = useState(false);
   const pagerLabels = [t('plan.yesterday'), `${t('plan.today')} · ${formatDayMonth()}`, t('plan.tomorrow')];
   const { data: livePlan } = useGeneratedPlan();
@@ -189,14 +199,17 @@ export default function Plan() {
         .filter((r) => showMelatonin || r.type !== 'melatonin')
         .filter((r) => showCaffeine || r.type !== 'caffeine')
         .filter((r) => showLight || r.type !== 'light')
-        .map((r) => ({
-          ...REC_STYLE[r.type],
-          eyebrow: r.locked ? `${r.eyebrow} · ${t('plan.premium_suffix')}` : r.eyebrow,
-          hero: r.hero,
-          body: r.body,
-          locked: r.locked,
-        }))
-    : buildFallbackRecs(suggested, dayShiftKind);
+        .map((r) => {
+          const effectiveLocked = r.locked && !isPremium;
+          return {
+            ...REC_STYLE[r.type],
+            eyebrow: effectiveLocked ? `${r.eyebrow} · ${t('plan.premium_suffix')}` : r.eyebrow,
+            hero: r.hero,
+            body: r.body,
+            locked: effectiveLocked,
+          };
+        })
+    : buildFallbackRecs(suggested, dayShiftKind, isPremium);
   // Strip cards from fallback list when user opted out of that substance —
   // buildFallbackRecs always returns the full 4 for the demo "looks rich"
   // effect; honesty wins once user has set their prefs.
