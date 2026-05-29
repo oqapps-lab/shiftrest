@@ -50,6 +50,17 @@ const i18n = new I18n({
   'zh-Hant': zhHant,
   'zh-TW': zhHant,
   'zh-HK': zhHant,
+  // QA-1 fix: i18n-js fallback derivation only walks the language portion
+  // (ru-US → ru). When neither is registered, it shows "[missing X]" instead
+  // of defaulting to defaultLocale. Russian translation isn't shipped yet,
+  // so explicitly point ru* at en. Same trick for any other locale a
+  // Russian-region user might surface (ru-US shows up on dev devices set
+  // to Russian language + US region).
+  ru: en,
+  'ru-RU': en,
+  'ru-US': en,
+  'ru-BY': en,
+  'ru-KZ': en,
 });
 
 i18n.enableFallback = true;

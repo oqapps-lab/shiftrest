@@ -85,7 +85,10 @@ function TimeCard({
   return (
     <>
       <Pressable onPress={openSheet} style={{ flex: 1 }} accessibilityRole="button">
-        <GlassCard variant="glass" padding="lg" style={styles.timeCard}>
+        {/* QA-3 fix: glass + paper both blended with orbs gradient and made
+            the card visually disappear. Use elevated surfaceHigh + explicit
+            border so the card reads as a tappable input field. */}
+        <GlassCard variant="elevated" padding="lg" style={[styles.timeCard, styles.timeCardBorder]}>
           <Eyebrow size="md">{label}</Eyebrow>
           <Text
             variant="headlineLg"
@@ -248,6 +251,10 @@ const styles = StyleSheet.create({
   },
   timeCard: {
     flex: 1,
+  },
+  timeCardBorder: {
+    borderWidth: 1,
+    borderColor: 'rgba(15,23,42,0.10)',
   },
   commuteHeader: {
     flexDirection: 'row',

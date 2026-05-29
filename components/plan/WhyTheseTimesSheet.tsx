@@ -179,7 +179,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    top: '10%',
+    // QA-2: was top:'10%' which left only ~30px of tappable dim above the
+    // safe-area top, so backdrop-tap to dismiss was effectively unreachable.
+    // Increase to 18% so the visible dim band is large enough that users
+    // hitting "outside" actually land in the Pressable.
+    top: '18%',
     bottom: 0,
     backgroundColor: colors.canvas,
     borderTopLeftRadius: radii.xxl,
