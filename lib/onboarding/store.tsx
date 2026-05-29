@@ -340,10 +340,19 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  // Persist on every change after hydration.
+  // Persist on every change after hydration. R19/H1: debounced 300ms so
+  // keystroke-rate typing in displayName / otherCommitments doesn't disk-
+  // write on every character. Trailing flush via timeout ref.
+  const persistTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     if (!hydrated) return;
-    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => null);
+    if (persistTimeoutRef.current) clearTimeout(persistTimeoutRef.current);
+    persistTimeoutRef.current = setTimeout(() => {
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => null);
+    }, 300);
+    return () => {
+      if (persistTimeoutRef.current) clearTimeout(persistTimeoutRef.current);
+    };
   }, [state, hydrated]);
 
   const update = useCallback((patch: Partial<OnboardingState>) => {
