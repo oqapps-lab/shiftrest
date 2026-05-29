@@ -247,7 +247,12 @@ export default function Schedule() {
               .eq('user_id', user.id)
               .eq('date', cell.iso!);
             if (error) {
-              Alert.alert(t('schedule.cell_delete_failed'), error.message);
+              // R19/i18n-4: was leaking Supabase error.message into Alert body.
+              if (__DEV__) console.warn('[schedule-delete]', error);
+              Alert.alert(
+                t('schedule.cell_delete_failed'),
+                t('schedule.cell_delete_failed_body'),
+              );
               return;
             }
             emitChange(EVENTS.shiftsChanged);

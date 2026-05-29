@@ -15,6 +15,7 @@ import {
   Animated,
   Easing,
 } from 'react-native';
+import i18n from '../../lib/i18n';
 import DateTimePicker, {
   type DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
@@ -37,10 +38,15 @@ interface Props {
 function formatDateTime(d: Date, mode: 'datetime' | 'time'): string {
   const time = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
   if (mode === 'time') return time;
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const date = `${weekdays[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
-  return `${date} · ${time}`;
+  // R19/i18n-2: was hardcoded English month/weekday arrays. Use
+  // Intl.DateTimeFormat with i18n.locale so the field renders
+  // localised "Mo 27 Mai" on de-DE etc.
+  const fmt = new Intl.DateTimeFormat(i18n.locale, {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+  });
+  return `${fmt.format(d)} · ${time}`;
 }
 
 export function DateTimePickerField({

@@ -496,6 +496,7 @@ const en = {
     cell_cancel: 'Cancel',
     cell_delete: 'Delete',
     cell_delete_failed: 'Could not delete shift',
+    cell_delete_failed_body: "We couldn't delete the shift. Try again in a moment.",
     empty_eyebrow: 'NO SHIFTS YET',
     empty_title: 'Apply your {{template}} rotation?',
     empty_sub: 'One tap fills the next 4 weeks based on the pattern you picked in Settings.',

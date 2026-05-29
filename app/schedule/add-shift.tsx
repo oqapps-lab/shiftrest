@@ -30,7 +30,7 @@ import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth/store';
 import { emitChange, EVENTS } from '../../lib/queries';
 import { setLocalShift } from '../../lib/local-shifts/store';
-import { t } from '../../lib/i18n';
+import i18n, { t } from '../../lib/i18n';
 
 type Kind = 'day' | 'night' | 'off';
 
@@ -79,10 +79,11 @@ function durationLabel(startsAt: Date, endsAt: Date): string {
 
 function formatSummary(kind: Kind, startsAt: Date, endsAt: Date): string {
   if (kind === 'off') return t('add_shift.summary_off');
-  const fmt = (d: Date): string => {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return `${d.getDate()} ${months[d.getMonth()]} · ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-  };
+  // R19/i18n-3: was hardcoded English month array. Use Intl.DateTimeFormat
+  // with the active i18n.locale so non-EN users see localised month names.
+  const dateFmt = new Intl.DateTimeFormat(i18n.locale, { day: 'numeric', month: 'short' });
+  const fmt = (d: Date): string =>
+    `${dateFmt.format(d)} · ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
   return `${fmt(startsAt)} → ${fmt(endsAt)}`;
 }
 
