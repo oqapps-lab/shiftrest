@@ -163,7 +163,13 @@ export default function AddShift() {
     setSubmitting(false);
 
     if (error) {
-      Alert.alert(t('add_shift.save_failed_title'), error.message, [{ text: t('add_shift.ok') }]);
+      // R14-4: was leaking Supabase error.message into Alert body.
+      if (__DEV__) console.warn('[add-shift]', error);
+      Alert.alert(
+        t('add_shift.save_failed_title'),
+        t('add_shift.save_failed_body'),
+        [{ text: t('add_shift.ok') }],
+      );
       return;
     }
     emitChange(EVENTS.shiftsChanged);

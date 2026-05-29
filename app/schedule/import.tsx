@@ -119,7 +119,12 @@ export default function CalendarImport() {
       : { error: null };
     setImporting(false);
     if (error) {
-      Alert.alert(t('calendar_import.import_failed_title'), error.message);
+      // R14-3: was leaking Supabase error.message into Alert body.
+      if (__DEV__) console.warn('[calendar-import]', error);
+      Alert.alert(
+        t('calendar_import.import_failed_title'),
+        t('calendar_import.import_failed_body'),
+      );
       return;
     }
     emitChange(EVENTS.shiftsChanged);

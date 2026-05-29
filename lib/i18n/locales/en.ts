@@ -554,6 +554,7 @@ const en = {
     day_tomorrow: 'Tomorrow',
     saved_title: 'Shift saved',
     save_failed_title: 'Could not save shift',
+    save_failed_body: "We couldn't save your shift. Try again in a moment.",
     ok: 'OK',
     cancel: 'Cancel',
     done: 'Done',
@@ -669,6 +670,7 @@ const en = {
     parse_failed_title: 'Could not parse file',
     parse_failed_body: "We couldn't read the .ics file. Make sure it's a valid calendar export.",
     import_failed_title: 'Import failed',
+    import_failed_body: "Couldn't save shifts. You may be offline — try again.",
     ok: 'OK',
   },
   history: {
