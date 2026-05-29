@@ -133,7 +133,7 @@ Per round before claiming "done":
 |---|------|--------------------------|------------|-------------|
 | R1 | 2026-05-29 | Nurse 3×12 / en / cold-start | 4 (QA-3 v3, QA-4, QA-5 fp, QA-1 prior) | f3e2817 5d3a9bb 4faa78b 83de2d5 f7badd4 |
 | R2 | TBD | Nurse 3×12 / ru / cold-start | — | — |
-| R3 | TBD | Firefighter 24/48 / en | — | — |
+| R3 | 2026-05-29 | Firefighter 24/48 / en / cold-start | **2 real** (R3-1 profession id mismatch + plural grammar, R3-2 Profile wrong fallback + legacy migration) + 2 obs (24h shift content gap, label asymmetry) | c66309e d13e03b | **COMPLETE.** Cold-start walked: Welcome / Step1-11 (selected Firefighter/EMT 24/48 / Day shift / Tomorrow morning / "I can't fall asleep after nights" / Q1 5:00-6:30 Q2 Afternoon Q3 22:00-23:30 / Coffee Normal sens / No melatonin / No kids / Mike) / Aha / Loading / Plan-ready ("Sleep catches up tonight.") / Paywall ($49.99 yr · 81% save) / Notif / Today + scroll / Schedule / Plan Y/T/T / Profile. R3-1 root cause: mock id 'fire' ≠ Profession type 'firefighter' caused store validation to drop it + StoriesCoverFlow rendered "FROM OTHER FIRE" with bad plural; fixed both mock alignment + PROFESSION_PLURAL map. R3-2 root cause: profile.tsx fallback was t('professions.nurse'), so ANY unknown profession silently rendered Nurse; switched to 'other' + added 'fire'→'firefighter' AsyncStorage migration. |
 | R4 | TBD | EMS 48/96 / en | — | — |
 | R5 | TBD | Continental 2/2/4 / en | — | — |
 | R6 | TBD | Custom schedule / en | — | — |
