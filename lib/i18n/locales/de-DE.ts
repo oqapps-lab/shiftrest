@@ -288,6 +288,13 @@ const deDE = {
     cell_cancel: 'Abbrechen',
     cell_delete: 'Löschen',
     cell_delete_failed: 'Schicht konnte nicht gelöscht werden',
+    empty_eyebrow: 'NOCH KEINE SCHICHTEN',
+    empty_title: 'Rotation „{{template}}" anwenden?',
+    empty_sub: 'Ein Tipp füllt die nächsten 4 Wochen basierend auf dem in den Einstellungen gewählten Muster.',
+    empty_cta: 'Auf nächste 4 Wochen anwenden',
+    empty_cta_a11y: 'Rotationsvorlage auf Plan anwenden',
+    import_from_calendar: 'Aus Kalender importieren (.ics)',
+    import_a11y: 'Schichten aus .ics-Datei importieren',
   },
   caffeine_types: {
     coffee: 'Kaffee',
