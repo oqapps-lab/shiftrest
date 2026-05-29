@@ -91,7 +91,23 @@ export default function CurrentShift() {
       <SegmentedControl<ShiftKind>
         options={getSegmentOptions()}
         value={shift}
-        onChange={(v) => update({ currentShift: v })}
+        onChange={(v) => {
+          // R4-1: flip START/END defaults when shift kind changes so the
+          // picker doesnt show 07:00 — 19:00 for Night shift. We only
+          // reset the times if they still match the canonical defaults
+          // for the OUTGOING kind, so user edits arent silently wiped.
+          const patch: { currentShift: ShiftKind; currentShiftStart?: string; currentShiftEnd?: string } = {
+            currentShift: v,
+          };
+          if (v === 'night' && state.currentShiftStart === '07:00' && state.currentShiftEnd === '19:00') {
+            patch.currentShiftStart = '19:00';
+            patch.currentShiftEnd = '07:00';
+          } else if (v === 'day' && state.currentShiftStart === '19:00' && state.currentShiftEnd === '07:00') {
+            patch.currentShiftStart = '07:00';
+            patch.currentShiftEnd = '19:00';
+          }
+          update(patch);
+        }}
       />
 
       {!isOff && (
