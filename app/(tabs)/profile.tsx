@@ -119,7 +119,15 @@ export default function Profile() {
               text: t('profile.signout.confirm'),
               style: 'destructive',
               onPress: async () => {
-                await signOut();
+                // R14-1: surface signOut errors (e.g. offline)
+                // instead of silently no-op'ing.
+                const res = await signOut();
+                if (res?.error) {
+                  Alert.alert(
+                    t('profile.signout.failed_title'),
+                    t('profile.signout.failed_body'),
+                  );
+                }
               },
             },
           ]);

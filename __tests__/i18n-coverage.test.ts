@@ -65,16 +65,16 @@ describe('i18n coverage', () => {
   //    you translated, and the other locales' tests will fail until
   //    you fix them — that's the point.
   const gapBaseline: Record<string, number> = {
-    'de-DE': 199,
-    'es-ES': 240,
-    'fr-FR': 240,
-    'it-IT': 240,
-    ja: 240,
-    ko: 240,
-    'nl-NL': 240,
-    'pt-BR': 240,
-    sv: 240,
-    'zh-Hant': 240,
+    'de-DE': 201,
+    'es-ES': 242,
+    'fr-FR': 242,
+    'it-IT': 242,
+    ja: 242,
+    ko: 242,
+    'nl-NL': 242,
+    'pt-BR': 242,
+    sv: 242,
+    'zh-Hant': 242,
   };
 
   test.each(locales)('%s does not regress from gap baseline', (name, dict) => {

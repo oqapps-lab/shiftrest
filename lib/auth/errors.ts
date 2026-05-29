@@ -12,6 +12,11 @@ import { t } from '../i18n';
 
 export function localizeAuthError(message: string | undefined | null): string {
   if (!message) return t('auth.something_went_wrong');
+  // R14-2: internal error codes from the auth store come through
+  // as exact strings — map them to their localised description.
+  if (message === 'apple_ios_only') return t('errors.apple_ios_only');
+  if (message === 'apple_unavailable') return t('errors.apple_unavailable');
+  if (message === 'apple_no_token') return t('errors.apple_no_token');
   const m = message.toLowerCase();
   if (m.includes('invalid login') || m.includes('invalid credentials')) {
     return t('auth.error_invalid_credentials');

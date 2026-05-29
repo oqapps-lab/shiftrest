@@ -260,6 +260,8 @@ const en = {
       body: 'You can sign back in any time.',
       cancel: 'Cancel',
       confirm: 'Sign out',
+      failed_title: "Couldn't sign out",
+      failed_body: "You're offline. Try again when you have a connection.",
     },
     restart: {
       title: 'Restart onboarding?',
