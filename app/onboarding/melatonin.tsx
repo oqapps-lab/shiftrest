@@ -210,6 +210,8 @@ export default function Melatonin() {
                 family="body"
                 weight="medium"
                 color={customSelected ? 'onPrimary' : 'ink'}
+                numberOfLines={1}
+                adjustsFontSizeToFit
               >
                 {customSelected ? time : t('onboarding.melatonin.custom_label')}
               </Text>
