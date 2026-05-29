@@ -52,6 +52,10 @@ export function ratingForToday(): SleepRating | null {
 }
 
 export function setSleepRating(rating: SleepRating, date: Date = new Date()): void {
+  // R17/A2: silently drop future-dated entries — pollutes daysInApp count
+  // and confuses downstream stats. Only past-or-present accepted.
+  const today = new Date();
+  if (date > today) return;
   const key = localDateKey(date);
   memCache = { entries: { ...memCache.entries, [key]: rating } };
   void AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(memCache));

@@ -11,6 +11,9 @@
 import { t } from '../i18n';
 
 export function localizeAuthError(message: string | undefined | null): string {
+  // R17/A4: preserve original error for dev debugging — display layer
+  // gets the localised version, console gets the raw cause.
+  if (__DEV__ && message) console.warn('[auth-error]', message);
   if (!message) return t('auth.something_went_wrong');
   // R14-2: internal error codes from the auth store come through
   // as exact strings — map them to their localised description.
@@ -24,7 +27,9 @@ export function localizeAuthError(message: string | undefined | null): string {
   if (m.includes('email not confirmed') || m.includes('not confirmed')) {
     return t('auth.error_email_not_confirmed');
   }
-  if (m.includes('network') || m.includes('fetch') || m.includes('typeerror')) {
+  // R17/A4: dropped overly-broad 'typeerror' keyword — non-network
+  // TypeErrors (undefined.foo) would be misclassified as offline.
+  if (m.includes('network request failed') || m.includes('fetch failed')) {
     return t('auth.error_network');
   }
   if (m.includes('already registered') || m.includes('user already')) {

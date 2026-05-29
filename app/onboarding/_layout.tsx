@@ -8,10 +8,15 @@ export default function OnboardingLayout() {
   const { update, state } = useOnboarding();
   const pathname = usePathname();
   useEffect(() => {
+    // R17/A1: guard against races on completion — markCompleted() clears
+    // lastOnboardingRoute and routes to (tabs); if the layout effect re-runs
+    // before unmount it would overwrite the cleared marker with the still-
+    // current /onboarding/notifications path. Skip when completed.
+    if (state.completed) return;
     if (pathname?.startsWith('/onboarding/') && pathname !== state.lastOnboardingRoute) {
       update({ lastOnboardingRoute: pathname });
     }
-  }, [pathname, state.lastOnboardingRoute, update]);
+  }, [pathname, state.completed, state.lastOnboardingRoute, update]);
 
   return (
     <Stack

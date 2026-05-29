@@ -30,6 +30,26 @@ import { useOnboarding } from '../lib/onboarding/store';
 import { useAuth } from '../lib/auth/store';
 import { t } from '../lib/i18n';
 
+// R17/A3: whitelist mirrors app/onboarding/_layout.tsx <Stack.Screen> names.
+// Keep in sync when adding/removing onboarding screens.
+const KNOWN_ONBOARDING_ROUTES: ReadonlySet<string> = new Set([
+  '/onboarding/profession',
+  '/onboarding/schedule',
+  '/onboarding/current-shift',
+  '/onboarding/next-shift',
+  '/onboarding/problem',
+  '/onboarding/social-proof-1',
+  '/onboarding/chronotype',
+  '/onboarding/caffeine',
+  '/onboarding/melatonin',
+  '/onboarding/family',
+  '/onboarding/name',
+  '/onboarding/social-proof-2',
+  '/onboarding/loading',
+  '/onboarding/aha',
+  '/onboarding/notifications',
+]);
+
 export default function Welcome() {
   const { state, hydrated, reverseSyncing } = useOnboarding();
   const { loading: authLoading, user } = useAuth();
@@ -44,9 +64,12 @@ export default function Welcome() {
     // set) and hasn't completed, send them back to where they left off
     // instead of restarting from S01.
     if (hydrated && !state.completed && state.lastOnboardingRoute) {
-      // String → Href cast: lastOnboardingRoute is always set by
-      // onboarding/_layout.tsx from pathname, so it's a valid route.
-      router.replace(state.lastOnboardingRoute as never);
+      // R17/A3: validate the stored route against the known onboarding
+      // screen whitelist — a renamed/removed screen + stale AsyncStorage
+      // would otherwise dead-route via expo-router.
+      if (KNOWN_ONBOARDING_ROUTES.has(state.lastOnboardingRoute)) {
+        router.replace(state.lastOnboardingRoute as never);
+      }
     }
   }, [hydrated, state.completed, state.lastOnboardingRoute]);
 
