@@ -143,6 +143,50 @@ Per round before claiming "done":
 
 **218/218 tests pass.** All commits live in `origin/main` ([latest 50](https://github.com/oqapps-lab/shiftrest/commits/main)).
 
+## R19-R21 — multi-agent adversarial audit (deeper-pass)
+
+Spawned 5 parallel agents (security, accessibility, performance, i18n leftover EN, architecture). All returned. Applied **13 fixes** + 11 new unit tests + 1 new SQL migration. Findings:
+
+### R19 — 13 fixed
+
+**Security (CRITICAL + 3 HIGH all shipped):**
+- **S-1 CRITICAL** — `summarize-story` Edge Function trusted client-supplied `id` and used `service_role` to UPDATE. Any signed-in user could overwrite another user's `ai_summary`. → JWT validation + `.eq('user_id', callerUid)`.
+- **S-2 HIGH** — `community_stories` UPDATE policy missing WITH CHECK let authors flip `approved=true` + rewrite `ai_summary` bypassing moderation. → WITH CHECK `approved=false` + BEFORE UPDATE trigger blocking `approved/ai_summary/raw_text` mutations from authenticated role.
+- **S-3 HIGH** — `subscriptions` INSERT policy accepted arbitrary `status`/`plan`. Authenticated user could insert `{status: 'active', plan: 'premium_annual'}` and self-grant premium bypassing Adapty. → WITH CHECK `status='free' AND plan='free'` + dropped UPDATE policy (only service_role can mutate).
+
+Migration: `supabase/migrations/20260529000001_security_fixes_r19.sql`.
+
+**Performance:**
+- **H1** AsyncStorage keystroke-rate writes during onboarding → 300ms trailing debounce in `lib/onboarding/store.tsx`.
+
+**Accessibility:**
+- **A11y P1** SerifHero gets `accessibilityRole="header"` — VoiceOver rotor surfaces every screen hero.
+
+**i18n leftover EN (5 fixed):**
+- DateTimePickerField + add-shift hardcoded `[Jan..Dec]` month array → `Intl.DateTimeFormat(i18n.locale, ...)`.
+- `schedule.tsx` cell_delete Alert leaked `error.message` → localised `cell_delete_failed_body` key + __DEV__ warn.
+- `auth/confirm.tsx` 2 leaks: GoTrue `error_description` + `exchangeCodeForSession` `error.message` → localised generic + __DEV__ warn.
+
+**Architecture quick wins (4 dead exports removed):**
+- `mockSocialProofStats`, `getMockTestimonials`, `mockTestimonials` (pre-Stage-6 artefacts, 0 callers)
+- `constants/tokens.ts` aggregate `tokens` const + default export (all consumers use named imports)
+- `lib/queries/plan.ts` `_events` placeholder + unused EVENTS import
+
+### R20 — 365-day stress
+
+Injected 365 days journal. Found **R20-1 layout bug**: 3-digit "365" wrapped to "36/5" inside narrow stat tile. Fixed with `numberOfLines={1}` + `adjustsFontSizeToFit` on HeroNumber. Verified live ✅.
+
+### R21 — design audit (deferred)
+
+Not run in this pass — agent-fleet token budget already consumed by R19+R20. Future round.
+
+### Deferred to next sprint
+- A11y: darken `inkGhost` (~2:1 fails WCAG AA), bare back chevrons, `AccessibilityInfo.announceForAccessibility`
+- Perf: H2/H3/H4 Home memoisation, M-series stories card memo, heatmap pre-styled dots
+- Security S-4: migrate Supabase auth tokens to `expo-secure-store`
+- i18n biggest gap: `lib/transition/generate.ts` hardcodes English titles/descriptions for every transition step → needs schema change (store `action_type` + `day_number` only, resolve t() at render)
+- Arch: standardise `Result<T,E>` discriminated union across stores; generate Supabase types with `supabase gen types`
+
 ## Deeper-pass rounds (R16-R18)
 
 After the R1-R15 backlog closed, ran 3 deeper-rigour passes per user request "глубже":
