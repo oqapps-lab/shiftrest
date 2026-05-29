@@ -316,6 +316,10 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         if (raw) {
           try {
             const parsed = JSON.parse(raw) as Partial<OnboardingState>;
+            // Migrate legacy profession id 'fire' → 'firefighter' (R3-2 fix)
+            if ((parsed as { profession?: string }).profession === 'fire') {
+              (parsed as { profession?: Profession }).profession = 'firefighter';
+            }
             setState({ ...INITIAL, ...parsed });
           } catch {
             // Corrupt cache — start fresh.
