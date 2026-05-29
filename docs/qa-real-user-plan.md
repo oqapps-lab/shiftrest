@@ -139,7 +139,7 @@ Per round before claiming "done":
 | R6 | TBD | Custom schedule / en | — | — |
 | R7 | TBD | Nurse / en / 30d history | — | — |
 | R8 | TBD | Nurse / en / PREMIUM | — | — |
-| R9 | TBD | de-DE visual walk | — | — |
+| R9 | 2026-05-29 | de-DE visual walk (partial 9/11 + 2 hot screens) | 1 real (R9-2 hero wrap), 1 false-positive (R9-1 scroll) | 7d3a61c | NOTE: Metro OOM-killed twice mid-walk; Mac running 6 sims. Walked: Welcome / Sign-in / Step1-9 (Profession/Schedule/CurrentShift/NextShift/Problem/Research/Chronotype/Caffeine/Melatonin). Verified live: QA-3 v3 + QA-4 fixes hold in DE. R9-2 fixed code-only, not re-visually-verified due to Metro outage. Remaining: Step10 Family (post-fix), Step11 Name, social-proof×2, Aha, Loading, Paywall, Notif, Today, Schedule, Plan, Profile, Settings — all need re-run when Mac frees up. |
 | R10 | TBD | iPhone 16e narrow | — | — |
 | R11 | TBD | iPhone 17 Pro Max wide | — | — |
 | R12 | TBD | Network failure modes | — | — |
