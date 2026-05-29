@@ -233,18 +233,6 @@ export const motion = {
   orbPulse: { duration: 4000 },
 } as const;
 
-// ─── EXPORT AGGREGATE ───────────────────────────────────────────────────────
-
-export const tokens = {
-  colors,
-  gradients,
-  radii,
-  spacing,
-  fonts,
-  typeScale,
-  tracking,
-  shadows,
-  motion,
-} as const;
-
-export default tokens;
+// R19/arch-1: removed `export const tokens` aggregate + `export default
+// tokens` — 0 callers, all consumers use named imports
+// `import { colors, spacing } from '../constants/tokens'`.

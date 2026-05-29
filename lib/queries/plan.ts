@@ -19,7 +19,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { DeviceEventEmitter } from 'react-native';
 import { supabase, isSupabaseConfigured } from '../supabase';
 import { useAuth } from '../auth/store';
-import { EVENTS } from './index';
 
 export interface PlanRecommendation {
   type: 'caffeine' | 'melatonin' | 'light' | 'nap' | 'sleep_window' | 'wind_down' | 'meal';
@@ -188,5 +187,5 @@ export function planHourAsFloat(iso: string | null | undefined): number | null {
   return Number(m[1]) + Number(m[2]) / 60;
 }
 
-// Mock placeholder for use on `EVENTS` import (not directly used here).
-export const _events = EVENTS;
+// R19/arch-1: removed `_events = EVENTS` placeholder — 0 callers,
+// leftover from an earlier refactor when this file re-exported EVENTS.
