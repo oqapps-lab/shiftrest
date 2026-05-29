@@ -51,7 +51,15 @@ export default function ShareStoryScreen() {
         [{ text: t('share_story.ok'), onPress: () => router.back() }],
       );
     } else {
-      Alert.alert(t('share_story.failed_title'), res.error);
+      // R12-1: map error codes to localized strings. Falls back to a
+      // generic "unknown" message for un-mapped Supabase errors so the
+      // user never sees raw error identifiers like "offline" / "too_long".
+      const localizedBody =
+        res.error === 'offline' ? t('share_story.error_offline')
+        : res.error === 'empty' ? t('share_story.error_empty')
+        : res.error === 'too_long' ? t('share_story.error_too_long')
+        : t('share_story.error_unknown');
+      Alert.alert(t('share_story.failed_title'), localizedBody);
     }
   };
 
