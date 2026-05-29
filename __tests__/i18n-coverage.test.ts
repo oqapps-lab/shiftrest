@@ -65,7 +65,7 @@ describe('i18n coverage', () => {
   //    you translated, and the other locales' tests will fail until
   //    you fix them — that's the point.
   const gapBaseline: Record<string, number> = {
-    'de-DE': 202,
+    'de-DE': 195,
     'es-ES': 228,
     'fr-FR': 228,
     'it-IT': 228,
