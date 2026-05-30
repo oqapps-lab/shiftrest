@@ -200,9 +200,10 @@ serve(async (req) => {
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL');
   const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+  const anonKey = Deno.env.get('SUPABASE_ANON_KEY');
   const openaiKey = Deno.env.get('OPENAI_API_KEY');
 
-  if (!supabaseUrl || !serviceRoleKey || !openaiKey) {
+  if (!supabaseUrl || !serviceRoleKey || !anonKey || !openaiKey) {
     return new Response(JSON.stringify({ error: 'missing_env' }), {
       status: 500,
       headers: { ...corsHeaders(), 'content-type': 'application/json' },
@@ -210,7 +211,11 @@ serve(async (req) => {
   }
 
   // Two clients: one as user (JWT) for identity check, one as service (admin) for writes.
-  const userClient = createClient(supabaseUrl, serviceRoleKey, {
+  // R19/SR-1 FIX: the user client MUST use the ANON key — a service_role
+  // key ignores RLS regardless of the JWT header, so the per-user identity
+  // guarantee on reads was fake. Anon key + JWT header enforces RLS as the
+  // authenticated user. (matches the summarize-story pattern.)
+  const userClient = createClient(supabaseUrl, anonKey, {
     global: { headers: { Authorization: `Bearer ${userJwt}` } },
     auth: { persistSession: false, autoRefreshToken: false },
   });
