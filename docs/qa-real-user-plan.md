@@ -143,6 +143,22 @@ Per round before claiming "done":
 
 **218/218 tests pass.** All commits live in `origin/main` ([latest 50](https://github.com/oqapps-lab/shiftrest/commits/main)).
 
+## R23 — second multi-agent wave (test / dependency / brand-copy / DB-query)
+
+Spawned 4 more agents (first attempt rate-limited; re-run succeeded). Applied **6 fixes + 16 new tests**:
+
+- **Copy P0** — `settings.subscription.restore_placeholder` showed "Adapty wiring lands in Stage 7. For now, this is a placeholder." (internal stage marker, no dev gate, renders in prod). Replaced with honest Apple-ID restore copy. *(Agent also flagged `demo_mode_text` / `signup_demo_sub` — verified FALSE POSITIVES, gated `__DEV__ && !configured`, never ship.)*
+- **Test HIGH** — `lib/auth/errors.ts` had 0 tests → `__tests__/auth-errors.test.ts` 9 cases incl R17/A4 regression lock (non-network TypeError must not classify as offline).
+- **Test HIGH** — `lib/community/store.tsx` had 0 tests → `__tests__/community-store.test.ts` 7 cases (empty / too_long / 1000-boundary / insert-error / unknown / success+edge-fn / trim).
+- **Security HIGH SR-1** — `supabase/functions/plan-generator` built its "user client" with the **service_role** key + JWT header. service_role ignores RLS regardless of header → per-user read guarantee was fake. Switched to `SUPABASE_ANON_KEY` (matches R19/S-1 summarize-story pattern). adminClient keeps service_role for gated writes.
+- **Perf I-1** — `community_stories` had no index covering the `locale` filter in `fetchApprovedStories`. Added partial `community_stories_locale_idx (locale, created_at DESC) WHERE approved=true`. Migration `20260530000001_perf_indexes_r19.sql`.
+- **Race R-1** — `plan-generator` non-atomic delete+insert: concurrent invokes for same (user_id, date) threw 23505 → 500. Now recovers by re-selecting the winner's row (cached:true) on unique-violation.
+
+### Deferred from R23 (need owner action / verification build)
+- **Dependency removal** — 4 verified-unused deps (`expo-image`, `expo-image-picker`, `@react-native-firebase/analytics`, `expo-linking`). NOT removed blind — Expo autolinking means a wrong removal breaks the next Codemagic native build silently. Run `npm uninstall …` + a verification build before shipping. `npm audit fix` clears the one `ws` moderate advisory.
+- **Race R-2** — `applyScheduleTemplate` read-then-write needs a UNIQUE partial index on `shifts(user_id,date) WHERE deleted_at IS NULL` + `.upsert()`. The index creation can FAIL if production already has duplicate shift rows → needs a dedupe pass first.
+- **N-1** — `useActiveTransitionPlan` two round-trips → embed `transition_steps(*)` join. Latency-only, low risk.
+
 ## R19-R21 — multi-agent adversarial audit (deeper-pass)
 
 Spawned 5 parallel agents (security, accessibility, performance, i18n leftover EN, architecture). All returned. Applied **13 fixes** + 11 new unit tests + 1 new SQL migration. Findings:
