@@ -73,6 +73,13 @@ export async function applyScheduleTemplate(
   }
 
   // Signed-in path: bulk insert into Supabase. Skip days already populated.
+  // R19/R-2 TODO: this SELECT-then-INSERT races against concurrent applies.
+  // Once migration 20260530000002_shifts_unique_index_r19.sql is APPLIED in
+  // prod (adds UNIQUE partial index on shifts(user_id,date) WHERE deleted_at
+  // IS NULL), switch the `.insert(inserts)` below to
+  // `.upsert(inserts, { onConflict: 'user_id,date', ignoreDuplicates: true })`
+  // and drop the read-filter. Do NOT switch before the index is live —
+  // onConflict with no matching index throws and breaks schedule-apply.
   const isoList = rows.map((r) => r.iso);
   const { data: existing } = await supabase
     .from('shifts')
