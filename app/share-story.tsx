@@ -67,7 +67,13 @@ export default function ShareStoryScreen() {
     <Screen scroll orbs="subtle" keyboardAvoiding>
       <Stack.Screen options={{ headerShown: false }} />
 
-      <Pressable onPress={() => router.back()} hitSlop={12} style={{ marginBottom: spacing.md }}>
+      <Pressable
+        onPress={() => router.back()}
+        hitSlop={12}
+        style={{ marginBottom: spacing.md }}
+        accessibilityRole="button"
+        accessibilityLabel={t('a11y.back')}
+      >
         <Glyph name="chevronLeft" size={22} color="ink" />
       </Pressable>
 

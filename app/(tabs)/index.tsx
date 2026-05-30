@@ -3,7 +3,7 @@
  * Eyebrow greeting + streak pill + Soft hero line + TimelineRing + ShiftBar + 3 next-event cards.
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, StyleSheet, Pressable, Alert } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -136,11 +136,13 @@ export default function Home() {
   const showMelatonin = onboarding.takesMelatonin !== false;
   // C2 — exclude caffeine event when user doesn't drink caffeine (cups=0)
   const showCaffeine = onboarding.caffeineCupsPerDay > 0;
-  const events = [
+  // R22/H3: memoise events array so unchanged hours don't churn 3 fresh
+  // children every render of the parent.
+  const events = useMemo(() => [
     ...(showCaffeine ? [{ ...EVENT_STYLES.caffeine, hour: caffeineHour }] : []),
     ...(showMelatonin ? [{ ...EVENT_STYLES.melatonin, hour: melatoninHour }] : []),
-    { ...EVENT_STYLES.sleep,     hour: sleepStartHour },
-  ];
+    { ...EVENT_STYLES.sleep, hour: sleepStartHour },
+  ], [showCaffeine, caffeineHour, showMelatonin, melatoninHour, sleepStartHour]);
 
   // Streak: real DB row when signed-in user has one, else 0.
   // Anon users see no pill (hidden when value===0).
@@ -173,16 +175,20 @@ export default function Home() {
   // day→night pivot. When detected, the CTA card hero becomes a SMART
   // suggestion ("Upcoming: night → day") rather than a generic prompt.
   const localShiftsMap = useLocalShifts();
-  const shiftByIsoForDetect = new Map<string, ShiftKind>();
-  for (const [iso, kind] of Object.entries(localShiftsMap)) {
-    if (kind === 'day' || kind === 'night' || kind === 'off') {
-      shiftByIsoForDetect.set(iso, kind);
-    }
-  }
+  // R22/H4: memoise the Map construction + 7-day scan so a journal
+  // emit or caffeine tap doesn't re-rebuild + re-scan when nothing
+  // shift-relevant changed.
   const todayIsoForDetect = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-  const detected = !livePlan?.transition_type
-    ? detectTransitionOpportunity(shiftByIsoForDetect, todayIsoForDetect)
-    : null;
+  const detected = useMemo(() => {
+    if (livePlan?.transition_type) return null;
+    const shiftByIsoForDetect = new Map<string, ShiftKind>();
+    for (const [iso, kind] of Object.entries(localShiftsMap)) {
+      if (kind === 'day' || kind === 'night' || kind === 'off') {
+        shiftByIsoForDetect.set(iso, kind);
+      }
+    }
+    return detectTransitionOpportunity(shiftByIsoForDetect, todayIsoForDetect);
+  }, [localShiftsMap, todayIsoForDetect, livePlan?.transition_type]);
 
   // Mirror Profile's fallback chain so the greeting never says "MARINA"
   // when the real signed-in user has a different display_name. Use just
