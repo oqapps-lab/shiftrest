@@ -88,7 +88,10 @@ export function getMockTransition() {
   };
 }
 
-export const mockTransition = getMockTransition();
+// R22/H2: removed `export const mockTransition` — it called t() at
+// module load (wrong locale on cold start) AND no consumer actually
+// uses it; transition.tsx + (tabs)/index.tsx both call getMockTransition()
+// at render time. Drop the const to avoid stale-i18n leak.
 
 export function getMockProfessions() {
   return [

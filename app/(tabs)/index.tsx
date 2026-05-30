@@ -150,8 +150,9 @@ export default function Home() {
 
   // Transition teaser: when a live plan exists pull its day-1 step counts;
   // else fall back to the mockTransition fixture so the demo still reads.
-  // Resolve at render time so locale changes between batches re-translate.
-  const mockTransition = getMockTransition();
+  // R22/H2: memoise — 12 t() lookups + 2 `new Date()` + weekday array fetch
+  // per render unless livePlan presence flips.
+  const mockTransition = useMemo(() => getMockTransition(), [livePlan]);
   const todayMock = mockTransition.days[0];
   const liveDay1Steps = livePlan?.steps.filter((s) => s.day_number === 1) ?? [];
   const liveDoneToday = liveDay1Steps.filter((s) => s.is_completed).length;

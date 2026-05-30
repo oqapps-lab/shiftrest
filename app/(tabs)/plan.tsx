@@ -2,7 +2,7 @@
  * S40 — Daily Sleep Plan. Hero timeline + 4 recommendation cards.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import {
   Screen,
@@ -194,22 +194,27 @@ export default function Plan() {
   );
 
   const liveRecs = livePlan?.metadata?.recommendations ?? null;
-  const baseRecs: UiRec[] = liveRecs && liveRecs.length > 0
-    ? liveRecs
-        .filter((r) => showMelatonin || r.type !== 'melatonin')
-        .filter((r) => showCaffeine || r.type !== 'caffeine')
-        .filter((r) => showLight || r.type !== 'light')
-        .map((r) => {
-          const effectiveLocked = r.locked && !isPremium;
-          return {
-            ...REC_STYLE[r.type],
-            eyebrow: effectiveLocked ? `${r.eyebrow} · ${t('plan.premium_suffix')}` : r.eyebrow,
-            hero: r.hero,
-            body: r.body,
-            locked: effectiveLocked,
-          };
-        })
-    : buildFallbackRecs(suggested, dayShiftKind, isPremium);
+  // R22/M1: memoise rec computation — was running ~25 t() lookups + 3
+  // filter passes + map on every render of Plan, including when only
+  // whyOpen toggles.
+  const baseRecs: UiRec[] = useMemo(() =>
+    liveRecs && liveRecs.length > 0
+      ? liveRecs
+          .filter((r) => showMelatonin || r.type !== 'melatonin')
+          .filter((r) => showCaffeine || r.type !== 'caffeine')
+          .filter((r) => showLight || r.type !== 'light')
+          .map((r) => {
+            const effectiveLocked = r.locked && !isPremium;
+            return {
+              ...REC_STYLE[r.type],
+              eyebrow: effectiveLocked ? `${r.eyebrow} · ${t('plan.premium_suffix')}` : r.eyebrow,
+              hero: r.hero,
+              body: r.body,
+              locked: effectiveLocked,
+            };
+          })
+      : buildFallbackRecs(suggested, dayShiftKind, isPremium),
+    [liveRecs, suggested, dayShiftKind, isPremium, showMelatonin, showCaffeine, showLight]);
   // Strip cards from fallback list when user opted out of that substance —
   // buildFallbackRecs always returns the full 4 for the demo "looks rich"
   // effect; honesty wins once user has set their prefs.
