@@ -420,6 +420,25 @@ serve(async (req) => {
     .maybeSingle();
 
   if (insertErr) {
+    // R19/R-1: delete+insert isn't atomic. Two concurrent invokes for the
+    // same (user_id, date) both miss cache and both insert → the partial
+    // unique index (WHERE deleted_at IS NULL) makes the loser throw 23505.
+    // Recover by returning the row the winner just wrote instead of 500.
+    if (insertErr.code === '23505') {
+      const { data: winner } = await adminClient
+        .from('sleep_plans')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('date', date)
+        .is('deleted_at', null)
+        .maybeSingle();
+      if (winner) {
+        return new Response(
+          JSON.stringify({ plan: winner, cached: true, generated_at: winner.created_at }),
+          { headers: { ...corsHeaders(), 'content-type': 'application/json' } },
+        );
+      }
+    }
     return new Response(
       JSON.stringify({ error: 'insert_failed', details: insertErr.message }),
       { status: 500, headers: { ...corsHeaders(), 'content-type': 'application/json' } },
