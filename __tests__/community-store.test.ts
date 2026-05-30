@@ -7,7 +7,7 @@
  */
 
 const mockSingle = jest.fn();
-const mockInvoke = jest.fn(() => ({ catch: () => undefined }));
+const mockInvoke = jest.fn((..._args: unknown[]) => ({ catch: () => undefined }));
 
 jest.mock('../lib/supabase', () => ({
   isSupabaseConfigured: true,
