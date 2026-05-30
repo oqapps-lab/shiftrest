@@ -860,7 +860,7 @@ const en = {
       auto_renew_notice: "Subscriptions auto-renew until cancelled. Cancel any time from your App Store account.",
       restore_title: 'Restore purchases',
       restore_link: 'Restore purchases',
-      restore_placeholder: 'Adapty wiring lands in Stage 7. For now, this is a placeholder.',
+      restore_placeholder: 'Purchases restore automatically when you sign in with the same Apple ID you bought with. Reopen the plan screen to restore manually.',
       resubscribe: 'Resubscribe',
       store_unavailable: 'Could not open App Store',
       bullets: {
