@@ -181,11 +181,23 @@ Injected 365 days journal. Found **R20-1 layout bug**: 3-digit "365" wrapped to 
 Not run in this pass — agent-fleet token budget already consumed by R19+R20. Future round.
 
 ### Deferred to next sprint
-- A11y: darken `inkGhost` (~2:1 fails WCAG AA), bare back chevrons, `AccessibilityInfo.announceForAccessibility`
-- Perf: H2/H3/H4 Home memoisation, M-series stories card memo, heatmap pre-styled dots
+- A11y: `AccessibilityInfo.announceForAccessibility` for journal/caffeine/Adapt-Score updates
+- Perf: StoriesCoverFlow card memo (M2/M3), TimelineRing memo (M7), AsyncStorage selector for journal hooks (M6)
 - Security S-4: migrate Supabase auth tokens to `expo-secure-store`
 - i18n biggest gap: `lib/transition/generate.ts` hardcodes English titles/descriptions for every transition step → needs schema change (store `action_type` + `day_number` only, resolve t() at render)
 - Arch: standardise `Result<T,E>` discriminated union across stores; generate Supabase types with `supabase gen types`
+
+## R22 — deferred quick wins (7 shipped)
+
+Knocked down deferred backlog from R19 multi-agent audit:
+
+- **A11y P1 back-chevrons** — `share-story.tsx:70`, `tips.tsx:67` bare Pressables → added `accessibilityRole="button"` + `accessibilityLabel={t('a11y.back')}` (key already existed).
+- **A11y P1 WCAG inkGhost** — `constants/tokens.ts` darkened `#B3B2AD` (~1.9:1 fails AA even for large text) → `#8E8D88` (~3.5:1 passes AA large). Used as text color on Schedule past dates; borders/backgrounds unaffected by the change. Verified live on Profile post-fix.
+- **Perf H3** — `app/(tabs)/index.tsx` events array literal rebuilt every render → `useMemo` on 5 hour/show deps.
+- **Perf H4** — `app/(tabs)/index.tsx` shiftByIsoForDetect Map + 7-day scan rebuilt every render → `useMemo` on [localShiftsMap, todayIsoForDetect, livePlan.transition_type].
+- **Perf H2** — `mock/user.ts` `mockTransition` module-level const ran t() at import time (stale locale on cold start) AND had 0 consumers → deleted. `app/(tabs)/index.tsx` `getMockTransition()` was running every render (12 t() + 2 new Date()) → wrapped in `useMemo([livePlan])`.
+- **Perf M1** — `app/(tabs)/plan.tsx` rec computation (~25 t() + 3 filter passes + map) ran on every render incl whyOpen toggle → `useMemo` on 7 actual deps.
+- **Perf M5** — `app/history.tsx` heatmap created fresh `{backgroundColor}` object literal per cell every render. With 95+ cells per R15 stress, churned 100s of allocations → hoisted to module-level `DOT_STYLE_BY_RATING` lookup table.
 
 ## Deeper-pass rounds (R16-R18)
 
