@@ -46,7 +46,11 @@ export const colors = {
   ink: '#32332F',
   inkSubtle: '#5F5F5B',
   inkMuted: '#6B6B65',
-  inkGhost: '#B3B2AD',
+  // R22/A11y: was #B3B2AD (~1.9:1 contrast on surface) — failed WCAG even
+  // for large text. Tightened to #8E8D88 (~3.5:1) so the "past dates" text
+  // on Schedule + future text uses are AA-compliant for large text. Still
+  // works as a subtle border tone — borders aren't bound by text contrast.
+  inkGhost: '#8E8D88',
 
   // Utility
   transparent: 'transparent',
