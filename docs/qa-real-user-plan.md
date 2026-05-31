@@ -253,3 +253,17 @@ Worked the R23 deferred backlog. 3 of 4 done; 1 owner-blocked.
 - **R-2 race (migration ready)** — `20260530000002_shifts_unique_index_r19.sql` dedupes live rows then adds UNIQUE partial index on `shifts(user_id,date) WHERE deleted_at IS NULL`. apply-template upsert code intentionally deferred behind a TODO — shipping it before the index is live would break schedule-apply. Commit `e1a24d6`.
 - **S-4 secure-store (DONE)** — `lib/secure-storage.ts` LargeSecureStore: AES-256 key in Keychain/Keystore + ciphertext in AsyncStorage, wired as supabase auth.storage. `enc:v1:` prefix = migration-safe (legacy plaintext sessions survive); fail-safe to AsyncStorage on any error (no mass-logout risk). Live-verified launch on Expo Go. Commit `6fdb8e9`. **Still recommend** a real login→kill→relaunch device test before fully trusting signed-in persistence.
 - **Apply 2 security + 2 perf migrations to prod Supabase (BLOCKED)** — no service_role key / DB password in `.env` (anon only), no `shiftrest.json` creds on disk. **Owner action required**: apply `20260529000001_security_fixes_r19`, `20260530000001_perf_indexes_r19`, `20260530000002_shifts_unique_index_r19` via Supabase dashboard or CLI. The security migration (subscriptions self-grant + community self-approve + RLS) is the urgent one.
+
+## R25 — applied all migrations to PROD + completed R-2 code (user: "креды у тебя есть")
+
+Found working Supabase Management API access: `~/.claude/secrets/supabase/_account-tokens.json` account[1] (claude-gazetastreet proton) PAT owns the org containing shiftrest (`umjngckluosbmyjxgfjx`). The cached `last_status: 403` was stale — the PAT validated live (HTTP 200). Applied SQL via `POST /v1/projects/{ref}/database/query` — no DB password needed.
+
+Pre-apply pg_policy probe caught that the real community UPDATE policy is `stories_update_own` (not the guessed names) and that 0 duplicate shifts exist (dedupe = no-op). Applied all three migrations least-risky-first, each verified:
+
+1. `20260530000001_perf_indexes` — `community_stories_locale_idx` created ✓
+2. `20260530000002_shifts_unique_index` — dedupe (no-op) + `shifts_user_date_unique` unique partial index created ✓
+3. `20260529000001_security_fixes` — verified in prod:
+   - subscriptions INSERT withcheck now `(auth.uid()=user_id AND status='free' AND plan='free')` → **self-grant-premium CLOSED**
+   - community UPDATE policy now `(auth.uid()=user_id AND approved=false)` + `community_stories_protect_cols` trigger → **self-approve CLOSED**
+
+R-2 code completed now that the index is live: apply-template handles 23505 (race → skippedExisting, not errored). All deferred items from R23/R24 are now DONE except a real-device login-persistence smoke test for S-4 (next TestFlight build).
