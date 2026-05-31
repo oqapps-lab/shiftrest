@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { View, Pressable, StyleSheet, Linking, Alert } from 'react-native';
+import { View, Pressable, StyleSheet, Linking } from 'react-native';
 import { router } from 'expo-router';
 import {
   Screen,
@@ -15,6 +15,7 @@ import {
   GlassCard,
   Glyph,
   PillCTA,
+  showAppDialog,
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
 import { formatTrialRemaining } from '../../lib/derive';
@@ -106,7 +107,10 @@ export default function Subscription() {
             label={t('settings_screens.subscription.manage_store')}
             onPress={() =>
               Linking.openURL('https://apps.apple.com/account/subscriptions').catch(
-                () => Alert.alert(t('settings_screens.subscription.store_unavailable')),
+                () => showAppDialog({
+                  title: t('settings_screens.subscription.store_unavailable'),
+                  actions: [{ label: t('a11y.close'), style: 'cancel' }],
+                }),
               )
             }
           />
@@ -173,10 +177,11 @@ export default function Subscription() {
       <View style={{ marginTop: spacing.huge }}>
         <Pressable
           onPress={() =>
-            Alert.alert(
-              t('settings_screens.subscription.restore_title'),
-              t('settings_screens.subscription.restore_placeholder'),
-            )
+            showAppDialog({
+              title: t('settings_screens.subscription.restore_title'),
+              message: t('settings_screens.subscription.restore_placeholder'),
+              actions: [{ label: t('a11y.close'), style: 'cancel' }],
+            })
           }
           hitSlop={12}
           style={styles.linkRow}

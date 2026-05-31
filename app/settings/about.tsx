@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { View, Pressable, StyleSheet, Linking, Alert } from 'react-native';
+import { View, Pressable, StyleSheet, Linking } from 'react-native';
 import Constants from 'expo-constants';
 import {
   Screen,
@@ -14,6 +14,7 @@ import {
   Text,
   GlassCard,
   Glyph,
+  showAppDialog,
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
 import { safeBack } from '../../lib/nav';
@@ -30,7 +31,11 @@ interface Row {
 
 function openExternal(url: string) {
   Linking.openURL(url).catch(() =>
-    Alert.alert(t('settings_screens.about.link_open_error'), t('settings_screens.about.link_copy_hint', { url })),
+    showAppDialog({
+      title: t('settings_screens.about.link_open_error'),
+      message: t('settings_screens.about.link_copy_hint', { url }),
+      actions: [{ label: t('a11y.close'), style: 'cancel' }],
+    }),
   );
 }
 

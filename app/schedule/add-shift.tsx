@@ -8,7 +8,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, Pressable, StyleSheet, Alert } from 'react-native';
+import { View, Pressable, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import {
@@ -23,6 +23,7 @@ import {
   SegmentedControl,
   DateTimePickerField,
   type SegmentOption,
+  showAppDialog,
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
 import { safeDismiss } from '../../lib/nav';
@@ -144,9 +145,11 @@ export default function AddShift() {
       const isoDate = localDateKey(startsAt);
       setLocalShift(isoDate, kind);
       emitChange(EVENTS.shiftsChanged);
-      Alert.alert(t('add_shift.saved_title'), summary, [
-        { text: t('add_shift.ok'), onPress: () => safeDismiss('/(tabs)/schedule') },
-      ]);
+      showAppDialog({
+        title: t('add_shift.saved_title'),
+        message: summary,
+        actions: [{ label: t('add_shift.ok'), onPress: () => safeDismiss('/(tabs)/schedule') }],
+      });
       return;
     }
 
@@ -166,17 +169,19 @@ export default function AddShift() {
     if (error) {
       // R14-4: was leaking Supabase error.message into Alert body.
       if (__DEV__) console.warn('[add-shift]', error);
-      Alert.alert(
-        t('add_shift.save_failed_title'),
-        t('add_shift.save_failed_body'),
-        [{ text: t('add_shift.ok') }],
-      );
+      showAppDialog({
+        title: t('add_shift.save_failed_title'),
+        message: t('add_shift.save_failed_body'),
+        actions: [{ label: t('add_shift.ok') }],
+      });
       return;
     }
     emitChange(EVENTS.shiftsChanged);
-    Alert.alert(t('add_shift.saved_title'), summary, [
-      { text: t('add_shift.ok'), onPress: () => safeDismiss('/(tabs)/schedule') },
-    ]);
+    showAppDialog({
+      title: t('add_shift.saved_title'),
+      message: summary,
+      actions: [{ label: t('add_shift.ok'), onPress: () => safeDismiss('/(tabs)/schedule') }],
+    });
   };
 
   return (

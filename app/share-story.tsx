@@ -8,7 +8,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Alert, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, StyleSheet, Pressable, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { router, Stack } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import {
@@ -19,6 +19,7 @@ import {
   PillCTA,
   GlassCard,
   Glyph,
+  showAppDialog,
 } from '../components/ui';
 import { colors, radii, spacing } from '../constants/tokens';
 import { useAuth } from '../lib/auth/store';
@@ -37,7 +38,11 @@ export default function ShareStoryScreen() {
 
   const submit = async () => {
     if (!user?.id) {
-      Alert.alert(t('share_story.signin_title'), t('share_story.signin_body'));
+      showAppDialog({
+        title: t('share_story.signin_title'),
+        message: t('share_story.signin_body'),
+        actions: [{ label: t('share_story.ok'), style: 'cancel' }],
+      });
       return;
     }
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -45,11 +50,11 @@ export default function ShareStoryScreen() {
     const res = await submitStory(text, state.profession, i18n.locale, user.id);
     setSubmitting(false);
     if (res.ok) {
-      Alert.alert(
-        t('share_story.thanks_title'),
-        t('share_story.thanks_body'),
-        [{ text: t('share_story.ok'), onPress: () => router.back() }],
-      );
+      showAppDialog({
+        title: t('share_story.thanks_title'),
+        message: t('share_story.thanks_body'),
+        actions: [{ label: t('share_story.ok'), onPress: () => router.back() }],
+      });
     } else {
       // R12-1: map error codes to localized strings. Falls back to a
       // generic "unknown" message for un-mapped Supabase errors so the
@@ -59,7 +64,11 @@ export default function ShareStoryScreen() {
         : res.error === 'empty' ? t('share_story.error_empty')
         : res.error === 'too_long' ? t('share_story.error_too_long')
         : t('share_story.error_unknown');
-      Alert.alert(t('share_story.failed_title'), localizedBody);
+      showAppDialog({
+        title: t('share_story.failed_title'),
+        message: localizedBody,
+        actions: [{ label: t('share_story.ok'), style: 'cancel' }],
+      });
     }
   };
 

@@ -9,7 +9,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Alert, ScrollView } from 'react-native';
+import { View, StyleSheet, Pressable, ScrollView } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import * as Haptics from 'expo-haptics';
@@ -21,6 +21,7 @@ import {
   Text,
   Glyph,
   PillCTA,
+  showAppDialog,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
 import { safeDismiss } from '../../lib/nav';
@@ -57,7 +58,11 @@ export default function CalendarImport() {
       // R12-4: was dumping raw parser exception into Alert body.
       // Generic localised body — actual error logged for dev (LogBox).
       if (__DEV__) console.warn('[calendar-import]', e);
-      Alert.alert(t('calendar_import.parse_failed_title'), t('calendar_import.parse_failed_body'));
+      showAppDialog({
+        title: t('calendar_import.parse_failed_title'),
+        message: t('calendar_import.parse_failed_body'),
+        actions: [{ label: t('calendar_import.ok'), style: 'cancel' }],
+      });
     } finally {
       setPicking(false);
     }
@@ -76,11 +81,11 @@ export default function CalendarImport() {
       }
       emitChange(EVENTS.shiftsChanged);
       setImporting(false);
-      Alert.alert(
-        t('calendar_import.done_title'),
-        t('calendar_import.done_body', { count: events.length }),
-        [{ text: t('calendar_import.ok'), onPress: () => safeDismiss('/(tabs)/schedule') }],
-      );
+      showAppDialog({
+        title: t('calendar_import.done_title'),
+        message: t('calendar_import.done_body', { count: events.length }),
+        actions: [{ label: t('calendar_import.ok'), onPress: () => safeDismiss('/(tabs)/schedule') }],
+      });
       return;
     }
 
@@ -121,18 +126,19 @@ export default function CalendarImport() {
     if (error) {
       // R14-3: was leaking Supabase error.message into Alert body.
       if (__DEV__) console.warn('[calendar-import]', error);
-      Alert.alert(
-        t('calendar_import.import_failed_title'),
-        t('calendar_import.import_failed_body'),
-      );
+      showAppDialog({
+        title: t('calendar_import.import_failed_title'),
+        message: t('calendar_import.import_failed_body'),
+        actions: [{ label: t('calendar_import.ok'), style: 'cancel' }],
+      });
       return;
     }
     emitChange(EVENTS.shiftsChanged);
-    Alert.alert(
-      t('calendar_import.done_title'),
-      t('calendar_import.done_body', { count: inserts.length }),
-      [{ text: t('calendar_import.ok'), onPress: () => safeDismiss('/(tabs)/schedule') }],
-    );
+    showAppDialog({
+      title: t('calendar_import.done_title'),
+      message: t('calendar_import.done_body', { count: inserts.length }),
+      actions: [{ label: t('calendar_import.ok'), onPress: () => safeDismiss('/(tabs)/schedule') }],
+    });
   };
 
   return (

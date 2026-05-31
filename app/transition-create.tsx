@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Alert } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import {
@@ -20,6 +20,7 @@ import {
   SegmentedControl,
   DateTimePickerField,
   type SegmentOption,
+  showAppDialog,
 } from '../components/ui';
 import { spacing, colors } from '../constants/tokens';
 import { safeDismiss } from '../lib/nav';
@@ -86,12 +87,16 @@ export default function TransitionCreate() {
         })),
       });
       emitChange(EVENTS.plansChanged);
-      Alert.alert(t('transition_create.saved_title'), t('transition_create.saved_body'), [
-        { text: t('transition_create.ok'), onPress: () => {
-          safeDismiss('/(tabs)');
-          setTimeout(() => router.push('/transition'), 200);
-        }},
-      ]);
+      showAppDialog({
+        title: t('transition_create.saved_title'),
+        message: t('transition_create.saved_body'),
+        actions: [
+          { label: t('transition_create.ok'), onPress: () => {
+            safeDismiss('/(tabs)');
+            setTimeout(() => router.push('/transition'), 200);
+          }},
+        ],
+      });
       return;
     }
 
@@ -131,12 +136,16 @@ export default function TransitionCreate() {
       if (stepErr) throw stepErr;
 
       emitChange(EVENTS.plansChanged);
-      Alert.alert(t('transition_create.saved_title'), t('transition_create.saved_body'), [
-        { text: t('transition_create.ok'), onPress: () => {
-          safeDismiss('/(tabs)');
-          setTimeout(() => router.push('/transition'), 200);
-        }},
-      ]);
+      showAppDialog({
+        title: t('transition_create.saved_title'),
+        message: t('transition_create.saved_body'),
+        actions: [
+          { label: t('transition_create.ok'), onPress: () => {
+            safeDismiss('/(tabs)');
+            setTimeout(() => router.push('/transition'), 200);
+          }},
+        ],
+      });
     } catch (e: unknown) {
       // R12-2: was showing raw e.message (often English Supabase code) —
       // localise by error-shape. Network failures get a friendly retry
@@ -146,7 +155,11 @@ export default function TransitionCreate() {
       const body = isNetwork
         ? t('transition_create.failed_offline')
         : t('transition_create.failed_unknown');
-      Alert.alert(t('transition_create.failed_title'), body, [{ text: t('transition_create.ok') }]);
+      showAppDialog({
+        title: t('transition_create.failed_title'),
+        message: body,
+        actions: [{ label: t('transition_create.ok') }],
+      });
     } finally {
       setSubmitting(false);
     }

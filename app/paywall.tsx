@@ -13,7 +13,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { View, Pressable, StyleSheet, Linking, Alert } from 'react-native';
+import { View, Pressable, StyleSheet, Linking } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import {
@@ -26,6 +26,7 @@ import {
   Text,
   Glyph,
   ProgressDots,
+  showAppDialog,
 } from '../components/ui';
 import { colors, spacing, radii } from '../constants/tokens';
 import { firstName } from '../lib/derive';
@@ -130,10 +131,11 @@ export default function Paywall() {
     try {
       const profile = await restorePurchases();
       const hasPremium = !!profile?.accessLevels?.premium?.isActive;
-      Alert.alert(
-        t('paywall.restore_title'),
-        hasPremium ? t('paywall.restore_success') : t('paywall.restore_empty'),
-      );
+      showAppDialog({
+        title: t('paywall.restore_title'),
+        message: hasPremium ? t('paywall.restore_success') : t('paywall.restore_empty'),
+        actions: [{ label: t('a11y.close'), style: 'cancel' }],
+      });
       if (hasPremium) {
         emitChange(EVENTS.subscriptionChanged);
         // BN3: paywall may be the root screen (onboarding deeplink, push
@@ -147,7 +149,11 @@ export default function Paywall() {
         }
       }
     } catch {
-      Alert.alert(t('paywall.restore_title'), t('paywall.restore_failed'));
+      showAppDialog({
+        title: t('paywall.restore_title'),
+        message: t('paywall.restore_failed'),
+        actions: [{ label: t('a11y.close'), style: 'cancel' }],
+      });
     } finally {
       setRestoring(false);
     }
@@ -189,7 +195,11 @@ export default function Paywall() {
       } catch (err) {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
         logEvent('purchase_failed', { plan: planValue, reason: String(err) });
-        Alert.alert(t('paywall.restore_title'), t('paywall.restore_failed'));
+        showAppDialog({
+          title: t('paywall.restore_title'),
+          message: t('paywall.restore_failed'),
+          actions: [{ label: t('a11y.close'), style: 'cancel' }],
+        });
       } finally {
         setSubmitting(false);
       }

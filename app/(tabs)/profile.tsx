@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, Pressable, Alert } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import { router } from 'expo-router';
 import {
   Screen,
@@ -13,6 +13,7 @@ import {
   HeroNumber,
   Text,
   Glyph,
+  showAppDialog,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockProfessions } from '../../mock/user';
@@ -113,24 +114,29 @@ export default function Profile() {
         label: t('profile.rows.account'),
         subtitle: user.email ?? t('profile.signed_in'),
         onPress: () => {
-          Alert.alert(t('profile.signout.title'), t('profile.signout.body'), [
-            { text: t('profile.signout.cancel'), style: 'cancel' },
-            {
-              text: t('profile.signout.confirm'),
-              style: 'destructive',
-              onPress: async () => {
-                // R14-1: surface signOut errors (e.g. offline)
-                // instead of silently no-op'ing.
-                const res = await signOut();
-                if (res?.error) {
-                  Alert.alert(
-                    t('profile.signout.failed_title'),
-                    t('profile.signout.failed_body'),
-                  );
-                }
+          showAppDialog({
+            title: t('profile.signout.title'),
+            message: t('profile.signout.body'),
+            actions: [
+              { label: t('profile.signout.cancel'), style: 'cancel' },
+              {
+                label: t('profile.signout.confirm'),
+                style: 'destructive',
+                onPress: async () => {
+                  // R14-1: surface signOut errors (e.g. offline)
+                  // instead of silently no-op'ing.
+                  const res = await signOut();
+                  if (res?.error) {
+                    showAppDialog({
+                      title: t('profile.signout.failed_title'),
+                      message: t('profile.signout.failed_body'),
+                      actions: [{ label: t('profile.signout.cancel'), style: 'cancel' }],
+                    });
+                  }
+                },
               },
-            },
-          ]);
+            ],
+          });
         },
       }
     : {
