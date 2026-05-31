@@ -22,8 +22,9 @@ import { t } from '../../lib/i18n';
 const getMessages = (): string[] => t('onboarding_screens.loading_steps') as unknown as string[];
 const MESSAGES_LEN = 4;
 const TICK_MS = 40; // 25fps counter
-const TOTAL_MS = 4200; // 4 messages × ~1s + ~200ms tail
-const STEP_MS = TOTAL_MS / MESSAGES_LEN;
+// A4: slower so the user can actually read what's being computed — owner
+// said it felt too fast / unclear. ~6.4s across 4 steps (~1.6s each).
+const TOTAL_MS = 6400;
 
 export default function Loading() {
   const [pct, setPct] = useState(0);
@@ -52,13 +53,20 @@ export default function Loading() {
         <Eyebrow>{t('onboarding_screens.loading.eyebrow')}</Eyebrow>
 
         <View style={styles.orbWrap}>
-          <BreathingOrb size={300} pulse />
+          <BreathingOrb size={320} pulse shimmer />
           <View style={styles.pctOverlay} pointerEvents="none">
-            <HeroNumber value={`${pct}%`} size="lg" align="center" />
+            <HeroNumber value={`${pct}%`} size="xl" align="center" />
           </View>
         </View>
 
-        <Text variant="bodyLg" color="inkSubtle" align="center" style={{ marginTop: spacing.xl }}>
+        <Text
+          variant="titleMd"
+          family="display"
+          weight="medium"
+          color="ink"
+          align="center"
+          style={{ marginTop: spacing.xxl }}
+        >
           {currentMessage}
         </Text>
       </View>
