@@ -31,3 +31,5 @@ export { Stepper } from './Stepper';
 export { OptionCard } from './OptionCard';
 export { DateTimePickerField } from './DateTimePickerField';
 export { PlanUpdatedBanner } from './PlanUpdatedBanner';
+export { AppDialogHost, showAppDialog } from './AppDialog';
+export type { DialogOptions, DialogAction } from './AppDialog';

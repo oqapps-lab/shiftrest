@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useMemo } from 'react';
-import { View, StyleSheet, Pressable, Alert } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -25,6 +25,7 @@ import {
   HeroNumber,
   SegmentedControl,
   PlanUpdatedBanner,
+  showAppDialog,
   type SegmentOption,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
@@ -362,14 +363,14 @@ export default function Home() {
                   onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                     const cups = (caffLog?.cups ?? 0) + 1;
-                    Alert.alert(
-                      t('today.caffeine_confirm_title'),
-                      t('today.caffeine_confirm_body', { cups }),
-                      [
-                        { text: t('today.caffeine_cancel'), style: 'cancel' },
-                        { text: t('today.caffeine_log_cta'), onPress: () => logCaffeine() },
+                    showAppDialog({
+                      title: t('today.caffeine_confirm_title'),
+                      message: t('today.caffeine_confirm_body', { cups }),
+                      actions: [
+                        { label: t('today.caffeine_cancel'), style: 'cancel' },
+                        { label: t('today.caffeine_log_cta'), onPress: () => logCaffeine() },
                       ],
-                    );
+                    });
                   }}
                   accessibilityRole="button"
                   accessibilityLabel={t('today.log_caffeine_a11y')}

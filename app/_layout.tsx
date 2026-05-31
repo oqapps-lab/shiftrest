@@ -16,6 +16,7 @@ import { View, LogBox, Platform } from 'react-native';
 // other network errors still surface.
 import { useAppFonts } from '../hooks/useAppFonts';
 import { colors } from '../constants/tokens';
+import { AppDialogHost } from '../components/ui';
 import { AuthProvider } from '../lib/auth/store';
 import { OnboardingProvider } from '../lib/onboarding/store';
 import { ensureAdaptyActivated } from '../lib/adapty';
@@ -88,6 +89,8 @@ export default function RootLayout() {
             <Stack.Screen name="history" />
             <Stack.Screen name="paywall" options={{ presentation: 'pageSheet' }} />
           </Stack>
+          {/* A3: branded replacement for stock iOS Alert — one host, app-wide */}
+          <AppDialogHost />
           </OnboardingProvider>
         </AuthProvider>
       </SafeAreaProvider>
