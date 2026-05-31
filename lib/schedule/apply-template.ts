@@ -73,13 +73,10 @@ export async function applyScheduleTemplate(
   }
 
   // Signed-in path: bulk insert into Supabase. Skip days already populated.
-  // R19/R-2 TODO: this SELECT-then-INSERT races against concurrent applies.
-  // Once migration 20260530000002_shifts_unique_index_r19.sql is APPLIED in
-  // prod (adds UNIQUE partial index on shifts(user_id,date) WHERE deleted_at
-  // IS NULL), switch the `.insert(inserts)` below to
-  // `.upsert(inserts, { onConflict: 'user_id,date', ignoreDuplicates: true })`
-  // and drop the read-filter. Do NOT switch before the index is live —
-  // onConflict with no matching index throws and breaks schedule-apply.
+  // R19/R-2: the shifts_user_date_unique partial index is now LIVE in prod
+  // (migration 20260530000002), so a concurrent-apply race can no longer
+  // create duplicate rows — it surfaces as a 23505 on insert, handled below
+  // as "skipped". The read-filter stays for the normal skippedExisting count.
   const isoList = rows.map((r) => r.iso);
   const { data: existing } = await supabase
     .from('shifts')
@@ -127,6 +124,13 @@ export async function applyScheduleTemplate(
 
   const { error: insertErr } = await supabase.from('shifts').insert(inserts);
   if (insertErr) {
+    // R-2: the shifts_user_date_unique partial index (live in prod) rejects
+    // a row that a concurrent apply committed in the SELECT→INSERT window.
+    // That's a 23505 unique-violation — the data already exists, so report
+    // it as skipped rather than a hard error. Any other error is real.
+    if ((insertErr as { code?: string }).code === '23505') {
+      return { inserted: 0, skippedExisting: rows.length, errored: 0 };
+    }
     return { inserted: 0, skippedExisting: 0, errored: inserts.length };
   }
   return {
