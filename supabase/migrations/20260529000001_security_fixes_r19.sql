@@ -40,6 +40,9 @@ DROP POLICY IF EXISTS "Users can update own subscription" ON public.subscription
 --   - only `reactions` can be changed by the author; `approved` + `ai_summary`
 --     are owned by the moderator workflow / Edge Function (service_role).
 
+-- Real policy name in prod is `stories_update_own` (verified via pg_policy);
+-- the two below are defensive no-ops for any earlier-named variant.
+DROP POLICY IF EXISTS "stories_update_own" ON public.community_stories;
 DROP POLICY IF EXISTS "Users can update own story" ON public.community_stories;
 DROP POLICY IF EXISTS "Users can update own community_stories" ON public.community_stories;
 
