@@ -109,5 +109,12 @@ Sim: `AF4951D7-668C-46F6-8FA1-0C564F0B7765` (iPhone 17 Pro) · Metro 8081.
   fixes (A1 especially is invisible until rebuilt).
 
 ## Execution log
-(updated as each item lands)
-- _pending start_
+- **A1** ✅ verified step-3 cards render in main (07:00/19:00); owner bug = stale TestFlight build → needs rebuild.
+- **A2** ✅ `fix(A2)` — unsupported device locale (ru/kz/…) now forces English; live-verified on Kazakh device.
+- **A3** ✅ `feat(A3)` ×2 — built branded `AppDialog` + `showAppDialog`; replaced ALL 29 stock iOS `Alert.alert` sites; live-verified caffeine confirm sheet.
+- **A4** ✅ `feat(A4)` — loading orb shimmer + bigger/slower stepped copy; live-verified 40%→80% step-through.
+- **B1** ✅ `feat(B1)` — Plan date stepper (any date -7..+14); live-verified +2-day night shift shows correct night plan.
+- **B2** ⏳ richer per-day plan detail + content — pending.
+- **B3** ⏳ Community Stories prominent + avatar + public feed — pending (large: needs expo-image-picker re-add, Supabase storage bucket, feed redesign).
+- **B4** ⏳ Shift Transition finish/remove — pending.
+- **Rebuild** ⏳ TestFlight build after B-items so the device reflects all fixes.
