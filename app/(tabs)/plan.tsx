@@ -29,7 +29,12 @@ import { useSubscription } from '../../lib/queries';
 import { useOnboarding, chronotypeBucket, computeChronotypeScore } from '../../lib/onboarding/store';
 import { useLocalShifts } from '../../lib/local-shifts/store';
 import type { GlyphName } from '../../components/ui';
-import { t } from '../../lib/i18n';
+import i18n, { t } from '../../lib/i18n';
+
+// B1: clamp how far the plan stepper can travel (1 week back → 2 weeks
+// ahead) so a user can reach a shift they set several days out.
+const MIN_OFFSET = -7;
+const MAX_OFFSET = 14;
 import { WhyTheseTimesSheet } from '../../components/plan/WhyTheseTimesSheet';
 
 interface UiRec {
@@ -155,7 +160,10 @@ const REC_STYLE: Record<PlanRecommendation['type'], { glyph: GlyphName; tintBg: 
 };
 
 export default function Plan() {
-  const [day, setDay] = useState(1);
+  // B1: offset in days from today (0=today, -1=yesterday, +N=future). Was a
+  // fixed 3-segment Y/T/T pager; now a date stepper so any scheduled date's
+  // plan is reachable — owner asked "where's the plan for a shift in 2 days".
+  const [offset, setOffset] = useState(0);
   const { data: subscription } = useSubscription();
   // R8-1: Melatonin card was hardcoded locked. Unlock for paid tiers.
   const isPremium =
@@ -163,22 +171,18 @@ export default function Plan() {
     subscription?.status === 'trial' ||
     subscription?.status === 'grace_period';
   const [whyOpen, setWhyOpen] = useState(false);
-  const pagerLabels = [t('plan.yesterday'), `${t('plan.today')} · ${formatDayMonth()}`, t('plan.tomorrow')];
   const { data: livePlan } = useGeneratedPlan();
   const { state: onboarding } = useOnboarding();
 
-  // K2: per-day shift kind. Read shifts for the date offset by (day-1),
-  // so Yesterday/Today/Tomorrow all surface their own timings instead of
-  // just relabelling the same numbers. Falls back to currentShift if no
-  // real shift recorded for that date.
-  const offsetDays = day - 1; // -1, 0, +1
+  // K2/B1: per-day shift kind for the offset date. Plan derives entirely
+  // from this date's shift kind + chronotype, so any date works.
   const localShiftsMap = useLocalShifts();
   const targetDate = new Date();
-  targetDate.setDate(targetDate.getDate() + offsetDays);
+  targetDate.setDate(targetDate.getDate() + offset);
   const targetIso = `${targetDate.getFullYear()}-${String(targetDate.getMonth() + 1).padStart(2, '0')}-${String(targetDate.getDate()).padStart(2, '0')}`;
   const dayShiftKind: 'day' | 'night' | 'off' =
     (localShiftsMap[targetIso] as 'day' | 'night' | 'off' | undefined)
-    ?? (day === 1 ? onboarding.currentShift : 'off');
+    ?? (offset === 0 ? onboarding.currentShift : 'off');
   // J1: hide melatonin card when user opted out in onboarding
   const showMelatonin = onboarding.takesMelatonin !== false;
   // C2: hide caffeine card when user doesn't drink caffeine
@@ -230,31 +234,51 @@ export default function Plan() {
   const now = new Date();
   const nowHour = now.getHours() + now.getMinutes() / 60;
 
-  const heroText = day === 0 ? t('plan.hero_yesterday') : day === 2 ? t('plan.hero_tomorrow') : t('plan.hero_today');
-  const ringLabel = day === 0 ? t('plan.yesterday') : day === 2 ? t('plan.tomorrow') : t('plan.now');
+  // B1: relative label for ±1, else weekday — e.g. "MON · 2 JUN".
+  const dateChip =
+    offset === 0 ? `${t('plan.today')} · ${formatDayMonth(targetDate)}`
+    : offset === -1 ? t('plan.yesterday')
+    : offset === 1 ? t('plan.tomorrow')
+    : `${new Intl.DateTimeFormat(i18n.locale, { weekday: 'short' }).format(targetDate).toUpperCase()} · ${formatDayMonth(targetDate)}`;
+  const heroText =
+    offset === 0 ? t('plan.hero_today')
+    : offset === -1 ? t('plan.hero_yesterday')
+    : offset === 1 ? t('plan.hero_tomorrow')
+    : t('plan.hero_date', { date: formatDayMonth(targetDate) });
+  const ringLabel =
+    offset === 0 ? t('plan.now')
+    : offset === -1 ? t('plan.yesterday')
+    : offset === 1 ? t('plan.tomorrow')
+    : formatDayMonth(targetDate);
 
   return (
     <Screen orbs="normal" scroll>
       <View style={styles.pagerRow}>
-        {pagerLabels.map((label, i) => (
-          <Pressable
-            key={label}
-            onPress={() => setDay(i)}
-            style={[styles.pagerItem, day === i && styles.pagerItemActive]}
-            accessibilityRole="button"
-            accessibilityLabel={label}
-          >
-            <Text
-              variant="labelMd"
-              family="body"
-              weight="medium"
-              color={day === i ? 'primary' : 'inkMuted'}
-              uppercase
-            >
-              {label}
-            </Text>
-          </Pressable>
-        ))}
+        <Pressable
+          onPress={() => setOffset((o) => Math.max(MIN_OFFSET, o - 1))}
+          disabled={offset <= MIN_OFFSET}
+          style={[styles.pagerArrow, offset <= MIN_OFFSET && { opacity: 0.25 }]}
+          hitSlop={12}
+          accessibilityRole="button"
+          accessibilityLabel={t('plan.prev_day_a11y')}
+        >
+          <Glyph name="chevronLeft" size={22} color="ink" />
+        </Pressable>
+        <View style={styles.pagerItemActive}>
+          <Text variant="labelMd" family="body" weight="medium" color="primary" uppercase>
+            {dateChip}
+          </Text>
+        </View>
+        <Pressable
+          onPress={() => setOffset((o) => Math.min(MAX_OFFSET, o + 1))}
+          disabled={offset >= MAX_OFFSET}
+          style={[styles.pagerArrow, offset >= MAX_OFFSET && { opacity: 0.25 }]}
+          hitSlop={12}
+          accessibilityRole="button"
+          accessibilityLabel={t('plan.next_day_a11y')}
+        >
+          <Glyph name="chevronRight" size={22} color="ink" />
+        </Pressable>
       </View>
 
       <View style={{ marginTop: spacing.xxl, marginBottom: spacing.xxl }}>
@@ -270,7 +294,7 @@ export default function Plan() {
           shiftEnd={suggested.shiftEnd}
           size={280}
           label={ringLabel}
-          centerLabel={day === 1 ? formatHour(nowHour) : formatHour(sleepStartHour)}
+          centerLabel={offset === 0 ? formatHour(nowHour) : formatHour(sleepStartHour)}
         />
       </View>
 
@@ -337,12 +361,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: spacing.lg,
   },
-  pagerItem: {
-    paddingVertical: 10,
-    paddingHorizontal: spacing.md,
-    borderRadius: radii.pill,
+  pagerArrow: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   pagerItemActive: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 10,
+    marginHorizontal: spacing.sm,
+    borderRadius: radii.pill,
     backgroundColor: colors.primaryContainer,
   },
   row: {

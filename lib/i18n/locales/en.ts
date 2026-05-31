@@ -108,6 +108,9 @@ const en = {
     hero_today: 'A gentle plan for today.',
     hero_yesterday: "Yesterday's plan.",
     hero_tomorrow: "Tomorrow's plan.",
+    hero_date: 'Your plan for {{date}}.',
+    prev_day_a11y: 'Previous day',
+    next_day_a11y: 'Next day',
     why_link: 'Why these times?  →',
     why_title: 'Why these times?',
     why_default:
