@@ -335,6 +335,12 @@ export default function Home() {
 
       <View style={{ height: spacing.huge }} />
 
+      {/* B3: Community stories — promoted from screen bottom to a prominent
+          mid-feed slot so members see how peers normalized their sleep. */}
+      <StoriesCoverFlow />
+
+      <View style={{ height: spacing.huge }} />
+
       <Eyebrow>{t('today.section_next')}</Eyebrow>
       <View style={{ height: spacing.md }} />
 
@@ -447,9 +453,6 @@ export default function Home() {
           </GlassCard>
         </Pressable>
       )}
-
-      {/* F20-P3: Community stories cover-flow carousel */}
-      <StoriesCoverFlow />
     </Screen>
   );
 }

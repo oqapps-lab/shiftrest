@@ -114,7 +114,9 @@ Sim: `AF4951D7-668C-46F6-8FA1-0C564F0B7765` (iPhone 17 Pro) · Metro 8081.
 - **A3** ✅ `feat(A3)` ×2 — built branded `AppDialog` + `showAppDialog`; replaced ALL 29 stock iOS `Alert.alert` sites; live-verified caffeine confirm sheet.
 - **A4** ✅ `feat(A4)` — loading orb shimmer + bigger/slower stepped copy; live-verified 40%→80% step-through.
 - **B1** ✅ `feat(B1)` — Plan date stepper (any date -7..+14); live-verified +2-day night shift shows correct night plan.
-- **B2** ⏳ richer per-day plan detail + content — pending.
-- **B3** ⏳ Community Stories prominent + avatar + public feed — pending (large: needs expo-image-picker re-add, Supabase storage bucket, feed redesign).
-- **B4** ⏳ Shift Transition finish/remove — pending.
+- **B2** ✅ `feat(B2)` — expandable "why this helps" rationale on each plan card; live-verified.
+- **B3a** ✅ `feat(B3a)` — profile photo avatar (expo-image-picker, tappable circular avatar + edit badge, branded permission dialog, persisted to onboarding store). Re-added expo-image-picker + app.json photosPermission. Also translated the 12 B1/B2 English-only plan keys (hero_date / why_card×7 / a11y) into all 10 locales (closed the i18n-coverage gap those commits had reopened).
+- **B3b** ✅ promoted `StoriesCoverFlow` from screen-bottom to a prominent mid-feed slot on Today (after the 24h ring, before "next events").
+- **B3 backend remainder** (documented, owner/backend-gated): true public photo feed needs a Supabase Storage bucket for avatars + author columns (display_name opt-in) on community_stories + RLS + moderation. Local avatar works today; cross-user photo sharing is a backend task, NOT shippable from the client alone.
+- **B4** ✅ verified REAL (not a teaser): `/transition-create` runs `generateTransitionPlan` → persists to `transition_plans`/`transition_steps` (signed) or local store, navigates to `/transition`; `/transition` renders a dated multi-day step plan with per-step completion + adaptive headline. Today card links to it (live plan → `/transition`, else → `/transition-create`). Step action copy is still template/demo text (dates are dynamic) — acceptable v1; future polish = personalized step copy.
 - **Rebuild** ⏳ TestFlight build after B-items so the device reflects all fixes.
