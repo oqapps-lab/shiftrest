@@ -111,6 +111,17 @@ const en = {
     hero_date: 'Your plan for {{date}}.',
     prev_day_a11y: 'Previous day',
     next_day_a11y: 'Next day',
+    expand_card_a11y: 'Show why this helps',
+    why_card_label: 'WHY THIS HELPS',
+    why_card: {
+      caffeine: 'Caffeine has a ~6-hour half-life — a cup now is still half-active at bedtime, fragmenting deep sleep. Stopping early lets adenosine rebuild so you fall asleep faster.',
+      melatonin: 'A low dose 1–2 h before your sleep window shifts your body clock toward your shift, not knocks you out. More isn’t better — 0.5–3 mg is the studied range.',
+      light: 'Light is the master clock signal. Bright light during your active hours holds alertness; dark glasses on the commute home stop the morning sun from dragging your clock the wrong way.',
+      nap: 'A short pre-shift nap clears sleep pressure without entering deep sleep, so you wake sharp — not groggy. Keep it under 30 min unless you have a full 90-min cycle free.',
+      sleep_window: 'Anchoring the block right after your shift catches your natural melatonin dip, so the longest unbroken stretch lands when your body is already primed to sleep.',
+      wind_down: 'A 30-min wind-down (dim light, no screens, cooler room) tells your nervous system the shift is over — the single biggest lever for falling asleep after a night on.',
+      meal: 'Eating during your biological night spikes glucose and delays sleep. A defined cutoff keeps digestion out of your rest window.',
+    },
     why_link: 'Why these times?  →',
     why_title: 'Why these times?',
     why_default:

@@ -4,6 +4,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import {
   Screen,
   Eyebrow,
@@ -42,6 +43,8 @@ interface UiRec {
   eyebrow: string;
   hero: string;
   body: string;
+  /** B2: expandable "why this helps" rationale. */
+  why?: string;
   tintBg: string;
   tintFg: 'sunriseDim' | 'duskDim' | 'primary';
   locked?: boolean;
@@ -84,6 +87,7 @@ function buildFallbackRecs(
       eyebrow: t('plan.cards.caffeine.eyebrow'),
       hero: t('plan.cards.caffeine.hero', { time: suggested.caffeineCutoff }),
       body: t('plan.cards.caffeine.body', { h: hoursBeforeSleep }),
+      why: t('plan.why_card.caffeine'),
       tintBg: colors.sunriseGlow,
       tintFg: 'sunriseDim',
     },
@@ -94,6 +98,7 @@ function buildFallbackRecs(
         : `${t('plan.cards.melatonin.eyebrow')} · ${t('plan.premium_suffix')}`,
       hero: t('plan.cards.melatonin.hero', { time: suggested.melatoninTime }),
       body: t('plan.cards.melatonin.body'),
+      why: t('plan.why_card.melatonin'),
       tintBg: colors.duskGlow,
       tintFg: 'duskDim',
       locked: !isPremium,
@@ -103,6 +108,7 @@ function buildFallbackRecs(
       eyebrow: t('plan.cards.light.eyebrow'),
       hero: lightHero,
       body: lightBody,
+      why: t('plan.why_card.light'),
       tintBg: colors.sunriseGlow,
       tintFg: 'sunriseDim',
     },
@@ -115,6 +121,7 @@ function buildFallbackRecs(
           eyebrow: t('plan.cards.nap.eyebrow'),
           hero: t('plan.cards.nap.hero'),
           body: t('plan.cards.nap.body'),
+          why: t('plan.why_card.nap'),
           tintBg: colors.primaryContainer,
           tintFg: 'primary' as const,
         };
@@ -127,6 +134,7 @@ function buildFallbackRecs(
           time: formatHour(nap.hour),
         }),
         body: t(`plan.cards.nap.body_${nap.kind}`),
+        why: t('plan.why_card.nap'),
         tintBg: colors.primaryContainer,
         tintFg: 'primary' as const,
       };
@@ -142,12 +150,24 @@ function buildFallbackRecs(
           cutoff: formatHour(meal.cutoffHour),
         }),
         body: t(meal.bodyKey),
+        why: t('plan.why_card.meal'),
         tintBg: colors.sunriseGlow,
         tintFg: 'sunriseDim' as const,
       };
     })(),
   ];
 }
+
+// B2: rationale per live-rec type (the WHY_CARD i18n block).
+const WHY_BY_TYPE: Record<PlanRecommendation['type'], string> = {
+  caffeine: 'plan.why_card.caffeine',
+  melatonin: 'plan.why_card.melatonin',
+  light: 'plan.why_card.light',
+  nap: 'plan.why_card.nap',
+  sleep_window: 'plan.why_card.sleep_window',
+  wind_down: 'plan.why_card.wind_down',
+  meal: 'plan.why_card.meal',
+};
 
 const REC_STYLE: Record<PlanRecommendation['type'], { glyph: GlyphName; tintBg: string; tintFg: 'sunriseDim' | 'duskDim' | 'primary' }> = {
   caffeine:    { glyph: 'coffee',  tintBg: colors.sunriseGlow,     tintFg: 'sunriseDim' },
@@ -164,6 +184,7 @@ export default function Plan() {
   // fixed 3-segment Y/T/T pager; now a date stepper so any scheduled date's
   // plan is reachable — owner asked "where's the plan for a shift in 2 days".
   const [offset, setOffset] = useState(0);
+  const [expandedCard, setExpandedCard] = useState<string | null>(null);
   const { data: subscription } = useSubscription();
   // R8-1: Melatonin card was hardcoded locked. Unlock for paid tiers.
   const isPremium =
@@ -214,6 +235,7 @@ export default function Plan() {
               eyebrow: effectiveLocked ? `${r.eyebrow} · ${t('plan.premium_suffix')}` : r.eyebrow,
               hero: r.hero,
               body: r.body,
+              why: WHY_BY_TYPE[r.type] ? t(WHY_BY_TYPE[r.type]) : undefined,
               locked: effectiveLocked,
             };
           })
@@ -298,35 +320,62 @@ export default function Plan() {
         />
       </View>
 
-      {recs.map((r) => (
-        <GlassCard
-          key={r.hero}
-          variant="glass"
-          padding="xxl"
-          style={[{ marginBottom: spacing.md }, r.locked && { opacity: 0.62 }]}
-        >
-          <View style={styles.row}>
-            <View style={[styles.iconWrap, { backgroundColor: r.tintBg }]}>
-              <Glyph name={r.glyph} size={22} color={r.tintFg} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Eyebrow color={r.locked ? 'duskDim' : 'inkMuted'}>{r.eyebrow}</Eyebrow>
-              <Text
-                variant="titleLg"
-                family="display"
-                weight="medium"
-                color="ink"
-                style={{ marginTop: 2 }}
-              >
-                {r.hero}
-              </Text>
-              <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 4 }}>
-                {r.body}
-              </Text>
-            </View>
-          </View>
-        </GlassCard>
-      ))}
+      {recs.map((r) => {
+        const isOpen = expandedCard === r.hero;
+        return (
+          <Pressable
+            key={r.hero}
+            onPress={() => {
+              if (!r.why) return;
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              setExpandedCard(isOpen ? null : r.hero);
+            }}
+            accessibilityRole={r.why ? 'button' : undefined}
+            accessibilityLabel={r.why ? t('plan.expand_card_a11y') : undefined}
+            accessibilityState={r.why ? { expanded: isOpen } : undefined}
+          >
+            <GlassCard
+              variant="glass"
+              padding="xxl"
+              style={[{ marginBottom: spacing.md }, r.locked && { opacity: 0.62 }]}
+            >
+              <View style={styles.row}>
+                <View style={[styles.iconWrap, { backgroundColor: r.tintBg }]}>
+                  <Glyph name={r.glyph} size={22} color={r.tintFg} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Eyebrow color={r.locked ? 'duskDim' : 'inkMuted'}>{r.eyebrow}</Eyebrow>
+                  <Text
+                    variant="titleLg"
+                    family="display"
+                    weight="medium"
+                    color="ink"
+                    style={{ marginTop: 2 }}
+                  >
+                    {r.hero}
+                  </Text>
+                  <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 4 }}>
+                    {r.body}
+                  </Text>
+                </View>
+                {r.why ? (
+                  <View style={{ transform: [{ rotate: isOpen ? '270deg' : '90deg' }], marginLeft: spacing.xs, marginTop: 4 }}>
+                    <Glyph name="chevronRight" size={18} color="inkGhost" />
+                  </View>
+                ) : null}
+              </View>
+              {isOpen && r.why ? (
+                <View style={styles.whyReveal}>
+                  <Eyebrow color="primary" style={{ marginBottom: spacing.xs }}>
+                    {t('plan.why_card_label')}
+                  </Eyebrow>
+                  <Text variant="bodyMd" color="inkSubtle">{r.why}</Text>
+                </View>
+              ) : null}
+            </GlassCard>
+          </Pressable>
+        );
+      })}
 
       <Pressable
         style={{ marginTop: spacing.xl, alignSelf: 'center' }}
@@ -366,6 +415,12 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  whyReveal: {
+    marginTop: spacing.lg,
+    paddingTop: spacing.lg,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: colors.inkGhost,
   },
   pagerItemActive: {
     flex: 1,
