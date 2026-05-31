@@ -88,6 +88,10 @@ export interface OnboardingState {
   // S11 name
   displayName: string;
 
+  // B3: local avatar photo URI (profile + story authorship). Local-only
+  // for now; a future build uploads to Supabase storage for the public feed.
+  avatarUri: string | null;
+
   // Settings-only: bright-light therapy opt-in (Plan tab shows light cards
   // when true). Not yet persisted to profiles table; local-only.
   usesLightTherapy: boolean;
@@ -120,6 +124,7 @@ const INITIAL: OnboardingState = {
   pickupTime: '15',
   otherCommitments: '',
   displayName: '',
+  avatarUri: null,
   // Default ON for new users — bright light therapy is the strongest
   // evidence-based intervention for shift adaptation and costs nothing to
   // display. Users can turn it off from Settings → Light therapy.

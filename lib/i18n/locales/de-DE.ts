@@ -60,6 +60,20 @@ const deDE = {
     journal_bad: 'Hart',
   },
   plan: {
+    hero_date: "Dein Plan für {{date}}.",
+    prev_day_a11y: "Vorheriger Tag",
+    next_day_a11y: "Nächster Tag",
+    expand_card_a11y: "Zeigen, warum das hilft",
+    why_card_label: "WARUM DAS HILFT",
+    why_card: {
+      caffeine: "Koffein hat eine Halbwertszeit von ~6 Stunden – eine Tasse jetzt wirkt zur Schlafenszeit noch halb und zerstückelt deinen Tiefschlaf. Frühzeitiges Aufhören lässt das Adenosin wieder aufbauen, sodass du schneller einschläfst.",
+      melatonin: "Eine niedrige Dosis 1–2 h vor deinem Schlaffenster verschiebt deine innere Uhr in Richtung deiner Schicht – es haut dich nicht um. Mehr ist nicht besser: 0,5–3 mg ist der erforschte Bereich.",
+      light: "Licht ist das wichtigste Signal für die innere Uhr. Helles Licht in deinen aktiven Stunden hält dich wach; eine dunkle Brille auf dem Heimweg verhindert, dass die Morgensonne deine Uhr in die falsche Richtung zieht.",
+      nap: "Ein kurzes Nickerchen vor der Schicht baut den Schlafdruck ab, ohne in den Tiefschlaf zu rutschen – so wachst du klar auf, nicht benommen. Halte es unter 30 min, außer du hast einen vollen 90-min-Zyklus frei.",
+      sleep_window: "Wenn du den Block direkt nach deiner Schicht verankerst, nutzt du dein natürliches Melatonin-Tief – so fällt die längste ununterbrochene Phase genau dann, wenn dein Körper schon zum Schlafen bereit ist.",
+      wind_down: "Eine 30-minütige Entspannungsphase (gedämpftes Licht, keine Bildschirme, kühleres Zimmer) signalisiert deinem Nervensystem, dass die Schicht vorbei ist – der wichtigste einzelne Hebel, um nach einer Nachtschicht einzuschlafen.",
+      meal: "Essen während deiner biologischen Nacht lässt den Blutzucker ansteigen und verzögert den Schlaf. Eine feste Essensgrenze hält die Verdauung aus deinem Ruhefenster heraus.",
+    },
     yesterday: 'GESTERN',
     today: 'HEUTE',
     tomorrow: 'MORGEN',
@@ -157,6 +171,11 @@ const deDE = {
   profile: {
     eyebrow: 'PROFIL',
     fallback_name: 'Freund',
+    avatar: {
+      a11y: "Profilfoto ändern",
+      perm_title: "Fotozugriff erforderlich",
+      perm_body: "Erlaube den Zugriff auf die Fotomediathek in den Einstellungen, um ein Profilbild auszuwählen.",
+    },
     stat_days: 'TAGE',
     stat_plans: 'PLÄNE',
     stat_on_plan: 'IM PLAN',

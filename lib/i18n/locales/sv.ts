@@ -46,6 +46,20 @@ const sv = {
     journal_bad: 'Tufft',
   },
   plan: {
+    hero_date: "Din plan för {{date}}.",
+    prev_day_a11y: "Föregående dag",
+    next_day_a11y: "Nästa dag",
+    expand_card_a11y: "Visa varför detta hjälper",
+    why_card_label: "VARFÖR DET HJÄLPER",
+    why_card: {
+      caffeine: "Koffein har en halveringstid på ~6 timmar – en kopp nu är fortfarande halvaktiv vid läggdags och splittrar din djupsömn. Att sluta i tid låter adenosinet byggas upp så att du somnar snabbare.",
+      melatonin: "En låg dos 1–2 h före ditt sömnfönster förskjuter din inre klocka mot ditt skift – det söver dig inte. Mer är inte bättre: 0,5–3 mg är det studerade intervallet.",
+      light: "Ljus är klockans främsta signal. Starkt ljus under dina aktiva timmar håller dig pigg; mörka glasögon på vägen hem hindrar morgonsolen från att dra klockan åt fel håll.",
+      nap: "En kort tupplur före skiftet sänker sömntrycket utan att du går in i djupsömn, så du vaknar skärpt – inte dåsig. Håll den under 30 min om du inte har en hel 90-minuterscykel ledig.",
+      sleep_window: "Att förankra sömnblocket direkt efter ditt skift fångar din naturliga melatonindipp, så att den längsta obrutna sträckan infaller när kroppen redan är redo att sova.",
+      wind_down: "En 30-minuters nedvarvning (dämpat ljus, inga skärmar, svalare rum) talar om för nervsystemet att skiftet är slut – den enskilt största spaken för att somna efter en natt på jobbet.",
+      meal: "Att äta under din biologiska natt höjer blodsockret och fördröjer sömnen. En tydlig gräns håller matsmältningen utanför ditt vilofönster.",
+    },
     yesterday: 'IGÅR',
     today: 'IDAG',
     tomorrow: 'IMORGON',
@@ -143,6 +157,11 @@ const sv = {
   profile: {
     eyebrow: 'PROFIL',
     fallback_name: 'Vän',
+    avatar: {
+      a11y: "Byt profilbild",
+      perm_title: "Åtkomst till foton behövs",
+      perm_body: "Tillåt åtkomst till fotobiblioteket i Inställningar för att välja en profilbild.",
+    },
     stat_days: 'DAGAR',
     stat_plans: 'PLANER',
     stat_on_plan: 'ENLIGT PLAN',

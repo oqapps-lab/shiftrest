@@ -3,7 +3,9 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Image } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
 import {
   Screen,
@@ -28,7 +30,32 @@ const STREAK_LENGTH = 14;
 
 export default function Profile() {
   const { user, signOut } = useAuth();
-  const { state: onboarding } = useOnboarding();
+  const { state: onboarding, update } = useOnboarding();
+
+  // B3: tap avatar → pick a photo from the library. Local URI persisted in
+  // the onboarding store (a future build uploads to Supabase storage for
+  // the public stories feed). Permission-denied shows a branded dialog.
+  const pickAvatar = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!perm.granted) {
+      showAppDialog({
+        title: t('profile.avatar.perm_title'),
+        message: t('profile.avatar.perm_body'),
+        actions: [{ label: t('a11y.close'), style: 'cancel' }],
+      });
+      return;
+    }
+    const res = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.7,
+    });
+    if (!res.canceled && res.assets[0]?.uri) {
+      update({ avatarUri: res.assets[0].uri });
+    }
+  };
   const { data: streak } = useStreak();
   const { data: stats } = useProfileStats();
   const { data: subscription } = useSubscription();
@@ -181,6 +208,23 @@ export default function Profile() {
   return (
     <Screen orbs="subtle" variant="dim" scroll>
       <Eyebrow>{t('profile.eyebrow')}</Eyebrow>
+      <Pressable
+        onPress={pickAvatar}
+        style={styles.avatarWrap}
+        accessibilityRole="button"
+        accessibilityLabel={t('profile.avatar.a11y')}
+      >
+        {onboarding.avatarUri ? (
+          <Image source={{ uri: onboarding.avatarUri }} style={styles.avatarImg} />
+        ) : (
+          <View style={styles.avatarPlaceholder}>
+            <Glyph name="user" size={30} color="primary" />
+          </View>
+        )}
+        <View style={styles.avatarEditBadge}>
+          <Glyph name="plus" size={12} color="onPrimary" />
+        </View>
+      </Pressable>
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
         <SerifHero>{displayName}</SerifHero>
         <Text
@@ -404,6 +448,39 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
+  avatarWrap: {
+    width: 84,
+    height: 84,
+    marginTop: spacing.lg,
+    borderRadius: radii.pill,
+  },
+  avatarImg: {
+    width: 84,
+    height: 84,
+    borderRadius: radii.pill,
+    backgroundColor: colors.surfaceLow,
+  },
+  avatarPlaceholder: {
+    width: 84,
+    height: 84,
+    borderRadius: radii.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primaryContainer,
+  },
+  avatarEditBadge: {
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
+    width: 28,
+    height: 28,
+    borderRadius: radii.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primary,
+    borderWidth: 2,
+    borderColor: colors.canvas,
+  },
   heatmapHeader: {
     flexDirection: 'row',
     alignItems: 'center',

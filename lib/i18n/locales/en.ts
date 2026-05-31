@@ -237,6 +237,11 @@ const en = {
   profile: {
     eyebrow: 'PROFILE',
     fallback_name: 'Friend',
+    avatar: {
+      a11y: 'Change profile photo',
+      perm_title: 'Photo access needed',
+      perm_body: 'Allow photo library access in Settings to choose a profile picture.',
+    },
     stat_days: 'DAYS',
     stat_plans: 'PLANS',
     stat_journal: 'JOURNAL',

@@ -46,6 +46,20 @@ const itIT = {
     journal_bad: 'Duro',
   },
   plan: {
+    hero_date: "Il tuo piano per {{date}}.",
+    prev_day_a11y: "Giorno precedente",
+    next_day_a11y: "Giorno successivo",
+    expand_card_a11y: "Scopri perché aiuta",
+    why_card_label: "PERCHÉ AIUTA",
+    why_card: {
+      caffeine: "La caffeina ha un'emivita di ~6 ore: una tazza adesso è ancora attiva per metà all'ora di dormire e frammenta il sonno profondo. Smettere presto lascia che l'adenosina si ricostruisca, così ti addormenti più in fretta.",
+      melatonin: "Una dose bassa 1–2 h prima della tua finestra di sonno sposta l'orologio biologico verso il tuo turno, non ti stordisce. Di più non è meglio: 0,5–3 mg è l'intervallo studiato.",
+      light: "La luce è il segnale principale del tuo orologio interno. Una luce intensa nelle ore di attività mantiene la vigilanza; gli occhiali scuri sul tragitto di ritorno impediscono al sole del mattino di spostare l'orologio nella direzione sbagliata.",
+      nap: "Un breve riposino prima del turno scarica la pressione del sonno senza entrare nel sonno profondo, così ti svegli lucido, non intontito. Tienilo sotto i 30 min, a meno che tu non abbia un ciclo intero di 90 min libero.",
+      sleep_window: "Ancorare il blocco di sonno subito dopo il turno coglie il tuo calo naturale di melatonina, così il tratto ininterrotto più lungo arriva quando il corpo è già pronto a dormire.",
+      wind_down: "Una fase di rilassamento di 30 min (luce soffusa, niente schermi, stanza più fresca) dice al sistema nervoso che il turno è finito: la leva più potente per addormentarti dopo una notte di lavoro.",
+      meal: "Mangiare durante la tua notte biologica fa salire la glicemia e ritarda il sonno. Un orario di stop ben definito tiene la digestione fuori dalla tua finestra di riposo.",
+    },
     yesterday: "IERI",
     today: "OGGI",
     tomorrow: "DOMANI",
@@ -143,6 +157,11 @@ const itIT = {
   profile: {
     eyebrow: "PROFILO",
     fallback_name: "Amico",
+    avatar: {
+      a11y: "Cambia foto profilo",
+      perm_title: "Accesso alle foto necessario",
+      perm_body: "Consenti l’accesso alla libreria foto nelle Impostazioni per scegliere una foto profilo.",
+    },
     stat_days: "GIORNI",
     stat_plans: "PIANI",
     stat_on_plan: "IN PIANO",

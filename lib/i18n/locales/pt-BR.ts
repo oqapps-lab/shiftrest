@@ -46,6 +46,20 @@ const ptBR = {
     journal_bad: 'Ruim',
   },
   plan: {
+    hero_date: "Seu plano para {{date}}.",
+    prev_day_a11y: "Dia anterior",
+    next_day_a11y: "Próximo dia",
+    expand_card_a11y: "Ver por que isso ajuda",
+    why_card_label: "POR QUE ISSO AJUDA",
+    why_card: {
+      caffeine: "A cafeína tem meia-vida de ~6 horas — uma xícara agora ainda está metade ativa na hora de dormir, fragmentando o sono profundo. Parar cedo deixa a adenosina se acumular para você adormecer mais rápido.",
+      melatonin: "Uma dose baixa 1–2 h antes da sua janela de sono ajusta seu relógio biológico ao seu turno, em vez de te apagar. Mais não é melhor — 0,5–3 mg é a faixa estudada.",
+      light: "A luz é o principal sinal do relógio biológico. Luz forte durante suas horas ativas mantém o estado de alerta; óculos escuros no trajeto de volta para casa impedem que o sol da manhã puxe seu relógio na direção errada.",
+      nap: "Uma soneca curta antes do turno alivia a pressão do sono sem entrar no sono profundo, então você acorda afiado — não grogue. Mantenha abaixo de 30 min, a menos que tenha um ciclo completo de 90 min livre.",
+      sleep_window: "Ancorar o bloco logo após o seu turno aproveita a queda natural de melatonina, fazendo com que o trecho mais longo e ininterrupto caia quando seu corpo já está pronto para dormir.",
+      wind_down: "Um relaxamento de 30 min (luz baixa, sem telas, ambiente mais fresco) avisa ao seu sistema nervoso que o turno acabou — a maior alavanca para adormecer depois de uma noite de trabalho.",
+      meal: "Comer durante sua noite biológica eleva a glicose e atrasa o sono. Um horário-limite definido mantém a digestão fora da sua janela de descanso.",
+    },
     yesterday: "ONTEM",
     today: "HOJE",
     tomorrow: "AMANHÃ",
@@ -143,6 +157,11 @@ const ptBR = {
   profile: {
     eyebrow: "PERFIL",
     fallback_name: "Amigo",
+    avatar: {
+      a11y: "Alterar foto do perfil",
+      perm_title: "Acesso às fotos necessário",
+      perm_body: "Permita o acesso à fototeca nos Ajustes para escolher uma foto de perfil.",
+    },
     stat_days: "DIAS",
     stat_plans: "PLANOS",
     stat_on_plan: "NO PLANO",

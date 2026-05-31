@@ -47,6 +47,20 @@ const esES = {
     journal_bad: 'Mal',
   },
   plan: {
+    hero_date: "Tu plan para el {{date}}.",
+    prev_day_a11y: "Día anterior",
+    next_day_a11y: "Día siguiente",
+    expand_card_a11y: "Ver por qué ayuda",
+    why_card_label: "POR QUÉ AYUDA",
+    why_card: {
+      caffeine: "La cafeína tiene una vida media de ~6 horas: una taza ahora sigue medio activa a la hora de dormir y fragmenta el sueño profundo. Cortarla pronto deja que la adenosina se acumule de nuevo y te duermas antes.",
+      melatonin: "Una dosis baja 1–2 h antes de tu ventana de sueño desplaza tu reloj interno hacia tu turno, no te deja KO. Más no es mejor: 0,5–3 mg es el rango estudiado.",
+      light: "La luz es la señal maestra de tu reloj. La luz intensa durante tus horas activas mantiene el estado de alerta; unas gafas oscuras en el trayecto a casa evitan que el sol de la mañana desplace tu reloj en el sentido equivocado.",
+      nap: "Una siesta corta antes del turno alivia la presión de sueño sin entrar en sueño profundo, así te despiertas despejado, no atontado. Mantenla por debajo de 30 min, salvo que tengas un ciclo completo de 90 min libre.",
+      sleep_window: "Anclar el bloque justo después del turno aprovecha tu bajón natural de melatonina, de modo que el tramo más largo e ininterrumpido coincide con el momento en que tu cuerpo ya está listo para dormir.",
+      wind_down: "Una rutina de relajación de 30 min (luz tenue, sin pantallas, habitación más fresca) le dice a tu sistema nervioso que el turno ha terminado: la palanca más potente para dormirte tras una noche de trabajo.",
+      meal: "Comer durante tu noche biológica dispara la glucosa y retrasa el sueño. Una hora de corte clara mantiene la digestión fuera de tu ventana de descanso.",
+    },
     yesterday: 'AYER',
     today: 'HOY',
     tomorrow: 'MAÑANA',
@@ -144,6 +158,11 @@ const esES = {
   profile: {
     eyebrow: 'PERFIL',
     fallback_name: 'Amigo',
+    avatar: {
+      a11y: "Cambiar foto de perfil",
+      perm_title: "Se necesita acceso a fotos",
+      perm_body: "Permite el acceso a la fototeca en Ajustes para elegir una foto de perfil.",
+    },
     stat_days: 'DÍAS',
     stat_plans: 'PLANES',
     stat_on_plan: 'EN PLAN',

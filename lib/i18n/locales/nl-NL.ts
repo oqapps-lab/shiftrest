@@ -47,6 +47,20 @@ const nlNL = {
     journal_bad: 'Slecht',
   },
   plan: {
+    hero_date: "Je plan voor {{date}}.",
+    prev_day_a11y: "Vorige dag",
+    next_day_a11y: "Volgende dag",
+    expand_card_a11y: "Laat zien waarom dit helpt",
+    why_card_label: "WAAROM DIT HELPT",
+    why_card: {
+      caffeine: "Cafeïne heeft een halfwaardetijd van ~6 uur — een kop nu is bij het slapengaan nog half actief en versnippert je diepe slaap. Op tijd stoppen laat adenosine weer opbouwen, zodat je sneller in slaap valt.",
+      melatonin: "Een lage dosis 1–2 u voor je slaapvenster verschuift je biologische klok richting je dienst, het verdooft je niet. Meer is niet beter — 0,5–3 mg is het onderzochte bereik.",
+      light: "Licht is het belangrijkste signaal voor je klok. Fel licht tijdens je actieve uren houdt je alert; een donkere bril op weg naar huis voorkomt dat de ochtendzon je klok de verkeerde kant op trekt.",
+      nap: "Een kort dutje vóór je dienst verlaagt de slaapdruk zonder dat je in diepe slaap raakt, zodat je scherp wakker wordt in plaats van suf. Houd het onder de 30 min, tenzij je tijd hebt voor een volledige cyclus van 90 min.",
+      sleep_window: "Door je slaapblok meteen na je dienst te plannen, vang je je natuurlijke melatoninedip op, zodat het langste ononderbroken stuk valt wanneer je lichaam al klaar is om te slapen.",
+      wind_down: "Een afbouwperiode van 30 min (gedimd licht, geen schermen, koelere kamer) vertelt je zenuwstelsel dat de dienst voorbij is — de grootste hefboom om in slaap te vallen na een nachtdienst.",
+      meal: "Eten tijdens je biologische nacht doet je glucose pieken en stelt je slaap uit. Een vaste eetstop houdt de spijsvertering buiten je rustvenster.",
+    },
     yesterday: 'GISTEREN',
     today: 'VANDAAG',
     tomorrow: 'MORGEN',
@@ -144,6 +158,11 @@ const nlNL = {
   profile: {
     eyebrow: 'PROFIEL',
     fallback_name: 'Vriend',
+    avatar: {
+      a11y: "Profielfoto wijzigen",
+      perm_title: "Toegang tot foto’s nodig",
+      perm_body: "Geef in Instellingen toegang tot de fotobibliotheek om een profielfoto te kiezen.",
+    },
     stat_days: 'DAGEN',
     stat_plans: 'PLANNEN',
     stat_on_plan: 'IN PLAN',

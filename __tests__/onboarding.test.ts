@@ -190,6 +190,7 @@ describe('mapToProfileRow', () => {
     usesLightTherapy: false,
     completed: false,
     lastOnboardingRoute: null,
+    avatarUri: null,
   };
 
   test('roundtrips main_problem to DB enum', () => {

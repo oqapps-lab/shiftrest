@@ -47,6 +47,20 @@ const frFR = {
     journal_bad: 'Dur',
   },
   plan: {
+    hero_date: "Votre plan pour le {{date}}.",
+    prev_day_a11y: "Jour précédent",
+    next_day_a11y: "Jour suivant",
+    expand_card_a11y: "Voir pourquoi c'est utile",
+    why_card_label: "POURQUOI C'EST UTILE",
+    why_card: {
+      caffeine: "La caféine a une demi-vie d'environ 6 heures : une tasse maintenant agit encore à moitié au coucher et fragmente le sommeil profond. Arrêter tôt laisse l'adénosine se reconstituer pour s'endormir plus vite.",
+      melatonin: "Une faible dose 1–2 h avant votre fenêtre de sommeil ajuste votre horloge interne à votre poste, sans vous assommer. Plus n'est pas mieux : 0,5–3 mg est la plage étudiée.",
+      light: "La lumière est le signal maître de l'horloge. Une lumière vive pendant vos heures actives maintient la vigilance ; des lunettes sombres sur le trajet du retour empêchent le soleil du matin de décaler votre horloge dans le mauvais sens.",
+      nap: "Une courte sieste avant le poste évacue la pression de sommeil sans entrer en sommeil profond : vous vous réveillez vif, pas groggy. Restez sous les 30 min, sauf si vous disposez d'un cycle complet de 90 min.",
+      sleep_window: "Caler le bloc juste après votre poste capte votre baisse naturelle de mélatonine : la plus longue plage ininterrompue tombe quand votre corps est déjà prêt à dormir.",
+      wind_down: "Une transition de 30 min (lumière tamisée, sans écrans, pièce plus fraîche) signale à votre système nerveux que le poste est terminé : c'est le levier le plus puissant pour s'endormir après une nuit de travail.",
+      meal: "Manger pendant votre nuit biologique fait grimper la glycémie et retarde le sommeil. Une heure limite définie garde la digestion hors de votre fenêtre de repos.",
+    },
     yesterday: 'HIER',
     today: 'AUJOURD’HUI',
     tomorrow: 'DEMAIN',
@@ -144,6 +158,11 @@ const frFR = {
   profile: {
     eyebrow: 'PROFIL',
     fallback_name: 'Ami',
+    avatar: {
+      a11y: "Changer la photo de profil",
+      perm_title: "Accès aux photos requis",
+      perm_body: "Autorisez l’accès à la photothèque dans les Réglages pour choisir une photo de profil.",
+    },
     stat_days: 'JOURS',
     stat_plans: 'PLANS',
     stat_on_plan: 'DANS LE PLAN',
