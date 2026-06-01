@@ -12,7 +12,7 @@
  */
 
 import React, { useMemo } from 'react';
-import { View, StyleSheet, Pressable, FlatList, useWindowDimensions } from 'react-native';
+import { View, StyleSheet, Pressable, FlatList, Image, useWindowDimensions } from 'react-native';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -84,15 +84,39 @@ function StoryCard({ story, index, scrollX, cardW, snap }: {
           end={{ x: 1, y: 1 }}
           style={styles.cardTopFade}
         />
+        {(story.avatar || story.author_name) && (
+          <View style={styles.authorRow}>
+            {story.avatar ? (
+              <Image source={story.avatar} style={styles.avatar} />
+            ) : (
+              <View style={[styles.avatar, styles.avatarFallback]}>
+                <Glyph name="user" size={18} color="primary" />
+              </View>
+            )}
+            <View style={{ flex: 1 }}>
+              {story.author_name && (
+                <Text variant="bodyMd" weight="medium" color="ink">
+                  {story.author_name}
+                </Text>
+              )}
+              {story.role_line && (
+                <Text variant="labelMd" color="inkMuted">
+                  {story.role_line}
+                </Text>
+              )}
+            </View>
+          </View>
+        )}
         <Text variant="bodyLg" color="ink" style={{ lineHeight: 26, marginTop: 8 }}>
           {story.ai_summary?.trim() ? `“${story.ai_summary.trim()}”` : '…'}
         </Text>
         <View style={styles.footer}>
-          {story.profession && (
+          {!story.role_line && story.profession && (
             <Text variant="labelMd" color="inkMuted" uppercase>
               {story.profession}
             </Text>
           )}
+          {story.role_line ? <View style={{ flex: 1 }} /> : null}
           <Pressable
             onPress={onReact}
             hitSlop={10}
@@ -190,6 +214,23 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 6,
+  },
+  authorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    marginBottom: spacing.md,
+  },
+  avatar: {
+    width: 44,
+    height: 44,
+    borderRadius: radii.pill,
+    backgroundColor: colors.surfaceLow,
+  },
+  avatarFallback: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primaryContainer,
   },
   footer: {
     flexDirection: 'row',
