@@ -22,9 +22,9 @@ import { t } from '../../lib/i18n';
 const getMessages = (): string[] => t('onboarding_screens.loading_steps') as unknown as string[];
 const MESSAGES_LEN = 4;
 const TICK_MS = 40; // 25fps counter
-// A4: slower so the user can actually read what's being computed — owner
-// said it felt too fast / unclear. ~6.4s across 4 steps (~1.6s each).
-const TOTAL_MS = 6400;
+// A4 v2: slower still — owner wanted the analysis to feel substantial,
+// like real work is happening. ~7.6s across 4 steps (~1.9s each).
+const TOTAL_MS = 7600;
 
 export default function Loading() {
   const [pct, setPct] = useState(0);

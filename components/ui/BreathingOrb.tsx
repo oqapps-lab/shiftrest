@@ -29,13 +29,16 @@ interface Props {
 export function BreathingOrb({ size = 280, pulse = true, shimmer = false, children, style }: Props) {
   const scale = useSharedValue(1);
   const shimmerV = useSharedValue(0);
+  const rot = useSharedValue(0);
 
   useEffect(() => {
     if (pulse) {
+      // A4 v2: deeper, livelier breath (owner wanted it more active) —
+      // bigger amplitude + slightly quicker cycle so it visibly "breathes".
       scale.value = withRepeat(
-        withTiming(1.08, {
-          duration: 4000,
-          easing: Easing.bezier(0.4, 0, 0.2, 1),
+        withTiming(1.14, {
+          duration: 3200,
+          easing: Easing.bezier(0.45, 0, 0.2, 1),
         }),
         -1,
         true,
@@ -47,25 +50,36 @@ export function BreathingOrb({ size = 280, pulse = true, shimmer = false, childr
 
   useEffect(() => {
     if (shimmer) {
-      // 2.6s period (offset from the 4s breath) → the two cycles drift in
-      // and out of phase, giving a slow "перелив" rather than a metronome.
+      // 2.2s opacity/scale pulse (offset from the 3.2s breath) → the cycles
+      // drift in/out of phase for a living "перелив" rather than a metronome.
       shimmerV.value = withRepeat(
-        withTiming(1, { duration: 2600, easing: Easing.inOut(Easing.sin) }),
+        withTiming(1, { duration: 2200, easing: Easing.inOut(Easing.sin) }),
         -1,
         true,
       );
+      // Slow continuous rotation of an off-centre highlight lobe → the bright
+      // spot orbits the orb, reading as a genuine shimmer sweep.
+      rot.value = withRepeat(
+        withTiming(360, { duration: 8000, easing: Easing.linear }),
+        -1,
+        false,
+      );
     } else {
       shimmerV.value = 0;
+      rot.value = 0;
     }
-  }, [shimmer, shimmerV]);
+  }, [shimmer, shimmerV, rot]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
 
   const shimmerStyle = useAnimatedStyle(() => ({
-    opacity: 0.35 + shimmerV.value * 0.65,
-    transform: [{ scale: 0.82 + shimmerV.value * 0.3 }],
+    opacity: 0.3 + shimmerV.value * 0.7,
+    transform: [
+      { scale: 0.8 + shimmerV.value * 0.34 },
+      { rotate: `${rot.value}deg` },
+    ],
   }));
 
   return (
@@ -105,13 +119,16 @@ export function BreathingOrb({ size = 280, pulse = true, shimmer = false, childr
         <Animated.View style={[StyleSheet.absoluteFill, shimmerStyle]} pointerEvents="none">
           <Svg width={size} height={size}>
             <Defs>
-              {/* Own scope — SVG gradient ids don't cross <Svg> boundaries. */}
-              <RadialGradient id="shimMid" cx="50%" cy="50%" r="50%">
-                <Stop offset="0%" stopColor={colors.primaryBright} stopOpacity={0.7} />
-                <Stop offset="55%" stopColor={colors.primaryBright} stopOpacity={0.25} />
+              {/* Own scope — SVG gradient ids don't cross <Svg> boundaries.
+                  Off-centre highlight (cx 38% / cy 40%): as the layer rotates,
+                  this bright lobe orbits the orb → visible shimmer sweep. */}
+              <RadialGradient id="shimMid" cx="38%" cy="40%" r="55%">
+                <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.55} />
+                <Stop offset="35%" stopColor={colors.primaryBright} stopOpacity={0.45} />
+                <Stop offset="70%" stopColor={colors.primaryBright} stopOpacity={0.15} />
                 <Stop offset="100%" stopColor={colors.primaryBright} stopOpacity={0} />
               </RadialGradient>
-              <RadialGradient id="shimCore" cx="50%" cy="50%" r="50%">
+              <RadialGradient id="shimCore" cx="40%" cy="42%" r="50%">
                 <Stop offset="0%" stopColor={colors.primary} stopOpacity={0.6} />
                 <Stop offset="60%" stopColor={colors.primary} stopOpacity={0.2} />
                 <Stop offset="100%" stopColor={colors.primary} stopOpacity={0} />

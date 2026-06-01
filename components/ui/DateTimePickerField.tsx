@@ -57,7 +57,12 @@ export function DateTimePickerField({
   mode = 'datetime',
 }: Props) {
   const [open, setOpen] = useState(false);
+  // `draft` seeds the spinner's initial wheel position ONCE per open. The
+  // live picked value lives in a ref so we never setState mid-scroll — a
+  // re-render with a changing `value` prop yanks the iOS spinner back to the
+  // controlled value and makes the wheel jump up/down under the finger.
   const [draft, setDraft] = useState<Date>(value);
+  const pickedRef = React.useRef<Date>(value);
   const fade = React.useRef(new Animated.Value(0)).current;
   const slide = React.useRef(new Animated.Value(1)).current;
 
@@ -76,6 +81,7 @@ export function DateTimePickerField({
   const openSheet = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     setDraft(value);
+    pickedRef.current = value;
     setOpen(true);
   };
 
@@ -85,12 +91,14 @@ export function DateTimePickerField({
 
   const done = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    onChange(draft);
+    onChange(pickedRef.current);
     setOpen(false);
   };
 
+  // Capture the spin into a ref only — NO setState, so the spinner keeps its
+  // own native scroll position and never re-renders mid-gesture.
   const handleChange = (_: DateTimePickerEvent, picked?: Date) => {
-    if (picked) setDraft(picked);
+    if (picked) pickedRef.current = picked;
   };
 
   return (
