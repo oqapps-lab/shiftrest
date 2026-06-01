@@ -64,6 +64,10 @@ const itIT = {
     today_cta: "Apri la biblioteca",
     quick_tips_link: "Cerchi consigli rapidi?  →",
   },
+  community: {
+    helpful_a11y: "Segna come utile",
+    helpful_count: "{{n}} l'hanno trovato utile",
+  },
   plan: {
     hero_date: "Il tuo piano per {{date}}.",
     prev_day_a11y: "Giorno precedente",

@@ -64,6 +64,10 @@ const zhHant = {
     today_cta: "開啟知識庫",
     quick_tips_link: "想看快速小技巧？  →",
   },
+  community: {
+    helpful_a11y: "標記為有幫助",
+    helpful_count: "{{n}} 人覺得有幫助",
+  },
   plan: {
     hero_date: "你 {{date}} 的睡眠計畫。",
     prev_day_a11y: "前一天",

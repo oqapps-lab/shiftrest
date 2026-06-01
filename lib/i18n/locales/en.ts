@@ -978,6 +978,8 @@ const en = {
     eyebrow_universal: 'FROM OTHER SHIFT WORKERS',
     sub: 'Stories shared anonymously by people on rotations like yours.',
     react_a11y: 'This helps me too',
+    helpful_a11y: 'Mark this helpful',
+    helpful_count: '{{n}} found this helpful',
     empty_title: 'Be the first to share',
     empty_sub: 'No stories yet for your profession — drop yours and we kick off the feed.',
     submit_cta: 'Share what helps you',

@@ -65,6 +65,10 @@ const frFR = {
     today_cta: "Ouvrir la bibliothèque",
     quick_tips_link: "Vous cherchez des conseils rapides ?  →",
   },
+  community: {
+    helpful_a11y: "Marquer comme utile",
+    helpful_count: "{{n}} ont trouvé cela utile",
+  },
   plan: {
     hero_date: "Votre plan pour le {{date}}.",
     prev_day_a11y: "Jour précédent",

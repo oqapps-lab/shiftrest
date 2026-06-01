@@ -64,6 +64,10 @@ const ko = {
     today_cta: "라이브러리 열기",
     quick_tips_link: "간단한 팁을 찾으세요?  →",
   },
+  community: {
+    helpful_a11y: "도움이 됨으로 표시",
+    helpful_count: "{{n}}명에게 도움이 되었어요",
+  },
   plan: {
     hero_date: "{{date}} 수면 플랜이에요.",
     prev_day_a11y: "이전 날",

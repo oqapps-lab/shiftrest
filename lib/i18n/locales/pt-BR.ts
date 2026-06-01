@@ -64,6 +64,10 @@ const ptBR = {
     today_cta: "Abrir biblioteca",
     quick_tips_link: "Procurando dicas rápidas?  →",
   },
+  community: {
+    helpful_a11y: "Marcar como útil",
+    helpful_count: "{{n}} acharam útil",
+  },
   plan: {
     hero_date: "Seu plano para {{date}}.",
     prev_day_a11y: "Dia anterior",

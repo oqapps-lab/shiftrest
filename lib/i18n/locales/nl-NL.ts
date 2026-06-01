@@ -65,6 +65,10 @@ const nlNL = {
     today_cta: "Bibliotheek openen",
     quick_tips_link: "Op zoek naar snelle tips?  →",
   },
+  community: {
+    helpful_a11y: "Markeer als nuttig",
+    helpful_count: "{{n}} vonden dit nuttig",
+  },
   plan: {
     hero_date: "Je plan voor {{date}}.",
     prev_day_a11y: "Vorige dag",

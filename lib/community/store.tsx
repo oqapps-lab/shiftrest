@@ -51,7 +51,7 @@ export const SEEDED_STORIES: CommunityStory[] = [
     author_name: 'Margaret',
     role_line: 'ICU nurse · 25 yrs on nights',
     avatar: require('../../assets/community/margaret.png'),
-    ai_summary: 'I stopped fighting the daylight. That was the whole secret.',
+    ai_summary: 'Wraparound sunglasses the moment I leave the unit, blackout curtains, last coffee by 3 a.m. — I finally sleep through daylight.',
     raw_text:
       'For twenty-five years I treated my days off like a punishment for working nights — forcing myself awake at noon so I’d "feel normal," then lying in bed at 3 a.m. wide-eyed and furious. What changed wasn’t willpower, it was permission. I quit apologizing for sleeping when the sun was up. Now I put my sunglasses on the second I leave the unit at 7, get into bed by 8:30 with the blackout curtains drawn, and I keep my last coffee no later than 3 a.m. on shift. My husband jokes I finally "joined the vampire union." Honestly? I sleep through the lawnmowers now. After all these years, I rest like it’s allowed.',
     reactions: 312,
@@ -64,7 +64,7 @@ export const SEEDED_STORIES: CommunityStory[] = [
     author_name: 'Priya',
     role_line: 'ER nurse · rotating day/night',
     avatar: require('../../assets/community/priya.png'),
-    ai_summary: 'The day after a night used to eat me alive. Now I have a plan.',
+    ai_summary: 'After a night I sleep a short 3–4 h, set an alarm, then get real afternoon light — so I flip back without losing my friends.',
     raw_text:
       'I love the ER and I love my friends, and for a while I thought I had to choose. Flipping from days to nights every week, I’d come home that first morning a zombie, crash until 4, miss every brunch, every birthday, and feel like I was watching my life through glass. The thing that saved me wasn’t sleeping more — it was sleeping smarter on the turn. I take a short anchor sleep when I get home, set an alarm, then catch real light in the afternoon so I can actually show up to dinner. I cut caffeine earlier than feels natural. I’m still tired sometimes, but I’m not disappearing anymore. I get to be a nurse AND a person.',
     reactions: 248,
@@ -77,7 +77,7 @@ export const SEEDED_STORIES: CommunityStory[] = [
     author_name: 'Sofia',
     role_line: 'Production line lead · 2-2-3 rotation',
     avatar: require('../../assets/community/sofia.png'),
-    ai_summary: 'The brain fog lifted once my sleep stopped being random.',
+    ai_summary: 'Sunglasses on the drive home, screens off, and one sleep block at the same time even on swing days — the brain fog lifted.',
     raw_text:
       'Two days, two nights, three off — my body never knew what year it was. I run a line, I make calls all shift, and the brain fog scared me. I’d drive forty minutes home and not remember the road. I assumed that was just my life now. What helped was treating my commute as part of wind-down instead of an afterthought: sunglasses on the drive home after nights so the morning light didn’t wake me up, screens off, a small melatonin dose timed to when I actually wanted to sleep instead of whenever I remembered. I keep one anchor block the same even on the swing days. The fog didn’t vanish overnight, but it lifted. I trust my own head again.',
     reactions: 174,
@@ -90,7 +90,7 @@ export const SEEDED_STORIES: CommunityStory[] = [
     author_name: 'Dana',
     role_line: 'Paramedic · 24/48 shifts',
     avatar: require('../../assets/community/dana.png'),
-    ai_summary: 'Anchor sleep and smart naps turned my 24s from survival to steady.',
+    ai_summary: 'A real recovery sleep right after shift, then a fixed 4-hour anchor block at the same hour every day — busy night or quiet.',
     raw_text:
       'On a 24 you can’t promise yourself sleep — some nights it’s three calls, some nights it’s eleven. I used to come off shift running on adrenaline, refuse to nap because "real people sleep at night," then lie awake at 2 a.m. resenting the ceiling. The unlock was permission to nap with intention: a real recovery sleep when I get home, then a short anchor block at the same hour every single night, busy shift or quiet one. That one steady anchor is what my body holds onto when everything else is chaos. I caffeine-cutoff hard in the back half of the shift now. My partner says I came back to myself. I feel like I’m living between the runs, not just surviving them.',
     reactions: 287,
@@ -103,7 +103,7 @@ export const SEEDED_STORIES: CommunityStory[] = [
     author_name: 'Marcus',
     role_line: 'Overnight warehouse stocker',
     avatar: require('../../assets/community/marcus.png'),
-    ai_summary: 'I traded four energy drinks a night for actual sleep. No contest.',
+    ai_summary: 'Last energy drink hours before clock-out and foil over the one window the curtains miss — first solid 5 hours in years.',
     raw_text:
       'I’m 24 and I genuinely thought I’d just feel wrecked forever. Overnight stocking, four or five energy drinks a shift, then home at 7 a.m. buzzing too hard to sleep and too fried to skate or do anything I actually like. I figured that was the job. Turns out it was mostly the caffeine and the sunlight wrecking me. I moved my last energy drink way earlier — like, hours before I clock out — and I blacked out my room properly, taped foil over the one window the cheap curtains couldn’t beat. First week I slept five solid hours and almost cried, no joke. Now I skate on my days off with energy in the tank. Wish someone told me at 19.',
     reactions: 203,
@@ -116,7 +116,7 @@ export const SEEDED_STORIES: CommunityStory[] = [
     author_name: 'Dave',
     role_line: 'Firefighter · 24/48 shifts',
     avatar: require('../../assets/community/dave.png'),
-    ai_summary: 'A boring wind-down ritual is what finally let me come down.',
+    ai_summary: 'Same wind-down every time after a tour: hot shower, no screens, dim everything, 10 min of slow breathing — then I can sleep.',
     raw_text:
       'After a busy tour the worst part wasn’t the calls — it was getting home keyed up and not being able to switch off. Twenty-eight years in, and I’d sit in the recliner at 8 a.m. still wired, then waste my whole first day off in that gray half-sleep. What turned it around sounds almost too simple: a wind-down ritual I do the same way every time. Hot shower, no screens, dim everything, ten minutes of slow breathing, then a proper recovery sleep before I try to live the day. Same routine whether the night was quiet or hell. It tells my body the tour is over and it’s safe to land. I get my days off back now. After all this time, that’s no small thing.',
     reactions: 196,

@@ -78,6 +78,10 @@ const deDE = {
     today_cta: "Bibliothek öffnen",
     quick_tips_link: "Schnelle Tipps gesucht?  →",
   },
+  community: {
+    helpful_a11y: "Als hilfreich markieren",
+    helpful_count: "{{n}} fanden das hilfreich",
+  },
   plan: {
     hero_date: "Dein Plan für {{date}}.",
     prev_day_a11y: "Vorheriger Tag",

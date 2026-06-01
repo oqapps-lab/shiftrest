@@ -167,8 +167,10 @@ export function Glyph({ name, size = 24, color = 'ink', strokeWidth = 1.5 }: Pro
       )}
       {name === 'book' && (
         <>
-          <Path d="M4 4h7a3 3 0 0 1 3 3v14a3 3 0 0 0-3-3H4V4z" {...common} />
-          <Path d="M20 4h-7a3 3 0 0 0-3 3v14a3 3 0 0 1 3-3h7V4z" {...common} />
+          {/* clean open book: spine + two gently-curved pages */}
+          <Path d="M12 6.4v13.4" {...common} />
+          <Path d="M12 6.4C9.4 4.9 6 4.7 3.4 5.3V18c2.6-.6 6-.4 8.6 1.1" {...common} />
+          <Path d="M12 6.4C14.6 4.9 18 4.7 20.6 5.3V18c-2.6-.6-6-.4-8.6 1.1" {...common} />
         </>
       )}
     </Svg>

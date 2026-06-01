@@ -65,6 +65,10 @@ const esES = {
     today_cta: "Abrir biblioteca",
     quick_tips_link: "¿Buscas consejos rápidos?  →",
   },
+  community: {
+    helpful_a11y: "Marcar como útil",
+    helpful_count: "A {{n}} les resultó útil",
+  },
   plan: {
     hero_date: "Tu plan para el {{date}}.",
     prev_day_a11y: "Día anterior",

@@ -385,8 +385,8 @@ export default function Profile() {
       >
         <GlassCard variant="paper" padding="xxl">
           <View style={styles.adaptRow}>
-            <View style={[styles.adaptScoreWrap, { backgroundColor: colors.sunriseGlow }]}>
-              <Glyph name="book" size={26} color="sunriseDim" />
+            <View style={[styles.adaptScoreWrap, { backgroundColor: colors.primaryContainer }]}>
+              <Glyph name="book" size={26} color="primary" />
             </View>
             <View style={{ flex: 1 }}>
               <Eyebrow>{t('profile.tips_eyebrow')}</Eyebrow>

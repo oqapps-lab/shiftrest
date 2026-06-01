@@ -64,6 +64,10 @@ const ja = {
     today_cta: "ライブラリを開く",
     quick_tips_link: "手軽なヒントをお探しですか？  →",
   },
+  community: {
+    helpful_a11y: "役に立ったとマーク",
+    helpful_count: "{{n}}人が役に立ったと回答",
+  },
   plan: {
     hero_date: "{{date}}のあなたのプラン。",
     prev_day_a11y: "前の日",

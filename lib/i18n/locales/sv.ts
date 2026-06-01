@@ -64,6 +64,10 @@ const sv = {
     today_cta: "Öppna biblioteket",
     quick_tips_link: "Letar du efter snabba tips?  →",
   },
+  community: {
+    helpful_a11y: "Markera som hjälpsam",
+    helpful_count: "{{n}} tyckte att detta var till hjälp",
+  },
   plan: {
     hero_date: "Din plan för {{date}}.",
     prev_day_a11y: "Föregående dag",
