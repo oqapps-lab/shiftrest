@@ -376,9 +376,9 @@ export default function Profile() {
         </Pressable>
       )}
 
-      {/* F20-P1: tap-target to the Sleep Tips library */}
+      {/* F20-P1 / C5: tap-target to the deep Sleep Library */}
       <Pressable
-        onPress={() => router.push('/tips')}
+        onPress={() => router.push('/library')}
         accessibilityRole="button"
         accessibilityLabel={t('profile.tips_a11y')}
         style={{ marginTop: spacing.lg }}
