@@ -24,6 +24,10 @@ import {
   formatHourRange,
   napWindowForShift,
   mealTimingForShift,
+  movementWindowForShift,
+  socialWindowForDay,
+  isFastRotatingSchedule,
+  anchorSleepWindow,
 } from '../../lib/derive';
 import { useGeneratedPlan, planHourAsFloat, type PlanRecommendation } from '../../lib/queries/plan';
 import { useSubscription } from '../../lib/queries';
@@ -55,10 +59,18 @@ interface UiRec {
  * against the CURRENT locale. Module-level const evaluation would freeze
  * the strings at load time and never update across locale switches.
  */
+interface FallbackCtx {
+  scheduleId: string | null | undefined;
+  hasChildren: boolean;
+  pickupHour: number | null;
+  caffeineCups: number;
+}
+
 function buildFallbackRecs(
   suggested: ReturnType<typeof suggestedPlanFromOnboarding>,
   shift: 'day' | 'night' | 'off',
   isPremium: boolean,
+  ctx: FallbackCtx,
 ): UiRec[] {
   const caffeineHour = Number(suggested.caffeineCutoff.split(':')[0]);
   const hoursBeforeSleep = hoursBetween(caffeineHour, suggested.sleepStart);
@@ -81,7 +93,7 @@ function buildFallbackRecs(
       : t('plan.cards.light.body_avoid', { range: formatHourRange(secondary.startHour, secondary.endHour) })
     : t('plan.cards.light.body');
 
-  return [
+  const recs: UiRec[] = [
     {
       glyph: 'coffee',
       eyebrow: t('plan.cards.caffeine.eyebrow'),
@@ -156,6 +168,102 @@ function buildFallbackRecs(
       };
     })(),
   ];
+
+  // ── C4: rich-plan modules, gated by shift + profile ──────────────────────
+
+  // Caffeine Strategy — night shifts with caffeine: front-load + tactical
+  // pre-dawn dose, not a continuous sip.
+  if (shift === 'night' && ctx.caffeineCups > 0) {
+    recs.push({
+      glyph: 'coffee',
+      eyebrow: t('plan.cards.caffeine_timing.eyebrow'),
+      hero: t('plan.cards.caffeine_timing.hero'),
+      body: t('plan.cards.caffeine_timing.body'),
+      why: t('plan.why_card.caffeine_timing'),
+      tintBg: colors.sunriseGlow,
+      tintFg: 'sunriseDim',
+    });
+  }
+
+  // Movement Window — exercise in the active phase, gentle near sleep.
+  {
+    const mv = movementWindowForShift(shift);
+    recs.push({
+      glyph: 'pulse',
+      eyebrow: t('plan.cards.movement.eyebrow'),
+      hero: t('plan.cards.movement.hero_template', {
+        range: formatHourRange(mv.startHour, mv.endHour),
+      }),
+      body: t('plan.cards.movement.body'),
+      why: t('plan.why_card.movement'),
+      tintBg: colors.primaryContainer,
+      tintFg: 'primary',
+    });
+  }
+
+  // Sleep Cave — blackout + cool + quiet, heaviest for daytime sleepers.
+  if (shift === 'night' || shift === 'off') {
+    recs.push({
+      glyph: 'moon',
+      eyebrow: t('plan.cards.environment.eyebrow'),
+      hero: t('plan.cards.environment.hero'),
+      body: t('plan.cards.environment.body'),
+      why: t('plan.why_card.environment'),
+      tintBg: colors.duskGlow,
+      tintFg: 'duskDim',
+    });
+  }
+
+  // Anchor Sleep — only for fast-rotating schedules that never fully adapt.
+  if (isFastRotatingSchedule(ctx.scheduleId)) {
+    const a = anchorSleepWindow();
+    recs.push({
+      glyph: 'bed',
+      eyebrow: t('plan.cards.anchor_sleep.eyebrow'),
+      hero: t('plan.cards.anchor_sleep.hero_template', {
+        range: formatHourRange(a.startHour, a.endHour),
+      }),
+      body: t('plan.cards.anchor_sleep.body'),
+      why: t('plan.why_card.anchor_sleep'),
+      tintBg: colors.primaryContainer,
+      tintFg: 'primary',
+    });
+  }
+
+  // Recovery Sleep — on a day off (the recovery heuristic): short capped
+  // morning sleep, then a full night to flip back. "This is the plan."
+  if (shift === 'off') {
+    recs.push({
+      glyph: 'bed',
+      eyebrow: t('plan.cards.recovery_sleep.eyebrow'),
+      hero: t('plan.cards.recovery_sleep.hero'),
+      body: t('plan.cards.recovery_sleep.body'),
+      why: t('plan.why_card.recovery_sleep'),
+      tintBg: colors.duskGlow,
+      tintFg: 'duskDim',
+    });
+  }
+
+  // Connect Window — one protected social/family slot that doesn't eat the
+  // sleep block. Anchors to kid-pickup when the user has children.
+  {
+    const sw = socialWindowForDay(shift, ctx.hasChildren, ctx.pickupHour);
+    recs.push({
+      glyph: 'user',
+      eyebrow: t('plan.cards.social_sync.eyebrow'),
+      hero: t('plan.cards.social_sync.hero_template', {
+        range: formatHourRange(sw.startHour, sw.endHour),
+      }),
+      body: ctx.hasChildren
+        ? t('plan.cards.social_sync.body_kids')
+        : t('plan.cards.social_sync.body'),
+      why: t('plan.why_card.social_sync'),
+      tintBg: colors.primaryContainer,
+      tintFg: 'primary',
+    });
+  }
+
+  return recs;
 }
 
 // B2: rationale per live-rec type (the WHY_CARD i18n block).
@@ -167,16 +275,28 @@ const WHY_BY_TYPE: Record<PlanRecommendation['type'], string> = {
   sleep_window: 'plan.why_card.sleep_window',
   wind_down: 'plan.why_card.wind_down',
   meal: 'plan.why_card.meal',
+  caffeine_timing: 'plan.why_card.caffeine_timing',
+  anchor_sleep: 'plan.why_card.anchor_sleep',
+  recovery_sleep: 'plan.why_card.recovery_sleep',
+  environment: 'plan.why_card.environment',
+  movement: 'plan.why_card.movement',
+  social_sync: 'plan.why_card.social_sync',
 };
 
 const REC_STYLE: Record<PlanRecommendation['type'], { glyph: GlyphName; tintBg: string; tintFg: 'sunriseDim' | 'duskDim' | 'primary' }> = {
-  caffeine:    { glyph: 'coffee',  tintBg: colors.sunriseGlow,     tintFg: 'sunriseDim' },
-  melatonin:   { glyph: 'moon',    tintBg: colors.duskGlow,        tintFg: 'duskDim'    },
-  light:       { glyph: 'sun',     tintBg: colors.sunriseGlow,     tintFg: 'sunriseDim' },
-  nap:         { glyph: 'bed',     tintBg: colors.primaryContainer, tintFg: 'primary'   },
-  sleep_window:{ glyph: 'bed',     tintBg: colors.primaryContainer, tintFg: 'primary'   },
-  wind_down:   { glyph: 'sparkle', tintBg: colors.duskGlow,        tintFg: 'duskDim'    },
-  meal:        { glyph: 'fork',    tintBg: colors.sunriseGlow,     tintFg: 'sunriseDim' },
+  caffeine:       { glyph: 'coffee',  tintBg: colors.sunriseGlow,      tintFg: 'sunriseDim' },
+  melatonin:      { glyph: 'moon',    tintBg: colors.duskGlow,         tintFg: 'duskDim'    },
+  light:          { glyph: 'sun',     tintBg: colors.sunriseGlow,      tintFg: 'sunriseDim' },
+  nap:            { glyph: 'bed',     tintBg: colors.primaryContainer, tintFg: 'primary'   },
+  sleep_window:   { glyph: 'bed',     tintBg: colors.primaryContainer, tintFg: 'primary'   },
+  wind_down:      { glyph: 'sparkle', tintBg: colors.duskGlow,         tintFg: 'duskDim'    },
+  meal:           { glyph: 'fork',    tintBg: colors.sunriseGlow,      tintFg: 'sunriseDim' },
+  caffeine_timing:{ glyph: 'coffee',  tintBg: colors.sunriseGlow,      tintFg: 'sunriseDim' },
+  anchor_sleep:   { glyph: 'bed',     tintBg: colors.primaryContainer, tintFg: 'primary'   },
+  recovery_sleep: { glyph: 'bed',     tintBg: colors.duskGlow,         tintFg: 'duskDim'    },
+  environment:    { glyph: 'moon',    tintBg: colors.duskGlow,         tintFg: 'duskDim'    },
+  movement:       { glyph: 'pulse',   tintBg: colors.primaryContainer, tintFg: 'primary'   },
+  social_sync:    { glyph: 'user',    tintBg: colors.primaryContainer, tintFg: 'primary'   },
 };
 
 export default function Plan() {
@@ -239,8 +359,14 @@ export default function Plan() {
               locked: effectiveLocked,
             };
           })
-      : buildFallbackRecs(suggested, dayShiftKind, isPremium),
-    [liveRecs, suggested, dayShiftKind, isPremium, showMelatonin, showCaffeine, showLight]);
+      : buildFallbackRecs(suggested, dayShiftKind, isPremium, {
+          scheduleId: onboarding.scheduleId,
+          hasChildren: onboarding.hasChildren === true,
+          pickupHour: onboarding.pickupTime ? Number(onboarding.pickupTime) : null,
+          caffeineCups: onboarding.caffeineCupsPerDay ?? 0,
+        }),
+    [liveRecs, suggested, dayShiftKind, isPremium, showMelatonin, showCaffeine, showLight,
+     onboarding.scheduleId, onboarding.hasChildren, onboarding.pickupTime, onboarding.caffeineCupsPerDay]);
   // Strip cards from fallback list when user opted out of that substance —
   // buildFallbackRecs always returns the full 4 for the demo "looks rich"
   // effect; honesty wins once user has set their prefs.

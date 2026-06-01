@@ -53,6 +53,12 @@ const nlNL = {
     expand_card_a11y: "Laat zien waarom dit helpt",
     why_card_label: "WAAROM DIT HELPT",
     why_card: {
+      caffeine_timing: "Cafeïne piekt ~30–60 min nadat je het drinkt, dus één dosis timen op de circadiane dip van 3–5 uur 's nachts werkt beter dan de hele dienst door nippen. Eén goed geplaatst kopje daar doet meer dan drie verspreide — en houdt je grens intact.",
+      anchor_sleep: "Bij een snelle rotatie past je klok zich nooit volledig aan, dus jagen op een perfect blok van 8 uur is een verloren strijd. Eén vast anker van 4 uur per dag aanhouden geeft je ritme een stabiel referentiepunt in plaats van het bij elke dienst te laten schommelen.",
+      recovery_sleep: "De hele ochtend doorslapen na nachtdiensten houdt je klok in nachtstand en steelt de slaapdruk die je nodig hebt om die avond in slaap te vallen. Een korte, begrensde ochtendslaap neemt de scherpste kantjes weg en laat je terugschakelen naar een normale nacht — herstel gaat sneller als je die eerste ochtend bewust wat minder slaapt.",
+      environment: "Slapen overdag bestrijdt twee waaksignalen: licht en een stijgende kerntemperatuur. Zelfs zwak licht door de gordijnen onderdrukt melatonine, en een koele kamer (~18°C) ondersteunt de temperatuurdaling die slaap op gang brengt. Verduistering + koelte + gelijkmatige ruis maakt van de dag een overtuigende nacht.",
+      movement: "Beweging is een secundair kloksignaal dat de diepe slaap verdiept, maar het verhoogt je kerntemperatuur een paar uur lang — en in slaap vallen vereist juist dat die temperatuur daalt. Plan echte beweging in je actieve fase; houd het rustig binnen 2 u voor je slaapblok.",
+      social_sync: "De gebruikelijke reden dat een slaapplan instort is niet de wetenschap — het zijn isolatie, schuldgevoel en de ongeplande late nacht. Eén beschermd moment benoemen om bij mensen te zijn beschermt zowel je relaties als je slaap. Alcohol verdooft snel maar versnippert de tweede helft van de nacht — een slaapdief vermomd als slaapmiddel.",
       caffeine: "Cafeïne heeft een halfwaardetijd van ~6 uur — een kop nu is bij het slapengaan nog half actief en versnippert je diepe slaap. Op tijd stoppen laat adenosine weer opbouwen, zodat je sneller in slaap valt.",
       melatonin: "Een lage dosis 1–2 u voor je slaapvenster verschuift je biologische klok richting je dienst, het verdooft je niet. Meer is niet beter — 0,5–3 mg is het onderzochte bereik.",
       light: "Licht is het belangrijkste signaal voor je klok. Fel licht tijdens je actieve uren houdt je alert; een donkere bril op weg naar huis voorkomt dat de ochtendzon je klok de verkeerde kant op trekt.",
@@ -74,6 +80,37 @@ const nlNL = {
       'We koppelen je slaapvenster aan het einde van je dienst, zodat het langste ononderbroken blok valt op het moment dat je toch al tot rust komt. De cafeïne-stop ligt 6 uur voor het slapen — ongeveer één halfwaardetijd. Melatonine (indien gebruikt) neem je 1–2 uur voor het slapen — vroeg genoeg om je ritme zacht te verschuiven, niet zo laat dat je erdoorheen slaapt.',
     premium_suffix: 'PREMIUM',
     cards: {
+      caffeine_timing: {
+        eyebrow: "CAFEÏNESTRATEGIE",
+        hero: "Vooraf laden, dan één voor ~3 uur 's nachts",
+        body: "Sterkste dosis bij aanvang van je dienst, één tactische dosis tijdens de dip van 3–5 uur 's nachts — sla de losse kopjes daartussen over en stop bij je grens.",
+      },
+      movement: {
+        eyebrow: "BEWEEGMOMENT",
+        hero_template: "Beweeg {{range}}",
+        body: "Plan echte beweging in je actieve fase. Houd het bij rustig rekken binnen 2 uur voor je slaapblok, zodat je kerntemperatuur kan dalen.",
+      },
+      environment: {
+        eyebrow: "SLAAPGROT",
+        hero: "Verduisterd · ~18°C · ruis maskeren",
+        body: "Slapen overdag vraagt om een donkerdere, koelere en stillere kamer dan 's nachts. Volledige verduistering, een koele kamer en gelijkmatige witte/roze ruis maken van de dag een overtuigende nacht.",
+      },
+      anchor_sleep: {
+        eyebrow: "ANKERSLAAP",
+        hero_template: "Bescherm {{range}} elke dag",
+        body: "Bij een snelle rotatie bewaak je één vast blok van 4 uur dat bij elk diensttype overlapt met je slaap — verdeel de rest zoals je rooster toelaat.",
+      },
+      recovery_sleep: {
+        eyebrow: "HERSTELSLAAP",
+        hero: "Korte ochtendslaap, dan een volle nacht",
+        body: "Na je laatste nacht neem je een ochtendslaap van maximaal 3–4 u en blijf je daarna op, om vannacht lang te slapen en terug te schakelen. Dit is het plan — jij faalt niet.",
+      },
+      social_sync: {
+        eyebrow: "CONTACTMOMENT",
+        hero_template: "Beste tijd voor mensen: {{range}}",
+        body: "Jouw ene beschermde moment om er voor anderen te zijn — zonder het slaapblok ervoor of erna te saboteren. Sla dat late laatste drankje over.",
+        body_kids: "Afgestemd op het ophalen, zodat je echt tijd met de kinderen hebt zonder je herstelslaap in te korten.",
+      },
       caffeine: {
         eyebrow: 'CAFEÏNE',
         hero: 'Laatste kop om {{time}}',

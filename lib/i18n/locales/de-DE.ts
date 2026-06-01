@@ -66,6 +66,12 @@ const deDE = {
     expand_card_a11y: "Zeigen, warum das hilft",
     why_card_label: "WARUM DAS HILFT",
     why_card: {
+      caffeine_timing: "Koffein erreicht seinen Höhepunkt ~30–60 min nach dem Trinken, daher schlägt eine gezielt aufs zirkadiane Tief zwischen 3–5 Uhr getimte Dosis das Nippen über die ganze Schicht. Eine einzige gut platzierte Tasse dort bewirkt mehr als drei verstreute — und hält deine Sperrzeit ein.",
+      anchor_sleep: "Bei schnellem Schichtwechsel passt sich deine innere Uhr nie vollständig an, daher ist das Jagen nach dem perfekten 8-Stunden-Block ein aussichtsloses Spiel. Ein fester 4-Stunden-Anker jeden Tag gibt deinem Rhythmus einen stabilen Bezugspunkt, statt ihn mit jeder Schicht taumeln zu lassen.",
+      recovery_sleep: "Den ganzen Morgen nach Nachtschichten zu verschlafen hält deine Uhr im Nachtmodus und raubt dir den Schlafdruck, den du brauchst, um in derselben Nacht einzuschlafen. Ein kurzer, begrenzter Morgenschlaf nimmt die Spitze, lässt dich aber zu einer normalen Nacht zurückwechseln — die Erholung geht schneller, wenn du an diesem ersten Morgen bewusst zu wenig schläfst.",
+      environment: "Tagschlaf kämpft gegen zwei Wachsignale: Licht und eine steigende Körperkerntemperatur. Schon schwaches Licht durch die Vorhänge unterdrückt Melatonin, und ein kühler Raum (~18 °C) unterstützt den Temperaturabfall, der den Schlaf einleitet. Verdunkelung + Kühle + gleichmäßiges Rauschen macht aus dem Tag eine überzeugende Nacht.",
+      movement: "Bewegung ist ein sekundäres Taktsignal, das den Tiefschlaf vertieft, aber sie hebt die Körperkerntemperatur für ein paar Stunden an — und zum Einschlafen muss diese Temperatur fallen. Plane echte Bewegung für deine aktive Phase; in den 2 h vor deinem Schlafblock halte sie sanft.",
+      social_sync: "Der übliche Grund, warum ein Schlafplan scheitert, ist nicht die Wissenschaft — es sind Isolation, Schuldgefühle und die ungeplante späte Nacht. Ein geschütztes Fenster zu benennen, um mit Menschen zusammen zu sein, schützt sowohl deine Beziehungen als auch deinen Schlaf. Alkohol macht schnell müde, zerstückelt aber die zweite Nachthälfte — ein Schlafdieb, getarnt als Einschlafhilfe.",
       caffeine: "Koffein hat eine Halbwertszeit von ~6 Stunden – eine Tasse jetzt wirkt zur Schlafenszeit noch halb und zerstückelt deinen Tiefschlaf. Frühzeitiges Aufhören lässt das Adenosin wieder aufbauen, sodass du schneller einschläfst.",
       melatonin: "Eine niedrige Dosis 1–2 h vor deinem Schlaffenster verschiebt deine innere Uhr in Richtung deiner Schicht – es haut dich nicht um. Mehr ist nicht besser: 0,5–3 mg ist der erforschte Bereich.",
       light: "Licht ist das wichtigste Signal für die innere Uhr. Helles Licht in deinen aktiven Stunden hält dich wach; eine dunkle Brille auf dem Heimweg verhindert, dass die Morgensonne deine Uhr in die falsche Richtung zieht.",
@@ -87,6 +93,37 @@ const deDE = {
       'Wir verankern dein Schlaffenster an deinem Schichtende, damit der längste ungestörte Block dann fällt, wenn du sowieso runterkommst. Der Koffein-Stopp liegt 6 Stunden vor dem Schlafen — etwa eine Halbwertszeit. Melatonin (falls genutzt) wird 1–2 Stunden vor dem Schlafen genommen — früh genug, um deinen Rhythmus sanft zu verschieben, aber nicht so spät, dass du es verschläfst.',
     premium_suffix: 'PREMIUM',
     cards: {
+      caffeine_timing: {
+        eyebrow: "KOFFEIN-STRATEGIE",
+        hero: "Vorne laden, eine fürs Tief um ~3 Uhr aufheben",
+        body: "Stärkste Dosis zu Schichtbeginn, eine gezielte Dosis im Tief zwischen 3–5 Uhr — die verstreuten Tassen dazwischen weglassen und zur Sperrzeit aufhören.",
+      },
+      movement: {
+        eyebrow: "BEWEGUNGSFENSTER",
+        hero_template: "Bewegung {{range}}",
+        body: "Plane echtes Training für deine aktive Phase. In den 2 Stunden vor deinem Schlafblock nur sanftes Dehnen, damit deine Körperkerntemperatur sinken kann.",
+      },
+      environment: {
+        eyebrow: "SCHLAFHÖHLE",
+        hero: "Komplett dunkel · ~18 °C · Lärm maskieren",
+        body: "Tagschlaf braucht einen dunkleren, kühleren und leiseren Raum als Nachtschlaf. Echte Verdunkelung, ein kühler Raum und gleichmäßiges Weißes/Rosa Rauschen machen aus dem Tag eine überzeugende Nacht.",
+      },
+      anchor_sleep: {
+        eyebrow: "ANKER-SCHLAF",
+        hero_template: "{{range}} jeden Tag schützen",
+        body: "Bei schnellem Schichtwechsel einen festen 4-Stunden-Block schützen, der sich bei jeder Schichtart mit deinem Schlaf überschneidet — den Rest aufteilen, wie es dein Dienstplan zulässt.",
+      },
+      recovery_sleep: {
+        eyebrow: "ERHOLUNGSSCHLAF",
+        hero: "Kurzer Morgenschlaf, dann eine ganze Nacht",
+        body: "Nach deiner letzten Nacht einen auf 3–4 h begrenzten Morgenschlaf nehmen und wach bleiben, dann heute Nacht lang schlafen, um umzustellen. Das ist der Plan — nicht dein Versagen.",
+      },
+      social_sync: {
+        eyebrow: "VERBINDUNGSFENSTER",
+        hero_template: "Beste Zeit für Menschen: {{range}}",
+        body: "Dein eines geschütztes Fenster, um für Menschen präsent zu sein — ohne den Schlafblock auf beiden Seiten zu sabotieren. Lass das späte „noch ein Drink“ aus.",
+        body_kids: "Auf die Abholzeit abgestimmt, damit du echte Zeit mit den Kindern hast, ohne deinen Erholungsschlaf zu verkürzen.",
+      },
       caffeine: {
         eyebrow: 'KOFFEIN',
         hero: 'Letzte Tasse bis {{time}}',

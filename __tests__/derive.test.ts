@@ -20,6 +20,10 @@ import {
   lightWindowsForShift,
   napWindowForShift,
   mealTimingForShift,
+  movementWindowForShift,
+  socialWindowForDay,
+  isFastRotatingSchedule,
+  anchorSleepWindow,
 } from '../lib/derive';
 
 // Mock t() so tests don't depend on i18n setup
@@ -326,5 +330,50 @@ describe('mealTimingForShift', () => {
     const m = mealTimingForShift('off', 23);
     expect(m.mainMealHour).toBe(13);
     expect(m.cutoffHour).toBe(20);
+  });
+});
+
+// C4: rich-plan module helpers
+describe('movementWindowForShift', () => {
+  test('night → pre-shift afternoon window', () => {
+    expect(movementWindowForShift('night')).toEqual({ startHour: 15, endHour: 17 });
+  });
+  test('day → after-shift evening window', () => {
+    expect(movementWindowForShift('day')).toEqual({ startHour: 17, endHour: 19 });
+  });
+  test('off → morning outdoor window', () => {
+    expect(movementWindowForShift('off')).toEqual({ startHour: 9, endHour: 11 });
+  });
+});
+
+describe('socialWindowForDay', () => {
+  test('night → before the shift', () => {
+    expect(socialWindowForDay('night', false, null)).toEqual({ startHour: 16, endHour: 18 });
+  });
+  test('off without kids → mid-afternoon default', () => {
+    expect(socialWindowForDay('off', false, null)).toEqual({ startHour: 15, endHour: 19 });
+  });
+  test('off with kids → anchored to pickup hour', () => {
+    expect(socialWindowForDay('off', true, 15)).toEqual({ startHour: 15, endHour: 19 });
+  });
+  test('off with late pickup → window clamps to 21:00', () => {
+    expect(socialWindowForDay('off', true, 19)).toEqual({ startHour: 19, endHour: 21 });
+  });
+});
+
+describe('isFastRotatingSchedule', () => {
+  test.each(['3x12-day-night', '24-48', '24/48', '48-96', 'continental-eu', 'custom-x'])(
+    'true for fast rotator %s',
+    (id) => expect(isFastRotatingSchedule(id)).toBe(true),
+  );
+  test('false for null / stable day', () => {
+    expect(isFastRotatingSchedule(null)).toBe(false);
+    expect(isFastRotatingSchedule('fixed-day')).toBe(false);
+  });
+});
+
+describe('anchorSleepWindow', () => {
+  test('fixed early-morning 4h block', () => {
+    expect(anchorSleepWindow()).toEqual({ startHour: 4, endHour: 8 });
   });
 });

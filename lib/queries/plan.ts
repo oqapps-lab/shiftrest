@@ -21,7 +21,21 @@ import { supabase, isSupabaseConfigured } from '../supabase';
 import { useAuth } from '../auth/store';
 
 export interface PlanRecommendation {
-  type: 'caffeine' | 'melatonin' | 'light' | 'nap' | 'sleep_window' | 'wind_down' | 'meal';
+  type:
+    | 'caffeine'
+    | 'melatonin'
+    | 'light'
+    | 'nap'
+    | 'sleep_window'
+    | 'wind_down'
+    | 'meal'
+    // C4: rich-plan modules
+    | 'caffeine_timing'
+    | 'anchor_sleep'
+    | 'recovery_sleep'
+    | 'environment'
+    | 'movement'
+    | 'social_sync';
   eyebrow: string;
   hero: string;
   body: string;

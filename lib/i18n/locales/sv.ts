@@ -52,6 +52,12 @@ const sv = {
     expand_card_a11y: "Visa varför detta hjälper",
     why_card_label: "VARFÖR DET HJÄLPER",
     why_card: {
+      caffeine_timing: "Koffein når sin topp ~30–60 min efter att du druckit det, så att tajma en dos till den cirkadiska svackan kl. 03–05 slår att smutta hela passet. En enda väl placerad kopp där gör mer än tre utspridda — och håller din gräns intakt.",
+      anchor_sleep: "Vid snabb rotation hinner din inre klocka aldrig anpassa sig helt, så att jaga ett perfekt 8-timmarsblock är ett förlorat spel. Att hålla ett fast 4-timmars ankare varje dag ger din rytm en stabil referenspunkt i stället för att låta den kastas omkring med varje pass.",
+      recovery_sleep: "Att sova hela morgonen efter nattpass håller din klocka i nattläge och stjäl det sömntryck du behöver för att somna den natten. En kort, begränsad morgonsömn tar udden av samtidigt som den låter dig ställa om till en normal natt — återhämtningen går snabbare när du medvetet undersover den första morgonen.",
+      environment: "Dagsömn kämpar mot två vakensignaler: ljus och en stigande kroppstemperatur. Även svagt ljus genom gardinerna dämpar melatonin, och ett svalt rum (~18°C) stödjer det temperaturfall som inleder sömnen. Mörkläggning + svalka + jämnt brus förvandlar dagen till en övertygande natt.",
+      movement: "Träning är en sekundär klocksignal som fördjupar djupsömnen, men den höjer kroppstemperaturen i ett par timmar — och för att somna måste den temperaturen sjunka. Lägg riktig rörelse till din aktiva fas; håll den mjuk inom 2 h före ditt sömnblock.",
+      social_sync: "Den vanliga orsaken till att en sömnplan kollapsar är inte vetenskapen — det är isolering, skuldkänslor och den oplanerade sena kvällen. Att namnge ett skyddat fönster för att umgås med andra skyddar både dina relationer och din sömn. Alkohol bedövar snabbt men fragmenterar nattens andra hälft — en sömntjuv förklädd till sömnhjälp.",
       caffeine: "Koffein har en halveringstid på ~6 timmar – en kopp nu är fortfarande halvaktiv vid läggdags och splittrar din djupsömn. Att sluta i tid låter adenosinet byggas upp så att du somnar snabbare.",
       melatonin: "En låg dos 1–2 h före ditt sömnfönster förskjuter din inre klocka mot ditt skift – det söver dig inte. Mer är inte bättre: 0,5–3 mg är det studerade intervallet.",
       light: "Ljus är klockans främsta signal. Starkt ljus under dina aktiva timmar håller dig pigg; mörka glasögon på vägen hem hindrar morgonsolen från att dra klockan åt fel håll.",
@@ -73,6 +79,37 @@ const sv = {
       'Vi förankrar ditt sömnfönster vid passets slut så att det längsta obrutna blocket landar när du ändå varvar ner. Koffeinstoppet sätts 6 timmar före läggdags — ungefär en halveringstid. Melatonin (om du tar det) tas 1–2 timmar före sömn — tidigt nog för att flytta din dygnsrytm, men inte så sent att du sover igenom det.',
     premium_suffix: 'PREMIUM',
     cards: {
+      caffeine_timing: {
+        eyebrow: "KOFFEINSTRATEGI",
+        hero: "Ladda tidigt, spara en till ~kl. 03",
+        body: "Starkaste dosen vid passets början, en taktisk dos vid svackan kl. 03–05 — strunta i de utspridda kopparna däremellan, och sluta vid din gräns.",
+      },
+      movement: {
+        eyebrow: "RÖRELSEFÖNSTER",
+        hero_template: "Rör på dig {{range}}",
+        body: "Lägg riktig träning till din aktiva fas. Håll dig till mjuk stretching inom 2 timmar före ditt sömnblock så att din kroppstemperatur hinner sjunka.",
+      },
+      environment: {
+        eyebrow: "SÖMNGROTTAN",
+        hero: "Mörkläggning · ~18°C · maskera ljud",
+        body: "Dagsömn kräver ett mörkare, svalare och tystare rum än nattsömn. Total mörkläggning, ett svalt rum och jämnt vitt/rosa brus förvandlar dagen till en övertygande natt.",
+      },
+      anchor_sleep: {
+        eyebrow: "ANKARSÖMN",
+        hero_template: "Skydda {{range}} varje dag",
+        body: "Vid snabb rotation, vakta ett fast 4-timmarsblock som överlappar din sömn vid varje passtyp — dela upp resten som ditt schema tillåter.",
+      },
+      recovery_sleep: {
+        eyebrow: "ÅTERHÄMTNINGSSÖMN",
+        hero: "Kort morgonsömn, sedan en hel natt",
+        body: "Efter din sista natt, ta en begränsad 3–4 h morgonsömn och håll dig vaken, sov sedan länge i natt för att ställa om. Det här är planen — inte att du misslyckas.",
+      },
+      social_sync: {
+        eyebrow: "UMGÄNGESFÖNSTER",
+        hero_template: "Bästa tiden för andra: {{range}}",
+        body: "Ditt enda skyddade fönster att vara närvarande med andra — utan att sabotera sömnblocket på någondera sidan. Strunta i den sena sista drinken.",
+        body_kids: "Anpassat till hämtningen så att du får riktig tid med barnen utan att korta ner din återhämtningssömn.",
+      },
       caffeine: {
         eyebrow: 'KOFFEIN',
         hero: 'Sista koppen senast {{time}}',

@@ -53,6 +53,12 @@ const esES = {
     expand_card_a11y: "Ver por qué ayuda",
     why_card_label: "POR QUÉ AYUDA",
     why_card: {
+      caffeine_timing: "La cafeína alcanza su pico ~30–60 min después de tomarla, así que cronometrar una dosis para el bajón circadiano de las 3–5 a.m. funciona mejor que ir bebiendo a sorbos todo el turno. Una sola taza bien colocada ahí rinde más que tres dispersas, y mantiene intacta tu hora límite.",
+      anchor_sleep: "En una rotación rápida tu reloj nunca se adapta del todo, así que perseguir un bloque perfecto de 8 horas es una batalla perdida. Mantener un ancla fija de 4 horas cada día le da a tu ritmo un punto de referencia estable en lugar de dejar que dé bandazos con cada turno.",
+      recovery_sleep: "Dormir toda la mañana después de las noches mantiene tu reloj en modo nocturno y te roba la presión de sueño que necesitas para dormirte esa noche. Un sueño matinal corto y limitado quita el filo mientras te permite volver a una noche normal: la recuperación es más rápida cuando duermes menos esa primera mañana a propósito.",
+      environment: "El sueño diurno lucha contra dos señales de vigilia: la luz y una temperatura corporal en ascenso. Incluso la luz tenue que se cuela por las cortinas suprime la melatonina, y una habitación fresca (~18°C) favorece la caída de temperatura que inicia el sueño. Oscuridad total + frescor + ruido constante convierten el día en una noche convincente.",
+      movement: "El ejercicio es una señal secundaria del reloj que profundiza el sueño de ondas lentas, pero eleva la temperatura corporal durante un par de horas, y dormirse requiere que esa temperatura baje. Reserva el movimiento de verdad para tu fase activa; mantenlo suave en las 2 h previas a tu bloque de sueño.",
+      social_sync: "El motivo habitual de que un plan de sueño se derrumbe no es la ciencia: es el aislamiento, la culpa y la noche tardía no planificada. Designar una ventana protegida para estar con la gente protege tanto tus relaciones como tu sueño. El alcohol seda rápido pero fragmenta la segunda mitad de la noche: un ladrón de sueño disfrazado de ayuda para dormir.",
       caffeine: "La cafeína tiene una vida media de ~6 horas: una taza ahora sigue medio activa a la hora de dormir y fragmenta el sueño profundo. Cortarla pronto deja que la adenosina se acumule de nuevo y te duermas antes.",
       melatonin: "Una dosis baja 1–2 h antes de tu ventana de sueño desplaza tu reloj interno hacia tu turno, no te deja KO. Más no es mejor: 0,5–3 mg es el rango estudiado.",
       light: "La luz es la señal maestra de tu reloj. La luz intensa durante tus horas activas mantiene el estado de alerta; unas gafas oscuras en el trayecto a casa evitan que el sol de la mañana desplace tu reloj en el sentido equivocado.",
@@ -74,6 +80,37 @@ const esES = {
       'Anclamos tu ventana de sueño al final de tu turno para que el bloque más largo de descanso caiga cuando ya estás bajando el ritmo. El corte de cafeína se sitúa 6 horas antes de dormir, que es aproximadamente su semivida. La melatonina (cuando se usa) va 1–2 horas antes de dormir — lo bastante pronto para mover tu fase circadiana, no tan tarde como para dormirte después.',
     premium_suffix: 'PREMIUM',
     cards: {
+      caffeine_timing: {
+        eyebrow: "ESTRATEGIA DE CAFEÍNA",
+        hero: "Carga al principio y reserva una para las ~3 a.m.",
+        body: "La dosis más fuerte al empezar el turno y una dosis táctica en el bajón de las 3–5 a.m.: evita las tazas dispersas de en medio y para en tu hora límite.",
+      },
+      movement: {
+        eyebrow: "VENTANA DE MOVIMIENTO",
+        hero_template: "Muévete {{range}}",
+        body: "Reserva el ejercicio de verdad para tu fase activa. Limítate a estiramientos suaves en las 2 horas previas a tu bloque de sueño para que tu temperatura corporal pueda bajar.",
+      },
+      environment: {
+        eyebrow: "CUEVA DEL SUEÑO",
+        hero: "Oscuridad total · ~18°C · enmascara el ruido",
+        body: "El sueño diurno necesita una habitación más oscura, fresca y silenciosa que el sueño nocturno. La oscuridad total, una habitación fresca y un ruido blanco/rosa constante convierten el día en una noche convincente.",
+      },
+      anchor_sleep: {
+        eyebrow: "SUEÑO ANCLA",
+        hero_template: "Protege {{range}} cada día",
+        body: "En una rotación rápida, protege un bloque fijo de 4 horas que solape con tu sueño en todos los tipos de turno; reparte el resto según te lo permita tu horario.",
+      },
+      recovery_sleep: {
+        eyebrow: "SUEÑO DE RECUPERACIÓN",
+        hero: "Sueño matinal corto y luego una noche completa",
+        body: "Tras tu último turno de noche, duerme un máximo de 3–4 h por la mañana y mantente despierto; luego duerme largo esta noche para volver al ritmo. Esto es el plan, no que estés fallando.",
+      },
+      social_sync: {
+        eyebrow: "VENTANA DE CONEXIÓN",
+        hero_template: "Mejor momento para la gente: {{range}}",
+        body: "Tu única ventana protegida para estar presente con la gente, sin sabotear el bloque de sueño de ningún lado. Sáltate la última copa de más.",
+        body_kids: "Ajustada a la hora de recogida para que tengas tiempo de verdad con los niños sin recortar tu sueño de recuperación.",
+      },
       caffeine: {
         eyebrow: 'CAFEÍNA',
         hero: 'Última taza antes de las {{time}}',

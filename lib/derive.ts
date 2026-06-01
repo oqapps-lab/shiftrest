@@ -303,3 +303,58 @@ export function mealTimingForShift(
     cutoffHour: Math.max(19, Math.floor(sleepStartHour) - 3),
   };
 }
+
+// ─── C4: rich-plan module helpers ──────────────────────────────────────────
+// Pure, shift-keyed windows for the new plan modules. Same pattern as the
+// nap/light/meal helpers above.
+
+export interface HourWindow {
+  startHour: number;
+  endHour: number;
+}
+
+/**
+ * C4 — exercise window. Exercise is a secondary zeitgeber that deepens
+ * slow-wave sleep, but vigorous work raises core temp for ~2h so it must
+ * sit well before the sleep block. Returns the recommended active window.
+ */
+export function movementWindowForShift(shift: 'day' | 'night' | 'off'): HourWindow {
+  if (shift === 'night') return { startHour: 15, endHour: 17 }; // before leaving for the night
+  if (shift === 'day') return { startHour: 17, endHour: 19 };   // after a day shift, hours before sleep
+  return { startHour: 9, endHour: 11 };                         // off day: morning outdoors (doubles as a light anchor)
+}
+
+/**
+ * C4 — protected social / family "connect" window. Names one realistic slot
+ * to be present with people without collapsing the sleep block on either
+ * side. Shifts to overlap kid-pickup when the user has children.
+ */
+export function socialWindowForDay(
+  shift: 'day' | 'night' | 'off',
+  hasChildren: boolean,
+  pickupHour: number | null,
+): HourWindow {
+  if (shift === 'night') return { startHour: 16, endHour: 18 }; // before the shift
+  if (shift === 'day') return { startHour: 18, endHour: 20 };   // evening after a day shift
+  // Off day: anchor to kid-pickup when present, else mid-afternoon.
+  const start = hasChildren && pickupHour != null ? pickupHour : 15;
+  return { startHour: start, endHour: Math.min(21, start + 4) };
+}
+
+/**
+ * C4 — true for fast-rotating schedules where the clock never fully adapts,
+ * so an anchor-sleep block (one fixed period every day) is the right tool.
+ */
+export function isFastRotatingSchedule(scheduleId: string | null | undefined): boolean {
+  if (!scheduleId) return false;
+  // Accept dash or slash separators (24-48 / 24/48 / 2448, etc.).
+  return /3x12|24[-/]?48|48[-/]?96|continental|custom/i.test(scheduleId);
+}
+
+/**
+ * C4 — anchor-sleep window: one fixed block guarded every day on a fast
+ * rotation. Anchored to the early-morning overlap of most shift types.
+ */
+export function anchorSleepWindow(): HourWindow {
+  return { startHour: 4, endHour: 8 };
+}

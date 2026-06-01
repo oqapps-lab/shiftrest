@@ -52,6 +52,12 @@ const itIT = {
     expand_card_a11y: "Scopri perché aiuta",
     why_card_label: "PERCHÉ AIUTA",
     why_card: {
+      caffeine_timing: "La caffeina raggiunge il picco circa 30–60 min dopo che l'hai bevuta, quindi mirare una dose al calo circadiano delle 3–5 del mattino batte il sorseggiare per tutto il turno. Una sola tazza ben piazzata lì fa più di tre sparse, e ti lascia intatto l'orario limite.",
+      anchor_sleep: "Con una rotazione rapida il tuo orologio non si adatta mai del tutto, quindi rincorrere un blocco perfetto di 8 ore è una battaglia persa. Mantenere un'ancora fissa di 4 ore ogni giorno dà al tuo ritmo un punto di riferimento stabile, invece di lasciarlo sbandare a ogni turno.",
+      recovery_sleep: "Dormire tutta la mattina dopo i turni di notte tiene il tuo orologio in modalità notturna e ti ruba la pressione del sonno che ti serve per addormentarti la sera. Un sonno mattutino breve e limitato smorza la stanchezza lasciandoti tornare a una notte normale: il recupero è più rapido se quella prima mattina dormi meno di proposito.",
+      environment: "Il sonno diurno combatte due segnali di veglia: la luce e una temperatura corporea che sale. Anche una luce debole attraverso le tende sopprime la melatonina, e una stanza fresca (~18°C) favorisce il calo di temperatura che avvia il sonno. Buio totale + fresco + rumore costante trasforma il giorno in una notte convincente.",
+      movement: "L'esercizio è un segnale secondario per l'orologio biologico che approfondisce il sonno a onde lente, ma alza la temperatura corporea per un paio d'ore, e per addormentarsi serve che quella temperatura scenda. Programma il movimento vero nella tua fase attiva; tienilo leggero nelle 2 h prima del blocco di sonno.",
+      social_sync: "Il motivo per cui un piano del sonno di solito crolla non è la scienza: sono l'isolamento, il senso di colpa e la nottata tardi non pianificata. Definire una finestra protetta per stare con le persone protegge sia le tue relazioni sia il tuo sonno. L'alcol seda in fretta ma frammenta la seconda metà della notte: un ladro di sonno travestito da sonnifero.",
       caffeine: "La caffeina ha un'emivita di ~6 ore: una tazza adesso è ancora attiva per metà all'ora di dormire e frammenta il sonno profondo. Smettere presto lascia che l'adenosina si ricostruisca, così ti addormenti più in fretta.",
       melatonin: "Una dose bassa 1–2 h prima della tua finestra di sonno sposta l'orologio biologico verso il tuo turno, non ti stordisce. Di più non è meglio: 0,5–3 mg è l'intervallo studiato.",
       light: "La luce è il segnale principale del tuo orologio interno. Una luce intensa nelle ore di attività mantiene la vigilanza; gli occhiali scuri sul tragitto di ritorno impediscono al sole del mattino di spostare l'orologio nella direzione sbagliata.",
@@ -73,6 +79,37 @@ const itIT = {
       "Ancoriamo la tua finestra di sonno alla fine del turno, così il blocco continuo più lungo cade quando stai già rallentando. Lo stop caffeina è 6 ore prima del letto perché corrisponde all’incirca alla sua emivita. La melatonina (se usata) va 1–2 ore prima del sonno — abbastanza presto da spostare la fase circadiana, non così tardi da farti dormire oltre il momento giusto.",
     premium_suffix: "PREMIUM",
     cards: {
+      caffeine_timing: {
+        eyebrow: "STRATEGIA CAFFEINA",
+        hero: "Carica all'inizio, poi tienine una per le ~3 di notte",
+        body: "Dose più forte all'inizio del turno, una dose tattica nel calo delle 3–5 del mattino: salta i caffè sparsi nel mezzo e fermati al tuo orario limite.",
+      },
+      movement: {
+        eyebrow: "FINESTRA MOVIMENTO",
+        hero_template: "Muoviti {{range}}",
+        body: "Programma l'esercizio vero nella tua fase attiva. Limitati a stretching leggero nelle 2 ore prima del blocco di sonno, così la temperatura corporea può scendere.",
+      },
+      environment: {
+        eyebrow: "TANA DEL SONNO",
+        hero: "Buio totale · ~18°C · maschera i rumori",
+        body: "Il sonno diurno ha bisogno di una stanza più buia, fresca e silenziosa di quella notturna. Buio totale, ambiente fresco e un rumore bianco/rosa costante trasformano il giorno in una notte convincente.",
+      },
+      anchor_sleep: {
+        eyebrow: "SONNO ANCORA",
+        hero_template: "Proteggi {{range}} ogni giorno",
+        body: "Con una rotazione rapida, difendi un blocco fisso di 4 ore che si sovrappone al tuo sonno in ogni tipo di turno: distribuisci il resto come ti permette il programma.",
+      },
+      recovery_sleep: {
+        eyebrow: "SONNO DI RECUPERO",
+        hero: "Sonno breve al mattino, poi una notte piena",
+        body: "Dopo l'ultima notte, fai un sonno mattutino limitato a 3–4 h e resta sveglio, poi dormi a lungo stanotte per tornare in fase. È il piano che funziona così, non un tuo fallimento.",
+      },
+      social_sync: {
+        eyebrow: "FINESTRA RELAZIONI",
+        hero_template: "Momento migliore per stare con gli altri: {{range}}",
+        body: "La tua unica finestra protetta per essere presente con le persone, senza sabotare il blocco di sonno prima o dopo. Salta l'ultimo bicchiere a tarda ora.",
+        body_kids: "Allineata all'orario di ritiro, così hai tempo vero con i bambini senza accorciare il tuo sonno di recupero.",
+      },
       caffeine: {
         eyebrow: "CAFFEINA",
         hero: "Ultima tazza entro le {{time}}",

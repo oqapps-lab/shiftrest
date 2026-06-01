@@ -53,6 +53,12 @@ const frFR = {
     expand_card_a11y: "Voir pourquoi c'est utile",
     why_card_label: "POURQUOI C'EST UTILE",
     why_card: {
+      caffeine_timing: "La caféine atteint son pic ~30–60 min après l'avoir bue, alors caler une dose sur le creux circadien de 3–5 h du matin vaut mieux que de siroter tout le poste. Une seule tasse bien placée à ce moment fait plus que trois éparpillées — tout en préservant votre heure limite.",
+      anchor_sleep: "En rotation rapide, votre horloge ne s'adapte jamais complètement, alors courir après un bloc parfait de 8 heures est une bataille perdue d'avance. Garder un ancrage fixe de 4 heures chaque jour donne à votre rythme un point de repère stable au lieu de le laisser tanguer à chaque poste.",
+      recovery_sleep: "Dormir toute la matinée après des nuits maintient votre horloge en mode nuit et vous prive de la pression dont vous avez besoin pour vous endormir le soir. Un court sommeil matinal plafonné apaise la fatigue tout en vous laissant revenir à une nuit normale — la récupération est plus rapide quand vous sous-dormez volontairement ce premier matin.",
+      environment: "Le sommeil de jour lutte contre deux signaux d'éveil : la lumière et la hausse de la température corporelle. Même une faible lumière à travers les rideaux supprime la mélatonine, et une pièce fraîche (~18°C) soutient la baisse de température qui amorce le sommeil. Obscurité totale + fraîcheur + bruit constant transforment le jour en une nuit convaincante.",
+      movement: "L'exercice est un signal horaire secondaire qui approfondit le sommeil lent, mais il élève la température corporelle pendant quelques heures — et s'endormir exige que cette température baisse. Placez le vrai mouvement dans votre phase active ; gardez-le doux dans les 2 h qui précèdent votre bloc de sommeil.",
+      social_sync: "La raison habituelle de l'effondrement d'un plan de sommeil n'est pas la science — c'est l'isolement, la culpabilité et la soirée tardive imprévue. Nommer une fenêtre protégée pour être avec vos proches protège à la fois vos relations et votre sommeil. L'alcool endort vite mais fragmente la seconde moitié de la nuit — un voleur de sommeil déguisé en aide au sommeil.",
       caffeine: "La caféine a une demi-vie d'environ 6 heures : une tasse maintenant agit encore à moitié au coucher et fragmente le sommeil profond. Arrêter tôt laisse l'adénosine se reconstituer pour s'endormir plus vite.",
       melatonin: "Une faible dose 1–2 h avant votre fenêtre de sommeil ajuste votre horloge interne à votre poste, sans vous assommer. Plus n'est pas mieux : 0,5–3 mg est la plage étudiée.",
       light: "La lumière est le signal maître de l'horloge. Une lumière vive pendant vos heures actives maintient la vigilance ; des lunettes sombres sur le trajet du retour empêchent le soleil du matin de décaler votre horloge dans le mauvais sens.",
@@ -74,6 +80,37 @@ const frFR = {
       'On ancre ta fenêtre de sommeil sur la fin de ton service pour que le plus long bloc continu tombe quand tu commences déjà à décrocher. Le stop caféine est fixé 6 heures avant le coucher, à peu près sa demi-vie. La mélatonine (si tu en prends) se prend 1 à 2 heures avant le sommeil — assez tôt pour décaler ta phase circadienne, pas trop tard pour ne pas dormir à travers.',
     premium_suffix: 'PREMIUM',
     cards: {
+      caffeine_timing: {
+        eyebrow: "STRATÉGIE CAFÉINE",
+        hero: "Concentrez tôt, puis gardez-en une pour ~3 h du matin",
+        body: "Dose la plus forte en début de poste, une dose tactique au creux de 3–5 h du matin — sautez les tasses éparpillées entre les deux, et arrêtez à votre heure limite.",
+      },
+      movement: {
+        eyebrow: "FENÊTRE D'ACTIVITÉ",
+        hero_template: "Bougez {{range}}",
+        body: "Placez le vrai exercice dans votre phase active. Tenez-vous-en à des étirements doux dans les 2 heures qui précèdent votre bloc de sommeil, pour que votre température corporelle puisse baisser.",
+      },
+      environment: {
+        eyebrow: "GROTTE DE SOMMEIL",
+        hero: "Obscurité totale · ~18°C · masquer le bruit",
+        body: "Le sommeil de jour exige une pièce plus sombre, plus fraîche et plus silencieuse que le sommeil de nuit. Une vraie obscurité, une pièce fraîche et un bruit blanc/rose constant transforment le jour en une nuit convaincante.",
+      },
+      anchor_sleep: {
+        eyebrow: "SOMMEIL D'ANCRAGE",
+        hero_template: "Protégez {{range}} chaque jour",
+        body: "En rotation rapide, préservez un bloc fixe de 4 heures qui chevauche votre sommeil sur chaque type de poste — répartissez le reste selon ce que votre planning permet.",
+      },
+      recovery_sleep: {
+        eyebrow: "SOMMEIL DE RÉCUPÉRATION",
+        hero: "Court sommeil matinal, puis une nuit complète",
+        body: "Après votre dernière nuit, faites un sommeil matinal plafonné à 3–4 h puis restez éveillé, puis dormez longtemps cette nuit pour vous resynchroniser. C'est le plan — pas un échec de votre part.",
+      },
+      social_sync: {
+        eyebrow: "FENÊTRE DE CONNEXION",
+        hero_template: "Meilleur moment pour les proches : {{range}}",
+        body: "Votre unique fenêtre protégée pour être présent avec vos proches — sans saboter le bloc de sommeil de part et d'autre. Évitez le dernier verre tardif.",
+        body_kids: "Calée sur la sortie d'école pour vous offrir un vrai moment avec les enfants sans écourter votre sommeil de récupération.",
+      },
       caffeine: {
         eyebrow: 'CAFÉINE',
         hero: 'Dernière tasse avant {{time}}',

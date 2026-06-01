@@ -52,6 +52,12 @@ const ptBR = {
     expand_card_a11y: "Ver por que isso ajuda",
     why_card_label: "POR QUE ISSO AJUDA",
     why_card: {
+      caffeine_timing: "A cafeína atinge o pico ~30–60 min depois de você tomar, então cronometrar uma dose para a baixa circadiana das 3–5 h supera ficar bebericando o plantão todo. Uma única xícara bem posicionada ali faz mais que três espalhadas — e mantém o seu horário-limite intacto.",
+      anchor_sleep: "Num rodízio rápido o seu relógio nunca se adapta por completo, então perseguir um bloco perfeito de 8 h é uma batalha perdida. Manter uma âncora fixa de 4 h todos os dias dá ao seu ritmo um ponto de referência estável, em vez de deixá-lo balançar a cada plantão.",
+      recovery_sleep: "Dormir a manhã inteira depois das noites mantém o seu relógio no modo noturno e rouba a pressão de sono que você precisa para adormecer naquela noite. Um sono curto e limitado de manhã alivia o cansaço e ao mesmo tempo deixa você virar a chave para uma noite normal — a recuperação é mais rápida quando você dorme de menos de propósito nessa primeira manhã.",
+      environment: "O sono diurno luta contra dois sinais de vigília: a luz e o aumento da temperatura corporal. Até uma luz fraca passando pela cortina suprime a melatonina, e um quarto fresco (~18°C) favorece a queda de temperatura que dá início ao sono. Blackout + fresco + ruído constante transforma o dia numa noite convincente.",
+      movement: "O exercício é um sinal secundário para o relógio que aprofunda o sono de ondas lentas, mas eleva a temperatura corporal por algumas horas — e adormecer exige que essa temperatura caia. Reserve o movimento de verdade para a sua fase ativa; mantenha-o leve nas 2 h antes do seu bloco de sono.",
+      social_sync: "O motivo de costume para um plano de sono desmoronar não é a ciência — é o isolamento, a culpa e a noitada não planejada. Definir uma janela protegida para estar com as pessoas protege tanto os seus relacionamentos quanto o seu sono. O álcool seda rápido, mas fragmenta a segunda metade da noite — um ladrão de sono disfarçado de indutor do sono.",
       caffeine: "A cafeína tem meia-vida de ~6 horas — uma xícara agora ainda está metade ativa na hora de dormir, fragmentando o sono profundo. Parar cedo deixa a adenosina se acumular para você adormecer mais rápido.",
       melatonin: "Uma dose baixa 1–2 h antes da sua janela de sono ajusta seu relógio biológico ao seu turno, em vez de te apagar. Mais não é melhor — 0,5–3 mg é a faixa estudada.",
       light: "A luz é o principal sinal do relógio biológico. Luz forte durante suas horas ativas mantém o estado de alerta; óculos escuros no trajeto de volta para casa impedem que o sol da manhã puxe seu relógio na direção errada.",
@@ -73,6 +79,37 @@ const ptBR = {
       "Ancoramos sua janela de sono ao fim do turno para que o bloco mais longo de descanso aconteça quando você já está desacelerando. O corte de cafeína fica 6 horas antes de dormir, mais ou menos a meia-vida. A melatonina (quando usada) vai 1–2 horas antes do sono — cedo o bastante para ajustar sua fase circadiana, mas não tão tarde a ponto de você dormir através do efeito.",
     premium_suffix: "PREMIUM",
     cards: {
+      caffeine_timing: {
+        eyebrow: "ESTRATÉGIA DA CAFEÍNA",
+        hero: "Carregue no início e guarde uma dose para ~3 h",
+        body: "Dose mais forte no começo do plantão, uma dose tática na baixa das 3–5 h — pule os cafezinhos espalhados no meio e pare no seu horário-limite.",
+      },
+      movement: {
+        eyebrow: "JANELA DE MOVIMENTO",
+        hero_template: "Movimente-se {{range}}",
+        body: "Reserve o exercício de verdade para a sua fase ativa. Nas 2 h antes do seu bloco de sono, fique só em alongamentos leves para a temperatura corporal poder cair.",
+      },
+      environment: {
+        eyebrow: "CAVERNA DO SONO",
+        hero: "Blackout · ~18°C · abafe o ruído",
+        body: "O sono diurno precisa de um quarto mais escuro, fresco e silencioso que o sono noturno. Blackout total, quarto fresco e um ruído branco/rosa constante transformam o dia numa noite convincente.",
+      },
+      anchor_sleep: {
+        eyebrow: "SONO-ÂNCORA",
+        hero_template: "Proteja {{range}} todos os dias",
+        body: "Num rodízio rápido, blinde um bloco fixo de 4 h que coincida com o seu sono em todo tipo de plantão — divida o resto conforme a sua escala permitir.",
+      },
+      recovery_sleep: {
+        eyebrow: "SONO DE RECUPERAÇÃO",
+        hero: "Sono curto de manhã e depois uma noite inteira",
+        body: "Depois do seu último plantão noturno, durma no máximo 3–4 h de manhã e fique acordado, depois durma bastante hoje à noite para virar a chave. Isso é o plano — não é você falhando.",
+      },
+      social_sync: {
+        eyebrow: "JANELA DE CONEXÃO",
+        hero_template: "Melhor hora para as pessoas: {{range}}",
+        body: "Sua única janela protegida para estar presente com as pessoas — sem sabotar o bloco de sono de nenhum dos lados. Pule aquele \"só mais um drinque\" no fim.",
+        body_kids: "Alinhada à hora de buscar as crianças para você ter tempo de verdade com elas sem encurtar o seu sono de recuperação.",
+      },
       caffeine: {
         eyebrow: "CAFEÍNA",
         hero: "Última xícara até {{time}}",
