@@ -5,7 +5,7 @@
  * Home transition card still appears for demo.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
@@ -22,7 +22,7 @@ import {
   type SegmentOption,
   showAppDialog,
 } from '../components/ui';
-import { spacing, colors } from '../constants/tokens';
+import { spacing, colors, radii } from '../constants/tokens';
 import { safeDismiss } from '../lib/nav';
 import { useAuth } from '../lib/auth/store';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
@@ -37,6 +37,7 @@ import {
 } from '../lib/transition/generate';
 import { setLocalTransitionPlan } from '../lib/local-transition/store';
 import { emitChange, EVENTS } from '../lib/queries';
+import { formatDayMonth } from '../lib/derive';
 import { t } from '../lib/i18n';
 
 const getTypeOptions = (): SegmentOption<TransitionType>[] => [
@@ -54,6 +55,14 @@ export default function TransitionCreate() {
     return d;
   });
   const [submitting, setSubmitting] = useState(false);
+
+  // D2: live start→end window so the user sees the transition has a finish,
+  // not just a start. The protocol spans 2 days (end = start + 1).
+  const windowText = useMemo(() => {
+    const end = new Date(startsAt);
+    end.setDate(startsAt.getDate() + 1);
+    return `${formatDayMonth(startsAt)} → ${formatDayMonth(end)}`;
+  }, [startsAt]);
 
   const onSave = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -226,6 +235,13 @@ export default function TransitionCreate() {
         >
           {t('transition_create.preview_template', { days: 2 })}
         </Text>
+        {/* D2: explicit start → end window */}
+        <View style={styles.windowPill}>
+          <Glyph name="calendar" size={14} color="primary" />
+          <Text variant="labelMd" weight="medium" color="primary" style={{ marginLeft: spacing.xs }}>
+            {windowText}
+          </Text>
+        </View>
         <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: spacing.sm }}>
           {t('transition_create.preview_body')}
         </Text>
@@ -242,5 +258,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: spacing.md,
+  },
+  windowPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    marginTop: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    backgroundColor: colors.primaryContainer,
+    borderRadius: radii.pill,
   },
 });

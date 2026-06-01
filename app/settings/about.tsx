@@ -17,6 +17,7 @@ import {
   showAppDialog,
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
+import { router } from 'expo-router';
 import { safeBack } from '../../lib/nav';
 import { t } from '../../lib/i18n';
 
@@ -68,12 +69,12 @@ export default function About() {
     {
       glyph: 'bell',
       label: t('settings_screens.about.privacy'),
-      onPress: () => openExternal('https://oqapps.pro/legal/shiftsleep/privacy'),
+      onPress: () => router.push('/legal/privacy'),
     },
     {
       glyph: 'bell',
       label: t('settings_screens.about.terms'),
-      onPress: () => openExternal('https://oqapps.pro/legal/shiftsleep/terms'),
+      onPress: () => router.push('/legal/terms'),
     },
   ];
 

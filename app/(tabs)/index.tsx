@@ -57,6 +57,7 @@ import {
   setSleepRating,
   ratingForToday,
   weeklyTally,
+  recentJournalDays,
   type SleepRating,
 } from '../../lib/sleep-journal/store';
 import { useLocalShifts } from '../../lib/local-shifts/store';
@@ -306,6 +307,27 @@ export default function Home() {
               accessibilityRole="button"
               accessibilityLabel={t('today.journal_stats_a11y')}
             >
+              {/* D3: visible last-7-days dot strip so ratings are tracked at a glance */}
+              <View style={styles.journalDots}>
+                {recentJournalDays(7).map((d) => (
+                  <View
+                    key={d.iso}
+                    style={[
+                      styles.journalDot,
+                      {
+                        backgroundColor:
+                          d.rating === 'good'
+                            ? colors.primary
+                            : d.rating === 'ok'
+                            ? colors.sunriseDim
+                            : d.rating === 'bad'
+                            ? colors.duskDim
+                            : colors.inkGhost,
+                      },
+                    ]}
+                  />
+                ))}
+              </View>
               <Text variant="bodyMd" color="inkSubtle">
                 {t('today.journal_tally_inline', { good: tally.good, ok: tally.ok, bad: tally.bad })}
               </Text>
@@ -550,5 +572,15 @@ const styles = StyleSheet.create({
     borderRadius: radii.pill,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  journalDots: {
+    flexDirection: 'row',
+    gap: 6,
+    marginBottom: spacing.sm,
+  },
+  journalDot: {
+    flex: 1,
+    height: 8,
+    borderRadius: 4,
   },
 });

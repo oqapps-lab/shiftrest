@@ -13,7 +13,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { View, Pressable, StyleSheet, Linking } from 'react-native';
+import { View, Pressable, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import {
@@ -83,9 +83,8 @@ export default function Paywall() {
     year: null,
   });
 
-  // Apple Guideline 3.1.2(c) — legal links required on paywall.
-  const TERMS_URL = 'https://oqapps.pro/legal/shiftsleep/terms';
-  const PRIVACY_URL = 'https://oqapps.pro/legal/shiftsleep/privacy';
+  // Apple Guideline 3.1.2(c) — legal links required on paywall. D7: these
+  // now open in-app legal screens (/legal/*) instead of an external browser.
 
   // Load Adapty products on mount. On Expo Go or pre-activation this returns
   // null and we fall back to hardcoded USD prices — the UI is unchanged.
@@ -397,7 +396,7 @@ export default function Paywall() {
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Pressable
-            onPress={() => Linking.openURL(TERMS_URL).catch(() => null)}
+            onPress={() => router.push('/legal/terms')}
             accessibilityRole="link"
             accessibilityLabel={t('paywall.terms_link')}
             hitSlop={8}
@@ -410,7 +409,7 @@ export default function Paywall() {
             ·
           </Text>
           <Pressable
-            onPress={() => Linking.openURL(PRIVACY_URL).catch(() => null)}
+            onPress={() => router.push('/legal/privacy')}
             accessibilityRole="link"
             accessibilityLabel={t('paywall.privacy_link')}
             hitSlop={8}
