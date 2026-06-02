@@ -100,3 +100,23 @@ None this pass — the walk surfaced product hierarchy/copy observations, not vi
 grounded persona, produced a testable wishlist, drove the live sim with the
 reused /ui-qa machinery, and yielded calibrated Partials (not manufactured
 gaps, not an all-5 rubber-stamp). No skill defects found.
+
+## 11. Follow-up — recommendations IMPLEMENTED (commit `6dc06ce`)
+All three recommendations were subsequently built (owner: "do all the fixes"):
+- **P1 ✅** — "right now" anchor added to the top of Today ("Sleep window
+  23:00 · last coffee by 14:00"), sourced from the same plan data. **Verified
+  live** (fix_today.png). Both W11 and W12 now Satisfied for first-glance.
+- **P2 ✅** — `getGreeting` is shift-aware; a night worker in the 04:00–12:00
+  window gets "TIME TO WIND DOWN" instead of "GOOD MORNING".
+  `greetings.wind_down` added across 11 locales. **Verified by 3 unit tests**
+  (morning+night→wind_down, evening+night→clock, day→clock) + live greeting
+  renders correctly for current state. (The wind_down string can't be shown
+  live without setting the Mac clock to morning.)
+- **P3 ✅** — Today's-shift control pre-selects today's shift from the
+  Schedule (ref-guarded sync; manual override still sticks). Today renders
+  with no update-depth loop → effect is loop-safe.
+
+Gates: tsc 0, jest 263/263 (+3). Revised needs-fit: all 12 needs now ✅;
+re-scored **Completeness 5 / Usefulness 5 / Needs-fit 5** for the first-glance
+moment specifically. NOT yet in a TestFlight build (1003 predates these +
+the onboarding Back button; a build 1004 would ship them).
