@@ -50,6 +50,9 @@ const frFR = {
     journal_bad: 'Dur',
   },
   library: {
+    read_more: "Lire la suite",
+    tips_eyebrow: "FONDÉ SUR LA SCIENCE DU SOMMEIL",
+    browse_all: "Parcourir la bibliothèque du sommeil",
     screen_eyebrow: "BIBLIOTHÈQUE DU SOMMEIL",
     screen_hero: "La science, en mots simples.",
     screen_sub: "Des articles approfondis et fondés sur la recherche pour les travailleurs postés : lumière, caféine, siestes, récupération et le reste de votre vie autour de l'horaire.",

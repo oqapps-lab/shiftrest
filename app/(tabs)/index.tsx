@@ -63,7 +63,7 @@ import {
 } from '../../lib/sleep-journal/store';
 import { useLocalShifts } from '../../lib/local-shifts/store';
 import { TodayIntroSheet } from '../../components/today/TodayIntroSheet';
-import { StoriesCoverFlow } from '../../components/community/StoriesCoverFlow';
+import { TipsCarousel } from '../../components/library/TipsCarousel';
 import { articlesForProfession } from '../../lib/sleep-tips/library';
 import { detectTransitionOpportunity } from '../../lib/transition/generate';
 import * as Haptics from 'expo-haptics';
@@ -403,7 +403,7 @@ export default function Home() {
 
       {/* B3: Community stories — promoted from screen bottom to a prominent
           mid-feed slot so members see how peers normalized their sleep. */}
-      <StoriesCoverFlow />
+      <TipsCarousel />
 
       <View style={{ height: spacing.huge }} />
 

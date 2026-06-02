@@ -49,6 +49,9 @@ const sv = {
     journal_bad: 'Tufft',
   },
   library: {
+    read_more: "Läs mer",
+    tips_eyebrow: "GRUNDAT PÅ SÖMNFORSKNING",
+    browse_all: "Bläddra i sömnbiblioteket",
     screen_eyebrow: "SÖMNBIBLIOTEK",
     screen_hero: "Vetenskapen, förklarad enkelt.",
     screen_sub: "Djupgående, forskningsbaserad läsning för skiftarbetare – ljus, koffein, tupplurar, återhämtning och resten av livet runt schemat.",

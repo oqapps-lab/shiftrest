@@ -50,6 +50,9 @@ const esES = {
     journal_bad: 'Mal',
   },
   library: {
+    read_more: "Leer más",
+    tips_eyebrow: "RESPALDADO POR LA CIENCIA DEL SUEÑO",
+    browse_all: "Explorar la biblioteca del sueño",
     screen_eyebrow: "BIBLIOTECA DEL SUEÑO",
     screen_hero: "La ciencia, explicada con claridad.",
     screen_sub: "Lecturas profundas y avaladas por estudios para quienes trabajan a turnos: luz, cafeína, siestas, recuperación y el resto de tu vida en torno al horario.",

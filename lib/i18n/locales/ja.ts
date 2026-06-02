@@ -49,6 +49,9 @@ const ja = {
     journal_bad: '悪い',
   },
   library: {
+    read_more: "続きを読む",
+    tips_eyebrow: "睡眠科学に基づく",
+    browse_all: "睡眠ライブラリを見る",
     screen_eyebrow: "スリープライブラリ",
     screen_hero: "やさしく解き明かす、睡眠の科学。",
     screen_sub: "光、カフェイン、仮眠、回復、そしてシフトを軸にした暮らし全体まで——シフト勤務者のための、研究に基づく深い読みもの。",

@@ -49,6 +49,9 @@ const ptBR = {
     journal_bad: 'Ruim',
   },
   library: {
+    read_more: "Ler mais",
+    tips_eyebrow: "BASEADO NA CIÊNCIA DO SONO",
+    browse_all: "Explorar a Biblioteca do Sono",
     screen_eyebrow: "BIBLIOTECA DO SONO",
     screen_hero: "A ciência, em bom português.",
     screen_sub: "Leituras aprofundadas e baseadas em pesquisa para quem trabalha em turnos — luz, cafeína, sonecas, recuperação e o resto da sua vida em torno da escala.",

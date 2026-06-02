@@ -49,6 +49,9 @@ const itIT = {
     journal_bad: 'Duro',
   },
   library: {
+    read_more: "Leggi di più",
+    tips_eyebrow: "BASATO SULLA SCIENZA DEL SONNO",
+    browse_all: "Esplora la libreria del sonno",
     screen_eyebrow: "BIBLIOTECA DEL SONNO",
     screen_hero: "La scienza, spiegata semplice.",
     screen_sub: "Approfondimenti basati sulla ricerca per chi fa i turni: luce, caffeina, riposini, recupero e tutta la vita attorno al tuo orario.",

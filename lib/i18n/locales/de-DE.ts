@@ -63,6 +63,9 @@ const deDE = {
     journal_bad: 'Hart',
   },
   library: {
+    read_more: "Mehr lesen",
+    tips_eyebrow: "AUF SCHLAFFORSCHUNG GESTÜTZT",
+    browse_all: "Schlafbibliothek durchsuchen",
     screen_eyebrow: "SCHLAFBIBLIOTHEK",
     screen_hero: "Die Wissenschaft, klar erklärt.",
     screen_sub: "Fundierte Lektüre für Schichtarbeiter — Licht, Koffein, Nickerchen, Erholung und dein Leben rund um den Dienstplan.",

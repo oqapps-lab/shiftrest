@@ -49,6 +49,9 @@ const zhHant = {
     journal_bad: '糟',
   },
   library: {
+    read_more: "閱讀更多",
+    tips_eyebrow: "以睡眠科學為依據",
+    browse_all: "瀏覽睡眠圖書館",
     screen_eyebrow: "睡眠知識庫",
     screen_hero: "用白話講清楚睡眠科學。",
     screen_sub: "為輪班工作者打造的深入研究文章——光照、咖啡因、小睡、恢復，以及如何在排班之外好好過生活。",

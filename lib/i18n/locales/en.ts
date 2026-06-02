@@ -988,6 +988,9 @@ const en = {
     submit_cta: 'Share what helps you',
   },
   library: {
+    read_more: "Read more",
+    tips_eyebrow: "BACKED BY SLEEP SCIENCE",
+    browse_all: "Browse the Sleep Library",
     screen_eyebrow: 'SLEEP LIBRARY',
     screen_hero: 'The science, in plain English.',
     screen_sub: 'Deep, research-backed reads for shift workers — light, caffeine, naps, recovery, and the rest of your life around the schedule.',

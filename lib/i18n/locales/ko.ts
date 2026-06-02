@@ -49,6 +49,9 @@ const ko = {
     journal_bad: '힘듦',
   },
   library: {
+    read_more: "더 보기",
+    tips_eyebrow: "수면 과학 기반",
+    browse_all: "수면 라이브러리 둘러보기",
     screen_eyebrow: "수면 라이브러리",
     screen_hero: "수면 과학, 쉽게 풀어드립니다.",
     screen_sub: "교대 근무자를 위한 깊이 있는 연구 기반 읽을거리 — 빛, 카페인, 낮잠, 회복, 그리고 스케줄에 맞춘 일상까지.",

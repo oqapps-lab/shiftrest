@@ -50,6 +50,9 @@ const nlNL = {
     journal_bad: 'Slecht',
   },
   library: {
+    read_more: "Lees meer",
+    tips_eyebrow: "ONDERBOUWD DOOR SLAAPWETENSCHAP",
+    browse_all: "Blader door de slaapbibliotheek",
     screen_eyebrow: "SLAAPBIBLIOTHEEK",
     screen_hero: "De wetenschap, in begrijpelijke taal.",
     screen_sub: "Diepgaande, wetenschappelijk onderbouwde artikelen voor ploegenwerkers — licht, cafeïne, dutjes, herstel en de rest van je leven rond het rooster.",
