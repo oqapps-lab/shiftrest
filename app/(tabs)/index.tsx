@@ -33,6 +33,7 @@ import { mockShiftBlocks, getMockTransition } from '../../mock/user';
 import {
   countCompleted,
   formatHour,
+  formatDayMonth,
   formatRelativeTime,
   formatStreak,
   getGreeting,
@@ -167,6 +168,11 @@ export default function Home() {
     : mockTransition.toShift;
   const doneToday = livePlan ? liveDoneToday : countCompleted(todayMock.steps);
   const totalToday = livePlan ? liveDay1Steps.length : todayMock.steps.length;
+  // D2: explicit start → end window so the user sees the transition has a
+  // defined finish straight from the Home card — not just a start date.
+  const transitionWindow = livePlan
+    ? `${formatDayMonth(new Date(livePlan.start_date + 'T00:00:00'))} → ${formatDayMonth(new Date(livePlan.end_date + 'T00:00:00'))}`
+    : null;
 
   // Real local time, expressed as fractional hours (e.g. 14.5 = 14:30) so
   // the TimelineRing's nowHour, the greeting, and the "in N hours" copy
@@ -479,6 +485,14 @@ export default function Home() {
                 <Text variant="titleLg" family="display" weight="light" color="ink" style={{ marginTop: 2 }}>
                   {t('today.transition_subtitle', { from: fromLabel, to: toLabel, done: doneToday, total: totalToday })}
                 </Text>
+                {transitionWindow ? (
+                  <View style={styles.transitionWindowRow}>
+                    <Glyph name="calendar" size={13} color="duskDim" />
+                    <Text variant="labelMd" weight="medium" color="duskDim" style={{ marginLeft: spacing.xs }}>
+                      {transitionWindow}
+                    </Text>
+                  </View>
+                ) : null}
               </View>
               <Glyph name="chevronRight" size={20} color="duskDim" />
             </View>
@@ -560,6 +574,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: spacing.md,
+  },
+  transitionWindowRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: spacing.xs,
   },
   journalRow: {
     flexDirection: 'row',
