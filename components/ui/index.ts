@@ -9,6 +9,7 @@ export { SerifHero } from './SerifHero';
 export { HeroNumber } from './HeroNumber';
 export { BreathingOrb } from './BreathingOrb';
 export { ProgressDots } from './ProgressDots';
+export { OnboardingBack } from './OnboardingBack';
 export { TimelineRing } from './TimelineRing';
 export { ShiftBar } from './ShiftBar';
 export type { ShiftBlock } from './ShiftBar';

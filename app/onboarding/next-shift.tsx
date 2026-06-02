@@ -15,6 +15,7 @@ import {
   Text,
   PillCTA,
   ProgressDots,
+  OnboardingBack,
   OptionCard,
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
@@ -53,6 +54,7 @@ export default function NextShiftScreen() {
         />
       }
     >
+      <OnboardingBack />
       <Eyebrow>{t('onboarding.step_template', { n: 4, total: 11 })}</Eyebrow>
       <ProgressDots
         count={11}
