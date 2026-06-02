@@ -7,6 +7,7 @@ const ko = {
     cta_secondary: "이미 계정이 있어요",
   },
   greetings: {
+    wind_down: "쉴 시간이에요",
     night: "안녕히 주무세요",
     morning: "좋은 아침",
     afternoon: "좋은 오후",
@@ -33,6 +34,8 @@ const ko = {
     event_sleep: "수면 시간대",
     transition_in_progress: "전환 진행 중",
     transition_subtitle: "{{from}} → {{to}}, 오늘 {{total}}단계 중 {{done}}단계 완료",
+    now_hero_full: "수면 시간 {{sleep}} · 카페인은 {{caffeine}}까지",
+    now_hero_sleep: "수면 시간 {{sleep}}",
     shift_label: '오늘 근무',
     plan_transition_eyebrow: '곧',
     plan_transition_title: '근무 전환 계획',

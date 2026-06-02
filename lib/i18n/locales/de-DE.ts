@@ -8,6 +8,7 @@ const deDE = {
     cta_secondary: 'Ich habe bereits ein Konto',
   },
   greetings: {
+    wind_down: "ZEIT ZUM RUNTERKOMMEN",
     night: 'GUTE NACHT',
     morning: 'GUTEN MORGEN',
     afternoon: 'GUTEN TAG',
@@ -34,6 +35,8 @@ const deDE = {
     event_sleep: 'SCHLAFFENSTER',
     transition_in_progress: 'ÜBERGANG LÄUFT',
     transition_subtitle: '{{from}} → {{to}}, {{done}} von {{total}} Schritten heute',
+    now_hero_full: "Schlaffenster {{sleep}} · letzter Kaffee bis {{caffeine}}",
+    now_hero_sleep: "Schlaffenster {{sleep}}",
     shift_label: 'SCHICHT HEUTE',
     plan_transition_eyebrow: 'BALD',
     plan_transition_detected_eyebrow: 'BALD · ERKANNT',

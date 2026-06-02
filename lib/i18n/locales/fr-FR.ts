@@ -8,6 +8,7 @@ const frFR = {
     cta_secondary: 'J’ai déjà un compte',
   },
   greetings: {
+    wind_down: "L’HEURE DE DÉCROCHER",
     night: 'BONNE NUIT',
     morning: 'BONJOUR',
     afternoon: 'BON APRÈS-MIDI',
@@ -34,6 +35,8 @@ const frFR = {
     event_sleep: 'FENÊTRE SOMMEIL',
     transition_in_progress: 'TRANSITION EN COURS',
     transition_subtitle: '{{from}} → {{to}}, {{done}} sur {{total}} étapes aujourd’hui',
+    now_hero_full: "Fenêtre de sommeil {{sleep}} · dernier café avant {{caffeine}}",
+    now_hero_sleep: "Fenêtre de sommeil {{sleep}}",
     shift_label: 'GARDE D’AUJOURD’HUI',
     plan_transition_eyebrow: 'À VENIR',
     plan_transition_title: 'Planifier un changement de garde',

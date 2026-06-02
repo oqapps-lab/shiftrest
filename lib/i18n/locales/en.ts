@@ -11,6 +11,7 @@ const en = {
     cta_secondary: 'I already have an account',
   },
   greetings: {
+    wind_down: "TIME TO WIND DOWN",
     night: 'GOOD NIGHT',
     morning: 'GOOD MORNING',
     afternoon: 'GOOD AFTERNOON',
@@ -30,6 +31,8 @@ const en = {
   today: {
     hero: 'Rest is gathering.',
     label_today: 'TODAY',
+    now_hero_full: "Sleep window {{sleep}} · last coffee by {{caffeine}}",
+    now_hero_sleep: "Sleep window {{sleep}}",
     shift_label: "TODAY'S SHIFT",
     section_24h: 'YOUR 24 HOURS',
     section_next: 'NEXT',

@@ -10,7 +10,17 @@
 import { t } from './i18n';
 import type { Translations } from './i18n/locales/en';
 
-export function getGreeting(nowHour: number): string {
+export function getGreeting(
+  nowHour: number,
+  shift?: 'day' | 'night' | 'off',
+): string {
+  // Persona fix (P2): a night worker who opens the app in the morning is
+  // winding DOWN, not starting their day — "Good morning" misreads their
+  // life. When they're on nights and it's the post-shift morning window,
+  // greet for rest instead of clock time.
+  if (shift === 'night' && nowHour >= 4 && nowHour < 12) {
+    return t('greetings.wind_down');
+  }
   if (nowHour < 5) return t('greetings.night');
   if (nowHour < 12) return t('greetings.morning');
   if (nowHour < 18) return t('greetings.afternoon');

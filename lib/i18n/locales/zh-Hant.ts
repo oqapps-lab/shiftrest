@@ -7,6 +7,7 @@ const zhHant = {
     cta_secondary: "我已經有帳號",
   },
   greetings: {
+    wind_down: "該放鬆休息了",
     night: "晚安",
     morning: "早安",
     afternoon: "午安",
@@ -33,6 +34,8 @@ const zhHant = {
     event_sleep: "睡眠時段",
     transition_in_progress: "轉換進行中",
     transition_subtitle: "{{from}} → {{to}},今日已完成 {{done}} / {{total}} 步",
+    now_hero_full: "睡眠時段 {{sleep}}・咖啡因最晚 {{caffeine}}",
+    now_hero_sleep: "睡眠時段 {{sleep}}",
     shift_label: '今日班次',
     plan_transition_eyebrow: '即將到來',
     plan_transition_title: '規畫班次過渡',

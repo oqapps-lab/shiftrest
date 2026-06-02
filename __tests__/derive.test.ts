@@ -53,6 +53,20 @@ describe('getGreeting', () => {
     expect(getGreeting(18)).toBe('[greetings.evening]');
     expect(getGreeting(23.99)).toBe('[greetings.evening]');
   });
+  // P2: shift-aware — night worker in the morning winds down, not "good morning"
+  test('night shift in morning window → wind_down', () => {
+    expect(getGreeting(7, 'night')).toBe('[greetings.wind_down]');
+    expect(getGreeting(4, 'night')).toBe('[greetings.wind_down]');
+    expect(getGreeting(11.99, 'night')).toBe('[greetings.wind_down]');
+  });
+  test('night shift outside morning window → clock-based', () => {
+    expect(getGreeting(20, 'night')).toBe('[greetings.evening]');
+    expect(getGreeting(2, 'night')).toBe('[greetings.night]');
+  });
+  test('day/off shift → unchanged clock-based greeting', () => {
+    expect(getGreeting(7, 'day')).toBe('[greetings.morning]');
+    expect(getGreeting(7, 'off')).toBe('[greetings.morning]');
+  });
 });
 
 describe('formatRelativeTime', () => {

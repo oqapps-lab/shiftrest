@@ -3,7 +3,7 @@
  * Eyebrow greeting + streak pill + Soft hero line + TimelineRing + ShiftBar + 3 next-event cards.
  */
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -148,6 +148,17 @@ export default function Home() {
     { ...EVENT_STYLES.sleep, hour: sleepStartHour },
   ], [showCaffeine, caffeineHour, showMelatonin, melatoninHour, sleepStartHour]);
 
+  // Persona fix (P1): a one-line "what's my move right now" anchor at the
+  // top of Today, built from the same plan data shown lower. A half-asleep
+  // shift worker home from a night sees their sleep window + caffeine
+  // cutoff immediately, instead of scrolling past the selector + journal.
+  const nowHeroText = showCaffeine
+    ? t('today.now_hero_full', {
+        sleep: formatHour(sleepStartHour),
+        caffeine: formatHour(caffeineHour),
+      })
+    : t('today.now_hero_sleep', { sleep: formatHour(sleepStartHour) });
+
   // Streak: real DB row when signed-in user has one, else 0.
   // Anon users see no pill (hidden when value===0).
   const streakValue = streak?.current_streak ?? 0;
@@ -200,6 +211,23 @@ export default function Home() {
     return detectTransitionOpportunity(shiftByIsoForDetect, todayIsoForDetect);
   }, [localShiftsMap, todayIsoForDetect, livePlan?.transition_type]);
 
+  // Persona fix (P3): if the Schedule already knows today's shift, pre-select
+  // it in the TODAY'S SHIFT control instead of making the user re-tap it daily.
+  // Synced only when the schedule's value for TODAY changes (tracked via ref),
+  // so a manual override on the control below still sticks afterward.
+  const syncedShiftRef = useRef<ShiftKind | null>(null);
+  useEffect(() => {
+    const scheduled = localShiftsMap[todayIsoForDetect];
+    if (
+      (scheduled === 'day' || scheduled === 'night' || scheduled === 'off') &&
+      scheduled !== syncedShiftRef.current &&
+      scheduled !== onboarding.currentShift
+    ) {
+      syncedShiftRef.current = scheduled;
+      update({ currentShift: scheduled });
+    }
+  }, [localShiftsMap, todayIsoForDetect, onboarding.currentShift, update]);
+
   // Mirror Profile's fallback chain so the greeting never says "MARINA"
   // when the real signed-in user has a different display_name. Use just
   // the first name in the greeting eyebrow so it doesn't push the streak
@@ -219,7 +247,7 @@ export default function Home() {
       <TodayIntroSheet />
       <View style={styles.headerRow}>
         <View style={{ flex: 1 }}>
-          <Eyebrow>{displayName ? `${getGreeting(nowHour)}, ${displayName}` : getGreeting(nowHour)}</Eyebrow>
+          <Eyebrow>{displayName ? `${getGreeting(nowHour, onboarding.currentShift)}, ${displayName}` : getGreeting(nowHour, onboarding.currentShift)}</Eyebrow>
         </View>
         {streakValue > 0 && (
           <Pressable
@@ -244,8 +272,17 @@ export default function Home() {
         )}
       </View>
 
-      <View style={{ marginTop: spacing.lg, marginBottom: spacing.lg }}>
+      <View style={{ marginTop: spacing.lg, marginBottom: spacing.md }}>
         <SerifHero>{t('today.hero')}</SerifHero>
+      </View>
+
+      {/* P1: "right now" anchor — sleep window + caffeine cutoff at a glance,
+          so the actionable answer is the first thing seen post-shift. */}
+      <View style={styles.nowHeroRow}>
+        <Glyph name="moon" size={15} color="primary" />
+        <Text variant="bodyMd" weight="medium" color="ink" style={styles.nowHeroText}>
+          {nowHeroText}
+        </Text>
       </View>
 
       {/* A9: Where you are today — daily state card, moved out of Settings */}
@@ -579,6 +616,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: spacing.xs,
+  },
+  nowHeroRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: spacing.lg,
+  },
+  nowHeroText: {
+    marginLeft: spacing.sm,
+    flex: 1,
   },
   journalRow: {
     flexDirection: 'row',

@@ -7,6 +7,7 @@ const itIT = {
     cta_secondary: "Ho già un account",
   },
   greetings: {
+    wind_down: "È ORA DI RILASSARSI",
     night: "BUONANOTTE",
     morning: "BUONGIORNO",
     afternoon: "BUON POMERIGGIO",
@@ -33,6 +34,8 @@ const itIT = {
     event_sleep: "FINESTRA DI SONNO",
     transition_in_progress: "TRANSIZIONE IN CORSO",
     transition_subtitle: "{{from}} → {{to}}, {{done}} di {{total}} passi oggi",
+    now_hero_full: "Finestra del sonno {{sleep}} · ultimo caffè entro le {{caffeine}}",
+    now_hero_sleep: "Finestra del sonno {{sleep}}",
     shift_label: 'TURNO DI OGGI',
     plan_transition_eyebrow: 'IN ARRIVO',
     plan_transition_title: 'Pianifica un cambio turno',

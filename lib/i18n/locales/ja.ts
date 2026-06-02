@@ -7,6 +7,7 @@ const ja = {
     cta_secondary: "アカウントをお持ちの方",
   },
   greetings: {
+    wind_down: "おやすみの準備を",
     night: "おやすみ",
     morning: "おはよう",
     afternoon: "こんにちは",
@@ -33,6 +34,8 @@ const ja = {
     event_sleep: "睡眠時間帯",
     transition_in_progress: "移行中",
     transition_subtitle: "{{from}} → {{to}}、本日のステップ {{done}}/{{total}}",
+    now_hero_full: "睡眠の時間 {{sleep}}・カフェインは {{caffeine}} まで",
+    now_hero_sleep: "睡眠の時間 {{sleep}}",
     shift_label: '今日のシフト',
     plan_transition_eyebrow: 'もうすぐ',
     plan_transition_title: 'シフト移行を計画',

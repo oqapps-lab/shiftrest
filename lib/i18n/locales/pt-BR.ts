@@ -7,6 +7,7 @@ const ptBR = {
     cta_secondary: "Já tenho uma conta",
   },
   greetings: {
+    wind_down: "HORA DE DESACELERAR",
     night: "BOA NOITE",
     morning: "BOM DIA",
     afternoon: "BOA TARDE",
@@ -33,6 +34,8 @@ const ptBR = {
     event_sleep: "JANELA DE SONO",
     transition_in_progress: "TRANSIÇÃO EM ANDAMENTO",
     transition_subtitle: "{{from}} → {{to}}, {{done}} de {{total}} passos hoje",
+    now_hero_full: "Janela de sono {{sleep}} · último café às {{caffeine}}",
+    now_hero_sleep: "Janela de sono {{sleep}}",
     shift_label: 'TURNO DE HOJE',
     plan_transition_eyebrow: 'EM BREVE',
     plan_transition_title: 'Planejar uma troca de turno',

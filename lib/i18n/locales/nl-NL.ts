@@ -8,6 +8,7 @@ const nlNL = {
     cta_secondary: 'Ik heb al een account',
   },
   greetings: {
+    wind_down: "TIJD OM TOT RUST TE KOMEN",
     night: 'GOEDENACHT',
     morning: 'GOEDEMORGEN',
     afternoon: 'GOEDEMIDDAG',
@@ -34,6 +35,8 @@ const nlNL = {
     event_sleep: 'SLAAPVENSTER',
     transition_in_progress: 'OVERGANG BEZIG',
     transition_subtitle: '{{from}} → {{to}}, {{done}} van {{total}} stappen vandaag',
+    now_hero_full: "Slaapvenster {{sleep}} · laatste koffie om {{caffeine}}",
+    now_hero_sleep: "Slaapvenster {{sleep}}",
     shift_label: 'DIENST VANDAAG',
     plan_transition_eyebrow: 'BINNENKORT',
     plan_transition_title: 'Een dienstwissel plannen',

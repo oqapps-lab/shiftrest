@@ -8,6 +8,7 @@ const esES = {
     cta_secondary: 'Ya tengo una cuenta',
   },
   greetings: {
+    wind_down: "HORA DE DESCONECTAR",
     night: 'BUENAS NOCHES',
     morning: 'BUENOS DÍAS',
     afternoon: 'BUENAS TARDES',
@@ -34,6 +35,8 @@ const esES = {
     event_sleep: 'VENTANA DE SUEÑO',
     transition_in_progress: 'TRANSICIÓN EN CURSO',
     transition_subtitle: '{{from}} → {{to}}, {{done}} de {{total}} pasos hoy',
+    now_hero_full: "Ventana de sueño {{sleep}} · último café a las {{caffeine}}",
+    now_hero_sleep: "Ventana de sueño {{sleep}}",
     shift_label: 'TURNO DE HOY',
     plan_transition_eyebrow: 'PRÓXIMO',
     plan_transition_title: 'Planificar un cambio de turno',

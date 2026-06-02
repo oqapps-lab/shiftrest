@@ -7,6 +7,7 @@ const sv = {
     cta_secondary: 'Jag har redan ett konto',
   },
   greetings: {
+    wind_down: "DAGS ATT VARVA NER",
     night: 'GOD NATT',
     morning: 'GOD MORGON',
     afternoon: 'GOD EFTERMIDDAG',
@@ -33,6 +34,8 @@ const sv = {
     event_sleep: 'SÖMNFÖNSTER',
     transition_in_progress: 'ÖVERGÅNG PÅGÅR',
     transition_subtitle: '{{from}} → {{to}}, {{done}} av {{total}} steg idag',
+    now_hero_full: "Sömnfönster {{sleep}} · sista kaffet {{caffeine}}",
+    now_hero_sleep: "Sömnfönster {{sleep}}",
     shift_label: 'PASS IDAG',
     plan_transition_eyebrow: 'SNART',
     plan_transition_title: 'Planera ett skiftbyte',
