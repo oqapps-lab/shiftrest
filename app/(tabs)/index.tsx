@@ -12,7 +12,7 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import {
   Screen,
   Eyebrow,
@@ -40,6 +40,7 @@ import {
   firstName,
   suggestedPlanFromOnboarding,
 } from '../../lib/derive';
+import { phaseForNow } from '../../lib/today-phase';
 import {
   useOnboarding,
   chronotypeBucket,
@@ -187,12 +188,93 @@ export default function Home() {
     ? `${formatDayMonth(new Date(livePlan.start_date + 'T00:00:00'))} → ${formatDayMonth(new Date(livePlan.end_date + 'T00:00:00'))}`
     : null;
 
-  // Real local time, expressed as fractional hours (e.g. 14.5 = 14:30) so
-  // the TimelineRing's nowHour, the greeting, and the "in N hours" copy
-  // all reflect what the user is actually looking at — instead of the
-  // demo-fixed 14:30 from mockPlan.
-  const now = new Date();
+  // HIGH-bug fix (G8): the clock used to be a bare `new Date()` at render
+  // time, so the TimelineRing center, the greeting, and every "in N hours"
+  // label FROZE at mount and only moved when some unrelated state changed.
+  // `nowTick` is refreshed every 60s AND on tab focus, and `now`/`nowHour`
+  // derive from it — so the whole screen tracks real wall-clock time.
+  const [nowTick, setNowTick] = useState<Date>(() => new Date());
+  // 60s ticker. EMPTY deps + functional update — never depends on the value
+  // it mutates (the render-loop trap fixed in store.tsx G1). Cleared on unmount.
+  useEffect(() => {
+    const id = setInterval(() => setNowTick(new Date()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+  // Re-sync the clock when the user returns to this tab (a 60s tick could be
+  // mid-cycle when they switch back from Plan/Profile).
+  useFocusEffect(
+    useCallback(() => {
+      setNowTick(new Date());
+    }, []),
+  );
+  const now = nowTick;
   const nowHour = now.getHours() + now.getMinutes() / 60;
+
+  // G8-P0: "Right now in your body" — the live circadian phase + next move.
+  // Pure pick from lib/today-phase using the SAME plan times shown lower, so
+  // the hero answer ("wind-down — melatonin in 40 min", "alertness dip ahead",
+  // …) always agrees with the cards. Recomputes when the minute ticks or any
+  // input changes. FREE feature, no gate.
+  const phase = useMemo(
+    () =>
+      phaseForNow({
+        nowHour,
+        shift: onboarding.currentShift,
+        plan: {
+          sleepStart: sleepStartHour,
+          sleepEnd: planHourAsFloat(generatedPlan?.sleep_end) ?? suggested.sleepEnd,
+          caffeineCutoff: formatHour(caffeineHour),
+          melatoninTime: formatHour(melatoninHour),
+          shiftStart: suggested.shiftStart,
+          shiftEnd: suggested.shiftEnd,
+        },
+        takesMelatonin: onboarding.takesMelatonin !== false,
+        format: formatHour,
+      }),
+    [
+      nowHour,
+      onboarding.currentShift,
+      onboarding.takesMelatonin,
+      sleepStartHour,
+      generatedPlan?.sleep_end,
+      suggested.sleepEnd,
+      caffeineHour,
+      melatoninHour,
+      suggested.shiftStart,
+      suggested.shiftEnd,
+    ],
+  );
+  // Map the phase tone → GlassCard variant + glyph color. Tones are
+  // semantic (dusk = sleep/wind-down, sunrise = alert/light, calm = neutral).
+  const PHASE_TONE: Record<
+    typeof phase.tone,
+    { variant: 'dusk' | 'paper' | 'glass'; glyphColor: 'duskDim' | 'sunriseDim' | 'primary'; eyebrowColor?: 'duskDim'; iconBg: string }
+  > = {
+    dusk: { variant: 'dusk', glyphColor: 'duskDim', eyebrowColor: 'duskDim', iconBg: colors.duskGlow },
+    sunrise: { variant: 'paper', glyphColor: 'sunriseDim', iconBg: colors.sunriseGlow },
+    primary: { variant: 'glass', glyphColor: 'primary', iconBg: colors.primaryContainer },
+    calm: { variant: 'glass', glyphColor: 'primary', iconBg: colors.primaryContainer },
+  };
+  const phaseStyle = PHASE_TONE[phase.tone];
+
+  // D (a11y): screen-reader summaries for the two core visuals. The ring and
+  // the 24h bar render to nothing for VoiceOver otherwise.
+  const sleepEndHour = planHourAsFloat(generatedPlan?.sleep_end) ?? suggested.sleepEnd;
+  const ringA11yLabel = t('a11y.timeline_ring', {
+    sleepStart: formatHour(sleepStartHour),
+    sleepEnd: formatHour(sleepEndHour),
+    shiftStart: formatHour(suggested.shiftStart),
+    shiftEnd: formatHour(suggested.shiftEnd),
+    now: formatHour(nowHour),
+  });
+  // Summarise the 24h bar from its sleep + shift blocks (the two that matter
+  // to a shift worker). mockShiftBlocks is a fixed demo fixture.
+  const shiftBlock = mockShiftBlocks.find((b) => b.kind === 'shift');
+  const sleepBlock = mockShiftBlocks.find((b) => b.kind === 'sleep');
+  const barSummaryParts: string[] = [];
+  if (shiftBlock) barSummaryParts.push(`${t('shift_kind.day_long')} ${formatHour(shiftBlock.start)}–${formatHour(shiftBlock.end)}`);
+  if (sleepBlock) barSummaryParts.push(`${t('today.event_sleep')} ${formatHour(sleepBlock.start)}–${formatHour(sleepBlock.end)}`);
+  const shiftBarA11yLabel = t('a11y.shift_bar', { summary: barSummaryParts.join(', ') });
 
   // D1 + QA-BUG-2: scan the next 7 days of shifts for a night→day or
   // day→night pivot. When detected, the CTA card hero becomes a SMART
@@ -339,6 +421,26 @@ export default function Home() {
         <SerifHero>{t('today.hero')}</SerifHero>
       </View>
 
+      {/* G8-P0: "Right now in your body" — the live circadian phase hero.
+          First card the eye hits: names the current phase + the single next
+          move, derived from the live clock + shift + plan. FREE. */}
+      <GlassCard variant={phaseStyle.variant} padding="xxl" style={{ marginBottom: spacing.md }}>
+        <View style={styles.eventRow}>
+          <View style={[styles.eventIcon, { backgroundColor: phaseStyle.iconBg }]}>
+            <Glyph name={phase.glyph} size={22} color={phaseStyle.glyphColor} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Eyebrow color={phaseStyle.eyebrowColor ?? 'inkMuted'}>{t(phase.eyebrowKey)}</Eyebrow>
+            <Text variant="titleLg" family="display" weight="light" color="ink" style={{ marginTop: 2 }}>
+              {t(phase.titleKey, phase.params)}
+            </Text>
+            <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 4 }}>
+              {t(phase.bodyKey, phase.params)}
+            </Text>
+          </View>
+        </View>
+      </GlassCard>
+
       {/* P1: "right now" anchor — sleep window + caffeine cutoff at a glance,
           so the actionable answer is the first thing seen post-shift. */}
       <View style={styles.nowHeroRow}>
@@ -469,12 +571,13 @@ export default function Home() {
           size={260}
           label={t('today.label_today')}
           centerLabel={formatHour(nowHour)}
+          accessibilityLabel={ringA11yLabel}
         />
       </View>
 
       <Eyebrow>{t('today.section_24h')}</Eyebrow>
       <View style={{ height: spacing.md }} />
-      <ShiftBar blocks={mockShiftBlocks} height={16} />
+      <ShiftBar blocks={mockShiftBlocks} height={16} accessibilityLabel={shiftBarA11yLabel} />
 
       <View style={{ height: spacing.huge }} />
 

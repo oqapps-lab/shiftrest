@@ -27,6 +27,24 @@ const ko = {
   today: {
     hero: "쉼이 모이고 있어요.",
     label_today: "오늘",
+    now_phase: {
+      eyebrow: '지금 이 순간',
+      sleep_window_title: '수면 시간대',
+      sleep_window_body: '지키세요. 조명은 낮추고, 휴대폰은 멀리, 방은 시원하고 어둡게.',
+      night_nadir_title: '집중력 저하 구간이 다가옵니다',
+      night_nadir_body: '새벽 3~5시는 실수가 가장 잦은 때입니다. 지금 {{napMin}}분 낮잠이나 마지막 커피를.',
+      wind_down_title: '긴장 풀기',
+      wind_down_body: '수면 시간대까지 {{mins}}분 남았습니다. 조명과 화면을 어둡게 하세요.',
+      wind_down_body_melatonin: '수면 시간대까지 {{mins}}분 남았습니다. {{melatonin}}쯤 멜라토닌을 복용하고 조명을 낮추세요.',
+      post_shift_commute_title: '귀가 중',
+      post_shift_commute_body: '선글라스를 쓰세요. 빛을 줄여 체내 시계를 밤 모드로 유지하면 잠들기 쉬워집니다.',
+      caffeine_cutoff_soon_title: '마지막 커피',
+      caffeine_cutoff_soon_body: '{{caffeine}}까지 마지막 커피를. 자기 전에 카페인이 빠지도록 하세요.',
+      rest_day_title: '회복하는 날',
+      rest_day_body: '오늘은 근무가 없습니다. 수면과 식사 시간을 일정하게 유지하면 다음 교대가 한결 수월해집니다.',
+      on_track_title: '순조롭습니다',
+      on_track_body: '다음: {{caffeine}}에 카페인 중단.',
+    },
     section_24h: "당신의 24시간",
     section_next: "다음",
     event_caffeine: "카페인 컷오프",
@@ -728,6 +746,8 @@ const ko = {
     week_plan: "주간 요금제 {{price}}",
     start_hour: '시작 {{hour}}',
     end_hour: '종료 {{hour}}',
+    timeline_ring: '하루 타임라인. 수면 시간대 {{sleepStart}}부터 {{sleepEnd}}까지, 근무 {{shiftStart}}부터 {{shiftEnd}}까지. 현재 {{now}}.',
+    shift_bar: '24시간 막대. {{summary}}',
   },
 
   push_notif: {

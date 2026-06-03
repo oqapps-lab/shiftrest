@@ -2,7 +2,8 @@
  * S40 — Daily Sleep Plan. Hero timeline + 4 recommendation cards.
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { useFocusEffect } from 'expo-router';
 import { View, StyleSheet, Pressable } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import {
@@ -402,8 +403,22 @@ export default function Plan() {
     planHourAsFloat(livePlan?.sleep_start) ?? suggested.sleepStart;
   const sleepEndHour =
     planHourAsFloat(livePlan?.sleep_end) ?? suggested.sleepEnd;
-  const now = new Date();
-  const nowHour = now.getHours() + now.getMinutes() / 60;
+  // HIGH-bug fix (G8): same frozen-clock issue as Today — `now` was a bare
+  // render-time `new Date()`, so the offset===0 center clock + the ring's
+  // now-marker never moved. Tick every 60s + refresh on tab focus, derive
+  // nowHour from the tick. Functional update + empty-dep effect (no render
+  // loop). The ring only reads nowHour when offset===0.
+  const [nowTick, setNowTick] = useState<Date>(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNowTick(new Date()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      setNowTick(new Date());
+    }, []),
+  );
+  const nowHour = nowTick.getHours() + nowTick.getMinutes() / 60;
 
   // B1: relative label for ±1, else weekday — e.g. "MON · 2 JUN".
   const dateChip =
@@ -469,15 +484,21 @@ export default function Plan() {
         />
       </View>
 
-      {recs.map((r) => {
-        const isOpen = expandedCard === r.hero;
+      {recs.map((r, i) => {
+        // MED-bug fix (G8): buildFallbackRecs can emit two cards with the
+        // SAME hero string (e.g. two 'bed' sleep cards). Keying + tracking
+        // the expanded card by `r.hero` caused a duplicate-key warning AND
+        // made tapping one "why this helps" expand BOTH. Use a stable
+        // composite that includes the list index so identity is unique.
+        const cardId = `${r.glyph}-${i}`;
+        const isOpen = expandedCard === cardId;
         return (
           <Pressable
-            key={r.hero}
+            key={cardId}
             onPress={() => {
               if (!r.why) return;
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              setExpandedCard(isOpen ? null : r.hero);
+              setExpandedCard(isOpen ? null : cardId);
             }}
             accessibilityRole={r.why ? 'button' : undefined}
             accessibilityLabel={r.why ? t('plan.expand_card_a11y') : undefined}

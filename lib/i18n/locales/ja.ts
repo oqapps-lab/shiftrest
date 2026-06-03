@@ -27,6 +27,24 @@ const ja = {
   today: {
     hero: "休息が集まる。",
     label_today: "今日",
+    now_phase: {
+      eyebrow: 'いまの状態',
+      sleep_window_title: '睡眠の時間帯',
+      sleep_window_body: '守りましょう。照明を落とし、スマホは遠ざけ、部屋は涼しく暗く。',
+      night_nadir_title: '集中力の谷が近づいています',
+      night_nadir_body: '午前3〜5時はミスが増える時間帯。今のうちに{{napMin}}分の仮眠か、最後のコーヒーを。',
+      wind_down_title: 'クールダウン',
+      wind_down_body: '睡眠の時間帯まであと{{mins}}分。照明と画面を暗くしましょう。',
+      wind_down_body_melatonin: '睡眠の時間帯まであと{{mins}}分。{{melatonin}}ごろにメラトニンを取り、照明を落としましょう。',
+      post_shift_commute_title: '帰宅中',
+      post_shift_commute_body: 'サングラスを。光を抑えて体内時計を夜モードに保てば、眠りやすくなります。',
+      caffeine_cutoff_soon_title: '最後のコーヒー',
+      caffeine_cutoff_soon_body: '{{caffeine}}までに最後のコーヒーを。就寝前にカフェインを抜きましょう。',
+      rest_day_title: '回復の日',
+      rest_day_body: '今日は勤務なし。睡眠と食事の時間を一定に保つと、次のローテーションが楽になります。',
+      on_track_title: '順調です',
+      on_track_body: '次は{{caffeine}}にカフェイン終了。',
+    },
     section_24h: "あなたの24時間",
     section_next: "次",
     event_caffeine: "カフェイン制限",
@@ -728,6 +746,8 @@ const ja = {
     week_plan: "週プラン {{price}}",
     start_hour: '開始 {{hour}}',
     end_hour: '終了 {{hour}}',
+    timeline_ring: '1日のタイムライン。睡眠の時間帯は{{sleepStart}}〜{{sleepEnd}}、勤務は{{shiftStart}}〜{{shiftEnd}}。現在{{now}}。',
+    shift_bar: '24時間バー。{{summary}}',
   },
 
   push_notif: {

@@ -28,6 +28,24 @@ const deDE = {
   today: {
     hero: 'Ruhe sammelt sich.',
     label_today: 'HEUTE',
+    now_phase: {
+      eyebrow: 'GERADE JETZT',
+      sleep_window_title: 'Dein Schlaffenster',
+      sleep_window_body: 'Schütze es – Licht gedämpft, Handy weg, Zimmer kühl und dunkel.',
+      night_nadir_title: 'Leistungstief voraus',
+      night_nadir_body: 'Das Tief von 3–5 Uhr ist die Zeit der meisten Fehler. Jetzt ein {{napMin}}-min-Nickerchen oder dein letzter Kaffee.',
+      wind_down_title: 'Herunterkommen',
+      wind_down_body: 'Schlaffenster öffnet in {{mins}} Min – dimme jetzt Licht und Bildschirme.',
+      wind_down_body_melatonin: 'Schlaffenster öffnet in {{mins}} Min – Melatonin gegen {{melatonin}}, dann Licht dimmen.',
+      post_shift_commute_title: 'Auf dem Heimweg',
+      post_shift_commute_body: 'Sonnenbrille auf – halte das Licht gering, damit deine innere Uhr im Nachtmodus bleibt und du schlafen kannst.',
+      caffeine_cutoff_soon_title: 'Letzter Kaffee',
+      caffeine_cutoff_soon_body: 'Letzter Kaffee bis {{caffeine}}, damit das Koffein vor dem Schlaffenster abgebaut ist.',
+      rest_day_title: 'Erholungstag',
+      rest_day_body: 'Heute keine Schicht – halte Schlaf- und Essenszeiten stabil, damit die nächste Rotation leichter fällt.',
+      on_track_title: 'Auf Kurs',
+      on_track_body: 'Als Nächstes: Koffein-Stopp um {{caffeine}}.',
+    },
     section_24h: 'DEINE 24 STUNDEN',
     section_next: 'ALS NÄCHSTES',
     event_caffeine: 'KOFFEIN-STOPP',
@@ -757,6 +775,8 @@ const deDE = {
     week_plan: 'Wochenplan {{price}}',
     start_hour: 'Start {{hour}}',
     end_hour: 'Ende {{hour}}',
+    timeline_ring: 'Tages-Zeitleiste. Schlaffenster {{sleepStart}} bis {{sleepEnd}}, Schicht {{shiftStart}} bis {{shiftEnd}}. Jetzt {{now}}.',
+    shift_bar: '24-Stunden-Balken. {{summary}}',
   },
 
   push_notif: {

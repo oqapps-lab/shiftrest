@@ -28,6 +28,24 @@ const nlNL = {
   today: {
     hero: 'Rust verzamelt zich.',
     label_today: 'VANDAAG',
+    now_phase: {
+      eyebrow: 'NU METEEN',
+      sleep_window_title: 'Je slaapvenster',
+      sleep_window_body: 'Bescherm het: licht laag, telefoon weg, kamer koel en donker.',
+      night_nadir_title: 'Dip in alertheid op komst',
+      night_nadir_body: 'De dip van 3–5 uur is wanneer fouten pieken. Nu een dutje van {{napMin}} min of je laatste koffie.',
+      wind_down_title: 'Tot rust komen',
+      wind_down_body: 'Je slaapvenster opent over {{mins}} min: dim licht en schermen.',
+      wind_down_body_melatonin: 'Je slaapvenster opent over {{mins}} min: melatonine rond {{melatonin}}, dim daarna het licht.',
+      post_shift_commute_title: 'Op weg naar huis',
+      post_shift_commute_body: 'Zonnebril op: houd het licht laag zodat je biologische klok in nachtmodus blijft en je kunt slapen.',
+      caffeine_cutoff_soon_title: 'Laatste koffie',
+      caffeine_cutoff_soon_body: 'Laatste koffie vóór {{caffeine}}, zodat de cafeïne weg is voor je slaapvenster.',
+      rest_day_title: 'Hersteldag',
+      rest_day_body: 'Vandaag geen dienst: houd je slaap- en eettijden stabiel, dan valt de volgende rotatie lichter.',
+      on_track_title: 'Op koers',
+      on_track_body: 'Hierna: cafeïnestop om {{caffeine}}.',
+    },
     section_24h: 'JE 24 UUR',
     section_next: 'VOLGENDE',
     event_caffeine: 'CAFEÏNE-STOP',
@@ -729,6 +747,8 @@ const nlNL = {
     week_plan: 'Weekplan {{price}}',
     start_hour: 'Begin {{hour}}',
     end_hour: 'Einde {{hour}}',
+    timeline_ring: 'Tijdlijn van de dag. Slaapvenster {{sleepStart}} tot {{sleepEnd}}, dienst {{shiftStart}} tot {{shiftEnd}}. Nu {{now}}.',
+    shift_bar: 'Balk van 24 uur. {{summary}}',
   },
 
   push_notif: {

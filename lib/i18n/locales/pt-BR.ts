@@ -27,6 +27,24 @@ const ptBR = {
   today: {
     hero: "O descanso se aproxima.",
     label_today: "HOJE",
+    now_phase: {
+      eyebrow: 'AGORA MESMO',
+      sleep_window_title: 'Sua janela de sono',
+      sleep_window_body: 'Proteja-a: luz baixa, celular longe, quarto fresco e escuro.',
+      night_nadir_title: 'Queda de alerta à frente',
+      night_nadir_body: 'A queda das 3h–5h é quando os erros aumentam. Um cochilo de {{napMin}} min ou seu último café agora.',
+      wind_down_title: 'Desacelerar',
+      wind_down_body: 'Sua janela de sono abre em {{mins}} min: diminua luzes e telas.',
+      wind_down_body_melatonin: 'Sua janela de sono abre em {{mins}} min: melatonina por volta de {{melatonin}} e depois reduza a luz.',
+      post_shift_commute_title: 'A caminho de casa',
+      post_shift_commute_body: 'Óculos de sol: mantenha pouca luz para que seu relógio interno fique em modo noturno e você consiga dormir.',
+      caffeine_cutoff_soon_title: 'Último café',
+      caffeine_cutoff_soon_body: 'Último café até {{caffeine}} para a cafeína passar antes da sua janela de sono.',
+      rest_day_title: 'Dia de recuperação',
+      rest_day_body: 'Hoje sem turno: mantenha horários de sono e refeições estáveis para a próxima rotação pesar menos.',
+      on_track_title: 'No caminho certo',
+      on_track_body: 'A seguir: corte de cafeína às {{caffeine}}.',
+    },
     section_24h: "SUAS 24 HORAS",
     section_next: "PRÓXIMO",
     event_caffeine: "CORTE DE CAFEÍNA",
@@ -728,6 +746,8 @@ const ptBR = {
     week_plan: "Plano semanal {{price}}",
     start_hour: 'Início {{hour}}',
     end_hour: 'Fim {{hour}}',
+    timeline_ring: 'Linha do tempo do dia. Janela de sono {{sleepStart}} às {{sleepEnd}}, turno {{shiftStart}} às {{shiftEnd}}. Agora {{now}}.',
+    shift_bar: 'Barra de 24 horas. {{summary}}',
   },
 
   push_notif: {

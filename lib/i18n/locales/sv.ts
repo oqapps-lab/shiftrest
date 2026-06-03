@@ -27,6 +27,24 @@ const sv = {
   today: {
     hero: 'Vilan samlas.',
     label_today: 'IDAG',
+    now_phase: {
+      eyebrow: 'JUST NU',
+      sleep_window_title: 'Ditt sömnfönster',
+      sleep_window_body: 'Skydda det – dämpat ljus, telefonen undan, rummet svalt och mörkt.',
+      night_nadir_title: 'Vakenhetssvacka närmar sig',
+      night_nadir_body: 'Svackan 03–05 är när misstagen ökar. En tupplur på {{napMin}} min eller din sista kaffe nu.',
+      wind_down_title: 'Varva ner',
+      wind_down_body: 'Ditt sömnfönster öppnas om {{mins}} min – dämpa ljus och skärmar.',
+      wind_down_body_melatonin: 'Ditt sömnfönster öppnas om {{mins}} min – melatonin runt {{melatonin}}, dämpa sedan ljuset.',
+      post_shift_commute_title: 'På väg hem',
+      post_shift_commute_body: 'Solglasögon på – håll ljuset lågt så att din inre klocka stannar i nattläge och du kan sova.',
+      caffeine_cutoff_soon_title: 'Sista kaffet',
+      caffeine_cutoff_soon_body: 'Sista kaffet före {{caffeine}} så att koffeinet hinner gå ur före sömnfönstret.',
+      rest_day_title: 'Återhämtningsdag',
+      rest_day_body: 'Inget pass i dag – håll sömn- och mattider stabila så blir nästa rotation lättare.',
+      on_track_title: 'På rätt väg',
+      on_track_body: 'Nästa: koffeinstopp kl. {{caffeine}}.',
+    },
     section_24h: 'DINA 24 TIMMAR',
     section_next: 'NÄSTA',
     event_caffeine: 'KOFFEINSTOPP',
@@ -728,6 +746,8 @@ const sv = {
     week_plan: 'Veckoplan {{price}}',
     start_hour: 'Start {{hour}}',
     end_hour: 'Slut {{hour}}',
+    timeline_ring: 'Dagens tidslinje. Sömnfönster {{sleepStart}} till {{sleepEnd}}, pass {{shiftStart}} till {{shiftEnd}}. Nu {{now}}.',
+    shift_bar: '24-timmarsstapel. {{summary}}',
   },
 
   push_notif: {

@@ -28,6 +28,24 @@ const frFR = {
   today: {
     hero: 'Le repos s’accumule.',
     label_today: 'AUJOURD’HUI',
+    now_phase: {
+      eyebrow: 'EN CE MOMENT',
+      sleep_window_title: 'Votre fenêtre de sommeil',
+      sleep_window_body: 'Protégez-la : lumière tamisée, téléphone à l’écart, chambre fraîche et sombre.',
+      night_nadir_title: 'Baisse de vigilance à venir',
+      night_nadir_body: 'Le creux de 3 h–5 h est le moment des erreurs. Une sieste de {{napMin}} min ou votre dernier café maintenant.',
+      wind_down_title: 'Décompression',
+      wind_down_body: 'Votre fenêtre de sommeil s’ouvre dans {{mins}} min : baissez lumières et écrans.',
+      wind_down_body_melatonin: 'Votre fenêtre de sommeil s’ouvre dans {{mins}} min : mélatonine vers {{melatonin}}, puis baissez la lumière.',
+      post_shift_commute_title: 'Sur le chemin du retour',
+      post_shift_commute_body: 'Lunettes de soleil : gardez peu de lumière pour que votre horloge interne reste en mode nuit et que vous puissiez dormir.',
+      caffeine_cutoff_soon_title: 'Dernier café',
+      caffeine_cutoff_soon_body: 'Dernier café avant {{caffeine}} pour que la caféine soit éliminée avant le sommeil.',
+      rest_day_title: 'Jour de récupération',
+      rest_day_body: 'Pas de poste aujourd’hui : gardez des horaires de sommeil et de repas stables pour mieux aborder la prochaine rotation.',
+      on_track_title: 'Sur la bonne voie',
+      on_track_body: 'Ensuite : arrêt de la caféine à {{caffeine}}.',
+    },
     section_24h: 'VOS 24 HEURES',
     section_next: 'SUIVANT',
     event_caffeine: 'STOP CAFÉINE',
@@ -729,6 +747,8 @@ const frFR = {
     week_plan: 'Plan hebdo {{price}}',
     start_hour: 'Début {{hour}}',
     end_hour: 'Fin {{hour}}',
+    timeline_ring: 'Frise de la journée. Fenêtre de sommeil {{sleepStart}} à {{sleepEnd}}, poste {{shiftStart}} à {{shiftEnd}}. Maintenant {{now}}.',
+    shift_bar: 'Barre de 24 heures. {{summary}}',
   },
 
   push_notif: {

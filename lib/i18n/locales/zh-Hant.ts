@@ -27,6 +27,24 @@ const zhHant = {
   today: {
     hero: "休息正在累積。",
     label_today: "今天",
+    now_phase: {
+      eyebrow: '此刻',
+      sleep_window_title: '你的睡眠時段',
+      sleep_window_body: '好好守護：燈光調暗、手機放遠、房間保持涼爽黑暗。',
+      night_nadir_title: '警覺度即將下降',
+      night_nadir_body: '凌晨3至5點是出錯高峰。現在小睡{{napMin}}分鐘，或喝下今晚最後一杯咖啡。',
+      wind_down_title: '放鬆收尾',
+      wind_down_body: '睡眠時段將在{{mins}}分鐘後開始——調暗燈光與螢幕。',
+      wind_down_body_melatonin: '睡眠時段將在{{mins}}分鐘後開始——約{{melatonin}}服用褪黑激素，然後調暗燈光。',
+      post_shift_commute_title: '返家途中',
+      post_shift_commute_body: '戴上太陽眼鏡——保持低光，讓生理時鐘維持夜間模式，才睡得著。',
+      caffeine_cutoff_soon_title: '最後一杯咖啡',
+      caffeine_cutoff_soon_body: '在{{caffeine}}前喝完最後一杯咖啡，讓咖啡因在睡眠時段前代謝完畢。',
+      rest_day_title: '恢復日',
+      rest_day_body: '今天沒有班——維持固定的睡眠與用餐時間，下一輪輪班會更輕鬆。',
+      on_track_title: '一切順利',
+      on_track_body: '接著：{{caffeine}}停止攝取咖啡因。',
+    },
     section_24h: "你的24小時",
     section_next: "下一個",
     event_caffeine: "咖啡因截止",
@@ -727,6 +745,8 @@ const zhHant = {
     week_plan: "週方案 {{price}}",
     start_hour: '開始 {{hour}}',
     end_hour: '結束 {{hour}}',
+    timeline_ring: '一日時間軸。睡眠時段{{sleepStart}}至{{sleepEnd}}，輪班{{shiftStart}}至{{shiftEnd}}。現在{{now}}。',
+    shift_bar: '24小時長條。{{summary}}',
   },
 
   push_notif: {

@@ -27,6 +27,24 @@ const itIT = {
   today: {
     hero: "Il riposo si raccoglie.",
     label_today: "OGGI",
+    now_phase: {
+      eyebrow: 'PROPRIO ORA',
+      sleep_window_title: 'La tua finestra di sonno',
+      sleep_window_body: 'Proteggila: luci basse, telefono lontano, stanza fresca e buia.',
+      night_nadir_title: 'Calo di attenzione in arrivo',
+      night_nadir_body: 'Il calo delle 3–5 è quando aumentano gli errori. Un pisolino di {{napMin}} min o il tuo ultimo caffè ora.',
+      wind_down_title: 'Rallenta',
+      wind_down_body: 'La finestra di sonno si apre tra {{mins}} min: abbassa luci e schermi.',
+      wind_down_body_melatonin: 'La finestra di sonno si apre tra {{mins}} min: melatonina verso le {{melatonin}}, poi abbassa le luci.',
+      post_shift_commute_title: 'In viaggio verso casa',
+      post_shift_commute_body: 'Occhiali da sole: tieni poca luce così il tuo orologio interno resta in modalità notte e riesci a dormire.',
+      caffeine_cutoff_soon_title: 'Ultimo caffè',
+      caffeine_cutoff_soon_body: 'Ultimo caffè entro le {{caffeine}} così la caffeina si smaltisce prima del sonno.',
+      rest_day_title: 'Giorno di recupero',
+      rest_day_body: 'Oggi niente turno: mantieni stabili gli orari di sonno e dei pasti così la prossima rotazione pesa meno.',
+      on_track_title: 'Sei in linea',
+      on_track_body: 'Prossimo: stop alla caffeina alle {{caffeine}}.',
+    },
     section_24h: "LE TUE 24 ORE",
     section_next: "PROSSIMO",
     event_caffeine: "STOP CAFFEINA",
@@ -728,6 +746,8 @@ const itIT = {
     week_plan: "Piano settimanale {{price}}",
     start_hour: 'Inizio {{hour}}',
     end_hour: 'Fine {{hour}}',
+    timeline_ring: 'Linea del tempo della giornata. Finestra di sonno {{sleepStart}} alle {{sleepEnd}}, turno {{shiftStart}} alle {{shiftEnd}}. Ora {{now}}.',
+    shift_bar: 'Barra delle 24 ore. {{summary}}',
   },
 
   push_notif: {

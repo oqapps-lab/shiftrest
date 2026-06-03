@@ -31,6 +31,24 @@ const en = {
   today: {
     hero: 'Rest is gathering.',
     label_today: 'TODAY',
+    now_phase: {
+      eyebrow: 'RIGHT NOW',
+      sleep_window_title: 'Your sleep window',
+      sleep_window_body: 'Protect it — lights low, phone away, room cool and dark.',
+      night_nadir_title: 'Alertness dip ahead',
+      night_nadir_body: 'The 3–5 a.m. low is when mistakes spike. A {{napMin}}-min nap or your last coffee now.',
+      wind_down_title: 'Wind-down',
+      wind_down_body: 'Sleep window opens in {{mins}} min — start dimming lights and screens.',
+      wind_down_body_melatonin: 'Sleep window opens in {{mins}} min — melatonin around {{melatonin}}, then dim the lights.',
+      post_shift_commute_title: 'Heading home',
+      post_shift_commute_body: 'Sunglasses on — keep light low so your body clock stays in night mode and you can sleep.',
+      caffeine_cutoff_soon_title: 'Last-call coffee',
+      caffeine_cutoff_soon_body: 'Last coffee by {{caffeine}} so caffeine clears before your sleep window.',
+      rest_day_title: 'Recovery day',
+      rest_day_body: 'No shift today — keep your sleep and meal times steady so the next rotation lands easier.',
+      on_track_title: 'On track',
+      on_track_body: 'Next: caffeine cutoff at {{caffeine}}.',
+    },
     now_hero_full: "Sleep window {{sleep}} · last coffee by {{caffeine}}",
     now_hero_sleep: "Sleep window {{sleep}}",
     shift_label: "TODAY'S SHIFT",
@@ -1234,6 +1252,8 @@ const en = {
     week_plan: "Week plan {{price}}",
     start_hour: 'Start {{hour}}',
     end_hour: 'End {{hour}}',
+    timeline_ring: 'Day timeline. Sleep window {{sleepStart}} to {{sleepEnd}}, shift {{shiftStart}} to {{shiftEnd}}. Now {{now}}.',
+    shift_bar: '24-hour bar. {{summary}}',
   },
 
   push_notif: {

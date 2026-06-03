@@ -28,6 +28,24 @@ const esES = {
   today: {
     hero: 'El descanso se acerca.',
     label_today: 'HOY',
+    now_phase: {
+      eyebrow: 'AHORA MISMO',
+      sleep_window_title: 'Tu ventana de sueño',
+      sleep_window_body: 'Protégela: luz baja, móvil lejos, habitación fresca y oscura.',
+      night_nadir_title: 'Bajón de alerta a la vista',
+      night_nadir_body: 'El bajón de 3 a 5 h es cuando más errores ocurren. Una siesta de {{napMin}} min o tu último café ahora.',
+      wind_down_title: 'Desconexión',
+      wind_down_body: 'Tu ventana de sueño se abre en {{mins}} min: baja luces y pantallas.',
+      wind_down_body_melatonin: 'Tu ventana de sueño se abre en {{mins}} min: melatonina hacia las {{melatonin}} y luego baja la luz.',
+      post_shift_commute_title: 'De camino a casa',
+      post_shift_commute_body: 'Gafas de sol puestas: mantén la luz baja para que tu reloj interno siga en modo noche y puedas dormir.',
+      caffeine_cutoff_soon_title: 'Último café',
+      caffeine_cutoff_soon_body: 'Último café antes de las {{caffeine}} para que la cafeína se elimine antes de dormir.',
+      rest_day_title: 'Día de recuperación',
+      rest_day_body: 'Hoy sin turno: mantén estables tus horas de sueño y comidas para que la próxima rotación cueste menos.',
+      on_track_title: 'Vas bien',
+      on_track_body: 'Siguiente: corte de cafeína a las {{caffeine}}.',
+    },
     section_24h: 'TUS 24 HORAS',
     section_next: 'SIGUIENTE',
     event_caffeine: 'CORTE DE CAFEÍNA',
@@ -729,6 +747,8 @@ const esES = {
     week_plan: 'Plan semanal {{price}}',
     start_hour: 'Inicio {{hour}}',
     end_hour: 'Fin {{hour}}',
+    timeline_ring: 'Línea de tiempo del día. Ventana de sueño {{sleepStart}} a {{sleepEnd}}, turno {{shiftStart}} a {{shiftEnd}}. Ahora {{now}}.',
+    shift_bar: 'Barra de 24 horas. {{summary}}',
   },
 
   push_notif: {
