@@ -389,13 +389,27 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       return { error: null, skipped: 'no_user' as const };
     }
     const row = mapToProfileRow(state, auth.user.id);
-    const fingerprint = JSON.stringify(row);
+    // G1 (CRITICAL freeze fix): exclude the always-changing `updated_at`
+    // timestamp from the dedupe fingerprint. It was stamped with
+    // `new Date()` on every call, so the fingerprint was ALWAYS new — the
+    // guard below never short-circuited, and the auto-sync effect (which
+    // depends on `state`) turned every state change into an upsert +
+    // emitPlanChanged() → plan refetch → re-render → state churn → upsert…
+    // an app-wide freezing loop for signed-in users. Hash only the real
+    // fields; the timestamp still goes to the DB, just not to the guard.
+    const { updated_at: _ignoredTs, ...stableRow } = row;
+    const fingerprint = JSON.stringify(stableRow);
     if (fingerprint === lastSyncedRef.current) {
-      return { error: null }; // already up-to-date
+      return { error: null }; // already up-to-date — nothing meaningful changed
     }
+    // Optimistically claim this fingerprint BEFORE the await so rapid
+    // back-to-back calls (e.g. while a toggle re-renders) dedupe instead of
+    // stacking upserts. Reset on failure so a real change can retry.
+    lastSyncedRef.current = fingerprint;
     const { error } = await supabase.from('profiles').upsert(row);
-    if (!error) {
-      lastSyncedRef.current = fingerprint;
+    if (error) {
+      lastSyncedRef.current = '';
+    } else {
       // M9 — tell the plan query its cache is stale. Without this, edits in
       // Settings → Sleep preferences silently update profiles but the Plan
       // tab keeps showing the pre-edit generated plan until app restart.
