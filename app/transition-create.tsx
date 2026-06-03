@@ -40,6 +40,19 @@ import { emitChange, EVENTS } from '../lib/queries';
 import { formatDayMonth } from '../lib/derive';
 import { t } from '../lib/i18n';
 
+// F2: never let a Supabase call hang forever — a stuck await left the
+// "Generate" button spinning indefinitely, which reads as a frozen app.
+// Reject after `ms` so the catch can surface a friendly retry dialog and
+// the finally{} re-enables the button.
+function withTimeout<T>(work: PromiseLike<T>, ms = 12000): Promise<T> {
+  return Promise.race([
+    Promise.resolve(work),
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('timeout')), ms),
+    ),
+  ]);
+}
+
 const getTypeOptions = (): SegmentOption<TransitionType>[] => [
   { value: 'night_to_day', label: t('transition_create.night_to_day') },
   { value: 'day_to_night', label: t('transition_create.day_to_night') },
@@ -65,6 +78,10 @@ export default function TransitionCreate() {
   }, [startsAt]);
 
   const onSave = async () => {
+    // F2: guard against the double/triple tap that happens when a slow save
+    // makes it look like "nothing happened" — re-entrancy could fire multiple
+    // inserts + navigations and wedge the app.
+    if (submitting) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     const plan = generateTransitionPlan(type, startsAt, {
       takesMelatonin: onboarding.takesMelatonin,
@@ -111,20 +128,22 @@ export default function TransitionCreate() {
 
     setSubmitting(true);
     try {
-      const { data: planRow, error: planErr } = await supabase
-        .from('transition_plans')
-        .insert({
-          user_id: user.id,
-          transition_type: plan.transition_type,
-          start_date: plan.start_date,
-          end_date: plan.end_date,
-          total_days: plan.total_days,
-          total_steps: plan.total_steps,
-          completed_steps: 0,
-          status: 'active',
-        })
-        .select('id')
-        .single();
+      const { data: planRow, error: planErr } = await withTimeout(
+        supabase
+          .from('transition_plans')
+          .insert({
+            user_id: user.id,
+            transition_type: plan.transition_type,
+            start_date: plan.start_date,
+            end_date: plan.end_date,
+            total_days: plan.total_days,
+            total_steps: plan.total_steps,
+            completed_steps: 0,
+            status: 'active',
+          })
+          .select('id')
+          .single(),
+      );
 
       if (planErr || !planRow) {
         throw planErr ?? new Error('No plan id returned');
@@ -141,7 +160,9 @@ export default function TransitionCreate() {
         description: s.description,
         is_completed: false,
       }));
-      const { error: stepErr } = await supabase.from('transition_steps').insert(stepRows);
+      const { error: stepErr } = await withTimeout(
+        supabase.from('transition_steps').insert(stepRows),
+      );
       if (stepErr) throw stepErr;
 
       emitChange(EVENTS.plansChanged);
@@ -160,7 +181,7 @@ export default function TransitionCreate() {
       // localise by error-shape. Network failures get a friendly retry
       // message; everything else falls back to "unknown" generic.
       const msg = e instanceof Error ? e.message : String(e);
-      const isNetwork = /network request failed|fetch|TypeError/i.test(msg);
+      const isNetwork = /network request failed|fetch|TypeError|timeout/i.test(msg);
       const body = isNetwork
         ? t('transition_create.failed_offline')
         : t('transition_create.failed_unknown');
