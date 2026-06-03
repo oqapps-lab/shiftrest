@@ -104,6 +104,12 @@ const en = {
     ok: 'OK',
   },
   plan: {
+    pt_eyebrow: "SHIFT-CHANGE PROTOCOL",
+    pt_hero: "Your night→day switch, planned",
+    pt_body: "Premium maps your shift transition step-by-step so flipping schedules doesn’t wreck your week.",
+    ph_eyebrow: "PROGRESS TRACKING",
+    ph_hero: "See what’s working over time",
+    ph_body: "Premium tracks your sleep across 30 days so you can watch your rotation actually improve.",
     yesterday: 'YESTERDAY',
     today: 'TODAY',
     tomorrow: 'TOMORROW',

@@ -263,6 +263,27 @@ function buildFallbackRecs(
     });
   }
 
+  // F6: premium teaser cards — free users see the depth behind the paywall
+  // (real features: full transition protocol + 30-day progress), locked.
+  recs.push({
+    glyph: 'sparkle',
+    eyebrow: isPremium ? t('plan.pt_eyebrow') : `${t('plan.pt_eyebrow')} \u00b7 ${t('plan.premium_suffix')}`,
+    hero: t('plan.pt_hero'),
+    body: t('plan.pt_body'),
+    tintBg: colors.duskGlow,
+    tintFg: 'duskDim',
+    locked: !isPremium,
+  });
+  recs.push({
+    glyph: 'pulse',
+    eyebrow: isPremium ? t('plan.ph_eyebrow') : `${t('plan.ph_eyebrow')} \u00b7 ${t('plan.premium_suffix')}`,
+    hero: t('plan.ph_hero'),
+    body: t('plan.ph_body'),
+    tintBg: colors.primaryContainer,
+    tintFg: 'primary',
+    locked: !isPremium,
+  });
+
   return recs;
 }
 
@@ -328,8 +349,10 @@ export default function Plan() {
   const showMelatonin = onboarding.takesMelatonin !== false;
   // C2: hide caffeine card when user doesn't drink caffeine
   const showCaffeine = onboarding.caffeineCupsPerDay > 0;
-  // E1: show light therapy card when user enabled it in settings
-  const showLight = onboarding.usesLightTherapy === true;
+  // F6: light/dark guidance applies to EVERY shift worker, not just
+  // light-box owners — gating on ===true stripped it for most users and
+  // left the plan thin. Default ON (hidden only if explicitly turned off).
+  const showLight = onboarding.usesLightTherapy !== false;
 
   // Suggested plan derived from THIS day's shift kind + chronotype. So
   // Yesterday/Today/Tomorrow each render their own honest timings.
