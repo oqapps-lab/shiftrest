@@ -41,6 +41,7 @@ export default function OnboardingLayout() {
       <Stack.Screen name="loading" />
       <Stack.Screen name="aha" />
       <Stack.Screen name="notifications" />
+      <Stack.Screen name="measurement" />
     </Stack>
   );
 }

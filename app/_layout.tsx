@@ -8,7 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { Stack } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { View, LogBox, Platform } from 'react-native';
+import { View, LogBox } from 'react-native';
 
 // Silence the dev-mode red toast for transient network failures during
 // Edge Function cold starts. The hooks already fall back to mock data;
@@ -21,7 +21,6 @@ import { AuthProvider } from '../lib/auth/store';
 import { OnboardingProvider } from '../lib/onboarding/store';
 import { ensureAdaptyActivated } from '../lib/adapty';
 import { ensureAppsFlyerInit } from '../lib/appsflyer';
-import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
 
 if (__DEV__) {
   LogBox.ignoreLogs([
@@ -46,15 +45,9 @@ export default function RootLayout() {
   // when their key is not in the env (dev mode without .env works fine).
   useEffect(() => {
     (async () => {
-      if (Platform.OS === 'ios') {
-        // ATT can only fire when app is in foreground active state. expo-tracking-transparency
-        // handles the timing internally. Silent if Info.plist key missing.
-        try {
-          await requestTrackingPermissionsAsync();
-        } catch {
-          // User denied / unavailable — fine, AppsFlyer falls back to IDFV-only.
-        }
-      }
+      // F3: ATT is NOT requested at cold launch anymore — a raw prompt with
+      // no context is an Apple 5.1.1 reject risk. It now fires from the
+      // onboarding 'measurement' priming screen, after the user taps Continue.
       ensureAdaptyActivated().catch(() => null);
       ensureAppsFlyerInit().catch(() => null);
     })();

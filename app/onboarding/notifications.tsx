@@ -25,7 +25,7 @@ export default function Notifications() {
 
   const finish = () => {
     markCompleted();
-    router.replace('/(tabs)');
+    router.replace('/onboarding/measurement');
   };
 
   return (

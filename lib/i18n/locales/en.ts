@@ -795,6 +795,13 @@ const en = {
     n_days: '{{n}} days left',
   },
   onboarding_screens: {
+    measurement: {
+      eyebrow: "ONE LAST THING",
+      hero: "Help us reach more shift workers.",
+      body: "ShiftRest measures which channels bring nurses, firefighters and factory workers to better sleep — so we can reach more of the people who need it. We never sell your data or show you ads. This is measurement only.",
+      cta: "Continue",
+      note: "On the next screen, tap Allow to help us — or Ask App Not to Track. Either way, your plan works exactly the same.",
+    },
     loading_steps: ['Reading your rotation', 'Calculating sleep window', 'Aligning melatonin', 'Drafting your plan'],
 
     profession: {
