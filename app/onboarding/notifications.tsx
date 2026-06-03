@@ -3,7 +3,7 @@
  * Two CTAs: Allow / Maybe later — both land in the main tabs for demo.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import {
@@ -17,14 +17,33 @@ import {
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
 import { mockNotificationTypes } from '../../mock/user';
+import { requestPermissions, flushPendingTrialReminder } from '../../lib/notifications';
 import { t } from '../../lib/i18n';
 
 export default function Notifications() {
+  const [busy, setBusy] = useState(false);
+
   // G1: do NOT markCompleted() here. Flipping `completed` mid-onboarding
   // raced the Welcome redirect to /(tabs) against this screen's own forward
   // navigation (and, before the store fix, triggered the profile-sync loop).
   // Completion is now claimed on the final screen (measurement).
   const finish = () => {
+    router.replace('/onboarding/measurement');
+  };
+
+  // "Allow" actually requests the OS notification permission (this screen is
+  // the priming context Apple expects before the system prompt), then flushes
+  // any trial-ending reminder stashed on the paywall (which precedes this
+  // screen) now that permission may be granted. Always navigates afterwards.
+  const allow = async () => {
+    if (busy) return;
+    setBusy(true);
+    try {
+      await requestPermissions();
+      await flushPendingTrialReminder();
+    } catch {
+      // permission flow failed / unavailable — proceed regardless.
+    }
     router.replace('/onboarding/measurement');
   };
 
@@ -38,7 +57,8 @@ export default function Notifications() {
           <PillCTA
             variant="primary"
             label={t('onboarding_screens.notifications.allow')}
-            onPress={finish}
+            onPress={allow}
+            disabled={busy}
           />
           <PillCTA
             variant="glass"

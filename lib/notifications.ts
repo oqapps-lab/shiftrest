@@ -23,6 +23,10 @@ const TRACKED_IDS_KEY = 'shiftrest:notif-scheduled-ids:v1';
 // bed/caffeine/melatonin set so rescheduleNotifications() (which cancels and
 // rebuilds the recurring set on every prefs/plan change) never wipes it.
 const TRIAL_REMINDER_ID_KEY = 'shiftrest:notif-trial-reminder-id:v1';
+// G5: when a trial starts BEFORE notifications are granted (the paywall
+// precedes the permission screen in onboarding), stash the intended reminder
+// here and flush it once permission is granted — see flushPendingTrialReminder.
+const PENDING_TRIAL_KEY = 'shiftrest:notif-pending-trial:v1';
 
 export type LeadMinutes = '15' | '30' | '60';
 
@@ -266,12 +270,19 @@ export async function scheduleTrialEndingReminder(
   }
 
   if (!Number.isFinite(trialDays) || trialDays < 1) {
+    await AsyncStorage.removeItem(PENDING_TRIAL_KEY).catch(() => null);
     return { scheduled: false, reason: 'invalid_days' };
   }
 
-  // Permission must already be granted — we never prompt here.
+  // Permission must already be granted — we never prompt here. If it isn't yet
+  // (the paywall precedes the onboarding permission screen), stash the intended
+  // reminder so flushPendingTrialReminder() can schedule it once granted.
   const { status } = await Notifications.getPermissionsAsync();
   if (status !== 'granted') {
+    await AsyncStorage.setItem(
+      PENDING_TRIAL_KEY,
+      JSON.stringify({ trialDays, startAt: startAt.toISOString() }),
+    ).catch(() => null);
     return { scheduled: false, reason: 'permission_denied' };
   }
 
@@ -282,6 +293,7 @@ export async function scheduleTrialEndingReminder(
   // A 1-day trial would fire "yesterday" — skip rather than schedule a past
   // date (iOS would drop it anyway).
   if (fireAt.getTime() <= Date.now()) {
+    await AsyncStorage.removeItem(PENDING_TRIAL_KEY).catch(() => null);
     return { scheduled: false, reason: 'fire_in_past' };
   }
 
@@ -297,8 +309,33 @@ export async function scheduleTrialEndingReminder(
     },
   });
   await AsyncStorage.setItem(TRIAL_REMINDER_ID_KEY, id);
+  await AsyncStorage.removeItem(PENDING_TRIAL_KEY).catch(() => null);
   logEvent('trial_reminder_scheduled', { trialDays, fireAt: fireAt.toISOString() });
   return { scheduled: true, fireAt: fireAt.toISOString() };
+}
+
+/**
+ * Flush a trial reminder that was stashed by scheduleTrialEndingReminder when
+ * notifications weren't yet granted (trial started on the paywall, which comes
+ * before the onboarding permission screen). Call right after the user grants
+ * notification permission. No-op when nothing is pending. Re-scheduling reuses
+ * the ORIGINAL trial start, so a now-past fire date is correctly dropped.
+ */
+export async function flushPendingTrialReminder(): Promise<TrialReminderResult> {
+  let raw: string | null = null;
+  try {
+    raw = await AsyncStorage.getItem(PENDING_TRIAL_KEY);
+  } catch {
+    return { scheduled: false };
+  }
+  if (!raw) return { scheduled: false };
+  try {
+    const { trialDays, startAt } = JSON.parse(raw) as { trialDays: number; startAt: string };
+    return await scheduleTrialEndingReminder(trialDays, new Date(startAt));
+  } catch {
+    await AsyncStorage.removeItem(PENDING_TRIAL_KEY).catch(() => null);
+    return { scheduled: false };
+  }
 }
 
 /** Convenience for tests — list everything we've scheduled. */
