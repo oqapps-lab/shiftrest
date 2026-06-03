@@ -24,6 +24,8 @@ import {
   socialWindowForDay,
   isFastRotatingSchedule,
   anchorSleepWindow,
+  personaForReveal,
+  disruptionReadForSchedule,
 } from '../lib/derive';
 
 // Mock t() so tests don't depend on i18n setup
@@ -389,5 +391,68 @@ describe('isFastRotatingSchedule', () => {
 describe('anchorSleepWindow', () => {
   test('fixed early-morning 4h block', () => {
     expect(anchorSleepWindow()).toEqual({ startHour: 4, endHour: 8 });
+  });
+});
+
+// ─── G3: pre-paywall reveal personalisation ────────────────────────────────
+
+describe('personaForReveal', () => {
+  test('known profession + night → profession-night title key', () => {
+    expect(personaForReveal('nurse', 'night', 'owl')).toEqual({
+      titleKey: 'reveal.persona.title_nurse_night',
+      bodyKey: 'reveal.persona.body_nurse',
+      chronoKey: 'reveal.persona.chrono_owl',
+    });
+  });
+  test('firefighter day shift', () => {
+    expect(personaForReveal('firefighter', 'day', 'lark')).toEqual({
+      titleKey: 'reveal.persona.title_firefighter_day',
+      bodyKey: 'reveal.persona.body_firefighter',
+      chronoKey: 'reveal.persona.chrono_lark',
+    });
+  });
+  test('factory off day', () => {
+    expect(personaForReveal('factory', 'off', 'intermediate')).toEqual({
+      titleKey: 'reveal.persona.title_factory_off',
+      bodyKey: 'reveal.persona.body_factory',
+      chronoKey: 'reveal.persona.chrono_intermediate',
+    });
+  });
+  test('profession "other" falls back to generic persona', () => {
+    expect(personaForReveal('other', 'night', null)).toEqual({
+      titleKey: 'reveal.persona.title_generic_night',
+      bodyKey: 'reveal.persona.body_generic',
+      chronoKey: null,
+    });
+  });
+  test('null profession + null chronotype → fully generic, no chrono clause', () => {
+    expect(personaForReveal(null, 'day', null)).toEqual({
+      titleKey: 'reveal.persona.title_generic_day',
+      bodyKey: 'reveal.persona.body_generic',
+      chronoKey: null,
+    });
+  });
+});
+
+describe('disruptionReadForSchedule', () => {
+  test('fast rotator → high circadian + high sleep-debt', () => {
+    const rows = disruptionReadForSchedule('3x12-day-night', 'night');
+    expect(rows.map((r) => r.severity)).toEqual(['high', 'high', 'moderate']);
+    expect(rows.map((r) => r.labelKey)).toEqual([
+      'reveal.disruption.circadian',
+      'reveal.disruption.sleep_debt',
+      'reveal.disruption.adaptation',
+    ]);
+  });
+  test('steady night (no rotation) → moderate across the board', () => {
+    const rows = disruptionReadForSchedule('fixed-night', 'night');
+    expect(rows.map((r) => r.severity)).toEqual(['moderate', 'moderate', 'moderate']);
+  });
+  test('plain day pattern → low circadian + low sleep-debt', () => {
+    const rows = disruptionReadForSchedule(null, 'day');
+    expect(rows.map((r) => r.severity)).toEqual(['low', 'low', 'low']);
+  });
+  test('always returns exactly three rows', () => {
+    expect(disruptionReadForSchedule('continental', 'off')).toHaveLength(3);
   });
 });

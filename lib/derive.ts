@@ -368,3 +368,83 @@ export function isFastRotatingSchedule(scheduleId: string | null | undefined): b
 export function anchorSleepWindow(): HourWindow {
   return { startHour: 4, endHour: 8 };
 }
+
+// ─── G3: pre-paywall reveal (aha) personalisation ──────────────────────────
+// Pure key-builders so the rich reveal can be memoised in the component and
+// unit-tested without rendering. They never fabricate medical numbers — they
+// map the user's profession + schedule + chronotype onto a fixed set of
+// translation keys (full copy lives in lib/i18n/locales/*).
+
+export type RevealProfession = 'nurse' | 'firefighter' | 'factory' | 'other' | null | undefined;
+
+/**
+ * Persona hero — profession drives the title/physiology body, chronotype adds
+ * a circadian descriptor clause. All three degrade gracefully: a missing
+ * profession falls back to the generic shift-worker persona, a missing
+ * chronotype simply drops the descriptor clause.
+ *
+ * Returns translation KEYS + interpolation values; the caller resolves via t().
+ */
+export interface RevealPersona {
+  titleKey: string;
+  bodyKey: string;
+  /** Chronotype clause key, or null when chronotype is unknown. */
+  chronoKey: string | null;
+}
+
+export function personaForReveal(
+  profession: RevealProfession,
+  shift: 'day' | 'night' | 'off',
+  chronotype: 'lark' | 'intermediate' | 'owl' | null,
+): RevealPersona {
+  const prof: 'nurse' | 'firefighter' | 'factory' | 'generic' =
+    profession === 'nurse' || profession === 'firefighter' || profession === 'factory'
+      ? profession
+      : 'generic';
+  // Night vs day vs off picks which body sentence we lead with.
+  const phase = shift === 'night' ? 'night' : shift === 'off' ? 'off' : 'day';
+  return {
+    titleKey: `reveal.persona.title_${prof}_${phase}`,
+    bodyKey: `reveal.persona.body_${prof}`,
+    chronoKey: chronotype ? `reveal.persona.chrono_${chronotype}` : null,
+  };
+}
+
+/**
+ * Disruption read — 2-3 honest severity cards keyed off how hard the schedule
+ * fights the body clock. Fast rotations (3x12 mixing day+night, 24/48,
+ * continental) get the highest circadian-disruption rating; a steady day
+ * pattern the lowest. Severity is an ordinal label ('low' | 'moderate' |
+ * 'high'), NOT a fabricated percentage — the copy stays qualitative.
+ */
+export type Severity = 'low' | 'moderate' | 'high';
+
+export interface DisruptionRow {
+  /** Eyebrow/label key, e.g. reveal.disruption.circadian. */
+  labelKey: string;
+  severity: Severity;
+}
+
+export function disruptionReadForSchedule(
+  scheduleId: string | null | undefined,
+  shift: 'day' | 'night' | 'off',
+): DisruptionRow[] {
+  const fastRotating = isFastRotatingSchedule(scheduleId);
+  const worksNights = shift === 'night';
+
+  // Circadian disruption: high if the schedule rotates fast OR the user is on
+  // nights right now; moderate for a settled night/day with no rotation;
+  // low only for a plain day pattern with no fast rotation.
+  const circadian: Severity = fastRotating ? 'high' : worksNights ? 'moderate' : 'low';
+  // Sleep-debt risk tracks rotation + night work too, one notch gentler.
+  const sleepDebt: Severity = fastRotating ? 'high' : worksNights ? 'moderate' : 'low';
+  // Adaptation: a fast rotation never fully adapts (always "in progress");
+  // a steady pattern can reach "settling".
+  const adaptation: Severity = fastRotating ? 'moderate' : worksNights ? 'moderate' : 'low';
+
+  return [
+    { labelKey: 'reveal.disruption.circadian', severity: circadian },
+    { labelKey: 'reveal.disruption.sleep_debt', severity: sleepDebt },
+    { labelKey: 'reveal.disruption.adaptation', severity: adaptation },
+  ];
+}
