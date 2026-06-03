@@ -11,7 +11,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { Modal, View, StyleSheet, Animated, Easing, Pressable } from 'react-native';
+import { Modal, View, ScrollView, StyleSheet, Animated, Easing, Pressable } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { GlassCard, Eyebrow, Text, SerifHero, PillCTA } from '../ui';
 import { colors, radii, spacing } from '../../constants/tokens';
@@ -57,7 +57,7 @@ export function TodayIntroSheet({ visible, onClose }: { visible: boolean; onClos
         ]}
       >
         <View style={styles.handle} />
-        <View style={{ paddingHorizontal: spacing.xl, paddingTop: spacing.lg }}>
+        <ScrollView contentContainerStyle={{ paddingHorizontal: spacing.xl, paddingTop: spacing.lg, paddingBottom: spacing.huge }} showsVerticalScrollIndicator={false}>
           <Eyebrow>{t('today_intro.eyebrow')}</Eyebrow>
           <View style={{ marginTop: spacing.sm, marginBottom: spacing.lg }}>
             <SerifHero>{t('today_intro.hero')}</SerifHero>
@@ -122,6 +122,34 @@ export function TodayIntroSheet({ visible, onClose }: { visible: boolean; onClos
             </View>
           </GlassCard>
 
+          <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.md }}>
+            <View style={styles.row}>
+              <View style={[styles.swatch, { backgroundColor: colors.primary }]} />
+              <View style={{ flex: 1 }}>
+                <Text variant="titleMd" family="display" weight="medium" color="ink">
+                  {t('today_intro.set_shift_title')}
+                </Text>
+                <Text variant="bodyMd" color="inkSubtle">
+                  {t('today_intro.set_shift_sub')}
+                </Text>
+              </View>
+            </View>
+          </GlassCard>
+
+          <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.xl }}>
+            <View style={styles.row}>
+              <View style={[styles.swatch, { backgroundColor: colors.duskGlow }]} />
+              <View style={{ flex: 1 }}>
+                <Text variant="titleMd" family="display" weight="medium" color="ink">
+                  {t('today_intro.offday_title')}
+                </Text>
+                <Text variant="bodyMd" color="inkSubtle">
+                  {t('today_intro.offday_sub')}
+                </Text>
+              </View>
+            </View>
+          </GlassCard>
+
           <View style={{ marginBottom: spacing.xxl }}>
             <PillCTA variant="primary" label={t('today_intro.got_it')} onPress={dismiss} />
           </View>
@@ -130,7 +158,7 @@ export function TodayIntroSheet({ visible, onClose }: { visible: boolean; onClos
               {t('today_intro.skip')}
             </Text>
           </Pressable>
-        </View>
+        </ScrollView>
       </Animated.View>
     </Modal>
   );

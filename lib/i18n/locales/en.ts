@@ -69,6 +69,10 @@ const en = {
     journal_bad: 'Rough',
   },
   today_intro: {
+    set_shift_title: "Set your shift",
+    set_shift_sub: "Tap Day, Night, or Off at the top of Today so your plan matches your real day.",
+    offday_title: "Mark a day off",
+    offday_sub: "Choose Off day — or add it in Schedule — and you\u2019ll get a recovery plan instead of a work plan.",
     eyebrow: 'WELCOME',
     hero: 'Reading your Today screen.',
     sub: 'Quick tour of what each shape on this screen means — takes 10 seconds.',
@@ -656,6 +660,8 @@ const en = {
     caffeine: { title: 'Caffeine keeps me up', sub: 'I rely on it but it ruins my sleep' },
   },
   paywall: {
+    products_unavailable_title: "Plans didn’t load",
+    products_unavailable_body: "We couldn’t reach the App Store. Check your connection and try again, or tap Maybe later to keep going.",
     unlock_header: "WHAT YOU UNLOCK",
     f_window_t: "Your sleep window",
     f_window_s: "Exact times to fall asleep and wake for every shift — not generic advice.",

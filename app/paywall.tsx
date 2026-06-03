@@ -178,6 +178,19 @@ export default function Paywall() {
     const selectedProduct = products[plan];
     const planValue = PLAN_TO_DB[plan];
 
+    // F4: on a real build, Adapty products should always load. If they did
+    // not (placement/IAP misconfig or no network), do NOT silently advance —
+    // that reads as a dead button. Tell the user. __DEV__ keeps the Expo Go
+    // demo flow (no native StoreKit there).
+    if (!selectedProduct && !__DEV__) {
+      showAppDialog({
+        title: t('paywall.products_unavailable_title'),
+        message: t('paywall.products_unavailable_body'),
+        actions: [{ label: t('a11y.close'), style: 'cancel' }],
+      });
+      return;
+    }
+
     // 1) If we have a real Adapty product (TestFlight / device): hit StoreKit.
     if (selectedProduct) {
       setSubmitting(true);
