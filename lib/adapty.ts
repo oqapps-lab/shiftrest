@@ -19,6 +19,20 @@ let activated = false;
 export const PAYWALL_PLACEMENT_ID =
   process.env.EXPO_PUBLIC_ADAPTY_PLACEMENT_ID ?? 'main';
 
+// G5: the #1 cause of a "dead" Start-trial button is a placement-id mismatch
+// between the dashboard and the app — `getPaywall('main')` throws (or returns
+// no products), products stay null, and the CTA silently does nothing. We don't
+// hard-code a single id: try the env-configured one first, then the ids this
+// project has used in the Adapty dashboard. Whichever returns products wins,
+// and we log it so a future mismatch is debuggable from the Metro console.
+const PLACEMENT_CANDIDATES: string[] = Array.from(
+  new Set(
+    [process.env.EXPO_PUBLIC_ADAPTY_PLACEMENT_ID, 'main', 'main_paywall'].filter(
+      Boolean,
+    ) as string[],
+  ),
+);
+
 // Single-flight cache so repeated useEffect renders don't refetch.
 let paywallCache: { paywall: AdaptyPaywall; products: AdaptyPaywallProduct[] } | null = null;
 
@@ -85,17 +99,34 @@ export async function loadPaywallProducts(): Promise<
     await ensureAdaptyActivated();
     if (!activated) return null;
   }
-  try {
-    const paywall = await adapty.getPaywall(PAYWALL_PLACEMENT_ID);
-    const products = await adapty.getPaywallProducts(paywall);
-    paywallCache = { paywall, products };
-    return paywallCache;
-  } catch (err) {
-    if (__DEV__) {
-      console.log('[adapty] loadPaywallProducts failed:', err);
+  let lastErr: unknown = null;
+  for (const placementId of PLACEMENT_CANDIDATES) {
+    try {
+      const paywall = await adapty.getPaywall(placementId);
+      const products = await adapty.getPaywallProducts(paywall);
+      if (products && products.length > 0) {
+        paywallCache = { paywall, products };
+        if (__DEV__) {
+          console.log(
+            `[adapty] paywall loaded from placement "${placementId}" (${products.length} products)`,
+          );
+        }
+        return paywallCache;
+      }
+      if (__DEV__) {
+        console.log(`[adapty] placement "${placementId}" returned 0 products — trying next`);
+      }
+    } catch (err) {
+      lastErr = err;
+      if (__DEV__) {
+        console.log(`[adapty] placement "${placementId}" failed:`, err);
+      }
     }
-    return null;
   }
+  if (__DEV__) {
+    console.log('[adapty] loadPaywallProducts: no placement yielded products', lastErr);
+  }
+  return null;
 }
 
 /**

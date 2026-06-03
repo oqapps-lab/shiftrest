@@ -315,6 +315,16 @@ export default function Paywall() {
     return '$0.96';
   };
 
+  // G4: trial disclosure directly under the CTA (Apple 3.1.2(c)) — name the
+  // exact price + period of the selected plan so the trial terms are clear
+  // before the user taps. Mirrors the Vitaminico/Sugar Quit pattern.
+  const ctaSubtext =
+    plan === 'year'
+      ? t('paywall.cta_sub_year', { price: priceFor('year') })
+      : plan === 'month'
+        ? t('paywall.cta_sub_month', { price: priceFor('month') })
+        : t('paywall.cta_sub_week', { price: priceFor('week') });
+
   return (
     <Screen
       orbs="normal"
@@ -329,6 +339,14 @@ export default function Paywall() {
             disabled={submitting}
             onPress={onStartTrial}
           />
+          <Text
+            variant="bodyMd"
+            color="inkSubtle"
+            align="center"
+            style={{ marginTop: spacing.sm, paddingHorizontal: spacing.md }}
+          >
+            {ctaSubtext}
+          </Text>
           <Pressable
             onPress={() => router.replace('/onboarding/notifications')}
             hitSlop={12}
