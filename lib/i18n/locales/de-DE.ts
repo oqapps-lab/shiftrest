@@ -38,8 +38,8 @@ const deDE = {
     now_hero_full: "Schlaffenster {{sleep}} · letzter Kaffee bis {{caffeine}}",
     now_hero_sleep: "Schlaffenster {{sleep}}",
     shift_label: 'SCHICHT HEUTE',
-    plan_transition_eyebrow: 'BALD',
-    plan_transition_detected_eyebrow: 'BALD · ERKANNT',
+    plan_transition_eyebrow: "VORAUSPLANEN",
+    plan_transition_detected_eyebrow: "SCHICHTWECHSEL ERKANNT",
     plan_transition_title: 'Schichtwechsel planen',
     plan_transition_sub: 'Erhalte einen 2-Tage-Plan für deinen nächsten Nacht ↔ Tag-Wechsel.',
     caffeine_logged: 'Letzte Tasse erfasst · {{cups}} heute',
@@ -609,9 +609,9 @@ const deDE = {
     },
     social_proof_2: {
       cta: "Meinen Plan anzeigen",
-      eyebrow: "AUF SCHLAFMEDIZIN AUFGEBAUT",
-      hero: "Für Schichtarbeiter konzipiert.",
-      body: "ShiftRest verbindet Chronobiologie-Forschung, Schichtarbeitsmedizin und verhaltensbezogene Schlafforschung – für den Alltag von Pflegekräften, Feuerwehrleuten, Sanitätern, Industriearbeitern und allen mit wechselnden Diensten.",
+      eyebrow: "DEIN PLAN IST FERTIG",
+      hero: "Sehen wir uns deine Nächte an.",
+      body: "Auf deine Schichten, deinen Chronotyp und deinen echten Alltag zugeschnitten — dein persönlicher Schlafplan ist fertig.",
     },
   },
   auth: {

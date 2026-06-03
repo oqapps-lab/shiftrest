@@ -37,7 +37,7 @@ const ptBR = {
     now_hero_full: "Janela de sono {{sleep}} · último café às {{caffeine}}",
     now_hero_sleep: "Janela de sono {{sleep}}",
     shift_label: 'TURNO DE HOJE',
-    plan_transition_eyebrow: 'EM BREVE',
+    plan_transition_eyebrow: "PLANEJE",
     plan_transition_title: 'Planejar uma troca de turno',
     plan_transition_sub: 'Obtenha um plano de 2 dias para a próxima troca noite ↔ dia.',
     caffeine_logged: 'Última xícara registrada · {{cups}} hoje',
@@ -580,9 +580,9 @@ const ptBR = {
     },
     social_proof_2: {
       cta: "Mostrar meu plano",
-      eyebrow: "BASEADO EM MEDICINA DO SONO",
-      hero: "Pensado para quem trabalha em turnos.",
-      body: "O ShiftRest combina pesquisa em cronobiologia, medicina do sono em turnos e ciência comportamental do sono — adaptada à rotina de enfermeiros, bombeiros, paramédicos, operários e de qualquer pessoa em escala rotativa.",
+      eyebrow: "SEU PLANO ESTÁ PRONTO",
+      hero: "Vamos ver suas noites.",
+      body: "Feito sob medida para seus turnos, seu cronotipo e como você realmente vive — seu plano de sono personalizado está pronto.",
     },
   },
   auth: {

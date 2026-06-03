@@ -37,7 +37,7 @@ const zhHant = {
     now_hero_full: "睡眠時段 {{sleep}}・咖啡因最晚 {{caffeine}}",
     now_hero_sleep: "睡眠時段 {{sleep}}",
     shift_label: '今日班次',
-    plan_transition_eyebrow: '即將到來',
+    plan_transition_eyebrow: "提前規劃",
     plan_transition_title: '規畫班次過渡',
     plan_transition_sub: '為下次夜 ↔ 日切換取得 2 天計畫。',
     caffeine_logged: '最後一杯已記錄 · 今日 {{cups}} 杯',
@@ -579,9 +579,9 @@ const zhHant = {
     },
     social_proof_2: {
       cta: "顯示我的方案",
-      eyebrow: "立基於睡眠醫學",
-      hero: "為輪班工作者設計。",
-      body: "ShiftRest 結合時間生物學研究、輪班睡眠醫學與行為睡眠科學 — 配合護理人員、消防員、急救人員、工廠員工等輪班工作者的真實情境量身打造。",
+      eyebrow: "你的計畫已就緒",
+      hero: "來看看你的夜晚。",
+      body: "依你的輪班、生理時型，以及你真實的生活打造——你的個人化睡眠計畫已就緒。",
     },
   },
   auth: {

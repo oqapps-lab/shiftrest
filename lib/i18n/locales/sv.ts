@@ -37,7 +37,7 @@ const sv = {
     now_hero_full: "Sömnfönster {{sleep}} · sista kaffet {{caffeine}}",
     now_hero_sleep: "Sömnfönster {{sleep}}",
     shift_label: 'PASS IDAG',
-    plan_transition_eyebrow: 'SNART',
+    plan_transition_eyebrow: "PLANERA FRAMÅT",
     plan_transition_title: 'Planera ett skiftbyte',
     plan_transition_sub: 'Få en 2-dagars plan för nästa natt ↔ dag-byte.',
     caffeine_logged: 'Senaste koppen loggad · {{cups}} idag',
@@ -580,9 +580,9 @@ const sv = {
     },
     social_proof_2: {
       cta: "Visa min plan",
-      eyebrow: "GRUNDAT I SÖMNMEDICIN",
-      hero: "Utformad för skiftarbetare.",
-      body: "ShiftRest kombinerar forskning i kronobiologi, skiftarbetes sömnmedicin och beteendevetenskaplig sömnforskning — anpassad till verkligheten för sjuksköterskor, brandmän, ambulanspersonal, fabriksarbetare och alla med roterande schema.",
+      eyebrow: "DIN PLAN ÄR KLAR",
+      hero: "Nu tittar vi på dina nätter.",
+      body: "Byggt kring dina skift, din kronotyp och hur du faktiskt lever – din personliga sömnplan är klar.",
     },
   },
   auth: {

@@ -41,8 +41,8 @@ const en = {
     event_sleep: 'SLEEP WINDOW',
     transition_in_progress: 'TRANSITION IN PROGRESS',
     transition_subtitle: '{{from}} → {{to}}, {{done}} of {{total}} steps today',
-    plan_transition_eyebrow: 'COMING UP',
-    plan_transition_detected_eyebrow: 'COMING UP · DETECTED',
+    plan_transition_eyebrow: "PLAN AHEAD",
+    plan_transition_detected_eyebrow: "SHIFT SWITCH DETECTED",
     plan_transition_title: 'Plan a shift transition',
     plan_transition_n2d_title: 'Night → day switch ahead',
     plan_transition_d2n_title: 'Day → night switch ahead',
@@ -829,9 +829,9 @@ const en = {
     },
     social_proof_2: {
       cta: "Show my plan",
-      eyebrow: "GROUNDED IN SLEEP MEDICINE",
-      hero: "Designed for shift workers.",
-      body: "ShiftRest combines chronobiology research, shift-work sleep medicine, and behavioural sleep science — adapted for the realities of nurses, firefighters, EMTs, factory workers, and anyone on a rotating schedule.",
+      eyebrow: "YOUR PLAN IS READY",
+      hero: "Let’s see your nights.",
+      body: "Built around your shifts, your chronotype, and how you actually live — your personalized sleep plan is ready.",
     },
   },
   auth: {

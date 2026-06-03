@@ -38,7 +38,7 @@ const frFR = {
     now_hero_full: "Fenêtre de sommeil {{sleep}} · dernier café avant {{caffeine}}",
     now_hero_sleep: "Fenêtre de sommeil {{sleep}}",
     shift_label: 'GARDE D’AUJOURD’HUI',
-    plan_transition_eyebrow: 'À VENIR',
+    plan_transition_eyebrow: "ANTICIPER",
     plan_transition_title: 'Planifier un changement de garde',
     plan_transition_sub: 'Obtiens un plan de 2 jours pour ton prochain passage nuit ↔ jour.',
     caffeine_logged: 'Dernière tasse enregistrée · {{cups}} aujourd’hui',
@@ -581,9 +581,9 @@ const frFR = {
     },
     social_proof_2: {
       cta: "Afficher mon plan",
-      eyebrow: "FONDÉ SUR LA MÉDECINE DU SOMMEIL",
-      hero: "Pensé pour le travail posté.",
-      body: "ShiftRest combine recherche en chronobiologie, médecine du sommeil en travail posté et science comportementale du sommeil — adaptées au quotidien des infirmiers, pompiers, secouristes, ouvriers et de toute personne en horaires rotatifs.",
+      eyebrow: "TON PLAN EST PRÊT",
+      hero: "Voyons tes nuits.",
+      body: "Conçu autour de tes quarts, de ton chronotype et de ta vraie vie — ton plan de sommeil personnalisé est prêt.",
     },
   },
   auth: {

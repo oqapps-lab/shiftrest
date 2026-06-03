@@ -37,7 +37,7 @@ const ja = {
     now_hero_full: "睡眠の時間 {{sleep}}・カフェインは {{caffeine}} まで",
     now_hero_sleep: "睡眠の時間 {{sleep}}",
     shift_label: '今日のシフト',
-    plan_transition_eyebrow: 'もうすぐ',
+    plan_transition_eyebrow: "先を見越して",
     plan_transition_title: 'シフト移行を計画',
     plan_transition_sub: '次の夜 ↔ 昼の切替に向けた2日間プランを取得。',
     caffeine_logged: '最後の一杯を記録 · 今日{{cups}}杯',
@@ -580,9 +580,9 @@ const ja = {
     },
     social_proof_2: {
       cta: "プランを表示",
-      eyebrow: "睡眠医学に基づく",
-      hero: "交替勤務者のために設計。",
-      body: "ShiftRest は時間生物学の研究・交替勤務睡眠医学・行動的睡眠科学を組み合わせ、看護師・消防士・救急隊員・工場勤務者など、輪番制で働くすべての人の現実に合わせて設計されています。",
+      eyebrow: "あなたのプランが完成",
+      hero: "あなたの夜を見てみましょう。",
+      body: "あなたのシフト、クロノタイプ、実際の生活に合わせた、あなた専用の睡眠プランが完成しました。",
     },
   },
   auth: {

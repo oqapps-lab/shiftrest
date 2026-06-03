@@ -3,7 +3,7 @@
  * Eyebrow greeting + streak pill + Soft hero line + TimelineRing + ShiftBar + 3 next-event cards.
  */
 
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -229,10 +229,14 @@ export default function Home() {
     '';
   const displayName = rawName ? firstName(rawName).toUpperCase() : '';
 
+  // F8: the timeline-legend sheet is now opened on demand from the "?" beside
+  // the ring, instead of auto-popping before the user has seen the screen.
+  const [introVisible, setIntroVisible] = useState(false);
+
   return (
     <Screen orbs="normal" scroll>
       <PlanUpdatedBanner />
-      <TodayIntroSheet />
+      <TodayIntroSheet visible={introVisible} onClose={() => setIntroVisible(false)} />
       <View style={styles.headerRow}>
         <View style={{ flex: 1 }}>
           <Eyebrow>{displayName ? `${getGreeting(nowHour, onboarding.currentShift)}, ${displayName}` : getGreeting(nowHour, onboarding.currentShift)}</Eyebrow>
@@ -370,7 +374,17 @@ export default function Home() {
         })()}
       </GlassCard>
 
-      <View style={{ alignItems: 'center', marginBottom: spacing.huge }}>
+      <View style={styles.ringWrap}>
+        {/* F8: on-demand legend — tap "?" to learn what each arc/dot means */}
+        <Pressable
+          onPress={() => setIntroVisible(true)}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel="Explain the timeline"
+          style={styles.ringHelp}
+        >
+          <Text variant="labelMd" family="body" weight="medium" color="inkMuted">?</Text>
+        </Pressable>
         <TimelineRing
           nowHour={nowHour}
           sleepStart={sleepStartHour}
@@ -609,6 +623,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: spacing.lg,
+  },
+  ringWrap: {
+    alignItems: 'center',
+    marginBottom: spacing.huge,
+    position: 'relative',
+  },
+  ringHelp: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    zIndex: 2,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: colors.surfaceHigh,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   nowHeroText: {
     marginLeft: spacing.sm,

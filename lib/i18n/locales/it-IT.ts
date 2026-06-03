@@ -37,7 +37,7 @@ const itIT = {
     now_hero_full: "Finestra del sonno {{sleep}} · ultimo caffè entro le {{caffeine}}",
     now_hero_sleep: "Finestra del sonno {{sleep}}",
     shift_label: 'TURNO DI OGGI',
-    plan_transition_eyebrow: 'IN ARRIVO',
+    plan_transition_eyebrow: "PIANIFICA",
     plan_transition_title: 'Pianifica un cambio turno',
     plan_transition_sub: 'Ottieni un piano di 2 giorni per il prossimo cambio notte ↔ giorno.',
     caffeine_logged: 'Ultima tazza registrata · {{cups}} oggi',
@@ -580,9 +580,9 @@ const itIT = {
     },
     social_proof_2: {
       cta: "Mostra il mio piano",
-      eyebrow: "FONDATO SULLA MEDICINA DEL SONNO",
-      hero: "Pensato per chi lavora a turni.",
-      body: "ShiftRest combina ricerca in cronobiologia, medicina del sonno nel lavoro a turni e scienza comportamentale del sonno — adattata alla realtà di infermieri, vigili del fuoco, soccorritori, operai e di chiunque lavori a turni.",
+      eyebrow: "IL TUO PIANO È PRONTO",
+      hero: "Vediamo le tue notti.",
+      body: "Costruito sui tuoi turni, sul tuo cronotipo e su come vivi davvero: il tuo piano del sonno personalizzato è pronto.",
     },
   },
   auth: {

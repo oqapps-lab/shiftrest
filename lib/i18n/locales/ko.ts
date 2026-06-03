@@ -37,7 +37,7 @@ const ko = {
     now_hero_full: "수면 시간 {{sleep}} · 카페인은 {{caffeine}}까지",
     now_hero_sleep: "수면 시간 {{sleep}}",
     shift_label: '오늘 근무',
-    plan_transition_eyebrow: '곧',
+    plan_transition_eyebrow: "미리 계획하기",
     plan_transition_title: '근무 전환 계획',
     plan_transition_sub: '다음 야간 ↔ 주간 전환을 위한 2일 단계 계획을 받으세요.',
     caffeine_logged: '마지막 잔 기록 · 오늘 {{cups}}잔',
@@ -580,9 +580,9 @@ const ko = {
     },
     social_proof_2: {
       cta: "내 계획 보기",
-      eyebrow: "수면의학에 기반",
-      hero: "교대근무자를 위한 설계.",
-      body: "ShiftRest는 시간생물학 연구, 교대근무 수면의학, 행동 수면과학을 결합해 간호사·소방관·응급구조사·공장 근로자 등 교대근무로 일하는 모든 분들의 현실에 맞춰 설계되었습니다.",
+      eyebrow: "당신의 플랜이 준비됐어요",
+      hero: "당신의 밤을 살펴봐요.",
+      body: "당신의 교대, 크로노타입, 실제 생활에 맞춘 맞춤 수면 플랜이 준비됐어요.",
     },
   },
   auth: {

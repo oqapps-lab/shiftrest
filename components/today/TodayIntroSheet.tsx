@@ -10,31 +10,21 @@
  * re-shown after that — users who re-open the app already know.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Modal, View, StyleSheet, Animated, Easing, Pressable } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import { GlassCard, Eyebrow, Text, SerifHero, PillCTA } from '../ui';
 import { colors, radii, spacing } from '../../constants/tokens';
 import { t } from '../../lib/i18n';
 
-const STORAGE_KEY = 'shiftrest:today-intro:v1';
-
-export function TodayIntroSheet() {
-  const [visible, setVisible] = useState(false);
+/**
+ * F8: now an ON-DEMAND legend opened from the "?" beside the timeline ring.
+ * It used to auto-pop on first Today visit — before the user had even seen
+ * the screen it explains. Controlled by the parent via visible/onClose.
+ */
+export function TodayIntroSheet({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const fade = React.useRef(new Animated.Value(0)).current;
   const slide = React.useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const seen = await AsyncStorage.getItem(STORAGE_KEY);
-        if (!seen) setVisible(true);
-      } catch {
-        // Storage error: don't block the screen.
-      }
-    })();
-  }, []);
 
   useEffect(() => {
     if (visible) {
@@ -48,14 +38,9 @@ export function TodayIntroSheet() {
     }
   }, [visible, fade, slide]);
 
-  const dismiss = async () => {
+  const dismiss = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    try {
-      await AsyncStorage.setItem(STORAGE_KEY, '1');
-    } catch {
-      // ignore — at worst they see it once more next launch
-    }
-    setVisible(false);
+    onClose();
   };
 
   return (

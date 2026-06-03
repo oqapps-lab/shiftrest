@@ -38,7 +38,7 @@ const nlNL = {
     now_hero_full: "Slaapvenster {{sleep}} · laatste koffie om {{caffeine}}",
     now_hero_sleep: "Slaapvenster {{sleep}}",
     shift_label: 'DIENST VANDAAG',
-    plan_transition_eyebrow: 'BINNENKORT',
+    plan_transition_eyebrow: "VOORUIT PLANNEN",
     plan_transition_title: 'Een dienstwissel plannen',
     plan_transition_sub: 'Krijg een 2-daags plan voor je volgende nacht ↔ dag-wissel.',
     caffeine_logged: 'Laatste kop geregistreerd · {{cups}} vandaag',
@@ -581,9 +581,9 @@ const nlNL = {
     },
     social_proof_2: {
       cta: "Toon mijn plan",
-      eyebrow: "GEFUNDEERD IN SLAAPGENEESKUNDE",
-      hero: "Ontworpen voor ploegendienstwerkers.",
-      body: "ShiftRest combineert onderzoek in chronobiologie, slaapgeneeskunde bij ploegendienst en gedragsmatige slaapwetenschap — aangepast aan de realiteit van verpleegkundigen, brandweerlieden, ambulancemedewerkers, fabrieksmedewerkers en iedereen met een roterend rooster.",
+      eyebrow: "JE PLAN IS KLAAR",
+      hero: "Laten we je nachten bekijken.",
+      body: "Afgestemd op je diensten, je chronotype en hoe je echt leeft — je persoonlijke slaapplan is klaar.",
     },
   },
   auth: {
