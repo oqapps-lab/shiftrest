@@ -3,8 +3,8 @@
  * Eyebrow greeting + streak pill + Soft hero line + TimelineRing + ShiftBar + 3 next-event cards.
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { View, StyleSheet, Pressable, ScrollView } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -68,6 +68,8 @@ import { articlesForProfession } from '../../lib/sleep-tips/library';
 import { detectTransitionOpportunity } from '../../lib/transition/generate';
 import * as Haptics from 'expo-haptics';
 import { t } from '../../lib/i18n';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TodayCoachmark, type CoachStep } from '../../components/today/TodayCoachmark';
 
 // Event styles per slot. The "hour" for each slot comes from the live
 // plan when available, else mockPlan. Computed inside the component so
@@ -233,8 +235,77 @@ export default function Home() {
   // the ring, instead of auto-popping before the user has seen the screen.
   const [introVisible, setIntroVisible] = useState(false);
 
+  // ── G7: Today coachmark tour ──────────────────────────────────────────
+  // A sequential spotlight walkthrough that dims the screen and highlights
+  // each key widget in scroll order. Auto-shows ONCE on first Today visit
+  // (after onboarding), then never again.
+  const scrollRef = useRef<ScrollView>(null);
+  const shiftRef = useRef<View>(null);
+  const journalRef = useRef<View>(null);
+  const ringRef = useRef<View>(null);
+  const nextRef = useRef<View>(null);
+  const [coachVisible, setCoachVisible] = useState(false);
+  const coachArmedRef = useRef(false);
+
+  const COACH_KEY = 'shiftrest:today-coach:v1';
+  const coachSteps: CoachStep[] = useMemo(
+    () => [
+      { ref: shiftRef, titleKey: 'today_coach.s1_title', bodyKey: 'today_coach.s1_body' },
+      { ref: journalRef, titleKey: 'today_coach.s2_title', bodyKey: 'today_coach.s2_body' },
+      { ref: ringRef, titleKey: 'today_coach.s3_title', bodyKey: 'today_coach.s3_body' },
+      { ref: nextRef, titleKey: 'today_coach.s4_title', bodyKey: 'today_coach.s4_body' },
+    ],
+    [],
+  );
+
+  // Auto-show once. EMPTY dep array + once-guard ref — DELIBERATELY does NOT
+  // depend on the onboarding state object (an effect depending on a mutated
+  // value caused an app-wide render loop before — see store.tsx G1 note).
+  // We read completed via a value captured at mount (snapshot), not a dep.
+  // current value; if onboarding isn't done yet we just skip (the user is
+  // still in the funnel and won't be on this tab anyway).
+  const onboardingCompletedAtMount = onboarding.completed;
+  useEffect(() => {
+    if (coachArmedRef.current) return;
+    coachArmedRef.current = true;
+    if (!onboardingCompletedAtMount) return;
+    let alive = true;
+    AsyncStorage.getItem(COACH_KEY)
+      .then((seen) => {
+        if (!alive) return;
+        if (!seen) setCoachVisible(true);
+      })
+      .catch(() => null);
+    return () => {
+      alive = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const finishCoach = useCallback(() => {
+    setCoachVisible(false);
+    AsyncStorage.setItem(COACH_KEY, '1').catch(() => null);
+  }, []);
+
+  // Scroll the inner ScrollView by a window-space delta (positive = scroll the
+  // target up toward the top). The coachmark passes (currentTop - desiredTop).
+  const scrollOffsetRef = useRef(0);
+  const handleScrollToY = useCallback((delta: number) => {
+    const next = Math.max(0, scrollOffsetRef.current + delta);
+    scrollOffsetRef.current = next;
+    scrollRef.current?.scrollTo({ y: next, animated: true });
+  }, []);
+
   return (
-    <Screen orbs="normal" scroll>
+    <Screen
+      orbs="normal"
+      scroll
+      scrollRef={scrollRef}
+      scrollEventThrottle={16}
+      onScroll={(e) => {
+        scrollOffsetRef.current = e.nativeEvent.contentOffset.y;
+      }}
+    >
       <PlanUpdatedBanner />
       <TodayIntroSheet visible={introVisible} onClose={() => setIntroVisible(false)} />
       <View style={styles.headerRow}>
@@ -278,16 +349,19 @@ export default function Home() {
       </View>
 
       {/* A9: Where you are today — daily state card, moved out of Settings */}
-      <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.md }}>
-        <Eyebrow style={{ marginBottom: spacing.sm }}>{t('today.shift_label')}</Eyebrow>
-        <SegmentedControl<ShiftKind>
-          options={shiftOptions}
-          value={onboarding.currentShift}
-          onChange={(v) => update({ currentShift: v })}
-        />
-      </GlassCard>
+      <View ref={shiftRef} collapsable={false}>
+        <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.md }}>
+          <Eyebrow style={{ marginBottom: spacing.sm }}>{t('today.shift_label')}</Eyebrow>
+          <SegmentedControl<ShiftKind>
+            options={shiftOptions}
+            value={onboarding.currentShift}
+            onChange={(v) => update({ currentShift: v })}
+          />
+        </GlassCard>
+      </View>
 
       {/* G4: Sleep journal — one-tap morning rating + USER-BUG-9 stats reveal */}
+      <View ref={journalRef} collapsable={false}>
       <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.huge }}>
         <Eyebrow style={{ marginBottom: spacing.sm }}>
           {todayRating ? t('today.journal_logged') : t('today.journal_prompt')}
@@ -373,8 +447,9 @@ export default function Home() {
           );
         })()}
       </GlassCard>
+      </View>
 
-      <View style={styles.ringWrap}>
+      <View ref={ringRef} collapsable={false} style={styles.ringWrap}>
         {/* F8: on-demand legend — tap "?" to learn what each arc/dot means */}
         <Pressable
           onPress={() => setIntroVisible(true)}
@@ -452,6 +527,7 @@ export default function Home() {
 
       <View style={{ height: spacing.huge }} />
 
+      <View ref={nextRef} collapsable={false}>
       <Eyebrow>{t('today.section_next')}</Eyebrow>
       <View style={{ height: spacing.md }} />
 
@@ -572,6 +648,14 @@ export default function Home() {
           </GlassCard>
         </Pressable>
       )}
+      </View>
+
+      <TodayCoachmark
+        visible={coachVisible}
+        onDone={finishCoach}
+        steps={coachSteps}
+        scrollToY={handleScrollToY}
+      />
     </Screen>
   );
 }
