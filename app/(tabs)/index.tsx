@@ -3,7 +3,7 @@
  * Eyebrow greeting + streak pill + Soft hero line + TimelineRing + ShiftBar + 3 next-event cards.
  */
 
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -211,22 +211,10 @@ export default function Home() {
     return detectTransitionOpportunity(shiftByIsoForDetect, todayIsoForDetect);
   }, [localShiftsMap, todayIsoForDetect, livePlan?.transition_type]);
 
-  // Persona fix (P3): if the Schedule already knows today's shift, pre-select
-  // it in the TODAY'S SHIFT control instead of making the user re-tap it daily.
-  // Synced only when the schedule's value for TODAY changes (tracked via ref),
-  // so a manual override on the control below still sticks afterward.
-  const syncedShiftRef = useRef<ShiftKind | null>(null);
-  useEffect(() => {
-    const scheduled = localShiftsMap[todayIsoForDetect];
-    if (
-      (scheduled === 'day' || scheduled === 'night' || scheduled === 'off') &&
-      scheduled !== syncedShiftRef.current &&
-      scheduled !== onboarding.currentShift
-    ) {
-      syncedShiftRef.current = scheduled;
-      update({ currentShift: scheduled });
-    }
-  }, [localShiftsMap, todayIsoForDetect, onboarding.currentShift, update]);
+  // NOTE: a P3 "auto-sync today's shift from the schedule" effect used to live
+  // here. It fought the manual TODAY'S SHIFT toggle — tapping Night snapped
+  // back to the scheduled Day — so it was removed. The toggle is purely
+  // manual; the schedule and the toggle are independent on purpose.
 
   // Mirror Profile's fallback chain so the greeting never says "MARINA"
   // when the real signed-in user has a different display_name. Use just
