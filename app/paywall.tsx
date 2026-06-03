@@ -65,12 +65,19 @@ const PLAN_TO_DB: Record<Plan, 'premium_weekly' | 'premium_monthly' | 'premium_a
   year: 'premium_annual',
 };
 
-// Lazy getter so t() runs at render time and respects current locale.
-const getValueBullets = () => [
-  { glyph: 'bed' as const, text: t('paywall.bullet_sleep') },
-  { glyph: 'coffee' as const, text: t('paywall.bullet_caffeine') },
-  { glyph: 'moon' as const, text: t('paywall.bullet_melatonin') },
-  { glyph: 'sparkle' as const, text: t('paywall.bullet_transition') },
+// F5: the subscription's full value, not 4 vague bullets. Lazy getter so t()
+// runs at render time and respects the active locale.
+const getPremiumFeatures = () => [
+  { glyph: 'moon' as const,     title: t('paywall.f_window_t'),     sub: t('paywall.f_window_s') },
+  { glyph: 'coffee' as const,   title: t('paywall.f_caffeine_t'),   sub: t('paywall.f_caffeine_s') },
+  { glyph: 'sun' as const,      title: t('paywall.f_light_t'),      sub: t('paywall.f_light_s') },
+  { glyph: 'sparkle' as const,  title: t('paywall.f_transition_t'), sub: t('paywall.f_transition_s') },
+  { glyph: 'calendar' as const, title: t('paywall.f_anyday_t'),     sub: t('paywall.f_anyday_s') },
+  { glyph: 'pulse' as const,    title: t('paywall.f_history_t'),    sub: t('paywall.f_history_s') },
+  { glyph: 'book' as const,     title: t('paywall.f_library_t'),    sub: t('paywall.f_library_s') },
+  { glyph: 'bed' as const,      title: t('paywall.f_recovery_t'),   sub: t('paywall.f_recovery_s') },
+  { glyph: 'leaf' as const,     title: t('paywall.f_melatonin_t'),  sub: t('paywall.f_melatonin_s') },
+  { glyph: 'bell' as const,     title: t('paywall.f_reminders_t'),  sub: t('paywall.f_reminders_s') },
 ];
 
 export default function Paywall() {
@@ -337,16 +344,31 @@ export default function Paywall() {
         <SerifHero>{t('paywall.hero')}</SerifHero>
       </View>
 
-      {getValueBullets().map((b) => (
-        <View key={b.text} style={styles.bulletRow}>
-          <View style={styles.bulletIcon}>
-            <Glyph name={b.glyph} size={20} color="primary" />
+      <Eyebrow>{t('paywall.unlock_header')}</Eyebrow>
+      <View style={{ height: spacing.md }} />
+      {getPremiumFeatures().map((f) => (
+        <View key={f.title} style={styles.featureRow}>
+          <View style={styles.featureIcon}>
+            <Glyph name={f.glyph} size={18} color="primary" />
           </View>
-          <Text variant="bodyLg" color="ink" style={{ flex: 1 }}>
-            {b.text}
-          </Text>
+          <View style={{ flex: 1 }}>
+            <Text variant="titleMd" family="display" weight="medium" color="ink">
+              {f.title}
+            </Text>
+            <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 1, lineHeight: 20 }}>
+              {f.sub}
+            </Text>
+          </View>
         </View>
       ))}
+
+      <View style={{ height: spacing.lg }} />
+      {/* Trust / authority — text-only, no fabricated reviews (Apple 2.3.7/5.2.1) */}
+      <GlassCard variant="whisper" padding="lg">
+        <Text variant="bodyMd" color="inkSubtle" style={{ lineHeight: 22 }}>
+          {t('paywall.trust')}
+        </Text>
+      </GlassCard>
 
       <View style={{ height: spacing.xxxl }} />
 
@@ -430,19 +452,20 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginBottom: spacing.md,
   },
-  bulletRow: {
+  featureRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginBottom: spacing.lg,
   },
-  bulletIcon: {
-    width: 36,
-    height: 36,
+  featureIcon: {
+    width: 34,
+    height: 34,
     borderRadius: radii.lg,
     backgroundColor: colors.primaryContainer,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: spacing.md,
+    marginTop: 2,
   },
   row: {
     flexDirection: 'row',

@@ -64,17 +64,21 @@ describe('i18n coverage', () => {
   // 2. If you're shipping in a hurry, decrement only the locales
   //    you translated, and the other locales' tests will fail until
   //    you fix them — that's the point.
+  // F5 (2026-06-03): +22 — the expanded Paywall premium-feature copy ships
+  // English-first (rendered via the A2 force-English fallback) pending a
+  // translation pass, same approach as the Sleep Library. Baselines bumped
+  // by exactly the new-key count; translate later and decrement.
   const gapBaseline: Record<string, number> = {
-    'de-DE': 204,
-    'es-ES': 245,
-    'fr-FR': 245,
-    'it-IT': 245,
-    ja: 245,
-    ko: 245,
-    'nl-NL': 245,
-    'pt-BR': 245,
-    sv: 245,
-    'zh-Hant': 245,
+    'de-DE': 226,
+    'es-ES': 267,
+    'fr-FR': 267,
+    'it-IT': 267,
+    ja: 267,
+    ko: 267,
+    'nl-NL': 267,
+    'pt-BR': 267,
+    sv: 267,
+    'zh-Hant': 267,
   };
 
   test.each(locales)('%s does not regress from gap baseline', (name, dict) => {
