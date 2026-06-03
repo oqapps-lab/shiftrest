@@ -72,7 +72,7 @@
           }
         ]
       },
-      "buildNumber": "1003"
+      "buildNumber": "1004"
     },
     "android": {
       "package": "com.gazetastreet.shiftrest",
