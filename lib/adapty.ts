@@ -130,6 +130,61 @@ export async function loadPaywallProducts(): Promise<
 }
 
 /**
+ * G5 — Trial intro-offer helpers.
+ *
+ * Adapty 3.15 (`@adapty/core`) models a subscription's introductory offer at
+ * `product.subscription?.offer`. The native SDK only POPULATES that `offer`
+ * (with `identifier.type === 'introductory'`) when StoreKit reports the user
+ * is ELIGIBLE for the group's introductory offer. Once a user has consumed the
+ * subscription group's one free trial, StoreKit (and therefore Adapty) omits
+ * the introductory offer — so its presence IS the eligibility signal. There is
+ * no separate `introductoryOfferEligibility` field in this SDK version.
+ *
+ * A free trial is the offer phase whose `paymentMode === 'free_trial'`; its
+ * length is `phase.subscriptionPeriod` (`numberOfUnits` + `unit`).
+ */
+
+/** Find the free-trial phase of a product's introductory offer, if any. */
+function introTrialPhase(product: AdaptyPaywallProduct | null | undefined) {
+  const offer = product?.subscription?.offer;
+  if (!offer || offer.identifier.type !== 'introductory') return null;
+  return offer.phases.find((ph) => ph.paymentMode === 'free_trial') ?? null;
+}
+
+/**
+ * Trial length in days for a product's introductory free-trial offer, or null
+ * when the product has no such offer (ineligible / not loaded / no trial).
+ * Converts the StoreKit period unit to days (week ×7, month ×30, year ×365).
+ */
+export function getIntroTrialDays(
+  product: AdaptyPaywallProduct | null | undefined,
+): number | null {
+  const phase = introTrialPhase(product);
+  if (!phase) return null;
+  const { numberOfUnits, unit } = phase.subscriptionPeriod;
+  if (!numberOfUnits || numberOfUnits <= 0) return null;
+  const perUnit =
+    unit === 'day' ? 1 : unit === 'week' ? 7 : unit === 'month' ? 30 : unit === 'year' ? 365 : 0;
+  if (perUnit === 0) return null;
+  return numberOfUnits * perUnit;
+}
+
+/**
+ * Eligibility for the introductory free trial:
+ *  - 'eligible'   — product loaded AND carries an introductory free-trial offer
+ *  - 'ineligible' — product loaded but no introductory free-trial offer
+ *                   (user already consumed the group's one offer)
+ *  - 'unknown'    — product not loaded (Expo Go / pre-load); StoreKit can't be
+ *                   queried, so callers should keep the trial marketing default.
+ */
+export function getTrialEligibility(
+  product: AdaptyPaywallProduct | null | undefined,
+): 'eligible' | 'ineligible' | 'unknown' {
+  if (!product) return 'unknown';
+  return introTrialPhase(product) ? 'eligible' : 'ineligible';
+}
+
+/**
  * Invoke StoreKit purchase for a product loaded via {@link loadPaywallProducts}.
  * Returns the resulting profile (with accessLevels) on success.
  * Throws on user cancel or transaction failure — caller must catch.

@@ -19,6 +19,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logEvent } from './events';
 
 const TRACKED_IDS_KEY = 'shiftrest:notif-scheduled-ids:v1';
+// G5: the trial-ending reminder is tracked separately from the recurring
+// bed/caffeine/melatonin set so rescheduleNotifications() (which cancels and
+// rebuilds the recurring set on every prefs/plan change) never wipes it.
+const TRIAL_REMINDER_ID_KEY = 'shiftrest:notif-trial-reminder-id:v1';
 
 export type LeadMinutes = '15' | '30' | '60';
 
@@ -222,6 +226,79 @@ export async function rescheduleNotifications(
   await saveTrackedIds(newIds);
   logEvent('notifs_scheduled', { count: newIds.length });
   return { granted: true, scheduledCount: newIds.length };
+}
+
+// ─── Trial-ending reminder (G5) ──────────────────────────────────────────────
+
+export interface TrialReminderResult {
+  scheduled: boolean;
+  reason?: 'permission_denied' | 'invalid_days' | 'fire_in_past';
+  fireAt?: string;
+}
+
+/**
+ * Schedule a SINGLE local notification reminding the user their free trial
+ * ends tomorrow, fired at (trial start + (trialDays - 1) days). Call this from
+ * the paywall on a successful trial start.
+ *
+ * Does NOT request permission — only schedules when notifications are ALREADY
+ * granted (the paywall happens before the notification-permission onboarding
+ * screen, so a silent no-op is correct there; the reminder will simply not be
+ * scheduled if the user hasn't granted yet). Idempotent: cancels any previously
+ * scheduled trial reminder before scheduling a fresh one, so re-entering the
+ * trial-start path never stacks duplicates.
+ */
+export async function scheduleTrialEndingReminder(
+  trialDays: number,
+  startAt: Date = new Date(),
+): Promise<TrialReminderResult> {
+  ensureHandler();
+
+  // Always clear any prior trial reminder first (idempotent).
+  try {
+    const prev = await AsyncStorage.getItem(TRIAL_REMINDER_ID_KEY);
+    if (prev) {
+      await Notifications.cancelScheduledNotificationAsync(prev).catch(() => null);
+      await AsyncStorage.removeItem(TRIAL_REMINDER_ID_KEY);
+    }
+  } catch {
+    // ignore — best-effort cleanup
+  }
+
+  if (!Number.isFinite(trialDays) || trialDays < 1) {
+    return { scheduled: false, reason: 'invalid_days' };
+  }
+
+  // Permission must already be granted — we never prompt here.
+  const { status } = await Notifications.getPermissionsAsync();
+  if (status !== 'granted') {
+    return { scheduled: false, reason: 'permission_denied' };
+  }
+
+  // Fire one day before the trial ends: start + (trialDays - 1) days.
+  const fireAt = new Date(startAt.getTime());
+  fireAt.setDate(fireAt.getDate() + (trialDays - 1));
+
+  // A 1-day trial would fire "yesterday" — skip rather than schedule a past
+  // date (iOS would drop it anyway).
+  if (fireAt.getTime() <= Date.now()) {
+    return { scheduled: false, reason: 'fire_in_past' };
+  }
+
+  const id = await Notifications.scheduleNotificationAsync({
+    content: {
+      title: t('notifications.trial_ending_title'),
+      body: t('notifications.trial_ending_body'),
+      sound: 'default',
+    },
+    trigger: {
+      type: Notifications.SchedulableTriggerInputTypes.DATE,
+      date: fireAt,
+    },
+  });
+  await AsyncStorage.setItem(TRIAL_REMINDER_ID_KEY, id);
+  logEvent('trial_reminder_scheduled', { trialDays, fireAt: fireAt.toISOString() });
+  return { scheduled: true, fireAt: fireAt.toISOString() };
 }
 
 /** Convenience for tests — list everything we've scheduled. */
