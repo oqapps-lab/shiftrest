@@ -74,6 +74,11 @@ export function AppDialogHost() {
 
   useEffect(() => {
     if (visible) {
+      // G1: cancel any in-flight close animation before opening, so a rapid
+      // replace (one dialog superseding another) can't leave a half-faded
+      // transparent backdrop mounted that swallows every touch app-wide.
+      fade.stopAnimation();
+      slide.stopAnimation();
       Animated.parallel([
         Animated.timing(fade, { toValue: 1, duration: 220, useNativeDriver: true, easing: Easing.out(Easing.cubic) }),
         Animated.timing(slide, { toValue: 0, duration: 300, useNativeDriver: true, easing: Easing.out(Easing.cubic) }),

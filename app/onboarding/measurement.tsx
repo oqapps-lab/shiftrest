@@ -15,10 +15,12 @@ import * as Haptics from 'expo-haptics';
 import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
 import { Screen, Eyebrow, SerifHero, Text, PillCTA, Glyph } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
+import { useOnboarding } from '../../lib/onboarding/store';
 import { t } from '../../lib/i18n';
 
 export default function Measurement() {
   const [busy, setBusy] = useState(false);
+  const { markCompleted } = useOnboarding();
 
   const onContinue = async () => {
     if (busy) return;
@@ -32,6 +34,10 @@ export default function Measurement() {
         // denied / unavailable — fine, attribution falls back to IDFV.
       }
     }
+    // G1: claim completion HERE (the final onboarding screen), right before
+    // entering the app — not back on the notifications screen, where the
+    // early flip raced the Welcome redirect.
+    markCompleted();
     router.replace('/(tabs)');
   };
 

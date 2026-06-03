@@ -6,7 +6,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
-import { useOnboarding } from '../../lib/onboarding/store';
 import {
   Screen,
   SerifHero,
@@ -21,10 +20,11 @@ import { mockNotificationTypes } from '../../mock/user';
 import { t } from '../../lib/i18n';
 
 export default function Notifications() {
-  const { markCompleted } = useOnboarding();
-
+  // G1: do NOT markCompleted() here. Flipping `completed` mid-onboarding
+  // raced the Welcome redirect to /(tabs) against this screen's own forward
+  // navigation (and, before the store fix, triggered the profile-sync loop).
+  // Completion is now claimed on the final screen (measurement).
   const finish = () => {
-    markCompleted();
     router.replace('/onboarding/measurement');
   };
 

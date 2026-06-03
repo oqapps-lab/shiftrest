@@ -139,6 +139,7 @@ export default function AddShift() {
   const dur = isOff ? '' : durationLabel(startsAt, endsAt);
 
   const onSave = async () => {
+    if (submitting) return; // guard double-tap while a save is in flight
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
     if (kind === 'off' || !isSupabaseConfigured || !supabase || !user?.id) {
@@ -155,20 +156,28 @@ export default function AddShift() {
 
     setSubmitting(true);
     const dateIso = localDateKey(startsAt);
-    const { error } = await supabase.from('shifts').insert({
-      user_id: user.id,
-      date: dateIso,
-      start_time: startsAt.toISOString(),
-      end_time: endsAt.toISOString(),
-      shift_type: kind,
-      is_manual: true,
-      notes: notes.trim() || null,
-    });
-    setSubmitting(false);
-
-    if (error) {
-      // R14-4: was leaking Supabase error.message into Alert body.
-      if (__DEV__) console.warn('[add-shift]', error);
+    try {
+      // G1/F2: the Supabase JS client has no fetch timeout. Without this
+      // race, a slow/dead request leaves the await parked forever —
+      // setSubmitting(false) + the success dialog never run, so the sheet
+      // is stuck and the app feels frozen. Time out after 12s.
+      const { error } = (await Promise.race([
+        supabase.from('shifts').insert({
+          user_id: user.id,
+          date: dateIso,
+          start_time: startsAt.toISOString(),
+          end_time: endsAt.toISOString(),
+          shift_type: kind,
+          is_manual: true,
+          notes: notes.trim() || null,
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 12000)),
+      ])) as { error: unknown };
+      if (error) throw error;
+    } catch (e) {
+      // R14-4: never leak the raw Supabase/error message into the dialog.
+      if (__DEV__) console.warn('[add-shift]', e);
+      setSubmitting(false);
       showAppDialog({
         title: t('add_shift.save_failed_title'),
         message: t('add_shift.save_failed_body'),
@@ -176,6 +185,7 @@ export default function AddShift() {
       });
       return;
     }
+    setSubmitting(false);
     emitChange(EVENTS.shiftsChanged);
     showAppDialog({
       title: t('add_shift.saved_title'),
