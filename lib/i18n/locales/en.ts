@@ -853,6 +853,16 @@ const en = {
       later: "Maybe later",
     },
     loading: {
+      s1_t: "Reading your schedule",
+      s1_d: "Your shifts, rotation, and what’s next",
+      s2_t: "Mapping your body clock",
+      s2_d: "Chronotype and circadian timing",
+      s3_t: "Tuning light & caffeine",
+      s3_d: "When to seek light, when to stop coffee",
+      s4_t: "Building your sleep windows",
+      s4_d: "Exact times to sleep and wake per shift",
+      s5_t: "Finalizing your plan",
+      s5_d: "Personalizing every recommendation for you",
       eyebrow: "ANALYSING",
     },
     social_proof_2: {
