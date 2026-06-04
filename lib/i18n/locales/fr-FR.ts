@@ -66,6 +66,13 @@ const frFR = {
     journal_good: 'Top',
     journal_ok: 'OK',
     journal_bad: 'Dur',
+    insight: {
+      eyebrow: 'CONSEIL DU JOUR',
+      tune_hint: 'Évaluez la nuit dernière pour ajuster le conseil du jour.',
+      lead_rough: 'Nuit difficile — ce soir : pièce sombre + respiration 4-7-8.',
+      lead_ok: 'Nuit moyenne — un petit ajustement peut tout changer.',
+      lead_good: 'Bien dormi — à consolider : lunettes de soleil au retour.',
+    },
   },
   library: {
     read_more: "Lire la suite",

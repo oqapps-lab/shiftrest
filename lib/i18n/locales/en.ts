@@ -85,6 +85,13 @@ const en = {
     journal_good: 'Great',
     journal_ok: 'OK',
     journal_bad: 'Rough',
+    insight: {
+      eyebrow: 'INSIGHT OF THE DAY',
+      tune_hint: 'Rate last night to tune today’s insight.',
+      lead_rough: 'Rough night — tonight: dark room + 4-7-8 breathing.',
+      lead_ok: 'A so-so night — one small tweak can move the dial.',
+      lead_good: 'Slept well — lock it in: sunglasses on the commute.',
+    },
   },
   today_intro: {
     set_shift_title: "Set your shift",

@@ -65,6 +65,13 @@ const sv = {
     journal_good: 'Toppen',
     journal_ok: 'OK',
     journal_bad: 'Tufft',
+    insight: {
+      eyebrow: 'DAGENS INSIKT',
+      tune_hint: 'Betygsätt i natt för att finjustera dagens insikt.',
+      lead_rough: 'Tuff natt — i kväll: mörkt rum + 4-7-8-andning.',
+      lead_ok: 'Sådär natt — en liten justering gör skillnad.',
+      lead_good: 'Sov bra — befäst det: solglasögon på vägen hem.',
+    },
   },
   library: {
     read_more: "Läs mer",

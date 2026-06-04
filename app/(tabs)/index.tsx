@@ -65,7 +65,7 @@ import {
 import { useLocalShifts } from '../../lib/local-shifts/store';
 import { TodayIntroSheet } from '../../components/today/TodayIntroSheet';
 import { TipsCarousel } from '../../components/library/TipsCarousel';
-import { articlesForProfession } from '../../lib/sleep-tips/library';
+import { DailyInsightCard } from '../../components/today/DailyInsightCard';
 import { detectTransitionOpportunity } from '../../lib/transition/generate';
 import * as Haptics from 'expo-haptics';
 import { t } from '../../lib/i18n';
@@ -587,46 +587,22 @@ export default function Home() {
 
       <View style={{ height: spacing.huge }} />
 
-      {/* C6: Tonight's read — surface one Sleep Library article on Today,
-          rotating daily + filtered to the user's profession. */}
-      {(() => {
-        const prof =
+      {/* TODAY-1: Daily Insight — rotating, phase × profession-aware,
+          journal-reactive content card. Replaces the old static "Tonight's
+          read" (which picked one article by date % length). Deterministic
+          per day, never-repeats until the pool is exhausted, and reacts to
+          the user's live circadian phase + last-night rating. */}
+      <DailyInsightCard
+        phaseKey={phase.key}
+        profession={
           onboarding.profession === 'nurse' ||
           onboarding.profession === 'firefighter' ||
           onboarding.profession === 'factory'
             ? onboarding.profession
-            : null;
-        const arts = articlesForProfession(prof);
-        if (arts.length === 0) return null;
-        const pick = arts[new Date().getDate() % arts.length];
-        return (
-          <Pressable
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              router.push(`/library/${pick.id}`);
-            }}
-            accessibilityRole="button"
-          >
-            <GlassCard variant="paper" padding="xxl">
-              <View style={styles.eventRow}>
-                <View style={[styles.eventIcon, { backgroundColor: colors.primaryContainer }]}>
-                  <Glyph name="book" size={22} color="primary" />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Eyebrow>{t('library.today_eyebrow')}</Eyebrow>
-                  <Text variant="titleLg" family="display" weight="light" color="ink" style={{ marginTop: 2 }}>
-                    {pick.title}
-                  </Text>
-                  <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
-                    {t('library.read_min', { n: pick.readMin })}
-                  </Text>
-                </View>
-                <Glyph name="chevronRight" size={20} color="inkMuted" />
-              </View>
-            </GlassCard>
-          </Pressable>
-        );
-      })()}
+            : null
+        }
+        rating={todayRating}
+      />
 
       <View style={{ height: spacing.huge }} />
 

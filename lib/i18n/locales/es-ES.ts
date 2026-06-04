@@ -66,6 +66,13 @@ const esES = {
     journal_good: 'Genial',
     journal_ok: 'OK',
     journal_bad: 'Mal',
+    insight: {
+      eyebrow: 'IDEA DEL DÍA',
+      tune_hint: 'Valora anoche para ajustar la idea de hoy.',
+      lead_rough: 'Noche dura — hoy: cuarto oscuro + respiración 4-7-8.',
+      lead_ok: 'Noche regular — un pequeño ajuste marca la diferencia.',
+      lead_good: 'Dormiste bien — consolídalo: gafas de sol al volver.',
+    },
   },
   library: {
     read_more: "Leer más",

@@ -65,6 +65,13 @@ const itIT = {
     journal_good: 'Top',
     journal_ok: 'OK',
     journal_bad: 'Duro',
+    insight: {
+      eyebrow: 'CONSIGLIO DEL GIORNO',
+      tune_hint: 'Valuta la notte scorsa per adattare il consiglio di oggi.',
+      lead_rough: 'Notte dura — stasera: stanza buia + respirazione 4-7-8.',
+      lead_ok: 'Notte così così — un piccolo accorgimento fa la differenza.',
+      lead_good: 'Hai dormito bene — consolida: occhiali da sole al rientro.',
+    },
   },
   library: {
     read_more: "Leggi di più",

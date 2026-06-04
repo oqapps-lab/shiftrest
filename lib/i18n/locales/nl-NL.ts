@@ -66,6 +66,13 @@ const nlNL = {
     journal_good: 'Top',
     journal_ok: 'OK',
     journal_bad: 'Slecht',
+    insight: {
+      eyebrow: 'INZICHT VAN DE DAG',
+      tune_hint: 'Beoordeel afgelopen nacht om het inzicht van vandaag af te stemmen.',
+      lead_rough: 'Zware nacht — vanavond: donkere kamer + 4-7-8-ademhaling.',
+      lead_ok: 'Matige nacht — één kleine aanpassing helpt al.',
+      lead_good: 'Goed geslapen — vastleggen: zonnebril op de terugweg.',
+    },
   },
   library: {
     read_more: "Lees meer",

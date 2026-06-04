@@ -65,6 +65,13 @@ const ko = {
     journal_good: '좋음',
     journal_ok: '보통',
     journal_bad: '힘듦',
+    insight: {
+      eyebrow: '오늘의 인사이트',
+      tune_hint: '어젯밤을 평가하면 오늘의 인사이트가 맞춰집니다.',
+      lead_rough: '힘든 밤 — 오늘은 어두운 방 + 4-7-8 호흡.',
+      lead_ok: '그저 그런 밤 — 작은 변화가 큰 차이를 만듭니다.',
+      lead_good: '잘 잤어요 — 굳히기: 퇴근길에 선글라스를.',
+    },
   },
   library: {
     read_more: "더 보기",

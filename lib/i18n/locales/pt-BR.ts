@@ -65,6 +65,13 @@ const ptBR = {
     journal_good: 'Ótimo',
     journal_ok: 'OK',
     journal_bad: 'Ruim',
+    insight: {
+      eyebrow: 'DICA DO DIA',
+      tune_hint: 'Avalie a noite passada para ajustar a dica de hoje.',
+      lead_rough: 'Noite difícil — hoje: quarto escuro + respiração 4-7-8.',
+      lead_ok: 'Noite mais ou menos — um pequeno ajuste já ajuda.',
+      lead_good: 'Dormiu bem — fixe isso: óculos de sol na volta.',
+    },
   },
   library: {
     read_more: "Ler mais",

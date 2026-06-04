@@ -65,6 +65,13 @@ const zhHant = {
     journal_good: '很好',
     journal_ok: '普通',
     journal_bad: '糟',
+    insight: {
+      eyebrow: '每日洞察',
+      tune_hint: '評價昨晚，調整今天的洞察。',
+      lead_rough: '難熬的一夜 — 今晚：暗房 + 4-7-8 呼吸法。',
+      lead_ok: '普通的一夜 — 一個小調整就能見效。',
+      lead_good: '睡得好 — 鞏固成果：通勤路上戴上墨鏡。',
+    },
   },
   library: {
     read_more: "閱讀更多",

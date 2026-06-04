@@ -65,6 +65,13 @@ const ja = {
     journal_good: 'よい',
     journal_ok: '普通',
     journal_bad: '悪い',
+    insight: {
+      eyebrow: '今日のヒント',
+      tune_hint: '昨夜を評価すると、今日のヒントが最適化されます。',
+      lead_rough: 'つらい夜 — 今夜は暗い部屋で4-7-8呼吸を。',
+      lead_ok: 'まずまずの夜 — 小さな工夫で変わります。',
+      lead_good: 'よく眠れた — 定着させよう：帰り道はサングラスを。',
+    },
   },
   library: {
     read_more: "続きを読む",

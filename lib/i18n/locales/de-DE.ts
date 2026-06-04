@@ -79,6 +79,13 @@ const deDE = {
     journal_good: 'Top',
     journal_ok: 'OK',
     journal_bad: 'Hart',
+    insight: {
+      eyebrow: 'TIPP DES TAGES',
+      tune_hint: 'Bewerte die letzte Nacht, um den heutigen Tipp anzupassen.',
+      lead_rough: 'Harte Nacht – heute: dunkler Raum + 4-7-8-Atmung.',
+      lead_ok: 'Mittelmäßige Nacht – eine kleine Anpassung bringt schon viel.',
+      lead_good: 'Gut geschlafen – festigen: Sonnenbrille auf dem Heimweg.',
+    },
   },
   library: {
     read_more: "Mehr lesen",
