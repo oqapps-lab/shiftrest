@@ -69,16 +69,16 @@ describe('i18n coverage', () => {
   // translation pass, same approach as the Sleep Library. Baselines bumped
   // by exactly the new-key count; translate later and decrement.
   const gapBaseline: Record<string, number> = {
-    'de-DE': 253,
-    'es-ES': 294,
-    'fr-FR': 294,
-    'it-IT': 294,
-    ja: 294,
-    ko: 294,
-    'nl-NL': 294,
-    'pt-BR': 294,
-    sv: 294,
-    'zh-Hant': 294,
+    'de-DE': 254,
+    'es-ES': 295,
+    'fr-FR': 295,
+    'it-IT': 295,
+    ja: 295,
+    ko: 295,
+    'nl-NL': 295,
+    'pt-BR': 295,
+    sv: 295,
+    'zh-Hant': 295,
   };
 
   test.each(locales)('%s does not regress from gap baseline', (name, dict) => {

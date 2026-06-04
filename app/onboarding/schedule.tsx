@@ -29,6 +29,7 @@ export default function Schedule() {
       orbs="subtle"
       scroll
       tabBarClearance={false}
+      footerClearance={208}
       floatingFooter={
         <PillCTA
           variant="primary"
@@ -55,7 +56,7 @@ export default function Schedule() {
       <Text
         variant="bodyLg"
         color="inkSubtle"
-        style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
+        style={{ marginTop: spacing.md, marginBottom: spacing.lg }}
       >
         {t('onboarding_screens.schedule.sub')}
       </Text>

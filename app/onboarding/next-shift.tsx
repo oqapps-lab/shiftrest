@@ -45,6 +45,7 @@ export default function NextShiftScreen() {
       orbs="subtle"
       scroll
       tabBarClearance={false}
+      footerClearance={208}
       floatingFooter={
         <PillCTA
           variant="primary"
@@ -71,7 +72,7 @@ export default function NextShiftScreen() {
       <Text
         variant="bodyLg"
         color="inkSubtle"
-        style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
+        style={{ marginTop: spacing.md, marginBottom: spacing.lg }}
       >
         {t('onboarding_screens.next_shift.sub')}
       </Text>

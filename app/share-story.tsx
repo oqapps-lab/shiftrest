@@ -105,8 +105,14 @@ export default function ShareStoryScreen() {
           placeholderTextColor={colors.inkGhost}
           style={styles.input}
         />
-        <Text variant="labelMd" color={remaining < 50 ? 'duskDim' : 'inkMuted'} style={{ marginTop: spacing.sm }}>
-          {t('share_story.remaining', { n: remaining })}
+        <Text
+          variant="labelMd"
+          color={text.trim().length > 0 && text.trim().length < 20 ? 'duskDim' : remaining < 50 ? 'duskDim' : 'inkMuted'}
+          style={{ marginTop: spacing.sm }}
+        >
+          {text.trim().length > 0 && text.trim().length < 20
+            ? t('share_story.min_chars', { n: 20 - text.trim().length })
+            : t('share_story.remaining', { n: remaining })}
         </Text>
       </GlassCard>
 

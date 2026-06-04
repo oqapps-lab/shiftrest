@@ -63,6 +63,13 @@ export function DateTimePickerField({
   // controlled value and makes the wheel jump up/down under the finger.
   const [draft, setDraft] = useState<Date>(value);
   const pickedRef = React.useRef<Date>(value);
+  // B02/B06 (Android): the community picker has no single 'datetime' dialog
+  // and can't live inside our custom Modal — it showed its own dialog and
+  // Cancel/Back couldn't escape (app had to be force-stopped). On Android we
+  // drive native date->time dialogs in sequence and handle the 'dismissed'
+  // event so the picker always closes.
+  const [androidStage, setAndroidStage] = useState<null | 'date' | 'time'>(null);
+  const androidDraftRef = React.useRef<Date>(value);
   const fade = React.useRef(new Animated.Value(0)).current;
   const slide = React.useRef(new Animated.Value(1)).current;
 
@@ -80,9 +87,38 @@ export function DateTimePickerField({
 
   const openSheet = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    if (Platform.OS === 'android') {
+      androidDraftRef.current = value;
+      setAndroidStage(mode === 'time' ? 'time' : 'date');
+      return;
+    }
     setDraft(value);
     pickedRef.current = value;
     setOpen(true);
+  };
+
+  const onAndroidChange = (event: DateTimePickerEvent, picked?: Date) => {
+    // Any non-'set' result (Cancel / Back / tap-outside) closes cleanly.
+    if (event.type !== 'set' || !picked) {
+      setAndroidStage(null);
+      return;
+    }
+    if (androidStage === 'date') {
+      const merged = new Date(androidDraftRef.current);
+      merged.setFullYear(picked.getFullYear(), picked.getMonth(), picked.getDate());
+      androidDraftRef.current = merged;
+      if (mode === 'datetime') {
+        setAndroidStage('time'); // chain into the time dialog
+        return;
+      }
+      onChange(merged);
+      setAndroidStage(null);
+      return;
+    }
+    const merged = new Date(androidDraftRef.current);
+    merged.setHours(picked.getHours(), picked.getMinutes(), 0, 0);
+    onChange(merged);
+    setAndroidStage(null);
   };
 
   const cancel = () => {
@@ -184,6 +220,15 @@ export function DateTimePickerField({
           )}
         </Animated.View>
       </Modal>
+
+      {Platform.OS === 'android' && androidStage && (
+        <DateTimePicker
+          value={androidDraftRef.current}
+          mode={androidStage}
+          display="default"
+          onChange={onAndroidChange}
+        />
+      )}
     </>
   );
 }

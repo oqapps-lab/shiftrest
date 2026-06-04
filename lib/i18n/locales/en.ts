@@ -1170,6 +1170,7 @@ const en = {
     field_label: 'YOUR NOTE',
     placeholder: 'When I switch to nights, I take a warm shower 90 min before bed and put my phone in the kitchen. Game changer.',
     remaining: '{{n}} characters left',
+    min_chars: "Add {{n}} more characters to share",
     privacy_note: 'We never display raw text. Our AI rewrites your note into 1-2 anonymous sentences before any other user sees it. A moderator reviews before publishing.',
     cta: 'Submit anonymously',
     submitting: 'Submitting…',
