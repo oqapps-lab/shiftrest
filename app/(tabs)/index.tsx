@@ -49,7 +49,8 @@ import {
   computeChronotypeScore,
   type ShiftKind,
 } from '../../lib/onboarding/store';
-import { useStreak, useActiveTransitionPlan } from '../../lib/queries';
+import { useStreak, useActiveTransitionPlan, useSubscription } from '../../lib/queries';
+import { computeAdaptiveCaffeine } from '../../lib/caffeine-adaptive';
 import { useGeneratedPlan, planHourAsFloat } from '../../lib/queries/plan';
 import { useAuth } from '../../lib/auth/store';
 import {
@@ -377,6 +378,33 @@ export default function Home() {
       caffLog?.cups,
       lastCupHour,
     ],
+  );
+
+  // TODAY-7: adaptive caffeine "last-call". For PREMIUM users who have LOGGED
+  // ≥1 cup today, the caffeine cutoff card stops showing the static schedule
+  // value and instead recomputes from their REAL last cup + sensitivity:
+  // when the caffeine fades, and whether it's clear before tonight's sleep.
+  // This REPLACES the static line (no second caffeine number) — see the
+  // caffeine card body below. Free users, and premium users who haven't logged
+  // yet, keep the unchanged static cutoff. Premium gate mirrors plan.tsx /
+  // TodaysFocusCard exactly.
+  const { data: subscription } = useSubscription();
+  const isPremium =
+    subscription?.status === 'active' ||
+    subscription?.status === 'trial' ||
+    subscription?.status === 'grace_period';
+  // Show the adaptive read only when premium AND a cup is logged today AND we
+  // could derive a valid last-cup hour. Otherwise the static card stays.
+  const adaptiveCaffeine = useMemo(
+    () =>
+      isPremium && (caffLog?.cups ?? 0) > 0 && lastCupHour != null
+        ? computeAdaptiveCaffeine(
+            lastCupHour,
+            onboarding.caffeineSensitivity,
+            sleepStartHour,
+          )
+        : null,
+    [isPremium, caffLog?.cups, lastCupHour, onboarding.caffeineSensitivity, sleepStartHour],
   );
 
   // Map the phase tone → GlassCard variant + glyph color. Tones are
@@ -863,6 +891,11 @@ export default function Home() {
 
       {events.map((e) => {
         const isCaffeine = e.glyph === 'coffee';
+        // TODAY-7: premium + logged → the caffeine card shows the ADAPTIVE
+        // last-call recomputed from the real cup, REPLACING the static cutoff
+        // number/relative-time. Exactly one caffeine line either way: the
+        // static HeroNumber path and the adaptive path are mutually exclusive.
+        const showAdaptiveCaffeine = isCaffeine && adaptiveCaffeine != null;
         return (
           <GlassCard key={e.labelKey} variant="glass" padding="xxl" style={{ marginBottom: spacing.md }}>
             <View style={styles.eventRow}>
@@ -870,15 +903,46 @@ export default function Home() {
                 <Glyph name={e.glyph} size={22} color={e.tintFg} />
               </View>
               <View style={{ flex: 1 }}>
-                <Eyebrow>{t(e.labelKey)}</Eyebrow>
-                <HeroNumber value={formatHour(e.hour)} size="md" style={{ marginTop: 2 }} />
-                <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
-                  {formatRelativeTime(nowHour, e.hour)}
-                </Text>
-                {isCaffeine && caffLog && (
-                  <Text variant="bodyMd" color="primary" style={{ marginTop: 2 }}>
-                    {t('today.caffeine_logged', { cups: caffLog.cups })}
-                  </Text>
+                {showAdaptiveCaffeine && adaptiveCaffeine ? (
+                  <>
+                    <Eyebrow>{t('today.caffeine_lastcall_eyebrow')}</Eyebrow>
+                    <Text
+                      variant="bodyMd"
+                      color={adaptiveCaffeine.clearForSleep ? 'ink' : 'coralDim'}
+                      weight="medium"
+                      style={{ marginTop: 4 }}
+                    >
+                      {adaptiveCaffeine.clearForSleep
+                        ? t('today.caffeine_lastcall_clear', {
+                            last: formatHour(adaptiveCaffeine.lastCupHour),
+                            fades: formatHour(adaptiveCaffeine.fadesAt),
+                            sleep: formatHour(sleepStartHour),
+                          })
+                        : t('today.caffeine_lastcall_warning', {
+                            last: formatHour(adaptiveCaffeine.lastCupHour),
+                            sleep: formatHour(sleepStartHour),
+                            cutoff: formatHour(adaptiveCaffeine.recommendedCutoff),
+                          })}
+                    </Text>
+                    {caffLog && (
+                      <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
+                        {t('today.caffeine_logged', { cups: caffLog.cups })}
+                      </Text>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <Eyebrow>{t(e.labelKey)}</Eyebrow>
+                    <HeroNumber value={formatHour(e.hour)} size="md" style={{ marginTop: 2 }} />
+                    <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
+                      {formatRelativeTime(nowHour, e.hour)}
+                    </Text>
+                    {isCaffeine && caffLog && (
+                      <Text variant="bodyMd" color="primary" style={{ marginTop: 2 }}>
+                        {t('today.caffeine_logged', { cups: caffLog.cups })}
+                      </Text>
+                    )}
+                  </>
                 )}
               </View>
               {isCaffeine && (
