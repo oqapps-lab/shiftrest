@@ -870,8 +870,6 @@ export default function Home() {
                       color={active ? 'onPrimaryContainer' : 'inkSubtle'}
                       align="center"
                       numberOfLines={1}
-                      adjustsFontSizeToFit
-                      minimumFontScale={0.8}
                     >
                       {t(bucket.labelKey)}
                     </Text>
@@ -916,8 +914,6 @@ export default function Home() {
                       color={active ? 'onPrimaryContainer' : 'inkSubtle'}
                       align="center"
                       numberOfLines={1}
-                      adjustsFontSizeToFit
-                      minimumFontScale={0.8}
                     >
                       {t(factor.labelKey)}
                     </Text>
@@ -1318,12 +1314,12 @@ const styles = StyleSheet.create({
   },
   hoursRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: spacing.xs,
     marginTop: spacing.sm,
   },
   hoursChip: {
-    flex: 1,
-    paddingHorizontal: 4,
+    paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: radii.md,
     alignItems: 'center',
@@ -1334,12 +1330,12 @@ const styles = StyleSheet.create({
   },
   factorsRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: spacing.xs,
     marginTop: spacing.sm,
   },
   factorChip: {
-    flex: 1,
-    paddingHorizontal: 4,
+    paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: radii.md,
     alignItems: 'center',
