@@ -67,6 +67,7 @@ import { useLocalShifts } from '../../lib/local-shifts/store';
 import { TodayIntroSheet } from '../../components/today/TodayIntroSheet';
 import { TipsCarousel } from '../../components/library/TipsCarousel';
 import { DailyInsightCard } from '../../components/today/DailyInsightCard';
+import { SafeToDriveCard } from '../../components/today/SafeToDriveCard';
 import { detectTransitionOpportunity } from '../../lib/transition/generate';
 import * as Haptics from 'expo-haptics';
 import { t } from '../../lib/i18n';
@@ -505,6 +506,14 @@ export default function Home() {
           </View>
         </View>
       </GlassCard>
+
+      {/* TODAY-3: Safe-to-Drive — post-shift drowsy-driving self-check. Mounts
+          ONLY in the post-shift commute window (just finished a night/long
+          shift, about to drive home — the drowsy-driving danger peak). The
+          card self-suppresses for the rest of the day once engaged/dismissed.
+          Wellness-framed advice — NEVER blocks the app, never shows for day
+          workers or outside the commute window. */}
+      {phase.key === 'post_shift_commute' && <SafeToDriveCard />}
 
       {/* P1: "right now" anchor — sleep window + caffeine cutoff at a glance,
           so the actionable answer is the first thing seen post-shift. */}
