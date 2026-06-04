@@ -631,8 +631,8 @@ export default function Home() {
           nowHour={nowHour}
           sleepStart={sleepStartHour}
           sleepEnd={planHourAsFloat(generatedPlan?.sleep_end) ?? suggested.sleepEnd}
-          shiftStart={suggested.shiftStart}
-          shiftEnd={suggested.shiftEnd}
+          shiftStart={realShiftBlock?.start}
+          shiftEnd={realShiftBlock?.end}
           size={260}
           label={t('today.label_today')}
           centerLabel={formatHour(nowHour)}
