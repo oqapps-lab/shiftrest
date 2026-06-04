@@ -67,6 +67,12 @@ import {
   lastLoggedIso,
   type SleepRating,
 } from '../../lib/sleep-journal/store';
+import {
+  useSleepHours,
+  setSleepHours,
+  hoursForToday,
+} from '../../lib/sleep-hours/store';
+import { sleepNeedForChronotype } from '../../lib/sleep-debt';
 import { resolveStreak, getAvailableFreezes, consumeFreeze } from '../../lib/streak';
 import { useLocalShifts } from '../../lib/local-shifts/store';
 import { TodayIntroSheet } from '../../components/today/TodayIntroSheet';
@@ -75,12 +81,24 @@ import { DailyInsightCard } from '../../components/today/DailyInsightCard';
 import { SafeToDriveCard } from '../../components/today/SafeToDriveCard';
 import { TodaysFocusCard } from '../../components/today/TodaysFocusCard';
 import { AnchorSleepCard } from '../../components/today/AnchorSleepCard';
+import { SleepDebtCard } from '../../components/today/SleepDebtCard';
 import type { FocusArgs } from '../../lib/today-focus';
 import { detectTransitionOpportunity } from '../../lib/transition/generate';
 import * as Haptics from 'expo-haptics';
 import { t } from '../../lib/i18n';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { TodayCoachmark, type CoachStep } from '../../components/today/TodayCoachmark';
+
+// TODAY-9: optional "how long did you sleep?" buckets. Each chip stores its
+// MIDPOINT into the parallel hours ledger (free, skippable). Low-friction by
+// design — ignoring it leaves the 1-tap rating fully functional.
+const HOURS_BUCKETS: { value: number; labelKey: string }[] = [
+  { value: 4, labelKey: 'today.journal_hours_lt5' }, // <5h → 4h
+  { value: 5.5, labelKey: 'today.journal_hours_5_6' }, // 5–6h → 5.5h
+  { value: 6.5, labelKey: 'today.journal_hours_6_7' }, // 6–7h → 6.5h
+  { value: 7.5, labelKey: 'today.journal_hours_7_8' }, // 7–8h → 7.5h
+  { value: 8.5, labelKey: 'today.journal_hours_8plus' }, // 8h+ → 8.5h
+];
 
 // Event styles per slot. The "hour" for each slot comes from the live
 // plan when available, else mockPlan. Computed inside the component so
@@ -135,6 +153,17 @@ export default function Home() {
   // re-render when user taps an emoji button.
   useSleepJournal();
   const todayRating = ratingForToday();
+
+  // TODAY-9: optional hours ledger (separate, free, backward-compatible).
+  // Subscribed so logging hours re-renders both the journal chips and the
+  // premium debt card. `null` = not logged today.
+  useSleepHours();
+  const todayHours = hoursForToday();
+  // Chronotype-adjusted sleep need (hours) — feeds the debt math; defaults to
+  // 7.5h when chronotype is unknown.
+  const sleepNeed = sleepNeedForChronotype(
+    chronotypeBucket(computeChronotypeScore(onboarding.chronotypeAnswers)),
+  );
 
   // QA-BUG-1: caffeine logger no longer overrides the cutoff hero time
   // — that's the suggested 'don't drink after' time (sleep − 6h), a
@@ -794,6 +823,47 @@ export default function Home() {
             );
           })}
         </View>
+        {/* TODAY-9: OPTIONAL "how long?" capture — appears once a rating is
+            logged. Free + fully skippable: writing a bucket midpoint to the
+            parallel hours ledger never affects the 1-tap rating above. */}
+        {todayRating && (
+          <View style={styles.hoursCapture}>
+            <Text variant="labelMd" family="body" weight="medium" color="inkMuted" uppercase>
+              {t('today.journal_hours_prompt')}
+            </Text>
+            <View style={styles.hoursRow}>
+              {HOURS_BUCKETS.map((bucket) => {
+                const active = todayHours === bucket.value;
+                return (
+                  <Pressable
+                    key={bucket.value}
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      setSleepHours(bucket.value);
+                    }}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: active }}
+                    accessibilityLabel={t(bucket.labelKey)}
+                    style={[
+                      styles.hoursChip,
+                      { backgroundColor: active ? colors.primaryContainer : colors.surfaceLow },
+                    ]}
+                  >
+                    <Text
+                      variant="labelMd"
+                      family="body"
+                      weight="medium"
+                      color={active ? 'onPrimaryContainer' : 'inkSubtle'}
+                      align="center"
+                    >
+                      {t(bucket.labelKey)}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+        )}
         {todayRating && (() => {
           const tally = weeklyTally();
           if (!tally) return null;
@@ -837,6 +907,13 @@ export default function Home() {
         })()}
       </GlassCard>
       </View>
+
+      {/* TODAY-9: Sleep-debt ledger — turns the optional hours capture above
+          into a tracked metric. PREMIUM analysis card (free users get a
+          screenshot-safe locked teaser → paywall; premium-but-unlogged gets an
+          honest empty state, no fake number). Grouped right under the journal
+          so the debt sits with the hours it's computed from. */}
+      <SleepDebtCard need={sleepNeed} />
 
       <View ref={ringRef} collapsable={false} style={styles.ringWrap}>
         {/* F8: on-demand legend — tap "?" to learn what each arc/dot means */}
@@ -1165,6 +1242,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
     borderRadius: radii.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  hoursCapture: {
+    marginTop: spacing.md,
+  },
+  hoursRow: {
+    flexDirection: 'row',
+    gap: spacing.xs,
+    marginTop: spacing.sm,
+  },
+  hoursChip: {
+    flex: 1,
+    paddingHorizontal: 4,
+    paddingVertical: spacing.sm,
+    borderRadius: radii.md,
     alignItems: 'center',
     justifyContent: 'center',
   },
