@@ -855,6 +855,9 @@ export default function Home() {
                       weight="medium"
                       color={active ? 'onPrimaryContainer' : 'inkSubtle'}
                       align="center"
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.8}
                     >
                       {t(bucket.labelKey)}
                     </Text>
