@@ -40,6 +40,7 @@ import {
   getGreeting,
   firstName,
   suggestedPlanFromOnboarding,
+  napWindowForShift,
 } from '../../lib/derive';
 import { phaseForNow } from '../../lib/today-phase';
 import {
@@ -71,6 +72,8 @@ import { TodayIntroSheet } from '../../components/today/TodayIntroSheet';
 import { TipsCarousel } from '../../components/library/TipsCarousel';
 import { DailyInsightCard } from '../../components/today/DailyInsightCard';
 import { SafeToDriveCard } from '../../components/today/SafeToDriveCard';
+import { TodaysFocusCard } from '../../components/today/TodaysFocusCard';
+import type { FocusArgs } from '../../lib/today-focus';
 import { detectTransitionOpportunity } from '../../lib/transition/generate';
 import * as Haptics from 'expo-haptics';
 import { t } from '../../lib/i18n';
@@ -325,6 +328,57 @@ export default function Home() {
       suggested.shiftEnd,
     ],
   );
+
+  // TODAY-6: "Today's Focus" inputs. Pure signals derived from the SAME plan
+  // times + live caffeine/journal stores already on this screen, so the
+  // premium card's single move always agrees with the phase hero above it.
+  // The card itself gates on premium and computes the focus; we only assemble
+  // its args here (cheap, memoised so it doesn't re-derive on unrelated ticks).
+  const lastCupHour = caffLog
+    ? (() => {
+        const d = new Date(caffLog.lastCupAt);
+        return Number.isNaN(d.getTime()) ? null : d.getHours() + d.getMinutes() / 60;
+      })()
+    : null;
+  const focusArgs = useMemo<FocusArgs>(
+    () => ({
+      nowHour,
+      shift: onboarding.currentShift,
+      plan: {
+        sleepStart: sleepStartHour,
+        sleepEnd: planHourAsFloat(generatedPlan?.sleep_end) ?? suggested.sleepEnd,
+        caffeineCutoff: formatHour(caffeineHour),
+        melatoninTime: formatHour(melatoninHour),
+        shiftStart: suggested.shiftStart,
+        shiftEnd: suggested.shiftEnd,
+      },
+      takesMelatonin: onboarding.takesMelatonin !== false,
+      caffeineCupsPerDay: onboarding.caffeineCupsPerDay ?? 0,
+      caffeineSensitivity: onboarding.caffeineSensitivity,
+      cupsToday: caffLog?.cups ?? 0,
+      lastCupHour,
+      tally: weeklyTally(),
+      napHour: napWindowForShift(onboarding.currentShift)?.hour ?? 14,
+      format: formatHour,
+    }),
+    [
+      nowHour,
+      onboarding.currentShift,
+      onboarding.takesMelatonin,
+      onboarding.caffeineCupsPerDay,
+      onboarding.caffeineSensitivity,
+      sleepStartHour,
+      generatedPlan?.sleep_end,
+      suggested.sleepEnd,
+      suggested.shiftStart,
+      suggested.shiftEnd,
+      caffeineHour,
+      melatoninHour,
+      caffLog?.cups,
+      lastCupHour,
+    ],
+  );
+
   // Map the phase tone → GlassCard variant + glyph color. Tones are
   // semantic (dusk = sleep/wind-down, sunrise = alert/light, calm = neutral).
   const PHASE_TONE: Record<
@@ -623,6 +677,12 @@ export default function Home() {
           </View>
         </View>
       </GlassCard>
+
+      {/* TODAY-6: "Today's Focus" — the single highest-priority move today with
+          its exact time. PREMIUM surface (free users get a locked teaser →
+          paywall, same slot). Mounts right after the RIGHT NOW phase card so
+          the day's one move sits directly under the live phase. */}
+      <TodaysFocusCard args={focusArgs} />
 
       {/* TODAY-3: Safe-to-Drive — post-shift drowsy-driving self-check. Mounts
           ONLY in the post-shift commute window (just finished a night/long
