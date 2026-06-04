@@ -29,7 +29,8 @@ import {
   type SegmentOption,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
-import { mockShiftBlocks, getMockTransition } from '../../mock/user';
+import { getMockTransition } from '../../mock/user';
+import type { ShiftBlock } from '../../components/ui/ShiftBar';
 import {
   countCompleted,
   formatHour,
@@ -267,15 +268,6 @@ export default function Home() {
     shiftEnd: formatHour(suggested.shiftEnd),
     now: formatHour(nowHour),
   });
-  // Summarise the 24h bar from its sleep + shift blocks (the two that matter
-  // to a shift worker). mockShiftBlocks is a fixed demo fixture.
-  const shiftBlock = mockShiftBlocks.find((b) => b.kind === 'shift');
-  const sleepBlock = mockShiftBlocks.find((b) => b.kind === 'sleep');
-  const barSummaryParts: string[] = [];
-  if (shiftBlock) barSummaryParts.push(`${t('shift_kind.day_long')} ${formatHour(shiftBlock.start)}–${formatHour(shiftBlock.end)}`);
-  if (sleepBlock) barSummaryParts.push(`${t('today.event_sleep')} ${formatHour(sleepBlock.start)}–${formatHour(sleepBlock.end)}`);
-  const shiftBarA11yLabel = t('a11y.shift_bar', { summary: barSummaryParts.join(', ') });
-
   // D1 + QA-BUG-2: scan the next 7 days of shifts for a night→day or
   // day→night pivot. When detected, the CTA card hero becomes a SMART
   // suggestion ("Upcoming: night → day") rather than a generic prompt.
@@ -294,6 +286,79 @@ export default function Home() {
     }
     return detectTransitionOpportunity(shiftByIsoForDetect, todayIsoForDetect);
   }, [localShiftsMap, todayIsoForDetect, livePlan?.transition_type]);
+
+  // today-2: the 24h "YOUR 24 HOURS" bar is built from the user's REAL data,
+  // never the mockShiftBlocks demo fixture (which showed a 07:45–19:00 nurse
+  // day-shift to everyone). Two real blocks:
+  //   • WORK — kind resolved from today's schedule entry (local-shifts) when
+  //     present, else the manual TODAY'S SHIFT toggle. Times come from the
+  //     user's own currentShiftStart/End when that resolved kind matches the
+  //     toggle; otherwise the same suggested.shiftStart/End the ring uses, so
+  //     bar + ring tell the same story. OFF days get NO work block.
+  //   • SLEEP — the plan sleep window (generatedPlan ?? suggestedPlanFromOnboarding),
+  //     the exact source the ring's sleep arc reads.
+  // ShiftBar's normaliseBlocks() already splits a midnight-crossing block
+  // (end <= start) into [start..24] + [0..end], so a night shift / wrapped
+  // sleep window needs no special-casing here.
+  const todayShiftKind: ShiftKind =
+    localShiftsMap[todayIsoForDetect] ?? onboarding.currentShift;
+  const realBlocks = useMemo<ShiftBlock[]>(() => {
+    const blocks: ShiftBlock[] = [];
+    if (todayShiftKind === 'day' || todayShiftKind === 'night') {
+      // Use the user's hand-entered times only when they describe TODAY's
+      // resolved shift kind; the currentShiftStart/End fields belong to the
+      // manual toggle, so they're meaningful only when that toggle matches.
+      // When today's schedule entry disagrees with the toggle, derive defaults
+      // for the RESOLVED kind (suggested is keyed to the toggle, so it can't
+      // be reused for the opposite kind without showing day-times on a night).
+      const useUserTimes = todayShiftKind === onboarding.currentShift;
+      const kindDefaults = useUserTimes
+        ? suggested
+        : suggestedPlanFromOnboarding(
+            todayShiftKind,
+            chronotypeBucket(computeChronotypeScore(onboarding.chronotypeAnswers)),
+          );
+      const workStart = useUserTimes
+        ? parseFloatHour(onboarding.currentShiftStart)
+        : kindDefaults.shiftStart;
+      const workEnd = useUserTimes
+        ? parseFloatHour(onboarding.currentShiftEnd)
+        : kindDefaults.shiftEnd;
+      blocks.push({ start: workStart, end: workEnd, kind: 'shift' });
+    }
+    // Always show the real sleep window (even on an OFF day — that's the one
+    // honest thing we can show without inventing a shift).
+    blocks.push({ start: sleepStartHour, end: sleepEndHour, kind: 'sleep' });
+    return blocks;
+  }, [
+    todayShiftKind,
+    onboarding.currentShift,
+    onboarding.currentShiftStart,
+    onboarding.currentShiftEnd,
+    onboarding.chronotypeAnswers,
+    suggested,
+    sleepStartHour,
+    sleepEndHour,
+  ]);
+
+  // D (a11y): screen-reader summary of the 24h bar, built from the SAME real
+  // blocks the bar renders (was reading the mockShiftBlocks fixture before).
+  const barSummaryParts: string[] = [];
+  const realShiftBlock = realBlocks.find((b) => b.kind === 'shift');
+  const realSleepBlock = realBlocks.find((b) => b.kind === 'sleep');
+  if (realShiftBlock) {
+    const shiftLabel =
+      todayShiftKind === 'night' ? t('shift_kind.night_long') : t('shift_kind.day_long');
+    barSummaryParts.push(
+      `${shiftLabel} ${formatHour(realShiftBlock.start)}–${formatHour(realShiftBlock.end)}`,
+    );
+  }
+  if (realSleepBlock) {
+    barSummaryParts.push(
+      `${t('today.event_sleep')} ${formatHour(realSleepBlock.start)}–${formatHour(realSleepBlock.end)}`,
+    );
+  }
+  const shiftBarA11yLabel = t('a11y.shift_bar', { summary: barSummaryParts.join(', ') });
 
   // NOTE: a P3 "auto-sync today's shift from the schedule" effect used to live
   // here. It fought the manual TODAY'S SHIFT toggle — tapping Night snapped
@@ -577,7 +642,7 @@ export default function Home() {
 
       <Eyebrow>{t('today.section_24h')}</Eyebrow>
       <View style={{ height: spacing.md }} />
-      <ShiftBar blocks={mockShiftBlocks} height={16} accessibilityLabel={shiftBarA11yLabel} />
+      <ShiftBar blocks={realBlocks} height={16} accessibilityLabel={shiftBarA11yLabel} />
 
       <View style={{ height: spacing.huge }} />
 
