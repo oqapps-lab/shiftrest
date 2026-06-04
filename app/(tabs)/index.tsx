@@ -61,8 +61,11 @@ import {
   ratingForToday,
   weeklyTally,
   recentJournalDays,
+  localCurrentStreak,
+  lastLoggedIso,
   type SleepRating,
 } from '../../lib/sleep-journal/store';
+import { resolveStreak, getAvailableFreezes, consumeFreeze } from '../../lib/streak';
 import { useLocalShifts } from '../../lib/local-shifts/store';
 import { TodayIntroSheet } from '../../components/today/TodayIntroSheet';
 import { TipsCarousel } from '../../components/library/TipsCarousel';
@@ -164,9 +167,12 @@ export default function Home() {
       })
     : t('today.now_hero_sleep', { sleep: formatHour(sleepStartHour) });
 
-  // Streak: real DB row when signed-in user has one, else 0.
-  // Anon users see no pill (hidden when value===0).
-  const streakValue = streak?.current_streak ?? 0;
+  // Streak source: server-authoritative `sleep_streaks` row for signed-in
+  // users, else the local journal-derived streak for anon/demo users. We
+  // also need the LAST logged day to drive the freeze-aware resolver.
+  const rawStreak = streak?.current_streak ?? localCurrentStreak();
+  const streakLastIso = streak?.last_streak_date ?? lastLoggedIso();
+  // The freeze-aware DISPLAY resolution happens below once `now` is known.
 
   // Transition teaser: when a live plan exists pull its day-1 step counts;
   // else fall back to the mockTransition fixture so the demo still reads.
@@ -211,6 +217,79 @@ export default function Home() {
   );
   const now = nowTick;
   const nowHour = now.getHours() + now.getMinutes() / 60;
+
+  // TODAY-4 — Streak Freeze + loss-aversion. A shift worker's unavoidable
+  // rough/missed day shouldn't reset the streak to zero. We read how many
+  // freezes are available this month (2/month, AsyncStorage-persisted),
+  // then resolve the DISPLAYED streak with freeze awareness.
+  //
+  // NOTE: for signed-in users the streak is server-authoritative (a Supabase
+  // insert-time RPC/trigger maintains `sleep_streaks`). That RPC is NOT yet
+  // freeze-aware, so on a 1-day gap it may have already reset current_streak
+  // to 0 server-side; this client adjustment covers the case where the server
+  // still holds the pre-gap value at read time. Full correctness needs the
+  // RPC to become freeze-aware too — a DB migration, intentionally out of
+  // scope for this task.
+  const [freezesAvailable, setFreezesAvailable] = useState(0);
+  useFocusEffect(
+    useCallback(() => {
+      let alive = true;
+      void getAvailableFreezes().then((n) => {
+        if (alive) setFreezesAvailable(n);
+      });
+      return () => {
+        alive = false;
+      };
+    }, []),
+  );
+  const resolvedStreak = useMemo(
+    () =>
+      resolveStreak({
+        lastDateIso: streakLastIso,
+        currentStreak: rawStreak,
+        today: now,
+        freezes: freezesAvailable,
+      }),
+    [streakLastIso, rawStreak, now, freezesAvailable],
+  );
+  // Latch the kept streak when a freeze is spent. Without this, consuming the
+  // LAST freeze would drop freezesAvailable→0, the memo would re-resolve the
+  // same gap with freezes:0, and the streak would snap back to 0 — undoing
+  // the save. The latch (keyed by the gap's lastDate) freezes the display at
+  // the kept value for this gap regardless of the now-decremented count.
+  const [latched, setLatched] = useState<{ key: string; streak: number } | null>(null);
+  const latchKey = streakLastIso ?? '';
+  useEffect(() => {
+    if (!resolvedStreak.freezeConsumed) return;
+    if (latched?.key === latchKey) return; // already spent for this gap
+    setLatched({ key: latchKey, streak: resolvedStreak.streak });
+    let alive = true;
+    void consumeFreeze().then((remaining) => {
+      if (alive) setFreezesAvailable(remaining);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [resolvedStreak.freezeConsumed, resolvedStreak.streak, latchKey, latched]);
+
+  // Display value: the latched (freeze-kept) streak if this gap was covered,
+  // else the freshly resolved value.
+  const streakValue =
+    latched?.key === latchKey ? latched.streak : resolvedStreak.streak;
+  const loggedToday = todayRating !== null;
+  // Streak alive but TODAY is still unlogged → the day's log is outstanding.
+  // Use streakValue (covers the latched freeze case) rather than the memo's
+  // transient atRisk so a freeze-covered gap still nudges the user to log.
+  const streakUnloggedToday = streakValue > 0 && !loggedToday;
+  // At-risk = unlogged AND late in the day (after the threshold below) — the
+  // loss-aversion nudge only escalates when the day is genuinely running out
+  // so we don't cry wolf at 9am.
+  const STREAK_AT_RISK_HOUR = 20; // local hour after which an unlogged day reads "at risk"
+  const lateInDay = nowHour >= STREAK_AT_RISK_HOUR;
+  const streakAtRisk = streakUnloggedToday && lateInDay;
+  // Loss-framed "keep it" copy fires earlier: streak alive but today unlogged.
+  const streakNeedsLog = streakUnloggedToday;
+  const freezeAvailable = freezesAvailable > 0;
 
   // G8-P0: "Right now in your body" — the live circadian phase + next move.
   // Pure pick from lib/today-phase using the SAME plan times shown lower, so
@@ -464,21 +543,43 @@ export default function Home() {
           <Pressable
             onPress={() => router.push('/(tabs)/profile')}
             accessibilityRole="button"
-            accessibilityLabel={t('a11y.view_streak')}
+            accessibilityLabel={
+              streakAtRisk
+                ? t('streak.at_risk', { n: streakValue })
+                : streakNeedsLog
+                  ? t('streak.keep', { n: streakValue })
+                  : t('a11y.view_streak')
+            }
             hitSlop={8}
-            style={styles.streak}
+            style={[styles.streak, streakAtRisk && styles.streakAtRisk]}
           >
-            <Glyph name="flame" size={16} color="sunriseDim" />
+            <Glyph
+              name="flame"
+              size={16}
+              color={streakAtRisk ? 'coralDim' : 'sunriseDim'}
+            />
             <Text
               variant="labelMd"
               family="body"
               weight="medium"
-              color="ink"
+              color={streakAtRisk ? 'coralDim' : 'ink'}
               uppercase
-              style={{ marginLeft: 6 }}
+              numberOfLines={2}
+              style={styles.streakText}
             >
-              {formatStreak(streakValue)}
+              {streakAtRisk
+                ? t('streak.at_risk', { n: streakValue })
+                : streakNeedsLog
+                  ? t('streak.keep', { n: streakValue })
+                  : formatStreak(streakValue)}
             </Text>
+            {freezeAvailable && (
+              <Glyph
+                name="snowflake"
+                size={14}
+                color="primaryBright"
+              />
+            )}
           </Pressable>
         )}
       </View>
@@ -826,6 +927,16 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: radii.pill,
     backgroundColor: colors.sunriseGlow,
+    flexShrink: 1,
+    maxWidth: '62%',
+  },
+  streakAtRisk: {
+    backgroundColor: colors.coralGlow,
+  },
+  streakText: {
+    marginLeft: 6,
+    marginRight: 6,
+    flexShrink: 1,
   },
   eventRow: {
     flexDirection: 'row',

@@ -17,6 +17,9 @@ const ja = {
     suffix_one: "日",
     suffix_other: "日",
     label_template: "{{n}}日連続",
+    keep: "{{n}}日連続を維持 — 今夜記録しよう",
+    at_risk: "{{n}}日連続を失わないで",
+    freeze_a11y: "ストリークフリーズが利用可能です — つらい1日をカバーします",
   },
   tabs: {
     today: "今日",

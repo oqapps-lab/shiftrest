@@ -18,6 +18,9 @@ const frFR = {
     suffix_one: 'JOUR',
     suffix_other: 'JOURS',
     label_template: 'SÉRIE DE {{n}} JOURS',
+    keep: 'GARDEZ VOTRE SÉRIE DE {{n}} JOURS — NOTEZ CE SOIR',
+    at_risk: 'NE PERDEZ PAS VOTRE SÉRIE DE {{n}} JOURS',
+    freeze_a11y: 'Un gel de série est disponible — une journée difficile est couverte',
   },
   tabs: {
     today: 'Aujourd’hui',

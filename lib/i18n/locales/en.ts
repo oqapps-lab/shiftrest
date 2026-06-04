@@ -21,6 +21,10 @@ const en = {
     suffix_one: 'DAY',
     suffix_other: 'DAYS',
     label_template: '{{n}}-DAY STREAK',
+    // Loss-averse states for the Today pill.
+    keep: 'KEEP YOUR {{n}}-DAY STREAK — LOG TONIGHT',
+    at_risk: "DON'T LOSE YOUR {{n}}-DAY STREAK",
+    freeze_a11y: 'A streak freeze is available — one rough day is covered',
   },
   tabs: {
     today: 'Today',

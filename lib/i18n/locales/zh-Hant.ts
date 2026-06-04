@@ -17,6 +17,9 @@ const zhHant = {
     suffix_one: "天",
     suffix_other: "天",
     label_template: "連續 {{n}} 天",
+    keep: "保持連續 {{n}} 天 — 今晚記錄",
+    at_risk: "別中斷連續 {{n}} 天",
+    freeze_a11y: "有一次連勝凍結可用 — 一個難熬的日子已被涵蓋",
   },
   tabs: {
     today: "今天",

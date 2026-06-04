@@ -86,6 +86,17 @@ export function journaledDayCount(): number {
 }
 
 /**
+ * TODAY-4 — the most recent day the user logged (YYYY-MM-DD), or null when
+ * the journal is empty. Feeds the freeze-aware streak resolver for anonymous
+ * users, who derive their streak from the local journal instead of Supabase.
+ */
+export function lastLoggedIso(): string | null {
+  const keys = Object.keys(memCache.entries);
+  if (keys.length === 0) return null;
+  return keys.sort().at(-1) ?? null;
+}
+
+/**
  * R7-1 — Local-only current streak.
  *
  * Consecutive days with ANY journal entry ending TODAY (or YESTERDAY

@@ -29,6 +29,7 @@ export type GlyphName =
   | 'home'
   | 'bed'
   | 'flame'
+  | 'snowflake'
   | 'fork'
   | 'book';
 
@@ -155,6 +156,17 @@ export function Glyph({ name, size = 24, color = 'ink', strokeWidth = 1.5 }: Pro
       )}
       {name === 'flame' && (
         <Path d="M12 3c0 3-4 5-4 9a4 4 0 0 0 8 0c0-2-1-3-1-5 2 1 3 3 3 6a6 6 0 1 1-12 0c0-5 6-5 6-10z" {...common} />
+      )}
+      {name === 'snowflake' && (
+        <>
+          {/* 6-point snowflake: 3 axes through the centre + small barbs */}
+          <Line x1={12} y1={3} x2={12} y2={21} {...common} />
+          <Line x1={4.2} y1={7.5} x2={19.8} y2={16.5} {...common} />
+          <Line x1={4.2} y1={16.5} x2={19.8} y2={7.5} {...common} />
+          <Path d="M9.5 5l2.5 2 2.5-2M9.5 19l2.5-2 2.5 2" {...common} />
+          <Path d="M4.7 10.4l.6-2.9 2.9.6M19.3 13.6l-.6 2.9-2.9-.6" {...common} />
+          <Path d="M4.7 13.6l3.5-.9M19.3 10.4l-3.5.9" {...common} />
+        </>
       )}
       {name === 'fork' && (
         <>

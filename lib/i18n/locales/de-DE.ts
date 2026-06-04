@@ -18,6 +18,9 @@ const deDE = {
     suffix_one: 'TAG',
     suffix_other: 'TAGE',
     label_template: '{{n}}-TAGE-SERIE',
+    keep: 'HALTE DEINE {{n}}-TAGE-SERIE — HEUTE EINTRAGEN',
+    at_risk: 'VERLIERE NICHT DEINE {{n}}-TAGE-SERIE',
+    freeze_a11y: 'Ein Serien-Freeze ist verfügbar — ein harter Tag ist abgedeckt',
   },
   tabs: {
     today: 'Heute',

@@ -17,6 +17,9 @@ const ptBR = {
     suffix_one: "DIA",
     suffix_other: "DIAS",
     label_template: "SEQUÊNCIA DE {{n}} DIAS",
+    keep: "MANTENHA SUA SEQUÊNCIA DE {{n}} DIAS — REGISTRE HOJE À NOITE",
+    at_risk: "NÃO PERCA SUA SEQUÊNCIA DE {{n}} DIAS",
+    freeze_a11y: "Você tem um congelamento de sequência disponível — um dia difícil está coberto",
   },
   tabs: {
     today: "Hoje",

@@ -41,6 +41,7 @@ export const colors = {
   duskGlow: '#D6C4D5',
   coral: '#E8A09B',
   coralDim: '#CF7F7A',
+  coralGlow: '#F7D9D6',
 
   // Text
   ink: '#32332F',

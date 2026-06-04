@@ -18,6 +18,9 @@ const esES = {
     suffix_one: 'DÍA',
     suffix_other: 'DÍAS',
     label_template: 'RACHA DE {{n}} DÍAS',
+    keep: 'MANTÉN TU RACHA DE {{n}} DÍAS — REGISTRA ESTA NOCHE',
+    at_risk: 'NO PIERDAS TU RACHA DE {{n}} DÍAS',
+    freeze_a11y: 'Tienes un congelador de racha disponible — un día difícil está cubierto',
   },
   tabs: {
     today: 'Hoy',

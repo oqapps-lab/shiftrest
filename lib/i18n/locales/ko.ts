@@ -17,6 +17,9 @@ const ko = {
     suffix_one: "일",
     suffix_other: "일",
     label_template: "{{n}}일 연속",
+    keep: "{{n}}일 연속 유지 — 오늘 밤 기록하세요",
+    at_risk: "{{n}}일 연속을 잃지 마세요",
+    freeze_a11y: "스트릭 프리즈를 사용할 수 있습니다 — 힘든 하루가 보호됩니다",
   },
   tabs: {
     today: "오늘",

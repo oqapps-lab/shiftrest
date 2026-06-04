@@ -17,6 +17,9 @@ const itIT = {
     suffix_one: "GIORNO",
     suffix_other: "GIORNI",
     label_template: "SERIE DI {{n}} GIORNI",
+    keep: "MANTIENI LA TUA SERIE DI {{n}} GIORNI — REGISTRA STASERA",
+    at_risk: "NON PERDERE LA TUA SERIE DI {{n}} GIORNI",
+    freeze_a11y: "Hai un congelamento serie disponibile — un giorno difficile è coperto",
   },
   tabs: {
     today: "Oggi",

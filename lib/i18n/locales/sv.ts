@@ -17,6 +17,9 @@ const sv = {
     suffix_one: 'DAG',
     suffix_other: 'DAGAR',
     label_template: '{{n}}-DAGARS SVIT',
+    keep: 'BEHÅLL DIN {{n}}-DAGARS SVIT — LOGGA I KVÄLL',
+    at_risk: 'FÖRLORA INTE DIN {{n}}-DAGARS SVIT',
+    freeze_a11y: 'En svit-frysning är tillgänglig — en tuff dag är täckt',
   },
   tabs: {
     today: 'Idag',

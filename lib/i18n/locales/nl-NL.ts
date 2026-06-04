@@ -18,6 +18,9 @@ const nlNL = {
     suffix_one: 'DAG',
     suffix_other: 'DAGEN',
     label_template: 'REEKS VAN {{n}} DAGEN',
+    keep: 'BEHOUD JE REEKS VAN {{n}} DAGEN — LOG VANAVOND',
+    at_risk: 'VERLIES JE REEKS VAN {{n}} DAGEN NIET',
+    freeze_a11y: 'Een reeks-freeze is beschikbaar — een zware dag is gedekt',
   },
   tabs: {
     today: 'Vandaag',
