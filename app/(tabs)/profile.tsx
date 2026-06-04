@@ -19,7 +19,7 @@ import {
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockProfessions } from '../../mock/user';
-import { formatTrialRemaining, clampDisplayName } from '../../lib/derive';
+import { formatTrialRemaining, isTrialExpired, clampDisplayName } from '../../lib/derive';
 import { useAuth } from '../../lib/auth/store';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useProfileStats, useSubscription } from '../../lib/queries';
@@ -123,7 +123,9 @@ export default function Profile() {
   if (!user) {
     subscriptionSubtitle = t('profile.subscription.free');
   } else if (subscription?.status === 'trial' && subscription.trial_end) {
-    subscriptionSubtitle = t('profile.subscription.trial_template', { remaining: formatTrialRemaining(subscription.trial_end) });
+    subscriptionSubtitle = isTrialExpired(subscription.trial_end)
+      ? t('profile.subscription.lapsed')
+      : t('profile.subscription.trial_template', { remaining: formatTrialRemaining(subscription.trial_end) });
   } else if (subscription?.status === 'active') {
     subscriptionSubtitle =
       subscription.plan === 'premium_annual' ? t('profile.subscription.annual') : t('profile.subscription.monthly');

@@ -62,6 +62,19 @@ export function formatTrialRemaining(trialEndsAt: string, today: Date = new Date
   return t('trial.n_days', { n: days });
 }
 
+export function isTrialExpired(
+  trialEndsAt: string | null | undefined,
+  today: Date = new Date(),
+): boolean {
+  if (!trialEndsAt) return false;
+  const isoLike = trialEndsAt.includes('T') ? trialEndsAt : `${trialEndsAt}T00:00:00`;
+  const end = new Date(isoLike);
+  if (Number.isNaN(end.getTime())) return true;
+  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+  return days < 0;
+}
+
 function monthsFull(): readonly string[] {
   const m = (t('date.months_full') as unknown) as Translations['date']['months_full'];
   return Array.isArray(m) ? m : [];

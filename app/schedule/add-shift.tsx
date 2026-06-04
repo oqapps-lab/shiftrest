@@ -85,7 +85,9 @@ function formatSummary(kind: Kind, startsAt: Date, endsAt: Date): string {
   const dateFmt = new Intl.DateTimeFormat(i18n.locale, { day: 'numeric', month: 'short' });
   const fmt = (d: Date): string =>
     `${dateFmt.format(d)} · ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-  return `${fmt(startsAt)} → ${fmt(endsAt)}`;
+  const suffix =
+    localDateKey(endsAt) !== localDateKey(startsAt) ? ` ${t('add_shift.next_day_suffix')}` : '';
+  return `${fmt(startsAt)} → ${fmt(endsAt)}${suffix}`;
 }
 
 export default function AddShift() {
@@ -116,10 +118,14 @@ export default function AddShift() {
 
   const selectKind = (next: Kind) => {
     setKind(next);
-    // When switching to a work kind from off, ensure we have valid times.
-    if (next !== 'off' && endsAt <= startsAt) {
-      setEndsAt(new Date(startsAt.getTime() + 12 * 60 * 60 * 1000));
-    }
+    if (next === 'off') return;
+    // B14: re-anchor to the kind's default window (day 07:00->19:00, night
+    // 19:00->07:00 next day), preserving the picked calendar date — selecting
+    // Night must actually move the times, not just relabel.
+    const startHour = next === 'night' ? 19 : 7;
+    const newStart = snapToTopOfHour(startsAt, startHour);
+    setStartsAt(newStart);
+    setEndsAt(new Date(newStart.getTime() + 12 * 60 * 60 * 1000));
   };
 
   // Auto-fix when start gets pushed past end (cross-day shifts handled by

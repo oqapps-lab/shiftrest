@@ -172,7 +172,7 @@ export function PillCTA({
         )}
 
         {/* Inner 1px top highlight for primary + sunrise + dusk — subtle, not glossy */}
-        {(variant === 'primary' || variant === 'sunrise' || variant === 'dusk') && (
+        {(variant === 'sunrise' || variant === 'dusk') && (
           <View style={styles.innerHighlight} pointerEvents="none" />
         )}
 

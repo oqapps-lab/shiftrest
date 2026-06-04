@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { View, Pressable, StyleSheet, Linking } from 'react-native';
+import { View, Pressable, StyleSheet, Linking, Platform } from 'react-native';
 import { router } from 'expo-router';
 import {
   Screen,
@@ -18,7 +18,7 @@ import {
   showAppDialog,
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
-import { formatTrialRemaining } from '../../lib/derive';
+import { formatTrialRemaining, isTrialExpired } from '../../lib/derive';
 import { safeBack } from '../../lib/nav';
 import { useAuth } from '../../lib/auth/store';
 import { useSubscription } from '../../lib/queries';
@@ -33,10 +33,23 @@ export default function Subscription() {
   // Trial is "in progress" only while trial_end is still in the future. Once
   // it lapses, formatTrialRemaining returns "expired" — we need to switch the
   // headline to match (otherwise UI shows "TRIAL IN PROGRESS · expired").
-  const trialIsExpired = (trialEnd: string | null | undefined): boolean => {
-    if (!trialEnd) return false;
-    return formatTrialRemaining(trialEnd) === 'expired';
-  };
+  // B10: decide expiry numerically (locale-independent) — comparing the
+  // localized formatTrialRemaining() against the English literal 'expired'
+  // silently failed on every non-English device.
+  const trialIsExpired = (trialEnd: string | null | undefined): boolean =>
+    isTrialExpired(trialEnd);
+
+  // B07: store name + manage-subscription deep link are platform-specific.
+  const isAndroid = Platform.OS === 'android';
+  const storeName = isAndroid
+    ? t('settings_screens.subscription.store_google')
+    : t('settings_screens.subscription.store_apple');
+  const accountName = isAndroid
+    ? t('settings_screens.subscription.account_google')
+    : t('settings_screens.subscription.account_apple');
+  const manageUrl = isAndroid
+    ? 'https://play.google.com/store/account/subscriptions'
+    : 'https://apps.apple.com/account/subscriptions';
 
   // Map real DB row → display key. Anon users have no subscription record
   // and no trial — they get the 'free' state, same as a signed-in user who
@@ -104,11 +117,11 @@ export default function Subscription() {
           <PillCTA
             variant="glass"
             size="md"
-            label={t('settings_screens.subscription.manage_store')}
+            label={t('settings_screens.subscription.manage_store', { store: storeName })}
             onPress={() =>
-              Linking.openURL('https://apps.apple.com/account/subscriptions').catch(
+              Linking.openURL(manageUrl).catch(
                 () => showAppDialog({
-                  title: t('settings_screens.subscription.store_unavailable'),
+                  title: t('settings_screens.subscription.store_unavailable', { store: storeName }),
                   actions: [{ label: t('a11y.close'), style: 'cancel' }],
                 }),
               )
@@ -179,7 +192,7 @@ export default function Subscription() {
           onPress={() =>
             showAppDialog({
               title: t('settings_screens.subscription.restore_title'),
-              message: t('settings_screens.subscription.restore_placeholder'),
+              message: t('settings_screens.subscription.restore_placeholder', { account: accountName }),
               actions: [{ label: t('a11y.close'), style: 'cancel' }],
             })
           }
