@@ -115,6 +115,21 @@ const deDE = {
     journal_hours_6_7: '6–7 Std.',
     journal_hours_7_8: '7–8 Std.',
     journal_hours_8plus: '8 Std.+',
+    factors: {
+      prompt: 'WAS HAT ES BEEINFLUSST? (OPTIONAL)',
+      blackout: 'Dunkler Raum',
+      late_caffeine: 'Spätes Koffein',
+      noise: 'Lärm',
+      kids: 'Kinder',
+      wound_down: 'Heruntergefahren',
+    },
+    week: {
+      eyebrow: 'DEINE SCHLAFWOCHE',
+      score_label: 'ANPASSUNG',
+      empty: 'Erfasse ein paar Nächte, um deine Muster zu sehen.',
+      insight_helps: 'Deine besseren Nächte haben oft: {{factor}}',
+      insight_hurts: 'Schlechtere Nächte hatten oft: {{factor}}',
+    },
     sleep_debt: {
       eyebrow: 'SCHLAFSCHULD',
       title: 'Schlafschuld: {{hours}} Std. · {{severity}}',

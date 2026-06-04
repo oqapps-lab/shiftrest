@@ -102,6 +102,21 @@ const nlNL = {
     journal_hours_6_7: '6–7 u',
     journal_hours_7_8: '7–8 u',
     journal_hours_8plus: '8 u+',
+    factors: {
+      prompt: 'WAT HAD INVLOED? (OPTIONEEL)',
+      blackout: 'Donkere kamer',
+      late_caffeine: 'Late cafeïne',
+      noise: 'Lawaai',
+      kids: 'Kinderen',
+      wound_down: 'Tot rust gekomen',
+    },
+    week: {
+      eyebrow: 'JOUW SLAAPWEEK',
+      score_label: 'AANPASSING',
+      empty: 'Leg een paar nachten vast om je patronen te zien.',
+      insight_helps: 'Je betere nachten hebben vaak: {{factor}}',
+      insight_hurts: 'Slechtere nachten hadden vaak: {{factor}}',
+    },
     sleep_debt: {
       eyebrow: 'SLAAPSCHULD',
       title: 'Slaapschuld: {{hours}} u · {{severity}}',

@@ -102,6 +102,21 @@ const frFR = {
     journal_hours_6_7: '6–7 h',
     journal_hours_7_8: '7–8 h',
     journal_hours_8plus: '8 h+',
+    factors: {
+      prompt: 'QU\'EST-CE QUI A JOUÉ ? (FACULTATIF)',
+      blackout: 'Pièce sombre',
+      late_caffeine: 'Caféine tardive',
+      noise: 'Bruit',
+      kids: 'Enfants',
+      wound_down: 'Bien décompressé',
+    },
+    week: {
+      eyebrow: 'VOTRE SEMAINE DE SOMMEIL',
+      score_label: 'ADAPT.',
+      empty: 'Notez quelques nuits pour voir vos tendances.',
+      insight_helps: 'Vos meilleures nuits ont souvent : {{factor}}',
+      insight_hurts: 'Les nuits plus dures avaient souvent : {{factor}}',
+    },
     sleep_debt: {
       eyebrow: 'DETTE DE SOMMEIL',
       title: 'Dette de sommeil : {{hours}} h · {{severity}}',

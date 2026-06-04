@@ -101,6 +101,21 @@ const zhHant = {
     journal_hours_6_7: '6–7小時',
     journal_hours_7_8: '7–8小時',
     journal_hours_8plus: '8小時以上',
+    factors: {
+      prompt: '什麼影響了睡眠？（選填）',
+      blackout: '昏暗房間',
+      late_caffeine: '太晚攝取咖啡因',
+      noise: '噪音',
+      kids: '孩子',
+      wound_down: '已放鬆',
+    },
+    week: {
+      eyebrow: '你的睡眠週',
+      score_label: '適應',
+      empty: '記錄幾晚即可看見你的模式。',
+      insight_helps: '你睡得較好的夜晚常有：{{factor}}',
+      insight_hurts: '較難熬的夜晚常有：{{factor}}',
+    },
     sleep_debt: {
       eyebrow: '睡眠負債',
       title: '睡眠負債：{{hours}}小時 · {{severity}}',

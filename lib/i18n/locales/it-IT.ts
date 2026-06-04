@@ -101,6 +101,21 @@ const itIT = {
     journal_hours_6_7: '6–7 h',
     journal_hours_7_8: '7–8 h',
     journal_hours_8plus: '8 h+',
+    factors: {
+      prompt: 'COSA HA INFLUITO? (FACOLTATIVO)',
+      blackout: 'Stanza buia',
+      late_caffeine: 'Caffeina tardiva',
+      noise: 'Rumore',
+      kids: 'Figli',
+      wound_down: 'Mi sono rilassato',
+    },
+    week: {
+      eyebrow: 'LA TUA SETTIMANA DI SONNO',
+      score_label: 'ADATT.',
+      empty: 'Registra qualche notte per vedere i tuoi schemi.',
+      insight_helps: 'Le tue notti migliori hanno spesso: {{factor}}',
+      insight_hurts: 'Le notti peggiori avevano spesso: {{factor}}',
+    },
     sleep_debt: {
       eyebrow: 'DEBITO DI SONNO',
       title: 'Debito di sonno: {{hours}} h · {{severity}}',

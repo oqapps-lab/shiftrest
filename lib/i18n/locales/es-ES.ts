@@ -102,6 +102,21 @@ const esES = {
     journal_hours_6_7: '6–7 h',
     journal_hours_7_8: '7–8 h',
     journal_hours_8plus: '8 h+',
+    factors: {
+      prompt: '¿QUÉ INFLUYÓ? (OPCIONAL)',
+      blackout: 'Cuarto oscuro',
+      late_caffeine: 'Cafeína tardía',
+      noise: 'Ruido',
+      kids: 'Hijos',
+      wound_down: 'Me relajé',
+    },
+    week: {
+      eyebrow: 'TU SEMANA DE SUEÑO',
+      score_label: 'ADAPT.',
+      empty: 'Registra unas noches para ver tus patrones.',
+      insight_helps: 'Tus mejores noches suelen tener: {{factor}}',
+      insight_hurts: 'Las noches peores solían tener: {{factor}}',
+    },
     sleep_debt: {
       eyebrow: 'DEUDA DE SUEÑO',
       title: 'Deuda de sueño: {{hours}} h · {{severity}}',

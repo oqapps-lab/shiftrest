@@ -101,6 +101,21 @@ const ko = {
     journal_hours_6_7: '6~7시간',
     journal_hours_7_8: '7~8시간',
     journal_hours_8plus: '8시간 이상',
+    factors: {
+      prompt: '무엇이 영향을 줬나요? (선택)',
+      blackout: '어두운 방',
+      late_caffeine: '늦은 카페인',
+      noise: '소음',
+      kids: '아이들',
+      wound_down: '긴장을 풀었음',
+    },
+    week: {
+      eyebrow: '이번 주 수면',
+      score_label: '적응',
+      empty: '며칠 기록하면 패턴이 보입니다.',
+      insight_helps: '좋은 밤에 자주 있던 것: {{factor}}',
+      insight_hurts: '힘든 밤에 자주 있던 것: {{factor}}',
+    },
     sleep_debt: {
       eyebrow: '수면 부채',
       title: '수면 부채: {{hours}}시간 · {{severity}}',

@@ -101,6 +101,21 @@ const sv = {
     journal_hours_6_7: '6–7 h',
     journal_hours_7_8: '7–8 h',
     journal_hours_8plus: '8 h+',
+    factors: {
+      prompt: 'VAD PÅVERKADE? (VALFRITT)',
+      blackout: 'Mörkt rum',
+      late_caffeine: 'Sent koffein',
+      noise: 'Buller',
+      kids: 'Barn',
+      wound_down: 'Varvade ner',
+    },
+    week: {
+      eyebrow: 'DIN SÖMNVECKA',
+      score_label: 'ANPASS.',
+      empty: 'Logga några nätter för att se dina mönster.',
+      insight_helps: 'Dina bättre nätter har ofta: {{factor}}',
+      insight_hurts: 'Tuffare nätter hade ofta: {{factor}}',
+    },
     sleep_debt: {
       eyebrow: 'SÖMNSKULD',
       title: 'Sömnskuld: {{hours}} h · {{severity}}',

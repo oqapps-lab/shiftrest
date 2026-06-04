@@ -122,6 +122,21 @@ const en = {
     journal_hours_6_7: '6–7h',
     journal_hours_7_8: '7–8h',
     journal_hours_8plus: '8h+',
+    factors: {
+      prompt: 'WHAT AFFECTED IT? (OPTIONAL)',
+      blackout: 'Dark room',
+      late_caffeine: 'Late caffeine',
+      noise: 'Noise',
+      kids: 'Kids',
+      wound_down: 'Wound down',
+    },
+    week: {
+      eyebrow: 'YOUR WEEK IN SLEEP',
+      score_label: 'ADAPT',
+      empty: 'Log a few nights to see your patterns.',
+      insight_helps: 'Your better nights tend to have: {{factor}}',
+      insight_hurts: 'Rougher nights often had: {{factor}}',
+    },
     sleep_debt: {
       eyebrow: 'SLEEP DEBT',
       title: 'Sleep debt: {{hours}}h · {{severity}}',

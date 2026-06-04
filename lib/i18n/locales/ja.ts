@@ -101,6 +101,21 @@ const ja = {
     journal_hours_6_7: '6〜7時間',
     journal_hours_7_8: '7〜8時間',
     journal_hours_8plus: '8時間以上',
+    factors: {
+      prompt: '何が影響した？（任意）',
+      blackout: '暗い部屋',
+      late_caffeine: '遅いカフェイン',
+      noise: '騒音',
+      kids: '子ども',
+      wound_down: 'リラックスできた',
+    },
+    week: {
+      eyebrow: '今週の睡眠',
+      score_label: '適応',
+      empty: '数晩記録するとパターンが見えてきます。',
+      insight_helps: '調子の良い夜によくあるもの：{{factor}}',
+      insight_hurts: 'つらい夜によくあったもの：{{factor}}',
+    },
     sleep_debt: {
       eyebrow: '睡眠負債',
       title: '睡眠負債：{{hours}}時間 · {{severity}}',

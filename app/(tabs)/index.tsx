@@ -72,6 +72,12 @@ import {
   setSleepHours,
   hoursForToday,
 } from '../../lib/sleep-hours/store';
+import {
+  useSleepFactors,
+  toggleSleepFactor,
+  factorsForToday,
+  SLEEP_FACTORS,
+} from '../../lib/sleep-factors/store';
 import { sleepNeedForChronotype } from '../../lib/sleep-debt';
 import { resolveStreak, getAvailableFreezes, consumeFreeze } from '../../lib/streak';
 import { useLocalShifts } from '../../lib/local-shifts/store';
@@ -82,6 +88,7 @@ import { SafeToDriveCard } from '../../components/today/SafeToDriveCard';
 import { TodaysFocusCard } from '../../components/today/TodaysFocusCard';
 import { AnchorSleepCard } from '../../components/today/AnchorSleepCard';
 import { SleepDebtCard } from '../../components/today/SleepDebtCard';
+import { WeekInSleepCard } from '../../components/today/WeekInSleepCard';
 import type { FocusArgs } from '../../lib/today-focus';
 import { detectTransitionOpportunity } from '../../lib/transition/generate';
 import * as Haptics from 'expo-haptics';
@@ -151,7 +158,7 @@ export default function Home() {
   };
   // G4: sleep journal — one-tap rating after sleep. Subscribed for live
   // re-render when user taps an emoji button.
-  useSleepJournal();
+  const journal = useSleepJournal();
   const todayRating = ratingForToday();
 
   // TODAY-9: optional hours ledger (separate, free, backward-compatible).
@@ -159,6 +166,13 @@ export default function Home() {
   // premium debt card. `null` = not logged today.
   useSleepHours();
   const todayHours = hoursForToday();
+
+  // TODAY-10: optional reflective "what affected it?" factor tags. Separate,
+  // free, backward-compatible store — multi-select, never touches the rating
+  // journal. Subscribed so toggling a chip re-renders the row + the week card.
+  const factorsMap = useSleepFactors();
+  const todayFactors = factorsForToday();
+
   // Chronotype-adjusted sleep need (hours) — feeds the debt math; defaults to
   // 7.5h when chronotype is unknown.
   const sleepNeed = sleepNeedForChronotype(
@@ -780,7 +794,7 @@ export default function Home() {
 
       {/* G4: Sleep journal — one-tap morning rating + USER-BUG-9 stats reveal */}
       <View ref={journalRef} collapsable={false}>
-      <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.huge }}>
+      <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.md }}>
         <Eyebrow style={{ marginBottom: spacing.sm }}>
           {todayRating ? t('today.journal_logged') : t('today.journal_prompt')}
         </Eyebrow>
@@ -867,10 +881,60 @@ export default function Home() {
             </View>
           </View>
         )}
+        {/* TODAY-10: OPTIONAL reflective "what affected it?" factor tags —
+            appears once a rating is logged, same low-friction pattern as the
+            hours row above. Multi-select toggle into the parallel factor store;
+            never touches the rating journal. Compact one-line chips (CJK-safe
+            via numberOfLines + adjustsFontSizeToFit, mirroring TODAY-9). */}
+        {todayRating && (
+          <View style={styles.factorsCapture}>
+            <Text variant="labelMd" family="body" weight="medium" color="inkMuted" uppercase>
+              {t('today.factors.prompt')}
+            </Text>
+            <View style={styles.factorsRow}>
+              {SLEEP_FACTORS.map((factor) => {
+                const active = todayFactors.includes(factor.id);
+                return (
+                  <Pressable
+                    key={factor.id}
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      toggleSleepFactor(factor.id);
+                    }}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: active }}
+                    accessibilityLabel={t(factor.labelKey)}
+                    style={[
+                      styles.factorChip,
+                      { backgroundColor: active ? colors.primaryContainer : colors.surfaceLow },
+                    ]}
+                  >
+                    <Text
+                      variant="labelMd"
+                      family="body"
+                      weight="medium"
+                      color={active ? 'onPrimaryContainer' : 'inkSubtle'}
+                      align="center"
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.8}
+                    >
+                      {t(factor.labelKey)}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+        )}
+        {/* D3: visible last-7-days dot strip so ratings are tracked at a glance.
+            The numeric weekly tally + trend + adapt score now live in the
+            consolidated "Your week in sleep" card below (TODAY-10) — this strip
+            stays here as the compact in-context glance only, no duplicate
+            tally. */}
         {todayRating && (() => {
           const tally = weeklyTally();
           if (!tally) return null;
-          const trendArrow = tally.trend === 'up' ? '↑' : tally.trend === 'down' ? '↓' : tally.trend === 'flat' ? '→' : '';
           return (
             <Pressable
               onPress={() => router.push('/history')}
@@ -878,7 +942,6 @@ export default function Home() {
               accessibilityRole="button"
               accessibilityLabel={t('today.journal_stats_a11y')}
             >
-              {/* D3: visible last-7-days dot strip so ratings are tracked at a glance */}
               <View style={styles.journalDots}>
                 {recentJournalDays(7).map((d) => (
                   <View
@@ -899,17 +962,19 @@ export default function Home() {
                   />
                 ))}
               </View>
-              <Text variant="bodyMd" color="inkSubtle">
-                {t('today.journal_tally_inline', { good: tally.good, ok: tally.ok, bad: tally.bad })}
-              </Text>
-              <Text variant="bodyMd" color="primary" style={{ marginTop: 2 }}>
-                {trendArrow ? `${trendArrow} ${t(`today.journal_trend_${tally.trend ?? 'flat'}`)} · ${t('today.journal_tap_history')}` : t('today.journal_tap_history')}
-              </Text>
             </Pressable>
           );
         })()}
       </GlassCard>
       </View>
+
+      {/* TODAY-10: "Your week in sleep" — ONE consolidated card. Owns the weekly
+          tally + trend (moved out of the loose journal line above), the adapt
+          score promoted from Profile, and an HONEST factor correlate insight
+          (only when bestCorrelate clears its thin-data guards; calm empty state
+          otherwise). Sits right under the journal so the week summary follows
+          the day's log. */}
+      <WeekInSleepCard ratings={journal.entries} factors={factorsMap.entries} />
 
       {/* TODAY-9: Sleep-debt ledger — turns the optional hours capture above
           into a tracked metric. PREMIUM analysis card (free users get a
@@ -1257,6 +1322,22 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
   },
   hoursChip: {
+    flex: 1,
+    paddingHorizontal: 4,
+    paddingVertical: spacing.sm,
+    borderRadius: radii.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  factorsCapture: {
+    marginTop: spacing.md,
+  },
+  factorsRow: {
+    flexDirection: 'row',
+    gap: spacing.xs,
+    marginTop: spacing.sm,
+  },
+  factorChip: {
     flex: 1,
     paddingHorizontal: 4,
     paddingVertical: spacing.sm,

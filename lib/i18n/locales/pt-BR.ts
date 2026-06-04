@@ -101,6 +101,21 @@ const ptBR = {
     journal_hours_6_7: '6–7 h',
     journal_hours_7_8: '7–8 h',
     journal_hours_8plus: '8 h+',
+    factors: {
+      prompt: 'O QUE INFLUENCIOU? (OPCIONAL)',
+      blackout: 'Quarto escuro',
+      late_caffeine: 'Cafeína tardia',
+      noise: 'Barulho',
+      kids: 'Filhos',
+      wound_down: 'Relaxei antes',
+    },
+    week: {
+      eyebrow: 'SUA SEMANA DE SONO',
+      score_label: 'ADAPT.',
+      empty: 'Registre algumas noites para ver seus padrões.',
+      insight_helps: 'Suas melhores noites costumam ter: {{factor}}',
+      insight_hurts: 'As noites piores costumavam ter: {{factor}}',
+    },
     sleep_debt: {
       eyebrow: 'DÍVIDA DE SONO',
       title: 'Dívida de sono: {{hours}} h · {{severity}}',
