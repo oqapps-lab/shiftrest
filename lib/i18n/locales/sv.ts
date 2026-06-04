@@ -807,6 +807,14 @@ const sv = {
         muted: 'Allt är tystat',
         a11y: 'Huvudaviseringar',
       },
+      rate_sleep: {
+        title: 'Betygsätt nattens sömn',
+        sub: 'En morgonpåminnelse för att logga bra, okej eller tufft — håller din svit vid liv.',
+      },
+      nap_nadir: {
+        title: 'Tupplur på nattskift',
+        sub: 'Bara på nattskiftsdagar — en signal före din pigghetsdipp kl. 3.',
+      },
     },
     subscription: {
       title: 'Prenumeration',
@@ -869,6 +877,8 @@ const sv = {
     bed_time_reminder: 'Påminnelse om läggdags',
     caffeine_cutoff_reminder: 'Påminnelse om koffeinstopp',
     melatonin_reminder: 'Påminnelse om melatonin',
+    rate_sleep_reminder: 'Påminnelse om att betygsätta nattens sömn',
+    nap_nadir_reminder: 'Påminnelse om tupplur på nattskift',
     commute_time_minutes: 'Restid i minuter',
     cups_per_day: 'Koppar per dag',
     take_melatonin: 'Ta melatonin',
@@ -890,6 +900,11 @@ const sv = {
     caffeine_body: 'Koffeinstopp nu. Byt till örtte eller vatten.',
     melatonin_title: 'Melatonin',
     melatonin_body: 'Dags för din melatonindos.',
+    rate_sleep_title: 'Hur sov du?',
+    rate_sleep_body: 'Tryck för att logga natten — bra, okej eller tufft. Håll din svit igång.',
+    rate_sleep_body_named: '{{name}}, hur var natten? Logga bra, okej eller tufft för att hålla din svit.',
+    nap_nadir_title: 'Tupplursfönster öppnas',
+    nap_nadir_body: 'Din pigghet sjunker snart — en 20-minuters tupplur nu hjälper hemfärden.',
   },
   errors: {
     apple_ios_only: 'Logga in med Apple finns bara på iOS.',

@@ -807,6 +807,14 @@ const ja = {
         muted: "すべてミュート中です",
         a11y: "通知のメインスイッチ",
       },
+      rate_sleep: {
+        title: '昨夜の睡眠を評価',
+        sub: '良い・普通・つらいを記録する朝のお知らせ — 連続記録を維持します。',
+      },
+      nap_nadir: {
+        title: '夜勤の仮眠',
+        sub: '夜勤の日だけ — 午前3時の眠気の谷の前にお知らせします。',
+      },
     },
     subscription: {
       title: "サブスクリプション",
@@ -869,6 +877,8 @@ const ja = {
     bed_time_reminder: '就寝時間のリマインダー',
     caffeine_cutoff_reminder: 'カフェイン終了のリマインダー',
     melatonin_reminder: 'メラトニンのリマインダー',
+    rate_sleep_reminder: '昨夜の睡眠を評価するリマインダー',
+    nap_nadir_reminder: '夜勤の仮眠リマインダー',
     commute_time_minutes: '通勤時間（分）',
     cups_per_day: '1日あたりのカップ数',
     take_melatonin: 'メラトニンを服用する',
@@ -890,6 +900,11 @@ const ja = {
     caffeine_body: 'カフェイン終了の時間です。ハーブティーか水に切り替えましょう。',
     melatonin_title: 'メラトニン',
     melatonin_body: 'メラトニンを服用する時間です。',
+    rate_sleep_title: 'よく眠れましたか？',
+    rate_sleep_body: 'タップして昨夜を記録 — 良い・普通・つらい。連続記録を続けましょう。',
+    rate_sleep_body_named: '{{name}}さん、昨夜はどうでしたか？良い・普通・つらいを記録して連続記録を維持しましょう。',
+    nap_nadir_title: '仮眠の時間です',
+    nap_nadir_body: 'まもなく眠気が高まります — 今20分の仮眠をとると帰りの運転が楽になります。',
   },
   errors: {
     apple_ios_only: 'Appleでサインインは iOS でのみご利用いただけます。',

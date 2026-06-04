@@ -836,6 +836,14 @@ const deDE = {
         muted: 'Alles ist stummgeschaltet',
         a11y: 'Hauptbenachrichtigungen',
       },
+      rate_sleep: {
+        title: 'Letzte Nacht bewerten',
+        sub: 'Ein Morgen-Hinweis: gut, ok oder schlecht festhalten — hält deine Serie am Leben.',
+      },
+      nap_nadir: {
+        title: 'Nickerchen im Nachtdienst',
+        sub: 'Nur an Nachtdienst-Tagen — ein Hinweis vor deinem Leistungstief um 3 Uhr.',
+      },
     },
     subscription: {
       title: 'Abonnement',
@@ -898,6 +906,8 @@ const deDE = {
     bed_time_reminder: 'Schlafenszeit-Erinnerung',
     caffeine_cutoff_reminder: 'Koffein-Stopp-Erinnerung',
     melatonin_reminder: 'Melatonin-Erinnerung',
+    rate_sleep_reminder: 'Erinnerung: letzte Nacht bewerten',
+    nap_nadir_reminder: 'Erinnerung: Nickerchen im Nachtdienst',
     commute_time_minutes: 'Pendelzeit in Minuten',
     cups_per_day: 'Tassen pro Tag',
     take_melatonin: 'Melatonin einnehmen',
@@ -919,6 +929,11 @@ const deDE = {
     caffeine_body: 'Koffein-Stopp ist jetzt. Wechsle zu Kräutertee oder Wasser.',
     melatonin_title: 'Melatonin',
     melatonin_body: 'Zeit für deine Melatonin-Dosis.',
+    rate_sleep_title: 'Wie hast du geschlafen?',
+    rate_sleep_body: 'Tippe, um die letzte Nacht festzuhalten — gut, ok oder schlecht. Halte deine Serie.',
+    rate_sleep_body_named: '{{name}}, wie war die letzte Nacht? Gut, ok oder schlecht festhalten, um deine Serie zu halten.',
+    nap_nadir_title: 'Nickerchen-Fenster öffnet sich',
+    nap_nadir_body: 'Deine Wachheit sinkt bald — ein 20-Minuten-Nickerchen hilft jetzt für die Heimfahrt.',
   },
   errors: {
     apple_ios_only: 'Mit Apple anmelden ist nur unter iOS verfügbar.',

@@ -808,6 +808,14 @@ const nlNL = {
         muted: 'Alles staat op stil',
         a11y: 'Hoofdmeldingen',
       },
+      rate_sleep: {
+        title: 'Beoordeel afgelopen nacht',
+        sub: 'Een ochtendherinnering om goed, oké of zwaar te loggen — houdt je reeks in leven.',
+      },
+      nap_nadir: {
+        title: 'Dutje in nachtdienst',
+        sub: 'Alleen op nachtdienstdagen — een seintje vóór je alertheidsdip om 3 uur.',
+      },
     },
     subscription: {
       title: 'Abonnement',
@@ -870,6 +878,8 @@ const nlNL = {
     bed_time_reminder: 'Herinnering bedtijd',
     caffeine_cutoff_reminder: 'Herinnering cafeïnestop',
     melatonin_reminder: 'Herinnering melatonine',
+    rate_sleep_reminder: 'Herinnering om afgelopen nacht te beoordelen',
+    nap_nadir_reminder: 'Herinnering voor dutje in nachtdienst',
     commute_time_minutes: 'Reistijd in minuten',
     cups_per_day: 'Koppen per dag',
     take_melatonin: 'Melatonine innemen',
@@ -891,6 +901,11 @@ const nlNL = {
     caffeine_body: 'Cafeïnegrens is nu. Schakel over op kruidenthee of water.',
     melatonin_title: 'Melatonine',
     melatonin_body: 'Tijd voor je melatoninedosis.',
+    rate_sleep_title: 'Hoe heb je geslapen?',
+    rate_sleep_body: 'Tik om afgelopen nacht te loggen — goed, oké of zwaar. Houd je reeks vol.',
+    rate_sleep_body_named: '{{name}}, hoe was de nacht? Log goed, oké of zwaar om je reeks vol te houden.',
+    nap_nadir_title: 'Dutjevenster opent',
+    nap_nadir_body: 'Je alertheid daalt straks — een dutje van 20 min helpt nu voor de rit naar huis.',
   },
   errors: {
     apple_ios_only: 'Inloggen met Apple is alleen op iOS beschikbaar.',

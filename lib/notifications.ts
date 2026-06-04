@@ -36,6 +36,11 @@ export interface NotifPrefs {
   bedReminderLead: LeadMinutes;
   caffeineReminder: boolean;
   melatoninReminder: boolean;
+  // TODAY-5: two new plan-timed re-engagement reminders.
+  /** Morning nudge after the sleep window ends → rate last night → streak. */
+  rateSleepReminder: boolean;
+  /** Tactical nap ~30 min before the night-shift circadian nadir (02:30). */
+  napNadirReminder: boolean;
 }
 
 export interface PlanTimes {
@@ -43,6 +48,21 @@ export interface PlanTimes {
   sleep_start: string | null;
   caffeine_cutoff: string | null;
   melatonin_at: string | null;
+  // TODAY-5 additions — sourced from the SAME live/suggested plan the Today
+  // cards use, so the new reminders fire at the user's real moments.
+  /** "HH:MM" — end of the sleep window; the rate-sleep nudge fires after it. */
+  sleep_end?: string | null;
+  /** Current shift type — gates the night-nadir nap to night-shift days. */
+  current_shift?: 'day' | 'night' | 'off';
+}
+
+/**
+ * Optional personalization. When a display name is present the rate-sleep
+ * body greets the user by first name; otherwise it falls back to the generic
+ * copy. Kept separate from PlanTimes so callers may omit it entirely.
+ */
+export interface NotifPersonalization {
+  firstName?: string | null;
 }
 
 // ─── Permission ─────────────────────────────────────────────────────────────
@@ -129,6 +149,38 @@ function shiftMinutes(time: { hour: number; minute: number }, deltaMin: number):
   return { hour: Math.floor(wrapped / 60), minute: wrapped % 60 };
 }
 
+/**
+ * TODAY-5 — fire time for the night-shift circadian nadir nap reminder.
+ *
+ * The nadir (peak error-risk / lowest alertness) is 02:30–05:00 on a night
+ * shift — the same window today-phase.ts surfaces as `night_nadir`. We nudge
+ * the user `leadMin` minutes BEFORE the nadir's 02:30 onset so a 20-minute
+ * power nap lands before alertness bottoms out, ahead of the drive home.
+ *
+ * Pure + deterministic (no I/O) so it can be unit-tested. Returns
+ * { hour, minute } in 24h local time; lead can wrap past midnight.
+ */
+export const NADIR_ONSET = { hour: 2, minute: 30 } as const;
+
+export function nadirNapFireTime(leadMin = 30): { hour: number; minute: number } {
+  return shiftMinutes(NADIR_ONSET, leadMin);
+}
+
+/**
+ * TODAY-5 — fire time for the "rate last night's sleep" morning nudge.
+ *
+ * Fires `delayMin` minutes AFTER the user's sleep window ends, so the prompt
+ * reaches them once they're actually up (a day worker waking 07:00, a night
+ * worker waking 17:00). Pure; wraps across midnight.
+ */
+export function rateSleepFireTime(
+  sleepEnd: { hour: number; minute: number },
+  delayMin = 15,
+): { hour: number; minute: number } {
+  // shiftMinutes SUBTRACTS its delta; pass a negative to push later.
+  return shiftMinutes(sleepEnd, -delayMin);
+}
+
 // ─── Schedule ──────────────────────────────────────────────────────────────
 
 export interface ScheduleResult {
@@ -144,6 +196,7 @@ export interface ScheduleResult {
 export async function rescheduleNotifications(
   prefs: NotifPrefs,
   plan: PlanTimes,
+  personal: NotifPersonalization = {},
 ): Promise<ScheduleResult> {
   ensureHandler();
 
@@ -225,6 +278,56 @@ export async function rescheduleNotifications(
       });
       newIds.push(id);
     }
+  }
+
+  // ── TODAY-5: "Rate last night's sleep" morning nudge ──────────────────
+  // Fires shortly AFTER the sleep window ends, prompting the user to log
+  // good/ok/rough → feeds the streak. Personalised with the first name when
+  // we have one. Runs on every day type (the sleep window always ends).
+  if (prefs.rateSleepReminder && plan.sleep_end) {
+    const endTime = parseHourMinute(plan.sleep_end);
+    if (endTime) {
+      const fireTime = rateSleepFireTime(endTime);
+      const name = personal.firstName?.trim();
+      const id = await Notifications.scheduleNotificationAsync({
+        content: {
+          title: t('push_notif.rate_sleep_title'),
+          body: name
+            ? t('push_notif.rate_sleep_body_named', { name })
+            : t('push_notif.rate_sleep_body'),
+          sound: 'default',
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.DAILY,
+          hour: fireTime.hour,
+          minute: fireTime.minute,
+        },
+      });
+      newIds.push(id);
+    }
+  }
+
+  // ── TODAY-5: Night-nadir tactical nap ─────────────────────────────────
+  // ONLY on night-shift days: fires ~30 min before the 02:30 circadian
+  // nadir so a 20-min power nap lands before alertness bottoms out, ahead
+  // of the drive home. (DAILY trigger; the night-shift gate is re-applied
+  // on every plan/shift change via rescheduleNotifications, which cancels
+  // and rebuilds — so off-day/day-shift never carries a stale nap push.)
+  if (prefs.napNadirReminder && plan.current_shift === 'night') {
+    const fireTime = nadirNapFireTime();
+    const id = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: t('push_notif.nap_nadir_title'),
+        body: t('push_notif.nap_nadir_body'),
+        sound: 'default',
+      },
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.DAILY,
+        hour: fireTime.hour,
+        minute: fireTime.minute,
+      },
+    });
+    newIds.push(id);
   }
 
   await saveTrackedIds(newIds);

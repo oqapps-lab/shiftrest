@@ -807,6 +807,14 @@ const itIT = {
         muted: "È tutto silenziato",
         a11y: "Notifiche generali",
       },
+      rate_sleep: {
+        title: 'Valuta la notte scorsa',
+        sub: 'Un promemoria mattutino per segnare bene, ok o difficile — tiene viva la tua serie.',
+      },
+      nap_nadir: {
+        title: 'Pisolino nel turno di notte',
+        sub: 'Solo nei giorni di turno notturno — un avviso prima del calo di vigilanza delle 3.',
+      },
     },
     subscription: {
       title: "Abbonamento",
@@ -869,6 +877,8 @@ const itIT = {
     bed_time_reminder: 'Promemoria ora di andare a letto',
     caffeine_cutoff_reminder: 'Promemoria stop caffeina',
     melatonin_reminder: 'Promemoria melatonina',
+    rate_sleep_reminder: 'Promemoria per valutare la notte scorsa',
+    nap_nadir_reminder: 'Promemoria pisolino nel turno di notte',
     commute_time_minutes: 'Tempo di tragitto in minuti',
     cups_per_day: 'Tazze al giorno',
     take_melatonin: 'Prendi la melatonina',
@@ -890,6 +900,11 @@ const itIT = {
     caffeine_body: 'Stop alla caffeina ora. Passa a una tisana o ad acqua.',
     melatonin_title: 'Melatonina',
     melatonin_body: 'È ora della tua dose di melatonina.',
+    rate_sleep_title: 'Come hai dormito?',
+    rate_sleep_body: 'Tocca per segnare la notte scorsa — bene, ok o difficile. Mantieni la tua serie.',
+    rate_sleep_body_named: '{{name}}, com’è stata la notte? Segna bene, ok o difficile per mantenere la serie.',
+    nap_nadir_title: 'Finestra del pisolino',
+    nap_nadir_body: 'La tua vigilanza calerà presto — un pisolino di 20 min ora aiuta nel viaggio a casa.',
   },
   errors: {
     apple_ios_only: 'L’accesso con Apple è disponibile solo su iOS.',

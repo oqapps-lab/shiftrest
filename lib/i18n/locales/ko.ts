@@ -807,6 +807,14 @@ const ko = {
         muted: "전부 무음으로 설정돼 있어요",
         a11y: "알림 마스터 스위치",
       },
+      rate_sleep: {
+        title: '어젯밤 수면 평가',
+        sub: '좋음·보통·힘듦을 기록하는 아침 알림 — 연속 기록을 유지합니다.',
+      },
+      nap_nadir: {
+        title: '야간 근무 낮잠',
+        sub: '야간 근무 날에만 — 오전 3시 각성도 저하 전에 알려드려요.',
+      },
     },
     subscription: {
       title: "구독",
@@ -869,6 +877,8 @@ const ko = {
     bed_time_reminder: '취침 시간 알림',
     caffeine_cutoff_reminder: '카페인 중단 알림',
     melatonin_reminder: '멜라토닌 알림',
+    rate_sleep_reminder: '어젯밤 수면 평가 알림',
+    nap_nadir_reminder: '야간 근무 낮잠 알림',
     commute_time_minutes: '통근 시간(분)',
     cups_per_day: '하루 컵 수',
     take_melatonin: '멜라토닌 복용',
@@ -890,6 +900,11 @@ const ko = {
     caffeine_body: '지금이 카페인 마지막 시간이에요. 허브차나 물로 바꿔 보세요.',
     melatonin_title: '멜라토닌',
     melatonin_body: '멜라토닌을 복용할 시간이에요.',
+    rate_sleep_title: '잘 주무셨나요?',
+    rate_sleep_body: '탭하여 어젯밤을 기록하세요 — 좋음, 보통, 힘듦. 연속 기록을 이어가세요.',
+    rate_sleep_body_named: '{{name}}님, 어젯밤은 어땠나요? 좋음·보통·힘듦을 기록해 연속 기록을 유지하세요.',
+    nap_nadir_title: '낮잠 시간이 다가와요',
+    nap_nadir_body: '곧 각성도가 떨어져요 — 지금 20분 낮잠이 귀가 운전에 도움이 됩니다.',
   },
   errors: {
     apple_ios_only: 'Apple로 로그인은 iOS에서만 사용할 수 있어요.',

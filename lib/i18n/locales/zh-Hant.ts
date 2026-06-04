@@ -806,6 +806,14 @@ const zhHant = {
         muted: "全部都已靜音",
         a11y: "通知總開關",
       },
+      rate_sleep: {
+        title: '為昨晚的睡眠評分',
+        sub: '早晨提醒你記錄好、普通或糟 — 讓你的連續紀錄保持下去。',
+      },
+      nap_nadir: {
+        title: '夜班小睡',
+        sub: '僅在夜班日 — 在凌晨 3 點警覺度低谷前提醒你。',
+      },
     },
     subscription: {
       title: "訂閱",
@@ -868,6 +876,8 @@ const zhHant = {
     bed_time_reminder: '就寢時間提醒',
     caffeine_cutoff_reminder: '咖啡因停止時間提醒',
     melatonin_reminder: '褪黑激素提醒',
+    rate_sleep_reminder: '為昨晚睡眠評分的提醒',
+    nap_nadir_reminder: '夜班小睡提醒',
     commute_time_minutes: '通勤時間（分鐘）',
     cups_per_day: '每日杯數',
     take_melatonin: '服用褪黑激素',
@@ -889,6 +899,11 @@ const zhHant = {
     caffeine_body: '咖啡因停飲時間到了，改喝花草茶或開水。',
     melatonin_title: '褪黑激素',
     melatonin_body: '該服用褪黑激素了。',
+    rate_sleep_title: '昨晚睡得好嗎？',
+    rate_sleep_body: '點擊記錄昨晚 — 好、普通或糟。保持你的連續紀錄。',
+    rate_sleep_body_named: '{{name}}，昨晚如何？記錄好、普通或糟以保持連續紀錄。',
+    nap_nadir_title: '小睡時段開始',
+    nap_nadir_body: '你的警覺度即將下降 — 現在小睡 20 分鐘有助於開車回家。',
   },
   errors: {
     apple_ios_only: '以 Apple 登入僅支援 iOS。',

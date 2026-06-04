@@ -808,6 +808,14 @@ const frFR = {
         muted: 'Tout est en silencieux',
         a11y: 'Notifications générales',
       },
+      rate_sleep: {
+        title: 'Noter la nuit dernière',
+        sub: 'Un rappel du matin pour noter bien, correct ou difficile — garde ta série en vie.',
+      },
+      nap_nadir: {
+        title: 'Sieste en poste de nuit',
+        sub: 'Seulement les jours de nuit — un rappel avant ta baisse de vigilance de 3 h.',
+      },
     },
     subscription: {
       title: 'Abonnement',
@@ -870,6 +878,8 @@ const frFR = {
     bed_time_reminder: 'Rappel d’heure de coucher',
     caffeine_cutoff_reminder: 'Rappel d’arrêt de la caféine',
     melatonin_reminder: 'Rappel de mélatonine',
+    rate_sleep_reminder: 'Rappel pour noter la nuit dernière',
+    nap_nadir_reminder: 'Rappel de sieste en poste de nuit',
     commute_time_minutes: 'Temps de trajet en minutes',
     cups_per_day: 'Tasses par jour',
     take_melatonin: 'Prendre de la mélatonine',
@@ -891,6 +901,11 @@ const frFR = {
     caffeine_body: 'Stop caféine maintenant. Passe à une tisane ou à l’eau.',
     melatonin_title: 'Mélatonine',
     melatonin_body: 'C’est l’heure de ta dose de mélatonine.',
+    rate_sleep_title: 'Comment as-tu dormi ?',
+    rate_sleep_body: 'Touche pour noter la nuit dernière — bien, correct ou difficile. Garde ta série.',
+    rate_sleep_body_named: '{{name}}, comment était la nuit ? Note bien, correct ou difficile pour garder ta série.',
+    nap_nadir_title: 'Fenêtre de sieste',
+    nap_nadir_body: 'Ta vigilance va baisser — une sieste de 20 min t’aide pour le trajet du retour.',
   },
   errors: {
     apple_ios_only: 'La connexion avec Apple est réservée à iOS.',

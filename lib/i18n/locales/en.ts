@@ -1146,6 +1146,14 @@ const en = {
         muted: "Everything is muted",
         a11y: "Master notifications",
       },
+      rate_sleep: {
+        title: "Rate last night's sleep",
+        sub: "A morning nudge to log good, ok, or rough — keeps your streak alive.",
+      },
+      nap_nadir: {
+        title: "Night-shift nap",
+        sub: "Only on night-shift days — a heads-up before your 3 AM alertness dip.",
+      },
     },
     subscription: {
       title: "Subscription",
@@ -1397,6 +1405,8 @@ const en = {
     bed_time_reminder: 'Bed time reminder',
     caffeine_cutoff_reminder: 'Caffeine cutoff reminder',
     melatonin_reminder: 'Melatonin reminder',
+    rate_sleep_reminder: 'Rate last night’s sleep reminder',
+    nap_nadir_reminder: 'Night-shift nap reminder',
     commute_time_minutes: 'Commute time in minutes',
     cups_per_day: 'Cups per day',
     take_melatonin: 'Take melatonin',
@@ -1418,6 +1428,11 @@ const en = {
     caffeine_body: 'Caffeine cutoff is now. Switch to herbal tea or water.',
     melatonin_title: 'Melatonin',
     melatonin_body: 'Time for your melatonin dose.',
+    rate_sleep_title: 'How did you sleep?',
+    rate_sleep_body: 'Tap to log last night — good, ok, or rough. Keep your streak going.',
+    rate_sleep_body_named: '{{name}}, how was last night? Log good, ok, or rough to keep your streak.',
+    nap_nadir_title: 'Nap window opening',
+    nap_nadir_body: 'Your alertness dips soon — a 20-min nap now helps the drive home.',
   },
   errors: {
     apple_ios_only: 'Sign in with Apple is iOS only.',

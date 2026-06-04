@@ -807,6 +807,14 @@ const ptBR = {
         muted: "Está tudo no mudo",
         a11y: "Notificações gerais",
       },
+      rate_sleep: {
+        title: 'Avalie a noite passada',
+        sub: 'Um lembrete matinal para registrar bem, ok ou difícil — mantém sua sequência viva.',
+      },
+      nap_nadir: {
+        title: 'Cochilo no turno da noite',
+        sub: 'Só nos dias de turno noturno — um aviso antes da sua queda de alerta das 3h.',
+      },
     },
     subscription: {
       title: "Assinatura",
@@ -869,6 +877,8 @@ const ptBR = {
     bed_time_reminder: 'Lembrete de hora de dormir',
     caffeine_cutoff_reminder: 'Lembrete de corte de cafeína',
     melatonin_reminder: 'Lembrete de melatonina',
+    rate_sleep_reminder: 'Lembrete para avaliar a noite passada',
+    nap_nadir_reminder: 'Lembrete de cochilo no turno da noite',
     commute_time_minutes: 'Tempo de deslocamento em minutos',
     cups_per_day: 'Xícaras por dia',
     take_melatonin: 'Tomar melatonina',
@@ -890,6 +900,11 @@ const ptBR = {
     caffeine_body: 'Limite de cafeína é agora. Troque por chá de ervas ou água.',
     melatonin_title: 'Melatonina',
     melatonin_body: 'Hora da sua dose de melatonina.',
+    rate_sleep_title: 'Como você dormiu?',
+    rate_sleep_body: 'Toque para registrar a noite passada — bem, ok ou difícil. Mantenha sua sequência.',
+    rate_sleep_body_named: '{{name}}, como foi a noite? Registre bem, ok ou difícil para manter sua sequência.',
+    nap_nadir_title: 'Janela de cochilo abrindo',
+    nap_nadir_body: 'Seu alerta vai cair logo — um cochilo de 20 min agora ajuda na volta para casa.',
   },
   errors: {
     apple_ios_only: 'Entrar com Apple só está disponível no iOS.',

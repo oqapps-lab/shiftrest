@@ -808,6 +808,14 @@ const esES = {
         muted: 'Todo está silenciado',
         a11y: 'Notificaciones generales',
       },
+      rate_sleep: {
+        title: 'Valora la noche pasada',
+        sub: 'Un aviso matutino para registrar bien, regular o mal — mantiene viva tu racha.',
+      },
+      nap_nadir: {
+        title: 'Siesta en turno de noche',
+        sub: 'Solo en días de turno nocturno — un aviso antes de tu bajón de alerta de las 3.',
+      },
     },
     subscription: {
       title: 'Suscripción',
@@ -870,6 +878,8 @@ const esES = {
     bed_time_reminder: 'Recordatorio de hora de dormir',
     caffeine_cutoff_reminder: 'Recordatorio de corte de cafeína',
     melatonin_reminder: 'Recordatorio de melatonina',
+    rate_sleep_reminder: 'Recordatorio para valorar la noche pasada',
+    nap_nadir_reminder: 'Recordatorio de siesta en turno de noche',
     commute_time_minutes: 'Tiempo de viaje en minutos',
     cups_per_day: 'Tazas por día',
     take_melatonin: 'Tomar melatonina',
@@ -891,6 +901,11 @@ const esES = {
     caffeine_body: 'El corte de cafeína es ahora. Cambia a infusión o agua.',
     melatonin_title: 'Melatonina',
     melatonin_body: 'Hora de tu dosis de melatonina.',
+    rate_sleep_title: '¿Cómo dormiste?',
+    rate_sleep_body: 'Toca para registrar la noche pasada — bien, regular o mal. Mantén tu racha.',
+    rate_sleep_body_named: '{{name}}, ¿qué tal la noche? Registra bien, regular o mal para mantener tu racha.',
+    nap_nadir_title: 'Se abre la ventana de siesta',
+    nap_nadir_body: 'Tu alerta bajará pronto — una siesta de 20 min ahora ayuda en el viaje a casa.',
   },
   errors: {
     apple_ios_only: 'Iniciar sesión con Apple solo está disponible en iOS.',
