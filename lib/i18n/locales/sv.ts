@@ -76,6 +76,11 @@ const sv = {
     transition_subtitle: '{{from}} → {{to}}, {{done}} av {{total}} steg idag',
     now_hero_full: "Sömnfönster {{sleep}} · sista kaffet {{caffeine}}",
     now_hero_sleep: "Sömnfönster {{sleep}}",
+    anchor_sleep: {
+      eyebrow: 'ANKARSÖMN',
+      title: 'Skydda {{window}} varje dag',
+      why: 'Vid roterande skift håller ett fast sömnblock din inre klocka från att glida helt.',
+    },
     shift_label: 'PASS IDAG',
     plan_transition_eyebrow: "PLANERA FRAMÅT",
     plan_transition_title: 'Planera ett skiftbyte',

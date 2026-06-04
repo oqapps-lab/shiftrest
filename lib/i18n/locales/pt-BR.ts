@@ -76,6 +76,11 @@ const ptBR = {
     transition_subtitle: "{{from}} → {{to}}, {{done}} de {{total}} passos hoje",
     now_hero_full: "Janela de sono {{sleep}} · último café às {{caffeine}}",
     now_hero_sleep: "Janela de sono {{sleep}}",
+    anchor_sleep: {
+      eyebrow: 'SONO ÂNCORA',
+      title: 'Proteja {{window}} todos os dias',
+      why: 'Em escala rotativa, um bloco de sono fixo impede que seu relógio biológico desregule por completo.',
+    },
     shift_label: 'TURNO DE HOJE',
     plan_transition_eyebrow: "PLANEJE",
     plan_transition_title: 'Planejar uma troca de turno',

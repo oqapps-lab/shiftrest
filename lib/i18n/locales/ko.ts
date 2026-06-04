@@ -76,6 +76,11 @@ const ko = {
     transition_subtitle: "{{from}} → {{to}}, 오늘 {{total}}단계 중 {{done}}단계 완료",
     now_hero_full: "수면 시간 {{sleep}} · 카페인은 {{caffeine}}까지",
     now_hero_sleep: "수면 시간 {{sleep}}",
+    anchor_sleep: {
+      eyebrow: '앵커 수면',
+      title: '매일 {{window}} 지키기',
+      why: '교대 근무에서는 고정된 수면 블록 하나가 생체 시계가 완전히 어긋나는 것을 막아줍니다.',
+    },
     shift_label: '오늘 근무',
     plan_transition_eyebrow: "미리 계획하기",
     plan_transition_title: '근무 전환 계획',

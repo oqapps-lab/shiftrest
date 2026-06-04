@@ -76,6 +76,11 @@ const ja = {
     transition_subtitle: "{{from}} → {{to}}、本日のステップ {{done}}/{{total}}",
     now_hero_full: "睡眠の時間 {{sleep}}・カフェインは {{caffeine}} まで",
     now_hero_sleep: "睡眠の時間 {{sleep}}",
+    anchor_sleep: {
+      eyebrow: 'アンカー睡眠',
+      title: '毎日 {{window}} を確保',
+      why: 'ローテーション勤務では、固定した睡眠ブロックが体内時計の大きなズレを防ぎます。',
+    },
     shift_label: '今日のシフト',
     plan_transition_eyebrow: "先を見越して",
     plan_transition_title: 'シフト移行を計画',

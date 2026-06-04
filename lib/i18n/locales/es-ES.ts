@@ -77,6 +77,11 @@ const esES = {
     transition_subtitle: '{{from}} → {{to}}, {{done}} de {{total}} pasos hoy',
     now_hero_full: "Ventana de sueño {{sleep}} · último café a las {{caffeine}}",
     now_hero_sleep: "Ventana de sueño {{sleep}}",
+    anchor_sleep: {
+      eyebrow: 'SUEÑO ANCLA',
+      title: 'Protege {{window}} cada día',
+      why: 'En un turno rotativo, un bloque de sueño fijo evita que tu reloj corporal se desajuste por completo.',
+    },
     shift_label: 'TURNO DE HOY',
     plan_transition_eyebrow: "PLANIFICA",
     plan_transition_title: 'Planificar un cambio de turno',

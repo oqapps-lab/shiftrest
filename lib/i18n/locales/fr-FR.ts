@@ -77,6 +77,11 @@ const frFR = {
     transition_subtitle: '{{from}} → {{to}}, {{done}} sur {{total}} étapes aujourd’hui',
     now_hero_full: "Fenêtre de sommeil {{sleep}} · dernier café avant {{caffeine}}",
     now_hero_sleep: "Fenêtre de sommeil {{sleep}}",
+    anchor_sleep: {
+      eyebrow: 'SOMMEIL ANCRE',
+      title: 'Protégez {{window}} chaque jour',
+      why: "En rotation, un bloc de sommeil fixe empêche votre horloge biologique de dériver complètement.",
+    },
     shift_label: 'GARDE D’AUJOURD’HUI',
     plan_transition_eyebrow: "ANTICIPER",
     plan_transition_title: 'Planifier un changement de garde',

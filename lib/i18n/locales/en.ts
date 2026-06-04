@@ -74,6 +74,11 @@ const en = {
     },
     now_hero_full: "Sleep window {{sleep}} · last coffee by {{caffeine}}",
     now_hero_sleep: "Sleep window {{sleep}}",
+    anchor_sleep: {
+      eyebrow: 'ANCHOR SLEEP',
+      title: 'Protect {{window}} every day',
+      why: 'On a rotating schedule, one fixed sleep block keeps your body clock from fully drifting.',
+    },
     shift_label: "TODAY'S SHIFT",
     section_24h: 'YOUR 24 HOURS',
     section_next: 'NEXT',

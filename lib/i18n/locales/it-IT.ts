@@ -76,6 +76,11 @@ const itIT = {
     transition_subtitle: "{{from}} → {{to}}, {{done}} di {{total}} passi oggi",
     now_hero_full: "Finestra del sonno {{sleep}} · ultimo caffè entro le {{caffeine}}",
     now_hero_sleep: "Finestra del sonno {{sleep}}",
+    anchor_sleep: {
+      eyebrow: 'SONNO ANCORA',
+      title: 'Proteggi {{window}} ogni giorno',
+      why: 'Con turni a rotazione, un blocco di sonno fisso evita che il tuo orologio biologico si sposti del tutto.',
+    },
     shift_label: 'TURNO DI OGGI',
     plan_transition_eyebrow: "PIANIFICA",
     plan_transition_title: 'Pianifica un cambio turno',

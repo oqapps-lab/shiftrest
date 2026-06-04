@@ -77,6 +77,11 @@ const deDE = {
     transition_subtitle: '{{from}} → {{to}}, {{done}} von {{total}} Schritten heute',
     now_hero_full: "Schlaffenster {{sleep}} · letzter Kaffee bis {{caffeine}}",
     now_hero_sleep: "Schlaffenster {{sleep}}",
+    anchor_sleep: {
+      eyebrow: 'ANKERSCHLAF',
+      title: 'Schütze täglich {{window}}',
+      why: 'Bei rotierenden Schichten hält ein fester Schlafblock deine innere Uhr davon ab, völlig zu verrutschen.',
+    },
     shift_label: 'SCHICHT HEUTE',
     plan_transition_eyebrow: "VORAUSPLANEN",
     plan_transition_detected_eyebrow: "SCHICHTWECHSEL ERKANNT",

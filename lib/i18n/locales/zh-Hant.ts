@@ -76,6 +76,11 @@ const zhHant = {
     transition_subtitle: "{{from}} → {{to}},今日已完成 {{done}} / {{total}} 步",
     now_hero_full: "睡眠時段 {{sleep}}・咖啡因最晚 {{caffeine}}",
     now_hero_sleep: "睡眠時段 {{sleep}}",
+    anchor_sleep: {
+      eyebrow: '錨定睡眠',
+      title: '每天守住 {{window}}',
+      why: '輪班時，固定一段睡眠能讓你的生理時鐘不至於完全偏移。',
+    },
     shift_label: '今日班次',
     plan_transition_eyebrow: "提前規劃",
     plan_transition_title: '規畫班次過渡',

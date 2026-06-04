@@ -74,6 +74,7 @@ import { TipsCarousel } from '../../components/library/TipsCarousel';
 import { DailyInsightCard } from '../../components/today/DailyInsightCard';
 import { SafeToDriveCard } from '../../components/today/SafeToDriveCard';
 import { TodaysFocusCard } from '../../components/today/TodaysFocusCard';
+import { AnchorSleepCard } from '../../components/today/AnchorSleepCard';
 import type { FocusArgs } from '../../lib/today-focus';
 import { detectTransitionOpportunity } from '../../lib/transition/generate';
 import * as Haptics from 'expo-haptics';
@@ -728,6 +729,13 @@ export default function Home() {
           {nowHeroText}
         </Text>
       </View>
+
+      {/* TODAY-8: Anchor Sleep — surfaces the existing fast-rotation anchor
+          block (Plan tab's anchorSleepWindow) on Today. Self-gates: renders
+          ONLY for fast-rotating schedules (3x12/24-48/48-96/continental/custom),
+          nothing for a steady day/night worker. Grouped with the sleep-window
+          glance above so the one fixed block to protect sits with sleep. */}
+      <AnchorSleepCard scheduleId={onboarding.scheduleId} />
 
       {/* A9: Where you are today — daily state card, moved out of Settings */}
       <View ref={shiftRef} collapsable={false}>

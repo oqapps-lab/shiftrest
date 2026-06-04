@@ -77,6 +77,11 @@ const nlNL = {
     transition_subtitle: '{{from}} → {{to}}, {{done}} van {{total}} stappen vandaag',
     now_hero_full: "Slaapvenster {{sleep}} · laatste koffie om {{caffeine}}",
     now_hero_sleep: "Slaapvenster {{sleep}}",
+    anchor_sleep: {
+      eyebrow: 'ANKERSLAAP',
+      title: 'Bescherm {{window}} elke dag',
+      why: 'Bij wisseldiensten houdt één vast slaapblok je biologische klok ervan af volledig te verschuiven.',
+    },
     shift_label: 'DIENST VANDAAG',
     plan_transition_eyebrow: "VOORUIT PLANNEN",
     plan_transition_title: 'Een dienstwissel plannen',
