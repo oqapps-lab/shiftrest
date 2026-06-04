@@ -539,50 +539,66 @@ export default function Home() {
         <View style={{ flex: 1 }}>
           <Eyebrow>{displayName ? `${getGreeting(nowHour, onboarding.currentShift)}, ${displayName}` : getGreeting(nowHour, onboarding.currentShift)}</Eyebrow>
         </View>
-        {streakValue > 0 && (
+        {streakValue > 0 && !streakNeedsLog && !streakAtRisk && (
           <Pressable
             onPress={() => router.push('/(tabs)/profile')}
             accessibilityRole="button"
-            accessibilityLabel={
-              streakAtRisk
-                ? t('streak.at_risk', { n: streakValue })
-                : streakNeedsLog
-                  ? t('streak.keep', { n: streakValue })
-                  : t('a11y.view_streak')
-            }
+            accessibilityLabel={t('a11y.view_streak')}
             hitSlop={8}
-            style={[styles.streak, streakAtRisk && styles.streakAtRisk]}
+            style={styles.streak}
           >
-            <Glyph
-              name="flame"
-              size={16}
-              color={streakAtRisk ? 'coralDim' : 'sunriseDim'}
-            />
+            <Glyph name="flame" size={16} color="sunriseDim" />
             <Text
               variant="labelMd"
               family="body"
               weight="medium"
-              color={streakAtRisk ? 'coralDim' : 'ink'}
+              color="ink"
               uppercase
-              numberOfLines={2}
               style={styles.streakText}
             >
-              {streakAtRisk
-                ? t('streak.at_risk', { n: streakValue })
-                : streakNeedsLog
-                  ? t('streak.keep', { n: streakValue })
-                  : formatStreak(streakValue)}
+              {formatStreak(streakValue)}
             </Text>
             {freezeAvailable && (
-              <Glyph
-                name="snowflake"
-                size={14}
-                color="primaryBright"
-              />
+              <Glyph name="snowflake" size={14} color="primaryBright" />
             )}
           </Pressable>
         )}
       </View>
+
+      {/* TODAY-4: the loss-aversion / at-risk streak nudge gets its OWN
+          full-width row — the long "keep your N-day streak" copy didn't fit
+          the compact inline pill (it truncated and hid the freeze snowflake). */}
+      {streakValue > 0 && (streakNeedsLog || streakAtRisk) && (
+        <Pressable
+          onPress={() => router.push('/(tabs)/profile')}
+          accessibilityRole="button"
+          accessibilityLabel={
+            streakAtRisk
+              ? t('streak.at_risk', { n: streakValue })
+              : t('streak.keep', { n: streakValue })
+          }
+          hitSlop={8}
+          style={[styles.streakNudge, streakAtRisk && styles.streakAtRisk]}
+        >
+          <Glyph name="flame" size={16} color={streakAtRisk ? 'coralDim' : 'sunriseDim'} />
+          <Text
+            variant="labelMd"
+            family="body"
+            weight="medium"
+            color={streakAtRisk ? 'coralDim' : 'ink'}
+            uppercase
+            numberOfLines={2}
+            style={styles.streakNudgeText}
+          >
+            {streakAtRisk
+              ? t('streak.at_risk', { n: streakValue })
+              : t('streak.keep', { n: streakValue })}
+          </Text>
+          {freezeAvailable && (
+            <Glyph name="snowflake" size={14} color={streakAtRisk ? 'coralDim' : 'primaryBright'} />
+          )}
+        </Pressable>
+      )}
 
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.md }}>
         <SerifHero>{t('today.hero')}</SerifHero>
@@ -937,6 +953,21 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     marginRight: 6,
     flexShrink: 1,
+  },
+  streakNudge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    marginTop: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 8,
+    borderRadius: radii.pill,
+    backgroundColor: colors.sunriseGlow,
+  },
+  streakNudgeText: {
+    flex: 1,
+    marginLeft: 6,
+    marginRight: 6,
   },
   eventRow: {
     flexDirection: 'row',
