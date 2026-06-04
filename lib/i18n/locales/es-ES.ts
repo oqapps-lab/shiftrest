@@ -458,7 +458,7 @@ const esES = {
     prev_month: 'Mes anterior',
     next_month: 'Mes siguiente',
     weekday_initials: ['L', 'M', 'X', 'J', 'V', 'S', 'D'],
-    cell_action_title: '¿Editar este turno?',
+    cell_action_title: '¿Eliminar este turno?',
     cell_action_body: 'Toca Eliminar para quitar el turno del {{date}}.',
     cell_cancel: 'Cancelar',
     cell_delete: 'Eliminar',

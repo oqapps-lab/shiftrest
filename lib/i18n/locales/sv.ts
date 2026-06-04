@@ -457,7 +457,7 @@ const sv = {
     prev_month: 'Föregående månad',
     next_month: 'Nästa månad',
     weekday_initials: ['M', 'T', 'O', 'T', 'F', 'L', 'S'],
-    cell_action_title: 'Redigera detta pass?',
+    cell_action_title: 'Ta bort detta pass?',
     cell_action_body: 'Tryck på Ta bort för att radera passet den {{date}}.',
     cell_cancel: 'Avbryt',
     cell_delete: 'Ta bort',

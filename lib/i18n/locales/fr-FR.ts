@@ -458,7 +458,7 @@ const frFR = {
     prev_month: 'Mois précédent',
     next_month: 'Mois suivant',
     weekday_initials: ['L', 'M', 'M', 'J', 'V', 'S', 'D'],
-    cell_action_title: 'Modifier cette garde ?',
+    cell_action_title: 'Supprimer cette garde ?',
     cell_action_body: 'Touche Supprimer pour enlever la garde du {{date}}.',
     cell_cancel: 'Annuler',
     cell_delete: 'Supprimer',
