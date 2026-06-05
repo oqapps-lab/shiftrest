@@ -175,6 +175,7 @@ describe('mapToProfileRow', () => {
     currentShiftEnd: '19:00',
     commuteMinutes: 30,
     nextShift: null,
+    nextShiftCustom: null,
     mainProblem: 'falling-asleep' as const,
     chronotypeAnswers: { q1: 'a', q2: 'a', q3: 'a' },
     caffeineCupsPerDay: 2,

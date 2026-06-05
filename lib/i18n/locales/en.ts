@@ -1102,6 +1102,7 @@ const en = {
         tomorrow_pm: { title: "Tomorrow, evening", subtitle: "Night shift starts ~18-30h from now" },
         day_after: { title: "Day after tomorrow", subtitle: "Plenty of time to reset" },
         on_break: { title: "I'm on a break", subtitle: "Off rotation right now" },
+        custom: { title: "Custom date & time", subtitle: "Pick exactly when your next shift starts" },
       },
     },
     problem: {

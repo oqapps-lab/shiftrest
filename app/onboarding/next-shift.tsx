@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import { View } from 'react-native';
 import { router } from 'expo-router';
 import {
   Screen,
@@ -17,6 +18,7 @@ import {
   ProgressDots,
   OnboardingBack,
   OptionCard,
+  DateTimePickerField,
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
 import type { GlyphName } from '../../components/ui';
@@ -36,9 +38,21 @@ const OPTIONS: NextShiftOption[] = [
   { id: 'on_break', glyph: 'leaf' },
 ];
 
+function defaultCustom(): Date {
+  const d = new Date();
+  d.setHours(d.getHours() + 12, 0, 0, 0);
+  return d;
+}
+function parseCustom(s: string | null): Date {
+  if (!s) return defaultCustom();
+  const d = new Date(s);
+  return isNaN(d.getTime()) ? defaultCustom() : d;
+}
+
 export default function NextShiftScreen() {
   const { state, update } = useOnboarding();
   const selected = state.nextShift;
+  const customSelected = selected === 'custom';
 
   return (
     <Screen
@@ -88,6 +102,33 @@ export default function NextShiftScreen() {
           accessibilityLabel={t(`onboarding_screens.next_shift.options.${opt.id}.title`)}
         />
       ))}
+
+      {/* R26-3: pick an exact date + time when none of the presets fit. */}
+      <OptionCard
+        key="custom"
+        title={t('onboarding_screens.next_shift.options.custom.title')}
+        subtitle={t('onboarding_screens.next_shift.options.custom.subtitle')}
+        glyph="calendar"
+        selected={customSelected}
+        onPress={() =>
+          update({
+            nextShift: 'custom',
+            nextShiftCustom: state.nextShiftCustom ?? defaultCustom().toISOString(),
+          })
+        }
+        accessibilityLabel={t('onboarding_screens.next_shift.options.custom.title')}
+      />
+      {customSelected && (
+        <View style={{ marginTop: spacing.md }}>
+          <DateTimePickerField
+            label={t('onboarding_screens.next_shift.options.custom.title')}
+            mode="datetime"
+            value={parseCustom(state.nextShiftCustom)}
+            onChange={(d) => update({ nextShiftCustom: d.toISOString() })}
+            accessibilityLabel={t('onboarding_screens.next_shift.options.custom.title')}
+          />
+        </View>
+      )}
     </Screen>
   );
 }
