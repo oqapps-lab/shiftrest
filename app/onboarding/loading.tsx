@@ -17,6 +17,7 @@ import {
   HeroNumber,
   ProgressDots,
 } from '../../components/ui';
+import * as Haptics from 'expo-haptics';
 import { spacing } from '../../constants/tokens';
 import { t } from '../../lib/i18n';
 
@@ -47,6 +48,15 @@ export default function Loading() {
   }, []);
 
   const stageIdx = Math.min(STAGES - 1, Math.floor((pct / 100) * STAGES));
+
+  // R26-4: tactile pulse as each new analysis stage appears.
+  const prevStage = useRef(0);
+  useEffect(() => {
+    if (stageIdx !== prevStage.current) {
+      prevStage.current = stageIdx;
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+    }
+  }, [stageIdx]);
 
   return (
     <Screen scroll={false} tabBarClearance={false} orbs="strong">
