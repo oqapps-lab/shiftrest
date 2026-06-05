@@ -9,12 +9,26 @@
       "distribution": "internal",
       "ios": {
         "simulator": true
+      },
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://umjngckluosbmyjxgfjx.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtam5nY2tsdW9zYm15anhnZmp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMTMwNzIsImV4cCI6MjA5MjY4OTA3Mn0.fsQ9mKZX6imeR5CBht-c9yy4xEugPFT7lpZR3c7r00g",
+        "EXPO_PUBLIC_ADAPTY_PUBLIC_KEY": "public_live_yAm0Uzst.TrC39HHO0WAdzbeF16RR",
+        "EXPO_PUBLIC_APPSFLYER_DEV_KEY": "QfoivzNipwRnnAgKjWwTqZ",
+        "EXPO_PUBLIC_APPSFLYER_APP_ID": "6766302800"
       }
     },
     "preview": {
       "distribution": "internal",
       "ios": {
         "resourceClass": "m-medium"
+      },
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://umjngckluosbmyjxgfjx.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtam5nY2tsdW9zYm15anhnZmp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMTMwNzIsImV4cCI6MjA5MjY4OTA3Mn0.fsQ9mKZX6imeR5CBht-c9yy4xEugPFT7lpZR3c7r00g",
+        "EXPO_PUBLIC_ADAPTY_PUBLIC_KEY": "public_live_yAm0Uzst.TrC39HHO0WAdzbeF16RR",
+        "EXPO_PUBLIC_APPSFLYER_DEV_KEY": "QfoivzNipwRnnAgKjWwTqZ",
+        "EXPO_PUBLIC_APPSFLYER_APP_ID": "6766302800"
       }
     },
     "production": {
@@ -24,6 +38,13 @@
       "ios": {
         "resourceClass": "m-medium",
         "buildConfiguration": "Release"
+      },
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "https://umjngckluosbmyjxgfjx.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVtam5nY2tsdW9zYm15anhnZmp4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxMTMwNzIsImV4cCI6MjA5MjY4OTA3Mn0.fsQ9mKZX6imeR5CBht-c9yy4xEugPFT7lpZR3c7r00g",
+        "EXPO_PUBLIC_ADAPTY_PUBLIC_KEY": "public_live_yAm0Uzst.TrC39HHO0WAdzbeF16RR",
+        "EXPO_PUBLIC_APPSFLYER_DEV_KEY": "QfoivzNipwRnnAgKjWwTqZ",
+        "EXPO_PUBLIC_APPSFLYER_APP_ID": "6766302800"
       }
     }
   },
