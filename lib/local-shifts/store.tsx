@@ -51,6 +51,8 @@ export function setLocalShift(iso: string, kind: LocalShiftKind): void {
 
 export function clearLocalShifts(): void {
   memCache = {};
+  hydrated = false;
+  hydratingPromise = null;
   void AsyncStorage.removeItem(STORAGE_KEY);
   emitChange(EVENTS.shiftsChanged);
 }

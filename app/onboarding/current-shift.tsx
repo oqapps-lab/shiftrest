@@ -58,7 +58,7 @@ export default function CurrentShift() {
   return (
     <Screen
       orbs="subtle"
-      scroll={false}
+      scroll
       tabBarClearance={false}
       floatingFooter={
         <PillCTA

@@ -164,6 +164,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Log first — after signOut() the session is gone and RLS rejects the insert.
     await logEvent('signed_out');
     const { error } = await supabase.auth.signOut();
+    // AUDIT-J: drop the anon local-shifts cache so the next anon session
+    // on this device can't inherit the previous user's schedule. Dynamic
+    // import avoids an auth <-> local-shifts <-> queries module cycle.
+    void import('../local-shifts/store').then((m) => m.clearLocalShifts());
     return { error };
   }, []);
 
