@@ -48,6 +48,7 @@ const KNOWN_ONBOARDING_ROUTES: ReadonlySet<string> = new Set([
   '/onboarding/loading',
   '/onboarding/aha',
   '/onboarding/notifications',
+  '/onboarding/measurement',
 ]);
 
 export default function Welcome() {

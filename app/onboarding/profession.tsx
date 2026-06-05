@@ -33,12 +33,24 @@ export default function Profession() {
       scroll
       tabBarClearance={false}
       floatingFooter={
-        <PillCTA
-          variant="primary"
-          label={t('onboarding.continue')}
-          disabled={!selected}
-          onPress={() => router.push('/onboarding/schedule')}
-        />
+        <>
+          <PillCTA
+            variant="primary"
+            label={t('onboarding.continue')}
+            disabled={!selected}
+            onPress={() => router.push('/onboarding/schedule')}
+          />
+          {/* AUDIT-A: existing-account users (incl. Apple reviewer) get
+              auto-resumed into onboarding and could never reach login —
+              surface it at the funnel entry. */}
+          <View style={{ height: 12 }} />
+          <PillCTA
+            variant="glass"
+            size="md"
+            label={t('welcome.cta_secondary')}
+            onPress={() => router.push('/auth/login')}
+          />
+        </>
       }
     >
       <OnboardingBack />
