@@ -14,6 +14,7 @@ import {
   Text,
   PillCTA,
   ProgressDots,
+  OnboardingBack,
   Stepper,
   OptionCard,
 } from '../../components/ui';
@@ -43,6 +44,7 @@ export default function Caffeine() {
         />
       }
     >
+      <OnboardingBack />
       <Eyebrow>{t('onboarding.step_template', { n: 8, total: 11 })}</Eyebrow>
       <ProgressDots
         count={11}

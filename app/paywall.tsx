@@ -13,7 +13,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { View, Pressable, StyleSheet, Linking, Alert } from 'react-native';
+import { View, Pressable, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import {
@@ -25,7 +25,7 @@ import {
   PillCTA,
   Text,
   Glyph,
-  ProgressDots,
+  showAppDialog,
 } from '../components/ui';
 import { colors, spacing, radii } from '../constants/tokens';
 import { firstName } from '../lib/derive';
@@ -36,10 +36,13 @@ import {
   restorePurchases,
   loadPaywallProducts,
   purchaseProduct,
+  getTrialEligibility,
+  getIntroTrialDays,
 } from '../lib/adapty';
+import { scheduleTrialEndingReminder } from '../lib/notifications';
 import type { AdaptyPaywallProduct } from 'react-native-adapty';
 import { logEvent } from '../lib/events';
-import { t } from '../lib/i18n';
+import i18n, { t } from '../lib/i18n';
 
 type Plan = 'week' | 'month' | 'year';
 
@@ -64,12 +67,26 @@ const PLAN_TO_DB: Record<Plan, 'premium_weekly' | 'premium_monthly' | 'premium_a
   year: 'premium_annual',
 };
 
-// Lazy getter so t() runs at render time and respects current locale.
-const getValueBullets = () => [
-  { glyph: 'bed' as const, text: t('paywall.bullet_sleep') },
-  { glyph: 'coffee' as const, text: t('paywall.bullet_caffeine') },
-  { glyph: 'moon' as const, text: t('paywall.bullet_melatonin') },
-  { glyph: 'sparkle' as const, text: t('paywall.bullet_transition') },
+// G5: fallback trial length when no product is loaded (Expo Go / pre-load) or
+// the loaded product carries no readable intro period. Matches the 7-day free
+// trial configured in App Store Connect. The REAL length is read off the
+// loaded product (getIntroTrialDays) so the copy degrades safely if ASC ever
+// changes it — this constant is only the acquisition-default marketing value.
+const TRIAL_DAYS = 7;
+
+// F5: the subscription's full value, not 4 vague bullets. Lazy getter so t()
+// runs at render time and respects the active locale.
+const getPremiumFeatures = () => [
+  { glyph: 'moon' as const,     title: t('paywall.f_window_t'),     sub: t('paywall.f_window_s') },
+  { glyph: 'coffee' as const,   title: t('paywall.f_caffeine_t'),   sub: t('paywall.f_caffeine_s') },
+  { glyph: 'sun' as const,      title: t('paywall.f_light_t'),      sub: t('paywall.f_light_s') },
+  { glyph: 'sparkle' as const,  title: t('paywall.f_transition_t'), sub: t('paywall.f_transition_s') },
+  { glyph: 'calendar' as const, title: t('paywall.f_anyday_t'),     sub: t('paywall.f_anyday_s') },
+  { glyph: 'pulse' as const,    title: t('paywall.f_history_t'),    sub: t('paywall.f_history_s') },
+  { glyph: 'book' as const,     title: t('paywall.f_library_t'),    sub: t('paywall.f_library_s') },
+  { glyph: 'bed' as const,      title: t('paywall.f_recovery_t'),   sub: t('paywall.f_recovery_s') },
+  { glyph: 'leaf' as const,     title: t('paywall.f_melatonin_t'),  sub: t('paywall.f_melatonin_s') },
+  { glyph: 'bell' as const,     title: t('paywall.f_reminders_t'),  sub: t('paywall.f_reminders_s') },
 ];
 
 export default function Paywall() {
@@ -82,9 +99,8 @@ export default function Paywall() {
     year: null,
   });
 
-  // Apple Guideline 3.1.2(c) — legal links required on paywall.
-  const TERMS_URL = 'https://oqapps.pro/legal/shiftsleep/terms';
-  const PRIVACY_URL = 'https://oqapps.pro/legal/shiftsleep/privacy';
+  // Apple Guideline 3.1.2(c) — legal links required on paywall. D7: these
+  // now open in-app legal screens (/legal/*) instead of an external browser.
 
   // Load Adapty products on mount. On Expo Go or pre-activation this returns
   // null and we fall back to hardcoded USD prices — the UI is unchanged.
@@ -110,6 +126,36 @@ export default function Paywall() {
     return products[p]?.price?.localizedString ?? FALLBACK_PRICES[p];
   };
 
+  // ── G5: trial eligibility + dynamic length, driven by the SELECTED product ──
+  const selectedProduct = products[plan];
+
+  // Eligibility gate (Apple 3.1.2(c)): only HIDE the trial path when StoreKit
+  // explicitly reports the user is ineligible (loaded product with no intro
+  // free-trial offer). 'unknown' (Expo Go / pre-load — no StoreKit to query)
+  // keeps the trial marketing copy, which is the correct acquisition default.
+  const trialEligible = getTrialEligibility(selectedProduct) !== 'ineligible';
+
+  // Real trial length from the product's intro offer when available, else the
+  // ASC-configured fallback. Length-agnostic: P7D→7, P3D→3, etc.
+  const trialDays = getIntroTrialDays(selectedProduct) ?? TRIAL_DAYS;
+
+  // Exact charge date (today + trialDays), localised. Apple/funnel: show the
+  // precise date money will move BEFORE the user confirms.
+  const chargeDateLabel = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() + trialDays);
+    try {
+      return new Intl.DateTimeFormat(i18n.locale, {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      }).format(d);
+    } catch {
+      // Some Hermes/locale combos throw on unusual tags — fall back to ISO date.
+      return d.toISOString().slice(0, 10);
+    }
+  })();
+
   // For the "save 81%" badge: $4.99/wk × 52 = $259.48; $49.99/yr ⇒ 81% off.
   // Computed from the actual loaded annual + weekly when available; otherwise
   // the static value from the funnel brief.
@@ -130,10 +176,11 @@ export default function Paywall() {
     try {
       const profile = await restorePurchases();
       const hasPremium = !!profile?.accessLevels?.premium?.isActive;
-      Alert.alert(
-        t('paywall.restore_title'),
-        hasPremium ? t('paywall.restore_success') : t('paywall.restore_empty'),
-      );
+      showAppDialog({
+        title: t('paywall.restore_title'),
+        message: hasPremium ? t('paywall.restore_success') : t('paywall.restore_empty'),
+        actions: [{ label: t('a11y.close'), style: 'cancel' }],
+      });
       if (hasPremium) {
         emitChange(EVENTS.subscriptionChanged);
         // BN3: paywall may be the root screen (onboarding deeplink, push
@@ -147,7 +194,11 @@ export default function Paywall() {
         }
       }
     } catch {
-      Alert.alert(t('paywall.restore_title'), t('paywall.restore_failed'));
+      showAppDialog({
+        title: t('paywall.restore_title'),
+        message: t('paywall.restore_failed'),
+        actions: [{ label: t('a11y.close'), style: 'cancel' }],
+      });
     } finally {
       setRestoring(false);
     }
@@ -166,6 +217,19 @@ export default function Paywall() {
     const selectedProduct = products[plan];
     const planValue = PLAN_TO_DB[plan];
 
+    // F4: on a real build, Adapty products should always load. If they did
+    // not (placement/IAP misconfig or no network), do NOT silently advance —
+    // that reads as a dead button. Tell the user. __DEV__ keeps the Expo Go
+    // demo flow (no native StoreKit there).
+    if (!selectedProduct && !__DEV__) {
+      showAppDialog({
+        title: t('paywall.products_unavailable_title'),
+        message: t('paywall.products_unavailable_body'),
+        actions: [{ label: t('a11y.close'), style: 'cancel' }],
+      });
+      return;
+    }
+
     // 1) If we have a real Adapty product (TestFlight / device): hit StoreKit.
     if (selectedProduct) {
       setSubmitting(true);
@@ -175,6 +239,13 @@ export default function Paywall() {
         if (result.type === 'success') {
           logEvent('purchase_success', { plan: planValue, vendorId: selectedProduct.vendorProductId });
           emitChange(EVENTS.subscriptionChanged);
+          // G5: if this purchase actually started a free trial, schedule the
+          // single "trial ends tomorrow" reminder. No-op when notifications
+          // aren't yet granted (paywall precedes the permission screen) — the
+          // scheduler never prompts here.
+          if (trialEligible) {
+            scheduleTrialEndingReminder(trialDays).catch(() => null);
+          }
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
           router.replace('/onboarding/notifications');
           return;
@@ -189,7 +260,11 @@ export default function Paywall() {
       } catch (err) {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
         logEvent('purchase_failed', { plan: planValue, reason: String(err) });
-        Alert.alert(t('paywall.restore_title'), t('paywall.restore_failed'));
+        showAppDialog({
+          title: t('paywall.restore_title'),
+          message: t('paywall.restore_failed'),
+          actions: [{ label: t('a11y.close'), style: 'cancel' }],
+        });
       } finally {
         setSubmitting(false);
       }
@@ -215,6 +290,10 @@ export default function Paywall() {
     } else {
       logEvent('trial_started', { plan: planValue });
       emitChange(EVENTS.subscriptionChanged);
+      // G5: same trial-ending reminder for the Supabase-RPC trial path.
+      if (trialEligible) {
+        scheduleTrialEndingReminder(trialDays).catch(() => null);
+      }
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
     router.replace('/onboarding/notifications');
@@ -286,6 +365,27 @@ export default function Paywall() {
     return '$0.96';
   };
 
+  // G4/G5: trial disclosure directly under the CTA (Apple 3.1.2(c)) — name the
+  // exact price + period of the selected plan so the terms are clear before the
+  // user taps. When the user is ineligible for the trial (3.1.2(c)) we MUST NOT
+  // advertise "{{days}} days free" — swap to the no-trial price line. Mirrors
+  // the Vitaminico/Sugar Quit pattern.
+  const subKey = trialEligible
+    ? (`paywall.cta_sub_${plan}` as const)
+    : (`paywall.cta_sub_notrial_${plan}` as const);
+  const ctaSubtext = trialEligible
+    ? t(subKey, { days: trialDays, price: priceFor(plan) })
+    : t(subKey, { price: priceFor(plan) });
+
+  // CTA label: trial → "Start {{days}}-day free trial"; ineligible → a plain
+  // "Subscribe — {{price}} / {{period}}" so we never promise an unavailable
+  // offer. The "starting…" state is shared.
+  const ctaLabel = submitting
+    ? t('paywall.starting_trial')
+    : trialEligible
+      ? t('paywall.start_trial', { days: trialDays })
+      : t(`paywall.subscribe_now_${plan}` as const, { price: priceFor(plan) });
+
   return (
     <Screen
       orbs="normal"
@@ -296,10 +396,18 @@ export default function Paywall() {
         <>
           <PillCTA
             variant="primary"
-            label={submitting ? t('paywall.starting_trial') : t('paywall.start_trial')}
+            label={ctaLabel}
             disabled={submitting}
             onPress={onStartTrial}
           />
+          <Text
+            variant="bodyMd"
+            color="inkSubtle"
+            align="center"
+            style={{ marginTop: spacing.sm, paddingHorizontal: spacing.md }}
+          >
+            {ctaSubtext}
+          </Text>
           <Pressable
             onPress={() => router.replace('/onboarding/notifications')}
             hitSlop={12}
@@ -325,19 +433,34 @@ export default function Paywall() {
 
       <Eyebrow>{displayName ? t('paywall.eyebrow_with_name', { name: displayName }) : t('paywall.eyebrow_plain')}</Eyebrow>
       <View style={{ marginTop: spacing.md, marginBottom: spacing.huge }}>
-        <SerifHero>{t('paywall.hero')}</SerifHero>
+        <SerifHero>{t('paywall.hero', { days: trialDays })}</SerifHero>
       </View>
 
-      {getValueBullets().map((b) => (
-        <View key={b.text} style={styles.bulletRow}>
-          <View style={styles.bulletIcon}>
-            <Glyph name={b.glyph} size={20} color="primary" />
+      <Eyebrow>{t('paywall.unlock_header')}</Eyebrow>
+      <View style={{ height: spacing.md }} />
+      {getPremiumFeatures().map((f) => (
+        <View key={f.title} style={styles.featureRow}>
+          <View style={styles.featureIcon}>
+            <Glyph name={f.glyph} size={18} color="primary" />
           </View>
-          <Text variant="bodyLg" color="ink" style={{ flex: 1 }}>
-            {b.text}
-          </Text>
+          <View style={{ flex: 1 }}>
+            <Text variant="titleMd" family="display" weight="medium" color="ink">
+              {f.title}
+            </Text>
+            <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 1, lineHeight: 20 }}>
+              {f.sub}
+            </Text>
+          </View>
         </View>
       ))}
+
+      <View style={{ height: spacing.lg }} />
+      {/* Trust / authority — text-only, no fabricated reviews (Apple 2.3.7/5.2.1) */}
+      <GlassCard variant="whisper" padding="lg">
+        <Text variant="bodyMd" color="inkSubtle" style={{ lineHeight: 22 }}>
+          {t('paywall.trust')}
+        </Text>
+      </GlassCard>
 
       <View style={{ height: spacing.xxxl }} />
 
@@ -350,10 +473,37 @@ export default function Paywall() {
 
       <View style={{ height: spacing.xxxl }} />
 
-      <Eyebrow>{t('paywall.trial_timeline')}</Eyebrow>
-      <View style={{ marginTop: spacing.sm, flexDirection: 'row', justifyContent: 'flex-start' }}>
-        <ProgressDots count={3} active={0} size={8} />
-      </View>
+      {/* G5: trial timeline — only shown when the user is eligible for the
+          trial (Apple 3.1.2(c)). A clean 3-node timeline (not N cramped dots)
+          that scales to any trial length, plus the exact charge-date line. */}
+      {trialEligible && (
+        <>
+          <Eyebrow>{t('paywall.trial_timeline', { days: trialDays })}</Eyebrow>
+          <View style={{ marginTop: spacing.md }}>
+            {[
+              { glyph: 'sparkle' as const, text: t('paywall.timeline_today') },
+              { glyph: 'bell' as const, text: t('paywall.timeline_reminder', { day: Math.max(trialDays - 1, 1) }) },
+              { glyph: 'calendar' as const, text: t('paywall.timeline_charge', { days: trialDays, price: priceFor(plan) }) },
+            ].map((node, i, arr) => (
+              <View key={node.text} style={styles.timelineRow}>
+                <View style={styles.timelineCol}>
+                  <View style={styles.timelineNode}>
+                    <Glyph name={node.glyph} size={14} color="primary" />
+                  </View>
+                  {i < arr.length - 1 && <View style={styles.timelineConnector} />}
+                </View>
+                <Text variant="bodyMd" color="ink" style={styles.timelineText}>
+                  {node.text}
+                </Text>
+              </View>
+            ))}
+          </View>
+          <View style={{ height: spacing.md }} />
+          <Text variant="bodyMd" color="inkSubtle" style={{ paddingHorizontal: spacing.xs }}>
+            {t('paywall.charge_on_' + plan, { date: chargeDateLabel, price: priceFor(plan) })}
+          </Text>
+        </>
+      )}
 
       {/* Apple-required paywall footer: Restore + ToS + Privacy + auto-renew disclosure */}
       <View style={{ marginTop: spacing.xxxl, alignItems: 'center' }}>
@@ -387,7 +537,7 @@ export default function Paywall() {
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Pressable
-            onPress={() => Linking.openURL(TERMS_URL).catch(() => null)}
+            onPress={() => router.push('/legal/terms')}
             accessibilityRole="link"
             accessibilityLabel={t('paywall.terms_link')}
             hitSlop={8}
@@ -400,7 +550,7 @@ export default function Paywall() {
             ·
           </Text>
           <Pressable
-            onPress={() => Linking.openURL(PRIVACY_URL).catch(() => null)}
+            onPress={() => router.push('/legal/privacy')}
             accessibilityRole="link"
             accessibilityLabel={t('paywall.privacy_link')}
             hitSlop={8}
@@ -421,19 +571,20 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginBottom: spacing.md,
   },
-  bulletRow: {
+  featureRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginBottom: spacing.lg,
   },
-  bulletIcon: {
-    width: 36,
-    height: 36,
+  featureIcon: {
+    width: 34,
+    height: 34,
     borderRadius: radii.lg,
     backgroundColor: colors.primaryContainer,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: spacing.md,
+    marginTop: 2,
   },
   row: {
     flexDirection: 'row',
@@ -447,6 +598,34 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   planCard: {},
+  timelineRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  timelineCol: {
+    alignItems: 'center',
+    marginRight: spacing.md,
+  },
+  timelineNode: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: colors.primaryContainer,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  timelineConnector: {
+    width: 2,
+    flex: 1,
+    minHeight: 18,
+    backgroundColor: colors.inkGhost,
+    marginVertical: 2,
+  },
+  timelineText: {
+    flex: 1,
+    paddingTop: 5,
+    paddingBottom: spacing.md,
+  },
   radio: {
     width: 22,
     height: 22,

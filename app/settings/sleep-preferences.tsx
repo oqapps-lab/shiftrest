@@ -11,7 +11,7 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, Pressable, Alert } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import { router } from 'expo-router';
 import {
   Screen,
@@ -21,6 +21,7 @@ import {
   Text,
   Glyph,
   type GlyphName,
+  showAppDialog,
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
 import {
@@ -100,13 +101,13 @@ export default function SleepPreferences() {
   const { state, reset } = useOnboarding();
 
   const onResetAlert = () => {
-    Alert.alert(
-      t('sleep_prefs.reset_alert.title'),
-      t('sleep_prefs.reset_alert.message'),
-      [
-        { text: t('sleep_prefs.reset_alert.cancel'), style: 'cancel' },
+    showAppDialog({
+      title: t('sleep_prefs.reset_alert.title'),
+      message: t('sleep_prefs.reset_alert.message'),
+      actions: [
+        { label: t('sleep_prefs.reset_alert.cancel'), style: 'cancel' },
         {
-          text: t('sleep_prefs.reset_alert.confirm'),
+          label: t('sleep_prefs.reset_alert.confirm'),
           style: 'destructive',
           onPress: () => {
             reset();
@@ -114,7 +115,7 @@ export default function SleepPreferences() {
           },
         },
       ],
-    );
+    });
   };
 
   const rows: SettingsRow[] = [
