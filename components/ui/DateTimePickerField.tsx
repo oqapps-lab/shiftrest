@@ -15,6 +15,7 @@ import {
   Animated,
   Easing,
 } from 'react-native';
+import i18n from '../../lib/i18n';
 import DateTimePicker, {
   type DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
@@ -37,10 +38,15 @@ interface Props {
 function formatDateTime(d: Date, mode: 'datetime' | 'time'): string {
   const time = `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
   if (mode === 'time') return time;
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const date = `${weekdays[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
-  return `${date} · ${time}`;
+  // R19/i18n-2: was hardcoded English month/weekday arrays. Use
+  // Intl.DateTimeFormat with i18n.locale so the field renders
+  // localised "Mo 27 Mai" on de-DE etc.
+  const fmt = new Intl.DateTimeFormat(i18n.locale, {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+  });
+  return `${fmt.format(d)} · ${time}`;
 }
 
 export function DateTimePickerField({
@@ -51,7 +57,19 @@ export function DateTimePickerField({
   mode = 'datetime',
 }: Props) {
   const [open, setOpen] = useState(false);
+  // `draft` seeds the spinner's initial wheel position ONCE per open. The
+  // live picked value lives in a ref so we never setState mid-scroll — a
+  // re-render with a changing `value` prop yanks the iOS spinner back to the
+  // controlled value and makes the wheel jump up/down under the finger.
   const [draft, setDraft] = useState<Date>(value);
+  const pickedRef = React.useRef<Date>(value);
+  // B02/B06 (Android): the community picker has no single 'datetime' dialog
+  // and can't live inside our custom Modal — it showed its own dialog and
+  // Cancel/Back couldn't escape (app had to be force-stopped). On Android we
+  // drive native date->time dialogs in sequence and handle the 'dismissed'
+  // event so the picker always closes.
+  const [androidStage, setAndroidStage] = useState<null | 'date' | 'time'>(null);
+  const androidDraftRef = React.useRef<Date>(value);
   const fade = React.useRef(new Animated.Value(0)).current;
   const slide = React.useRef(new Animated.Value(1)).current;
 
@@ -69,8 +87,38 @@ export function DateTimePickerField({
 
   const openSheet = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    if (Platform.OS === 'android') {
+      androidDraftRef.current = value;
+      setAndroidStage(mode === 'time' ? 'time' : 'date');
+      return;
+    }
     setDraft(value);
+    pickedRef.current = value;
     setOpen(true);
+  };
+
+  const onAndroidChange = (event: DateTimePickerEvent, picked?: Date) => {
+    // Any non-'set' result (Cancel / Back / tap-outside) closes cleanly.
+    if (event.type !== 'set' || !picked) {
+      setAndroidStage(null);
+      return;
+    }
+    if (androidStage === 'date') {
+      const merged = new Date(androidDraftRef.current);
+      merged.setFullYear(picked.getFullYear(), picked.getMonth(), picked.getDate());
+      androidDraftRef.current = merged;
+      if (mode === 'datetime') {
+        setAndroidStage('time'); // chain into the time dialog
+        return;
+      }
+      onChange(merged);
+      setAndroidStage(null);
+      return;
+    }
+    const merged = new Date(androidDraftRef.current);
+    merged.setHours(picked.getHours(), picked.getMinutes(), 0, 0);
+    onChange(merged);
+    setAndroidStage(null);
   };
 
   const cancel = () => {
@@ -79,12 +127,14 @@ export function DateTimePickerField({
 
   const done = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    onChange(draft);
+    onChange(pickedRef.current);
     setOpen(false);
   };
 
+  // Capture the spin into a ref only — NO setState, so the spinner keeps its
+  // own native scroll position and never re-renders mid-gesture.
   const handleChange = (_: DateTimePickerEvent, picked?: Date) => {
-    if (picked) setDraft(picked);
+    if (picked) pickedRef.current = picked;
   };
 
   return (
@@ -170,6 +220,15 @@ export function DateTimePickerField({
           )}
         </Animated.View>
       </Modal>
+
+      {Platform.OS === 'android' && androidStage && (
+        <DateTimePicker
+          value={androidDraftRef.current}
+          mode={androidStage}
+          display="default"
+          onChange={onAndroidChange}
+        />
+      )}
     </>
   );
 }

@@ -13,6 +13,7 @@ import {
   Text,
   PillCTA,
   ProgressDots,
+  OnboardingBack,
   TextField,
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
@@ -38,6 +39,7 @@ export default function Name() {
         />
       }
     >
+      <OnboardingBack />
       <Eyebrow>{t('onboarding.step_template', { n: 11, total: 11 })}</Eyebrow>
       <ProgressDots
         count={11}

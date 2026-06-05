@@ -3,7 +3,9 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, Pressable, Alert } from 'react-native';
+import { View, StyleSheet, Pressable, Image } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import * as Haptics from 'expo-haptics';
 import { router } from 'expo-router';
 import {
   Screen,
@@ -13,10 +15,11 @@ import {
   HeroNumber,
   Text,
   Glyph,
+  showAppDialog,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
 import { mockProfessions } from '../../mock/user';
-import { formatTrialRemaining, clampDisplayName } from '../../lib/derive';
+import { formatTrialRemaining, isTrialExpired, clampDisplayName } from '../../lib/derive';
 import { useAuth } from '../../lib/auth/store';
 import { useOnboarding } from '../../lib/onboarding/store';
 import { useStreak, useProfileStats, useSubscription } from '../../lib/queries';
@@ -27,7 +30,32 @@ const STREAK_LENGTH = 14;
 
 export default function Profile() {
   const { user, signOut } = useAuth();
-  const { state: onboarding } = useOnboarding();
+  const { state: onboarding, update } = useOnboarding();
+
+  // B3: tap avatar → pick a photo from the library. Local URI persisted in
+  // the onboarding store (a future build uploads to Supabase storage for
+  // the public stories feed). Permission-denied shows a branded dialog.
+  const pickAvatar = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!perm.granted) {
+      showAppDialog({
+        title: t('profile.avatar.perm_title'),
+        message: t('profile.avatar.perm_body'),
+        actions: [{ label: t('a11y.close'), style: 'cancel' }],
+      });
+      return;
+    }
+    const res = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.7,
+    });
+    if (!res.canceled && res.assets[0]?.uri) {
+      update({ avatarUri: res.assets[0].uri });
+    }
+  };
   const { data: streak } = useStreak();
   const { data: stats } = useProfileStats();
   const { data: subscription } = useSubscription();
@@ -95,7 +123,9 @@ export default function Profile() {
   if (!user) {
     subscriptionSubtitle = t('profile.subscription.free');
   } else if (subscription?.status === 'trial' && subscription.trial_end) {
-    subscriptionSubtitle = t('profile.subscription.trial_template', { remaining: formatTrialRemaining(subscription.trial_end) });
+    subscriptionSubtitle = isTrialExpired(subscription.trial_end)
+      ? t('profile.subscription.lapsed')
+      : t('profile.subscription.trial_template', { remaining: formatTrialRemaining(subscription.trial_end) });
   } else if (subscription?.status === 'active') {
     subscriptionSubtitle =
       subscription.plan === 'premium_annual' ? t('profile.subscription.annual') : t('profile.subscription.monthly');
@@ -113,16 +143,29 @@ export default function Profile() {
         label: t('profile.rows.account'),
         subtitle: user.email ?? t('profile.signed_in'),
         onPress: () => {
-          Alert.alert(t('profile.signout.title'), t('profile.signout.body'), [
-            { text: t('profile.signout.cancel'), style: 'cancel' },
-            {
-              text: t('profile.signout.confirm'),
-              style: 'destructive',
-              onPress: async () => {
-                await signOut();
+          showAppDialog({
+            title: t('profile.signout.title'),
+            message: t('profile.signout.body'),
+            actions: [
+              { label: t('profile.signout.cancel'), style: 'cancel' },
+              {
+                label: t('profile.signout.confirm'),
+                style: 'destructive',
+                onPress: async () => {
+                  // R14-1: surface signOut errors (e.g. offline)
+                  // instead of silently no-op'ing.
+                  const res = await signOut();
+                  if (res?.error) {
+                    showAppDialog({
+                      title: t('profile.signout.failed_title'),
+                      message: t('profile.signout.failed_body'),
+                      actions: [{ label: t('profile.signout.cancel'), style: 'cancel' }],
+                    });
+                  }
+                },
               },
-            },
-          ]);
+            ],
+          });
         },
       }
     : {
@@ -167,6 +210,23 @@ export default function Profile() {
   return (
     <Screen orbs="subtle" variant="dim" scroll>
       <Eyebrow>{t('profile.eyebrow')}</Eyebrow>
+      <Pressable
+        onPress={pickAvatar}
+        style={styles.avatarWrap}
+        accessibilityRole="button"
+        accessibilityLabel={t('profile.avatar.a11y')}
+      >
+        {onboarding.avatarUri ? (
+          <Image source={{ uri: onboarding.avatarUri }} style={styles.avatarImg} />
+        ) : (
+          <View style={styles.avatarPlaceholder}>
+            <Glyph name="user" size={30} color="primary" />
+          </View>
+        )}
+        <View style={styles.avatarEditBadge}>
+          <Glyph name="plus" size={12} color="onPrimary" />
+        </View>
+      </Pressable>
       <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
         <SerifHero>{displayName}</SerifHero>
         <Text
@@ -318,17 +378,17 @@ export default function Profile() {
         </Pressable>
       )}
 
-      {/* F20-P1: tap-target to the Sleep Tips library */}
+      {/* F20-P1 / C5: tap-target to the deep Sleep Library */}
       <Pressable
-        onPress={() => router.push('/tips')}
+        onPress={() => router.push('/library')}
         accessibilityRole="button"
         accessibilityLabel={t('profile.tips_a11y')}
         style={{ marginTop: spacing.lg }}
       >
         <GlassCard variant="paper" padding="xxl">
           <View style={styles.adaptRow}>
-            <View style={[styles.adaptScoreWrap, { backgroundColor: colors.sunriseGlow }]}>
-              <Glyph name="book" size={26} color="sunriseDim" />
+            <View style={[styles.adaptScoreWrap, { backgroundColor: colors.primaryContainer }]}>
+              <Glyph name="book" size={26} color="primary" />
             </View>
             <View style={{ flex: 1 }}>
               <Eyebrow>{t('profile.tips_eyebrow')}</Eyebrow>
@@ -390,6 +450,39 @@ export default function Profile() {
 }
 
 const styles = StyleSheet.create({
+  avatarWrap: {
+    width: 84,
+    height: 84,
+    marginTop: spacing.lg,
+    borderRadius: radii.pill,
+  },
+  avatarImg: {
+    width: 84,
+    height: 84,
+    borderRadius: radii.pill,
+    backgroundColor: colors.surfaceLow,
+  },
+  avatarPlaceholder: {
+    width: 84,
+    height: 84,
+    borderRadius: radii.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primaryContainer,
+  },
+  avatarEditBadge: {
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
+    width: 28,
+    height: 28,
+    borderRadius: radii.pill,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primary,
+    borderWidth: 2,
+    borderColor: colors.canvas,
+  },
   heatmapHeader: {
     flexDirection: 'row',
     alignItems: 'center',

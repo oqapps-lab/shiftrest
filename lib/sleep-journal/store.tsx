@@ -52,6 +52,10 @@ export function ratingForToday(): SleepRating | null {
 }
 
 export function setSleepRating(rating: SleepRating, date: Date = new Date()): void {
+  // R17/A2: silently drop future-dated entries — pollutes daysInApp count
+  // and confuses downstream stats. Only past-or-present accepted.
+  const today = new Date();
+  if (date > today) return;
   const key = localDateKey(date);
   memCache = { entries: { ...memCache.entries, [key]: rating } };
   void AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(memCache));
@@ -79,6 +83,17 @@ export function useSleepJournal(): JournalMap {
 /** Count of total journaled days (across all time). */
 export function journaledDayCount(): number {
   return Object.keys(memCache.entries).length;
+}
+
+/**
+ * TODAY-4 — the most recent day the user logged (YYYY-MM-DD), or null when
+ * the journal is empty. Feeds the freeze-aware streak resolver for anonymous
+ * users, who derive their streak from the local journal instead of Supabase.
+ */
+export function lastLoggedIso(): string | null {
+  const keys = Object.keys(memCache.entries);
+  if (keys.length === 0) return null;
+  return keys.sort().at(-1) ?? null;
 }
 
 /**

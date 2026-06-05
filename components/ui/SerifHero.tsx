@@ -28,6 +28,7 @@ export function SerifHero({ children, align = 'left', color = 'ink', style }: Pr
       color={color}
       align={align}
       style={style}
+      accessibilityRole="header"
     >
       {children}
     </Text>

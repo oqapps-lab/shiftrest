@@ -1,152 +1,215 @@
 /**
  * USER-BUG-5 — TodayIntroSheet
  *
- * One-time explainer popup shown on first visit to the Today tab.
- * Surfaces what each visual element of the timeline ring means
- * (dusk arc = sleep window, sage arc = shift, marker dot = now),
- * plus what the cards below the ring do.
+ * On-demand legend opened from the "?" beside the timeline ring. Explains what
+ * each visual element of the timeline ring means (dusk arc = sleep window,
+ * sage arc = shift, marker dot = now), plus what the cards below the ring do,
+ * and how to set today's shift / mark an off-day.
  *
- * Storage: shiftrest:today-intro:v1 (set to '1' on dismiss). Never
- * re-shown after that — users who re-open the app already know.
+ * G6: this is now a REAL draggable bottom sheet — grab the grey handle and
+ * swipe down to dismiss (or tap the backdrop). Built on react-native-gesture-
+ * handler + reanimated (both already in the app); no new dependency.
+ *
+ * Note: gestures inside a RN <Modal> need their OWN GestureHandlerRootView —
+ * the app-root one (app/_layout.tsx) does not reach the modal's separate
+ * native view hierarchy, so the handle wouldn't drag without this wrapper.
  */
 
-import React, { useEffect, useState } from 'react';
-import { Modal, View, StyleSheet, Animated, Easing, Pressable } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect } from 'react';
+import { Modal, View, ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { GestureHandlerRootView, GestureDetector, Gesture } from 'react-native-gesture-handler';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  runOnJS,
+  interpolate,
+  Extrapolation,
+} from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { GlassCard, Eyebrow, Text, SerifHero, PillCTA } from '../ui';
 import { colors, radii, spacing } from '../../constants/tokens';
 import { t } from '../../lib/i18n';
 
-const STORAGE_KEY = 'shiftrest:today-intro:v1';
+const SPRING = { damping: 18, stiffness: 160 };
 
-export function TodayIntroSheet() {
-  const [visible, setVisible] = useState(false);
-  const fade = React.useRef(new Animated.Value(0)).current;
-  const slide = React.useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const seen = await AsyncStorage.getItem(STORAGE_KEY);
-        if (!seen) setVisible(true);
-      } catch {
-        // Storage error: don't block the screen.
-      }
-    })();
-  }, []);
+export function TodayIntroSheet({ visible, onClose }: { visible: boolean; onClose: () => void }) {
+  const { height: screenH } = useWindowDimensions();
+  // Sheet sits 12% from the top, so its travel to fully off-screen ≈ 88% of
+  // the screen height. Refined precisely once the sheet lays out.
+  const sheetH = useSharedValue(screenH * 0.88);
+  const translateY = useSharedValue(screenH); // start fully closed (off-screen)
 
   useEffect(() => {
     if (visible) {
-      Animated.parallel([
-        Animated.timing(fade, { toValue: 1, duration: 240, useNativeDriver: true, easing: Easing.out(Easing.cubic) }),
-        Animated.timing(slide, { toValue: 0, duration: 320, useNativeDriver: true, easing: Easing.out(Easing.cubic) }),
-      ]).start();
+      translateY.value = withSpring(0, SPRING);
     } else {
-      fade.setValue(0);
-      slide.setValue(1);
+      translateY.value = sheetH.value;
     }
-  }, [visible, fade, slide]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visible]);
 
-  const dismiss = async () => {
+  // Animated close: slide down, then flip the parent's `visible` on the JS
+  // thread once the animation lands.
+  const close = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    try {
-      await AsyncStorage.setItem(STORAGE_KEY, '1');
-    } catch {
-      // ignore — at worst they see it once more next launch
-    }
-    setVisible(false);
+    translateY.value = withTiming(sheetH.value, { duration: 220 }, (finished) => {
+      if (finished) runOnJS(onClose)();
+    });
   };
 
+  // Drag handle gesture — lives on the handle zone only so it never fights the
+  // inner ScrollView. Drag past 25% of the sheet (or fling) to dismiss.
+  const pan = Gesture.Pan()
+    .onUpdate((e) => {
+      translateY.value = Math.max(0, e.translationY);
+    })
+    .onEnd((e) => {
+      if (e.translationY > sheetH.value * 0.25 || e.velocityY > 800) {
+        translateY.value = withTiming(sheetH.value, { duration: 200 }, (finished) => {
+          if (finished) runOnJS(onClose)();
+        });
+      } else {
+        translateY.value = withSpring(0, SPRING);
+      }
+    });
+
+  // Tap the dimmed backdrop to dismiss (previously impossible).
+  const backdropTap = Gesture.Tap().onEnd(() => {
+    runOnJS(close)();
+  });
+
+  const sheetStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateY.value }],
+  }));
+
+  const backdropStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(translateY.value, [0, sheetH.value], [1, 0], Extrapolation.CLAMP),
+  }));
+
   return (
-    <Modal visible={visible} transparent animationType="none" onRequestClose={dismiss}>
-      <Animated.View style={[styles.backdrop, { opacity: fade }]} />
-      <Animated.View
-        style={[
-          styles.sheet,
-          {
-            transform: [
-              { translateY: slide.interpolate({ inputRange: [0, 1], outputRange: [0, 600] }) },
-            ],
-          },
-        ]}
-      >
-        <View style={styles.handle} />
-        <View style={{ paddingHorizontal: spacing.xl, paddingTop: spacing.lg }}>
-          <Eyebrow>{t('today_intro.eyebrow')}</Eyebrow>
-          <View style={{ marginTop: spacing.sm, marginBottom: spacing.lg }}>
-            <SerifHero>{t('today_intro.hero')}</SerifHero>
-          </View>
-          <Text variant="bodyLg" color="inkSubtle" style={{ marginBottom: spacing.xl }}>
-            {t('today_intro.sub')}
-          </Text>
-
-          <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.md }}>
-            <View style={styles.row}>
-              <View style={[styles.swatch, { backgroundColor: colors.duskGlow }]} />
-              <View style={{ flex: 1 }}>
-                <Text variant="titleMd" family="display" weight="medium" color="ink">
-                  {t('today_intro.dusk_title')}
-                </Text>
-                <Text variant="bodyMd" color="inkSubtle">
-                  {t('today_intro.dusk_sub')}
-                </Text>
-              </View>
+    <Modal visible={visible} transparent animationType="none" onRequestClose={close}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <GestureDetector gesture={backdropTap}>
+          <Animated.View style={[styles.backdrop, backdropStyle]} />
+        </GestureDetector>
+        <Animated.View
+          style={[styles.sheet, sheetStyle]}
+          onLayout={(ev) => {
+            const h = ev.nativeEvent.layout.height;
+            if (h > 0) sheetH.value = h;
+          }}
+        >
+          {/* Drag-to-dismiss handle zone */}
+          <GestureDetector gesture={pan}>
+            <View style={styles.handleZone}>
+              <View style={styles.handle} />
             </View>
-          </GlassCard>
+          </GestureDetector>
 
-          <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.md }}>
-            <View style={styles.row}>
-              <View style={[styles.swatch, { backgroundColor: colors.primary }]} />
-              <View style={{ flex: 1 }}>
-                <Text variant="titleMd" family="display" weight="medium" color="ink">
-                  {t('today_intro.shift_title')}
-                </Text>
-                <Text variant="bodyMd" color="inkSubtle">
-                  {t('today_intro.shift_sub')}
-                </Text>
-              </View>
+          <ScrollView
+            contentContainerStyle={{ paddingHorizontal: spacing.xl, paddingTop: spacing.sm, paddingBottom: spacing.huge }}
+            showsVerticalScrollIndicator={false}
+          >
+            <Eyebrow>{t('today_intro.eyebrow')}</Eyebrow>
+            <View style={{ marginTop: spacing.sm, marginBottom: spacing.lg }}>
+              <SerifHero>{t('today_intro.hero')}</SerifHero>
             </View>
-          </GlassCard>
-
-          <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.md }}>
-            <View style={styles.row}>
-              <View style={[styles.swatchDot, { backgroundColor: colors.ink }]} />
-              <View style={{ flex: 1 }}>
-                <Text variant="titleMd" family="display" weight="medium" color="ink">
-                  {t('today_intro.now_title')}
-                </Text>
-                <Text variant="bodyMd" color="inkSubtle">
-                  {t('today_intro.now_sub')}
-                </Text>
-              </View>
-            </View>
-          </GlassCard>
-
-          <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.xl }}>
-            <View style={styles.row}>
-              <View style={[styles.swatch, { backgroundColor: colors.sunriseGlow }]} />
-              <View style={{ flex: 1 }}>
-                <Text variant="titleMd" family="display" weight="medium" color="ink">
-                  {t('today_intro.cards_title')}
-                </Text>
-                <Text variant="bodyMd" color="inkSubtle">
-                  {t('today_intro.cards_sub')}
-                </Text>
-              </View>
-            </View>
-          </GlassCard>
-
-          <View style={{ marginBottom: spacing.xxl }}>
-            <PillCTA variant="primary" label={t('today_intro.got_it')} onPress={dismiss} />
-          </View>
-          <Pressable onPress={dismiss} hitSlop={12} style={{ alignSelf: 'center', marginBottom: spacing.huge }}>
-            <Text variant="bodyMd" color="inkMuted">
-              {t('today_intro.skip')}
+            <Text variant="bodyLg" color="inkSubtle" style={{ marginBottom: spacing.xl }}>
+              {t('today_intro.sub')}
             </Text>
-          </Pressable>
-        </View>
-      </Animated.View>
+
+            <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.md }}>
+              <View style={styles.row}>
+                <View style={[styles.swatch, { backgroundColor: colors.duskGlow }]} />
+                <View style={{ flex: 1 }}>
+                  <Text variant="titleMd" family="display" weight="medium" color="ink">
+                    {t('today_intro.dusk_title')}
+                  </Text>
+                  <Text variant="bodyMd" color="inkSubtle">
+                    {t('today_intro.dusk_sub')}
+                  </Text>
+                </View>
+              </View>
+            </GlassCard>
+
+            <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.md }}>
+              <View style={styles.row}>
+                <View style={[styles.swatch, { backgroundColor: colors.primary }]} />
+                <View style={{ flex: 1 }}>
+                  <Text variant="titleMd" family="display" weight="medium" color="ink">
+                    {t('today_intro.shift_title')}
+                  </Text>
+                  <Text variant="bodyMd" color="inkSubtle">
+                    {t('today_intro.shift_sub')}
+                  </Text>
+                </View>
+              </View>
+            </GlassCard>
+
+            <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.md }}>
+              <View style={styles.row}>
+                <View style={[styles.swatchDot, { backgroundColor: colors.ink }]} />
+                <View style={{ flex: 1 }}>
+                  <Text variant="titleMd" family="display" weight="medium" color="ink">
+                    {t('today_intro.now_title')}
+                  </Text>
+                  <Text variant="bodyMd" color="inkSubtle">
+                    {t('today_intro.now_sub')}
+                  </Text>
+                </View>
+              </View>
+            </GlassCard>
+
+            <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.xl }}>
+              <View style={styles.row}>
+                <View style={[styles.swatch, { backgroundColor: colors.sunriseGlow }]} />
+                <View style={{ flex: 1 }}>
+                  <Text variant="titleMd" family="display" weight="medium" color="ink">
+                    {t('today_intro.cards_title')}
+                  </Text>
+                  <Text variant="bodyMd" color="inkSubtle">
+                    {t('today_intro.cards_sub')}
+                  </Text>
+                </View>
+              </View>
+            </GlassCard>
+
+            <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.md }}>
+              <View style={styles.row}>
+                <View style={[styles.swatch, { backgroundColor: colors.primary }]} />
+                <View style={{ flex: 1 }}>
+                  <Text variant="titleMd" family="display" weight="medium" color="ink">
+                    {t('today_intro.set_shift_title')}
+                  </Text>
+                  <Text variant="bodyMd" color="inkSubtle">
+                    {t('today_intro.set_shift_sub')}
+                  </Text>
+                </View>
+              </View>
+            </GlassCard>
+
+            <GlassCard variant="whisper" padding="lg" style={{ marginBottom: spacing.xl }}>
+              <View style={styles.row}>
+                <View style={[styles.swatch, { backgroundColor: colors.duskGlow }]} />
+                <View style={{ flex: 1 }}>
+                  <Text variant="titleMd" family="display" weight="medium" color="ink">
+                    {t('today_intro.offday_title')}
+                  </Text>
+                  <Text variant="bodyMd" color="inkSubtle">
+                    {t('today_intro.offday_sub')}
+                  </Text>
+                </View>
+              </View>
+            </GlassCard>
+
+            <View style={{ marginBottom: spacing.xxl }}>
+              <PillCTA variant="primary" label={t('today_intro.got_it')} onPress={close} />
+            </View>
+          </ScrollView>
+        </Animated.View>
+      </GestureHandlerRootView>
     </Modal>
   );
 }
@@ -171,13 +234,16 @@ const styles = StyleSheet.create({
     borderTopRightRadius: radii.xxl,
     paddingTop: spacing.md,
   },
+  handleZone: {
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.md,
+    alignItems: 'center',
+  },
   handle: {
     width: 40,
-    height: 4,
-    borderRadius: 2,
+    height: 5,
+    borderRadius: 2.5,
     backgroundColor: colors.inkGhost,
-    alignSelf: 'center',
-    marginBottom: spacing.md,
   },
   row: {
     flexDirection: 'row',

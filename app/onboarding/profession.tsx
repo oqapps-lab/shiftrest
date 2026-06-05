@@ -15,6 +15,7 @@ import {
   Text,
   PillCTA,
   ProgressDots,
+  OnboardingBack,
   Glyph,
 } from '../../components/ui';
 import { colors, spacing, radii } from '../../constants/tokens';
@@ -40,6 +41,7 @@ export default function Profession() {
         />
       }
     >
+      <OnboardingBack />
       <Eyebrow>{t('onboarding.step_template', { n: 1, total: 11 })}</Eyebrow>
       <ProgressDots count={11} active={0} style={{ marginVertical: spacing.sm, justifyContent: 'flex-start' }} />
 
