@@ -1,4 +1,149 @@
 const nlNL = {
+  tips: {
+    screen_eyebrow: "SLAAPBIBLIOTHEEK",
+    screen_hero: "Kleine dingen die het verschil maken.",
+    screen_sub: "Wetenschappelijk onderbouwde ideeën die je vanavond kunt proberen. Tik op een kaart om meer te lezen.",
+    category_environment: "Omgeving",
+    category_nutrition: "Voeding",
+    category_pre_sleep: "Ritueel voor het slapen",
+    category_mental: "Mentaal",
+    category_post_shift: "Na je dienst",
+    category_all: "Alles",
+    open_a11y: "Tip openen",
+    citation_label: "BRON",
+    today_eyebrow: "TIP VOOR VANNACHT",
+    today_cta: "Toon alles",
+    warm_socks: {
+      title: "Draag warme sokken in bed",
+      body: "Je voeten verwarmen verwijdt de bloedvaten aan de oppervlakte — warmte verdwijnt sneller uit je kern, en dat is dezelfde daling die je brein het signaal geeft om melatonine vrij te maken. 30% sneller in slaap op koude nachten.",
+    },
+    weighted_blanket: {
+      title: "Probeer een verzwaringsdeken van 7-10 kg",
+      body: "Diepe drukstimulatie verlaagt cortisol en verhoogt serotonine. Onderzoeken tonen ~50% minder nachtelijke ontwakingen bij slapeloosheidspatiënten na 4 weken.",
+    },
+    blackout_curtains: {
+      title: "Verduisteringsgordijnen, geen leds",
+      body: "Zelfs 5 lux slaapkamerlicht (het ledje van een rookmelder) verlaagt melatonine met ~50%. Voor wie overdag slaapt zijn verduisteringsgordijnen geen luxe. Plak leds af die je niet kunt loskoppelen.",
+    },
+    cool_room: {
+      title: "Zet de kamer op 16-19°C",
+      body: "Je kerntemperatuur daalt 's nachts 1°C. Een slaapkamer van 21°C+ blokkeert die daling en versnippert je slaap. 16-19 is voor de meeste volwassenen de ideale waarde.",
+    },
+    phone_charger_outside: {
+      title: "Laad je telefoon op in een andere kamer",
+      body: "Je scrolt niet als hij er niet is. Dat ene \"ik kijk even hoe laat het is\" laat je netvlies oplichten en wist 30 minuten afbouwen in 4 seconden.",
+    },
+    white_noise: {
+      title: "Bruine of roze ruis > stilte",
+      body: "Stilte is slecht — je brein reageert alert op elk minigeluidje. Een gelijkmatige bruine-ruisvloer van 50 dB maskeert sirenes, dichtslaande deuren en huishoudelijk lawaai. Roze ruis liet diepere diepe slaap zien in EEG-onderzoek.",
+    },
+    eye_mask_earplugs: {
+      title: "Slaapmasker + foam-oordopjes",
+      body: "Voor herstelslaap na de dagdienst blokkeren maskers 100% van het licht dat je netvlies bereikt. Foam-oordopjes dempen ~30 dB. Gratis en effectiever dan de meeste apps.",
+    },
+    no_caffeine_after_2pm: {
+      title: "Geen cafeïne 6 u voor het slapen",
+      body: "De halfwaardetijd is ~5 u. Een espresso om 14:00 laat om 20:00 nog een flinke dosis achter. Adenosinereceptoren blijven geblokkeerd, ook al voel je je niet \"opgejaagd\" — je slaap is alsnog oppervlakkiger.",
+    },
+    tart_cherry_juice: {
+      title: "Zure kersensap 1 u voor het slapen",
+      body: "Natuurlijke bron van melatonine plus tryptofaan. Twee bekers per dag voegden ~85 minuten toe aan de totale slaaptijd in een kleine gerandomiseerde studie. Goedkoper dan pillen.",
+    },
+    magnesium_glycinate: {
+      title: "Magnesiumglycinaat, 200-400 mg",
+      body: "Magnesium bindt GABA-receptoren en verlaagt cortisol. De glycinaatvorm is het zachtst voor je maag. Neem geen citraat — een laxerend effect midden in de slaap is precies wat je niet wilt.",
+    },
+    valerian_root: {
+      title: "Valeriaanwortel, 300-600 mg",
+      body: "Milde GABA-agonist. Het effect bouwt op over 2-4 weken nachtelijk gebruik, niet bij losse doses. Ruikt afschuwelijk — neem capsules in plaats van thee.",
+    },
+    chamomile_tea: {
+      title: "Kamillethee is echt, niet zomaar een meme",
+      body: "Apigenine in kamille bindt zwak dezelfde receptoren als benzodiazepinen. Het effect is klein maar reëel, en het ritueel van zetten + nippen verankert het afbouwen.",
+    },
+    protein_breakfast: {
+      title: "Eiwitrijke eerste maaltijd",
+      body: "Tryptofaan uit je ochtendeieren wordt in de loop van de middag serotonine en 's nachts melatonine. Koolhydraatrijke ontbijten laten je insuline pieken en daarna crashen — de energiedip is groter.",
+    },
+    no_alcohol_pre_sleep: {
+      title: "Alcohol versnippert je slaap",
+      body: "Een slaapmutsje laat je sneller in slaap vallen maar snijdt in je REM-slaap en veroorzaakt rond 3 uur micro-ontwakingen terwijl het wordt afgebroken. Je voelt je uitgerust, maar dat ben je niet. Stop 3 u voor het slapen.",
+    },
+    walk_10min: {
+      title: "Wandeling van 10 minuten na het eten",
+      body: "Lichte aerobe beweging verlaagt je bloedsuiker, laat cortisol dalen en geeft een zachte temperatuurpiek die omslaat in de slaapopwekkende daling. Intensiteit is niet nodig.",
+    },
+    warm_shower: {
+      title: "Warme douche 90 min voor het slapen",
+      body: "Tegen de verwachting in KOELT een warme douche van 10 min je juist af. Vaatverwijding = sneller warmteverlies na de douche. Studies tonen 36% sneller in slaap.",
+    },
+    breathing_478: {
+      title: "4-7-8-ademhaling, 4 cycli",
+      body: "Adem 4 s in, houd 7 s vast, adem 8 s uit. Activeert het parasympathische zenuwstelsel. Liggend in bed schakelt het je binnen een minuut uit sympathische alertheid. Gratis en meteen.",
+    },
+    dim_lights_1hr: {
+      title: "Dim alle lichten 1 uur voor het slapen",
+      body: "Fel plafondlicht stelt de melatonineafgifte 90+ minuten uit. Zoutlampen, gedimde wandlampen, kaarsen. Heb je alleen felle lampen — zet ze uit en gebruik de telefoonzaklamp ondersteboven.",
+    },
+    read_paper_book: {
+      title: "Lees een papieren boek in bed",
+      body: "Papier zendt geen blauw licht uit, geeft geen meldingen en eindigt niet met een cliffhanger-algoritme. 6 minuten lezen verlaagt stress met 68%. Saaie boeken helpen nog meer.",
+    },
+    stretching_5min: {
+      title: "5 min heup- + nekrekoefeningen",
+      body: "Ploegenwerk + de hele dag staan = verkrampte heupbuigers en nek. Rustige rekoefeningen lossen lichamelijke spanning op voordat die zich uit als rusteloze benen.",
+    },
+    worry_journal: {
+      title: "Schrijf de taken van morgen van je af",
+      body: "Besteed 5 min aan het opschrijven van je to-dolijst voor morgen voor het slapen. Onderzoek toont dat dit de inslaaptijd met ~9 minuten verkort. De maalstroom op papier zetten is genoeg.",
+    },
+    gratitude_three: {
+      title: "Noem 3 specifieke dingen",
+      body: "Niet \"gezin\" — wat je kind aan tafel zei. Specificiteit leidt je beoordeling weg van dreigingsscan. De inslaaptijd daalt bij volwassenen die het 2 weken doen.",
+    },
+    cognitive_shuffle: {
+      title: "Cognitieve shuffle: willekeurige woorden",
+      body: "Kies een woord (\"garage\"). Beeld je elk woord met een G in: garden, geest, glas. Daarna een woord met een A. Het lineaire verhaal van je brein valt uit elkaar — en dat is slaap.",
+    },
+    no_clock_watching: {
+      title: "Draai de klok weg",
+      body: "Elke blik op \"03:47\" zet stressrekenwerk in gang (\"nog maar 3 uur over\"). Cortisol piekt, slaap verdampt. Verberg de klok — je wekker werkt nog steeds.",
+    },
+    sunglasses_commute: {
+      title: "Zonnebril op weg naar huis in de ochtend",
+      body: "Na een nachtdienst zet de felle ochtendzon je biologische klok op \"dagmodus\" precies wanneer je moet slapen. Een omsluitende zonnebril op de terugweg beschermt je melatoninevenster.",
+    },
+    caffeine_pre_drive: {
+      title: "Kleine koffie 30 min voor de rit naar huis",
+      body: "Een dosis van 50-100 mg onderdrukt de slaperigheid na je dienst NET lang genoeg om veilig thuis te komen. Drink hem voor vertrek — het piekeffect valt achter het stuur. Daarna niets meer tot je geslapen hebt.",
+    },
+    no_screens_30min: {
+      title: "De eerste 30 min thuis geen telefoon",
+      body: "Even decompressie is belangrijk. Telefoon = scrollen = prikkeling = inslaaptijd 60+ min later. Douche, eet iets kleins en ga dan slapen.",
+    },
+    wind_down_with_tea: {
+      title: "Vervang de wijn na je dienst door kruidenthee",
+      body: "Alcohol versnippert dagslaap nog erger dan nachtslaap — de circadiane ontregeling stapelt op. Kamille + citroenmelisse + een rustig ritueel werkt net zo goed.",
+    },
+  },
+  history: {
+    eyebrow: "SLAAPGESCHIEDENIS",
+    title: "Je patroon van 30 dagen",
+    subtitle: "{{total}} nachten vastgelegd. De trend toont alleen de richting — geen schaamte, gewoon een signaal.",
+    empty_title: "Nog niets vastgelegd",
+    empty_sub: "Tik na het slapen op een gevoel bij Vandaag. Na twee dagen begin je je patroon te zien.",
+    trend_label: "WEEK OP WEEK",
+    trend_up: "Je past je beter aan dan vorige week",
+    trend_down: "Een zwaardere week dan de vorige",
+    trend_flat: "Stabiel — ongeveer gelijk aan vorige week",
+    trend_sub: "Vergelijkt de laatste 7 dagen met de 7 ervoor. Alleen de richting.",
+    stat_great: "TOP",
+    stat_ok: "OK",
+    stat_rough: "ZWAAR",
+    calendar_label: "LAATSTE 30 DAGEN · PER WEEK",
+    week_n: "W{{n}}",
+    footnote: "Geen score, geen reeksdruk — gewoon een spiegel.",
+  },
   welcome: {
     eyebrow: 'SHIFTREST',
     hero: 'Rust komt terug, zachtjes.',
@@ -650,6 +795,8 @@ const nlNL = {
     caffeine: { title: 'Cafeïne houdt me wakker', sub: 'Ik leun erop maar het sloopt mijn slaap' },
   },
   paywall: {
+    products_unavailable_title: "Plannen niet geladen",
+    products_unavailable_body: "We konden de App Store niet bereiken. Controleer je verbinding en probeer opnieuw, of tik op Misschien later om door te gaan.",
     eyebrow_plain: 'JE PLAN IS KLAAR',
     eyebrow_with_name: '{{name}}, JE PLAN IS KLAAR',
     hero: '{{days}} dagen. Daarna jouw keuze.',
@@ -801,6 +948,16 @@ const nlNL = {
       later: 'Misschien later',
     },
     loading: {
+      s1_t: "Je rooster lezen",
+      s1_d: "Je diensten, rotatie en wat er volgt",
+      s2_t: "Je biologische klok in kaart brengen",
+      s2_d: "Chronotype en circadiane timing",
+      s3_t: "Licht & cafeïne afstemmen",
+      s3_d: "Wanneer licht zoeken, wanneer stoppen met koffie",
+      s4_t: "Je slaapvensters opbouwen",
+      s4_d: "Exacte tijden om te slapen en op te staan per dienst",
+      s5_t: "Je plan afronden",
+      s5_d: "Elk advies persoonlijk op jou afstemmen",
       eyebrow: 'ANALYSEREN',
     },
     social_proof_2: {

@@ -1,4 +1,149 @@
 const itIT = {
+  tips: {
+    screen_eyebrow: "LIBRERIA DEL SONNO",
+    screen_hero: "Piccole cose che spostano l’ago.",
+    screen_sub: "Idee basate sulla ricerca da provare stanotte. Tocca una card per saperne di più.",
+    category_environment: "Ambiente",
+    category_nutrition: "Alimentazione",
+    category_pre_sleep: "Rituale pre-sonno",
+    category_mental: "Mente",
+    category_post_shift: "Dopo il turno",
+    category_all: "Tutti",
+    open_a11y: "Apri il consiglio",
+    citation_label: "FONTE",
+    today_eyebrow: "CONSIGLIO DI STASERA",
+    today_cta: "Vedi tutti",
+    warm_socks: {
+      title: "Metti calzini caldi a letto",
+      body: "Scaldare i piedi dilata i vasi sanguigni superficiali — il calore si disperde più in fretta dal nucleo, lo stesso calo che segnala al cervello di rilasciare melatonina. Addormentamento più rapido del 30% nelle notti fredde.",
+    },
+    weighted_blanket: {
+      title: "Prova una coperta ponderata da 7-10 kg",
+      body: "La pressione profonda riduce il cortisolo e aumenta la serotonina. Gli studi mostrano circa il 50% di risvegli notturni in meno nei pazienti insonni dopo 4 settimane.",
+    },
+    blackout_curtains: {
+      title: "Tende oscuranti, niente LED",
+      body: "Bastano 5 lux di luce in camera (il LED di un rilevatore di fumo) per abbattere la melatonina di circa il 50%. Per chi dorme di giorno le tende oscuranti sono irrinunciabili. Copri con del nastro i LED che non puoi staccare.",
+    },
+    cool_room: {
+      title: "Porta la stanza a 16-19°C",
+      body: "La temperatura corporea scende di 1°C durante la notte. Una camera a 21°C o più blocca questo calo e frammenta il sonno. 16-19 è il punto ideale per la maggior parte degli adulti.",
+    },
+    phone_charger_outside: {
+      title: "Carica il telefono in un’altra stanza",
+      body: "Non scrolli se non ce l’hai accanto. I controlli del tipo «do solo un’occhiata all’ora» accendono la retina e azzerano 30 minuti di rilassamento in 4 secondi.",
+    },
+    white_noise: {
+      title: "Rumore bruno o rosa, meglio del silenzio",
+      body: "Il silenzio è un nemico — il cervello si allerta a ogni micro-rumore. Un fondo costante di rumore bruno a 50 dB maschera sirene, porte sbattute, rumori di casa. Il rumore rosa ha mostrato un sonno profondo più marcato negli studi EEG.",
+    },
+    eye_mask_earplugs: {
+      title: "Mascherina + tappi in espanso",
+      body: "Per il sonno di recupero dopo il turno, le mascherine bloccano il 100% della luce che raggiunge la retina. I tappi in espanso tagliano circa 30 dB. Gratis e più efficaci di molte app.",
+    },
+    no_caffeine_after_2pm: {
+      title: "Niente caffeina nelle 6 h prima di dormire",
+      body: "L’emivita è di circa 5 h. Un espresso alle 14:00 lascia una dose significativa attiva alle 20:00. I recettori dell’adenosina restano bloccati anche se non ti senti «su di giri» — il sonno è comunque più leggero.",
+    },
+    tart_cherry_juice: {
+      title: "Succo di amarena 1 h prima di dormire",
+      body: "Fonte naturale di melatonina più triptofano. Due tazze al giorno hanno aggiunto circa 85 minuti al tempo totale di sonno in un piccolo studio randomizzato. Più economico delle pillole.",
+    },
+    magnesium_glycinate: {
+      title: "Magnesio glicinato, 200-400 mg",
+      body: "Il magnesio si lega ai recettori GABA e abbassa il cortisolo. La forma glicinato è la più delicata sull’intestino. Evita il citrato — l’effetto lassativo a metà sonno è proprio ciò che non vuoi.",
+    },
+    valerian_root: {
+      title: "Radice di valeriana, 300-600 mg",
+      body: "Lieve agonista del GABA. L’effetto si costruisce nell’arco di 2-4 settimane di uso serale, non con la singola dose. Ha un odore pessimo — meglio le capsule della tisana.",
+    },
+    chamomile_tea: {
+      title: "La camomilla funziona davvero, non è solo un luogo comune",
+      body: "L’apigenina della camomilla si lega agli stessi recettori delle benzodiazepine, in modo debole. L’effetto è piccolo ma reale, e il rituale di prepararla e sorseggiarla aiuta a rilassarsi.",
+    },
+    protein_breakfast: {
+      title: "Primo pasto ricco di proteine",
+      body: "Il triptofano delle uova del mattino diventa serotonina entro metà pomeriggio e melatonina di notte. Le colazioni cariche di carboidrati impennano e poi fanno crollare l’insulina — il calo di energia è più forte.",
+    },
+    no_alcohol_pre_sleep: {
+      title: "L’alcol frammenta il sonno",
+      body: "Un bicchierino della staffa ti fa addormentare prima ma taglia il REM e provoca micro-risvegli verso le 3 mentre viene metabolizzato. Ti senti riposato, ma non lo sei. Smetti 3 h prima di dormire.",
+    },
+    walk_10min: {
+      title: "Camminata di 10 minuti dopo cena",
+      body: "Una leggera attività aerobica abbassa la glicemia, riduce il cortisolo e dà un lieve picco di temperatura che poi si inverte nel calo che concilia il sonno. Non serve intensità.",
+    },
+    warm_shower: {
+      title: "Doccia calda 90 min prima di dormire",
+      body: "Contro ogni intuizione, 10 minuti di doccia calda ti RAFFREDDANO. La vasodilatazione accelera la dispersione di calore dopo la doccia. Gli studi mostrano un addormentamento più rapido del 36%.",
+    },
+    breathing_478: {
+      title: "Respirazione 4-7-8 per 4 cicli",
+      body: "Inspira 4 s, trattieni 7 s, espira 8 s. Attiva il parasimpatico. Fatta sdraiato a letto ti porta fuori dall’allerta simpatica in meno di un minuto. Gratis, immediato.",
+    },
+    dim_lights_1hr: {
+      title: "Abbassa tutte le luci 1 ora prima di dormire",
+      body: "La luce intensa dall’alto ritarda il rilascio di melatonina di oltre 90 minuti. Lampade di sale, applique soffuse, candele. Se hai solo lampadine forti, spegnile e usa la torcia del telefono rivolta verso il basso.",
+    },
+    read_paper_book: {
+      title: "Leggi un libro di carta a letto",
+      body: "La carta non emette luce blu, non ti invia notifiche, non finisce con un cliffhanger studiato dall’algoritmo. 6 minuti di lettura abbassano lo stress del 68%. I libri noiosi aiutano ancora di più.",
+    },
+    stretching_5min: {
+      title: "5 min di stretching per anche e collo",
+      body: "Lavoro a turni più ore in piedi tutto il giorno significa flessori dell’anca e collo bloccati. Allunghi delicati sciolgono la tensione fisica prima che si trasformi in gambe senza riposo.",
+    },
+    worry_journal: {
+      title: "Scarica su carta i compiti di domani",
+      body: "Dedica 5 min a scrivere la lista delle cose da fare di domani prima di dormire. Gli studi mostrano che questo riduce il tempo per addormentarsi di circa 9 minuti. Basta tirare fuori il pensiero dalla testa.",
+    },
+    gratitude_three: {
+      title: "Nomina 3 cose precise",
+      body: "Non «la famiglia» — ciò che tuo figlio ha detto a cena. La precisione sposta la mente dalla ricerca di minacce. Il tempo per addormentarsi cala negli adulti che lo praticano per 2 settimane.",
+    },
+    cognitive_shuffle: {
+      title: "Shuffle cognitivo: parole a caso",
+      body: "Scegli una parola («garage»). Visualizza ogni parola che inizia con G: giardino, gufo, gomma. Poi una parola che inizia con A. La narrazione lineare del cervello si sgretola — e arriva il sonno.",
+    },
+    no_clock_watching: {
+      title: "Gira l’orologio dall’altra parte",
+      body: "Ogni occhiata alle «03:47» innesca calcoli da stress («mi restano solo 3 ore»). Il cortisolo s’impenna, il sonno svanisce. Nascondi l’orologio — le sveglie funzionano lo stesso.",
+    },
+    sunglasses_commute: {
+      title: "Occhiali da sole nel tragitto verso casa al mattino",
+      body: "Dopo un turno di notte, il sole intenso del mattino riporta il tuo orologio circadiano in «modalità giorno» proprio quando devi dormire. Occhiali da sole avvolgenti sulla via di casa proteggono la tua finestra di melatonina.",
+    },
+    caffeine_pre_drive: {
+      title: "Un caffè piccolo 30 min prima di guidare verso casa",
+      body: "Una dose di 50-100 mg smorza la sonnolenza post-turno giusto il tempo di arrivare a casa in sicurezza. Bevilo prima di partire — l’effetto è al picco quando sei al volante. Poi niente altro fino a dopo aver dormito.",
+    },
+    no_screens_30min: {
+      title: "Niente telefono nei primi 30 min a casa",
+      body: "La decompressione conta. Telefono uguale scrolling uguale stimolazione uguale addormentamento ritardato di oltre 60 min. Fai una doccia, mangia qualcosa di leggero, poi dormi.",
+    },
+    wind_down_with_tea: {
+      title: "Sostituisci il vino post-turno con una tisana",
+      body: "L’alcol frammenta il sonno diurno ancora più di quello notturno — il disallineamento circadiano si somma. Camomilla, melissa e un rituale tranquillo funzionano altrettanto bene.",
+    },
+  },
+  history: {
+    eyebrow: "STORICO DEL SONNO",
+    title: "Il tuo andamento di 30 giorni",
+    subtitle: "{{total}} notti registrate. L’andamento indica solo la direzione — nessun giudizio, solo un segnale.",
+    empty_title: "Ancora niente registrato",
+    empty_sub: "Tocca un umore su Oggi dopo aver dormito. Dopo due giorni inizierai a vedere il tuo andamento.",
+    trend_label: "SETTIMANA SU SETTIMANA",
+    trend_up: "Ti stai adattando meglio della settimana scorsa",
+    trend_down: "Settimana più dura della precedente",
+    trend_flat: "Stabile — più o meno come la settimana scorsa",
+    trend_sub: "Confronta gli ultimi 7 giorni con i 7 precedenti. Solo la direzione.",
+    stat_great: "TOP",
+    stat_ok: "OK",
+    stat_rough: "DURE",
+    calendar_label: "ULTIMI 30 GIORNI · PER SETTIMANA",
+    week_n: "S{{n}}",
+    footnote: "Nessun punteggio, nessuna pressione da serie — solo uno specchio.",
+  },
   welcome: {
     eyebrow: "SHIFTREST",
     hero: "Il riposo torna, con calma.",
@@ -649,6 +794,8 @@ const itIT = {
     caffeine: { title: "La caffeina mi tiene sveglio", sub: "Ne dipendo ma rovina il mio sonno" },
   },
   paywall: {
+    products_unavailable_title: "Piani non caricati",
+    products_unavailable_body: "Non siamo riusciti a raggiungere l’App Store. Controlla la connessione e riprova, oppure tocca Magari più tardi per continuare.",
     eyebrow_plain: "IL TUO PIANO È PRONTO",
     eyebrow_with_name: "{{name}}, IL TUO PIANO È PRONTO",
     hero: "{{days}} giorni. Poi decidi tu.",
@@ -800,6 +947,16 @@ const itIT = {
       later: "Magari più tardi",
     },
     loading: {
+      s1_t: "Leggiamo la tua rotazione",
+      s1_d: "I tuoi turni, la rotazione e cosa viene dopo",
+      s2_t: "Mappiamo il tuo orologio biologico",
+      s2_d: "Cronotipo e tempi circadiani",
+      s3_t: "Calibriamo luce e caffeina",
+      s3_d: "Quando cercare la luce, quando smettere col caffè",
+      s4_t: "Costruiamo le tue finestre di sonno",
+      s4_d: "Orari esatti di sonno e sveglia per ogni turno",
+      s5_t: "Finalizziamo il tuo piano",
+      s5_d: "Personalizziamo ogni consiglio su misura per te",
       eyebrow: "ANALISI IN CORSO",
     },
     social_proof_2: {

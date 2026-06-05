@@ -1,4 +1,149 @@
 const frFR = {
+  tips: {
+    screen_eyebrow: "BIBLIOTHÈQUE DU SOMMEIL",
+    screen_hero: "De petites choses qui font la différence.",
+    screen_sub: "Des idées fondées sur la recherche, à tester dès ce soir. Touche une carte pour en savoir plus.",
+    category_environment: "Environnement",
+    category_nutrition: "Nutrition",
+    category_pre_sleep: "Rituel d’avant-sommeil",
+    category_mental: "Mental",
+    category_post_shift: "Après ton poste",
+    category_all: "Tout",
+    open_a11y: "Ouvrir le conseil",
+    citation_label: "SOURCE",
+    today_eyebrow: "CONSEIL DE CE SOIR",
+    today_cta: "Voir tout",
+    warm_socks: {
+      title: "Mets des chaussettes chaudes au lit",
+      body: "Réchauffer tes pieds dilate les vaisseaux superficiels — la chaleur s’évacue plus vite depuis ton noyau, et c’est cette même baisse qui signale à ton cerveau de libérer la mélatonine. Endormissement 30 % plus rapide les nuits froides.",
+    },
+    weighted_blanket: {
+      title: "Essaie une couverture lestée de 7 à 10 kg",
+      body: "La pression profonde réduit le cortisol et augmente la sérotonine. Des essais montrent ~50 % de réveils nocturnes en moins chez les insomniaques après 4 semaines.",
+    },
+    blackout_curtains: {
+      title: "Rideaux occultants, zéro LED",
+      body: "Même 5 lux de lumière dans la chambre (la LED d’un détecteur de fumée) réduisent la mélatonine d’environ 50 %. Pour qui dort le jour, les rideaux occultants sont non négociables. Recouvre d’un ruban les LED que tu ne peux pas débrancher.",
+    },
+    cool_room: {
+      title: "Règle la chambre entre 16 et 19 °C",
+      body: "Ta température corporelle baisse de 1 °C pendant la nuit. Une chambre à 21 °C ou plus bloque cette baisse et fragmente le sommeil. 16 à 19 °C est l’idéal pour la plupart des adultes.",
+    },
+    phone_charger_outside: {
+      title: "Recharge ton téléphone dans une autre pièce",
+      body: "Tu ne scrolleras pas s’il n’est pas là. Le « je regarde juste l’heure » éclaire ta rétine et réduit à néant 30 minutes de décompression en 4 secondes.",
+    },
+    white_noise: {
+      title: "Bruit brun ou rose plutôt que le silence",
+      body: "Le silence est mauvais — ton cerveau réagit au moindre micro-bruit. Un fond de bruit brun stable à 50 dB masque sirènes, portes qui claquent, allées et venues. Le bruit rose a montré un sommeil profond plus marqué en EEG.",
+    },
+    eye_mask_earplugs: {
+      title: "Masque de nuit + bouchons en mousse",
+      body: "Pour le sommeil de récupération de jour, les masques bloquent 100 % de la lumière atteignant la rétine. Les bouchons en mousse coupent ~30 dB. Gratuit et plus efficace que la plupart des applis.",
+    },
+    no_caffeine_after_2pm: {
+      title: "Pas de caféine 6 h avant le coucher",
+      body: "Sa demi-vie est d’environ 5 h. Un espresso à 14 h laisse une dose notable à 20 h. Les récepteurs à adénosine restent bloqués même si tu ne te sens pas « survolté » — le sommeil reste plus léger.",
+    },
+    tart_cherry_juice: {
+      title: "Jus de cerise acidulée 1 h avant le coucher",
+      body: "Source naturelle de mélatonine et de tryptophane. Deux verres par jour ont ajouté ~85 minutes de sommeil total dans un petit essai randomisé. Moins cher que des comprimés.",
+    },
+    magnesium_glycinate: {
+      title: "Magnésium glycinate, 200 à 400 mg",
+      body: "Le magnésium se lie aux récepteurs GABA et abaisse le cortisol. La forme glycinate est la plus douce pour les intestins. Évite le citrate — un effet laxatif en plein sommeil, c’est exactement ce que tu ne veux pas.",
+    },
+    valerian_root: {
+      title: "Racine de valériane, 300 à 600 mg",
+      body: "Léger agoniste GABA. L’effet se construit sur 2 à 4 semaines de prise quotidienne, pas en une seule dose. Ça sent très mauvais — préfère les gélules au thé.",
+    },
+    chamomile_tea: {
+      title: "La camomille, c’est réel, pas qu’un cliché",
+      body: "L’apigénine de la camomille se lie aux mêmes récepteurs que les benzodiazépines, faiblement. L’effet est petit mais réel, et le rituel d’infuser et de siroter ancre la décompression.",
+    },
+    protein_breakfast: {
+      title: "Un premier repas riche en protéines",
+      body: "Le tryptophane de tes œufs du matin devient sérotonine en milieu d’après-midi, puis mélatonine la nuit. Un petit-déjeuner riche en glucides fait grimper puis chuter l’insuline — la baisse d’énergie est plus brutale.",
+    },
+    no_alcohol_pre_sleep: {
+      title: "L’alcool fragmente ton sommeil",
+      body: "Un dernier verre t’endort plus vite mais réduit le sommeil paradoxal et déclenche des micro-réveils vers 3 h pendant qu’il se métabolise. Tu te sens reposé, mais tu ne l’es pas. Arrête 3 h avant le coucher.",
+    },
+    walk_10min: {
+      title: "10 minutes de marche après le dîner",
+      body: "Une activité aérobie légère fait baisser la glycémie, réduit le cortisol et provoque une douce hausse de température qui s’inverse ensuite en la baisse qui favorise le sommeil. Pas besoin d’intensité.",
+    },
+    warm_shower: {
+      title: "Douche chaude 90 min avant le coucher",
+      body: "Contre toute attente, une douche chaude de 10 min te REFROIDIT. La vasodilatation = perte de chaleur plus rapide après la douche. Des études montrent un endormissement 36 % plus rapide.",
+    },
+    breathing_478: {
+      title: "Respiration 4-7-8 sur 4 cycles",
+      body: "Inspire 4 s, retiens 7 s, expire 8 s. Active le parasympathique. Allongé dans ton lit, ça te fait passer de la vigilance sympathique au calme en moins d’une minute. Gratuit, instantané.",
+    },
+    dim_lights_1hr: {
+      title: "Tamise toutes les lumières 1 h avant le coucher",
+      body: "Une lumière de plafond vive retarde la libération de mélatonine de plus de 90 minutes. Lampes de sel, appliques tamisées, bougies. Si tu n’as que des ampoules vives — éteins-les et utilise la lampe du téléphone retournée vers le bas.",
+    },
+    read_paper_book: {
+      title: "Lis un livre papier au lit",
+      body: "Le papier n’émet pas de lumière bleue, ne t’envoie pas de notifications, ne se termine pas sur un cliffhanger calculé par un algorithme. 6 minutes de lecture font baisser le stress de 68 %. Les livres ennuyeux aident encore plus.",
+    },
+    stretching_5min: {
+      title: "5 min d’étirements hanches + nuque",
+      body: "Travail posté + station debout toute la journée = fléchisseurs de hanche et nuque verrouillés. Des étirements doux relâchent la tension physique avant qu’elle ne se transforme en jambes sans repos.",
+    },
+    worry_journal: {
+      title: "Vide ta tête des tâches de demain",
+      body: "Passe 5 min à écrire ta liste de tâches du lendemain avant de te coucher. Des essais montrent que cela réduit le délai d’endormissement d’environ 9 minutes. Externaliser la boucle mentale suffit.",
+    },
+    gratitude_three: {
+      title: "Nomme 3 choses précises",
+      body: "Pas « la famille » — ce que ton enfant a dit au dîner. La précision réoriente l’évaluation, loin de la veille aux menaces. Le délai d’endormissement baisse chez les adultes qui s’y tiennent 2 semaines.",
+    },
+    cognitive_shuffle: {
+      title: "Brouillage cognitif : mots au hasard",
+      body: "Choisis un mot (« garage »). Visualise chaque mot commençant par G : garde, gâteau, glace. Puis un mot commençant par A. Le récit linéaire du cerveau se désagrège — c’est ça, le sommeil.",
+    },
+    no_clock_watching: {
+      title: "Tourne l’horloge vers le mur",
+      body: "Chaque coup d’œil à « 03:47 » déclenche un calcul anxieux (« plus que 3 heures »). Le cortisol grimpe, le sommeil s’évapore. Cache l’horloge — les alarmes fonctionnent toujours.",
+    },
+    sunglasses_commute: {
+      title: "Lunettes de soleil sur le trajet du matin",
+      body: "Après un poste de nuit, le soleil vif du matin remet ton horloge interne en « mode jour » au moment précis où tu dois dormir. Des lunettes de soleil enveloppantes sur la route du retour préservent ta fenêtre à mélatonine.",
+    },
+    caffeine_pre_drive: {
+      title: "Petit café 30 min avant le trajet retour",
+      body: "Une dose de 50 à 100 mg atténue la somnolence d’après-poste JUSTE assez pour rentrer en sécurité. Bois-le avant de partir — effet maximal au volant. Puis plus rien jusqu’à ce que tu aies dormi.",
+    },
+    no_screens_30min: {
+      title: "Pas de téléphone les 30 premières minutes à la maison",
+      body: "La décompression compte. Téléphone = scroll = stimulation = endormissement retardé de plus de 60 min. Douche, petit en-cas, puis dodo.",
+    },
+    wind_down_with_tea: {
+      title: "Remplace le verre d’après-poste par une tisane",
+      body: "L’alcool fragmente le sommeil de jour encore plus que celui de nuit — le décalage circadien s’ajoute. Camomille + mélisse + un rituel tranquille font tout aussi bien l’affaire.",
+    },
+  },
+  history: {
+    eyebrow: "HISTORIQUE DE SOMMEIL",
+    title: "Ta tendance sur 30 jours",
+    subtitle: "{{total}} nuits notées. La tendance ne montre qu’une direction — aucun jugement, juste un signal.",
+    empty_title: "Rien de noté pour l’instant",
+    empty_sub: "Touche une humeur sur Aujourd’hui après le sommeil. Au bout de deux jours, ta tendance commence à se dessiner.",
+    trend_label: "D’UNE SEMAINE À L’AUTRE",
+    trend_up: "Tu t’adaptes mieux que la semaine dernière",
+    trend_down: "Semaine plus difficile que la précédente",
+    trend_flat: "Stable — à peu près comme la semaine dernière",
+    trend_sub: "Compare les 7 derniers jours aux 7 précédents. Direction seulement.",
+    stat_great: "TOP",
+    stat_ok: "OK",
+    stat_rough: "DUR",
+    calendar_label: "30 DERNIERS JOURS · PAR SEMAINE",
+    week_n: "S{{n}}",
+    footnote: "Pas de score, pas de pression de série — juste un miroir.",
+  },
   welcome: {
     eyebrow: 'SHIFTREST',
     hero: 'Le repos revient, en douceur.',
@@ -650,6 +795,8 @@ const frFR = {
     caffeine: { title: 'La caféine me tient éveillé', sub: 'J’en dépends mais elle gâche mon sommeil' },
   },
   paywall: {
+    products_unavailable_title: "Échec du chargement des offres",
+    products_unavailable_body: "Impossible de joindre l’App Store. Vérifie ta connexion et réessaie, ou touche Plus tard pour continuer.",
     eyebrow_plain: 'TON PLAN EST PRÊT',
     eyebrow_with_name: '{{name}}, TON PLAN EST PRÊT',
     hero: '{{days}} jours. Ensuite c’est toi qui décides.',
@@ -801,6 +948,16 @@ const frFR = {
       later: 'Plus tard peut-être',
     },
     loading: {
+      s1_t: "Lecture de ton planning",
+      s1_d: "Tes postes, ta rotation et ce qui arrive",
+      s2_t: "Cartographie de ton horloge interne",
+      s2_d: "Chronotype et timing circadien",
+      s3_t: "Réglage lumière et caféine",
+      s3_d: "Quand chercher la lumière, quand arrêter le café",
+      s4_t: "Construction de tes fenêtres de sommeil",
+      s4_d: "Heures exactes de coucher et de réveil par poste",
+      s5_t: "Finalisation de ton plan",
+      s5_d: "On personnalise chaque recommandation pour toi",
       eyebrow: 'ANALYSE EN COURS',
     },
     social_proof_2: {

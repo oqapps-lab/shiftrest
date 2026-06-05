@@ -1,4 +1,149 @@
 const deDE = {
+  tips: {
+    screen_eyebrow: "SCHLAF-BIBLIOTHEK",
+    screen_hero: "Kleine Dinge, die etwas bewegen.",
+    screen_sub: "Forschungsbasierte Ideen, die du heute Nacht ausprobieren kannst. Tippe eine Karte an, um mehr zu lesen.",
+    category_environment: "Umgebung",
+    category_nutrition: "Ernährung",
+    category_pre_sleep: "Einschlafritual",
+    category_mental: "Kopf",
+    category_post_shift: "Nach deiner Schicht",
+    category_all: "Alle",
+    open_a11y: "Tipp öffnen",
+    citation_label: "QUELLE",
+    today_eyebrow: "TIPP FÜR HEUTE NACHT",
+    today_cta: "Alle ansehen",
+    warm_socks: {
+      title: "Trag warme Socken im Bett",
+      body: "Warme Füße weiten die oberflächlichen Blutgefäße — Wärme entweicht schneller aus deinem Körperkern, und genau dieser Abfall signalisiert deinem Gehirn, Melatonin auszuschütten. 30 % schnelleres Einschlafen in kalten Nächten.",
+    },
+    weighted_blanket: {
+      title: "Probier eine 7–10 kg schwere Decke",
+      body: "Tiefer, gleichmäßiger Druck senkt Cortisol und erhöht Serotonin. Studien zeigen nach 4 Wochen ~50 % weniger nächtliches Aufwachen bei Menschen mit Schlafstörungen.",
+    },
+    blackout_curtains: {
+      title: "Verdunkelung, keine LEDs",
+      body: "Schon 5 Lux Zimmerlicht (eine Rauchmelder-LED) senken das Melatonin um ~50 %. Für Tagschläfer sind Verdunkelungsvorhänge Pflicht. Klebe LEDs ab, die du nicht ausstecken kannst.",
+    },
+    cool_room: {
+      title: "Stell den Raum auf 16–19 °C",
+      body: "Deine Körperkerntemperatur fällt über Nacht um 1 °C. Ein Schlafzimmer mit 21 °C+ blockiert diesen Abfall und zerstückelt den Schlaf. 16–19 ist für die meisten Erwachsenen ideal.",
+    },
+    phone_charger_outside: {
+      title: "Lad dein Handy in einem anderen Raum",
+      body: "Du scrollst nicht, wenn es nicht da ist. Das schnelle „Ich schau nur kurz auf die Uhr“ beleuchtet deine Netzhaut und setzt 30 Minuten Herunterfahren in 4 Sekunden zurück.",
+    },
+    white_noise: {
+      title: "Braunes oder rosa Rauschen > Stille",
+      body: "Stille ist schlecht — dein Gehirn schreckt bei jedem Mikrogeräusch auf. Ein stetiger 50-dB-Teppich aus braunem Rauschen überdeckt Sirenen, knallende Türen, Haushaltslärm. Rosa Rauschen zeigte in EEG-Studien tieferen Tiefschlaf.",
+    },
+    eye_mask_earplugs: {
+      title: "Schlafmaske + Schaumstoff-Ohrstöpsel",
+      body: "Für den Erholungsschlaf nach der Tagschicht blockieren Masken 100 % des Lichts, das die Netzhaut erreicht. Schaumstoff-Ohrstöpsel dämpfen ~30 dB. Kostenlos und wirksamer als die meisten Apps.",
+    },
+    no_caffeine_after_2pm: {
+      title: "Kein Koffein 6 Std. vor dem Schlafen",
+      body: "Die Halbwertszeit liegt bei ~5 Std. Ein Espresso um 14:00 lässt um 20:00 noch eine spürbare Dosis übrig. Die Adenosin-Rezeptoren bleiben blockiert, auch wenn du dich nicht „aufgedreht“ fühlst — der Schlaf bleibt flacher.",
+    },
+    tart_cherry_juice: {
+      title: "Sauerkirschsaft 1 Std. vor dem Schlafen",
+      body: "Natürliche Melatonin-Quelle plus Tryptophan. Zwei Tassen täglich brachten in einer kleinen randomisierten Studie ~85 Minuten mehr Gesamtschlaf. Günstiger als Tabletten.",
+    },
+    magnesium_glycinate: {
+      title: "Magnesiumglycinat, 200–400 mg",
+      body: "Magnesium bindet an GABA-Rezeptoren und senkt Cortisol. Die Glycinat-Form ist am magenschonendsten. Kein Citrat nehmen — der abführende Effekt mitten im Schlaf ist genau das, was du nicht willst.",
+    },
+    valerian_root: {
+      title: "Baldrianwurzel, 300–600 mg",
+      body: "Milder GABA-Agonist. Die Wirkung baut sich über 2–4 Wochen täglicher Einnahme auf, nicht mit Einzeldosen. Riecht scheußlich — Kapseln statt Tee.",
+    },
+    chamomile_tea: {
+      title: "Kamillentee wirkt wirklich, nicht nur als Meme",
+      body: "Das Apigenin in Kamille bindet schwach an dieselben Rezeptoren wie Benzodiazepine. Der Effekt ist klein, aber echt, und das Ritual aus Aufbrühen + Schlürfen verankert das Herunterkommen.",
+    },
+    protein_breakfast: {
+      title: "Proteinreiche erste Mahlzeit",
+      body: "Das Tryptophan aus deinen Morgen-Eiern wird bis zum Nachmittag zu Serotonin und bis zur Nacht zu Melatonin. Kohlenhydratreiche Frühstücke treiben den Insulinspiegel hoch und lassen ihn abstürzen — das Energietief ist größer.",
+    },
+    no_alcohol_pre_sleep: {
+      title: "Alkohol zerstückelt deinen Schlaf",
+      body: "Ein Schlummertrunk lässt dich schneller einschlafen, kappt aber den REM-Schlaf und löst beim Abbau gegen 3 Uhr Mikro-Wachphasen aus. Du fühlst dich erholt, bist es aber nicht. Hör 3 Std. vor dem Schlafen auf.",
+    },
+    walk_10min: {
+      title: "10-Minuten-Spaziergang nach dem Essen",
+      body: "Leichte Bewegung senkt den Blutzucker, drückt das Cortisol und sorgt für einen sanften Temperaturanstieg, der sich danach in den schlaffördernden Abfall umkehrt. Intensität ist nicht nötig.",
+    },
+    warm_shower: {
+      title: "Warme Dusche 90 Min. vor dem Schlafen",
+      body: "Paradoxerweise KÜHLT dich eine 10-minütige warme Dusche ab. Die Gefäßerweiterung sorgt nach der Dusche für schnelleren Wärmeverlust. Studien zeigen 36 % schnelleres Einschlafen.",
+    },
+    breathing_478: {
+      title: "4-7-8-Atmung über 4 Zyklen",
+      body: "4 Sek. einatmen, 7 Sek. halten, 8 Sek. ausatmen. Aktiviert den Parasympathikus. Im Bett liegend bringt sie dich in unter einer Minute aus der sympathischen Wachheit. Kostenlos, sofort.",
+    },
+    dim_lights_1hr: {
+      title: "Alle Lichter 1 Stunde vor dem Schlafen dimmen",
+      body: "Helles Deckenlicht verzögert die Melatonin-Ausschüttung um 90+ Minuten. Salzlampen, gedämpfte Wandleuchten, Kerzen. Wenn du nur helle Birnen hast — schalt sie aus und nutz die Handy-Taschenlampe kopfüber.",
+    },
+    read_paper_book: {
+      title: "Lies ein gedrucktes Buch im Bett",
+      body: "Druck strahlt kein Blaulicht aus, benachrichtigt dich nicht und endet nicht auf einem Algorithmus-Cliffhanger. 6 Minuten Lesen senken den Stress um 68 %. Langweilige Bücher helfen mehr.",
+    },
+    stretching_5min: {
+      title: "5 Min. Hüft- + Nackendehnung",
+      body: "Schichtarbeit + den ganzen Tag stehen = verkürzte Hüftbeuger und ein verspannter Nacken. Sanftes Dehnen löst die körperliche Anspannung, bevor sie sich als unruhige Beine zeigt.",
+    },
+    worry_journal: {
+      title: "Schreib morgige Aufgaben aus dem Kopf",
+      body: "Verbring vor dem Schlafen 5 Min. damit, deine To-do-Liste für morgen zu schreiben. Studien zeigen, dass das die Einschlafzeit um ~9 Minuten verkürzt. Den Gedankenkreis nach außen zu bringen, reicht schon.",
+    },
+    gratitude_three: {
+      title: "Nenne 3 konkrete Dinge",
+      body: "Nicht „Familie“ — sondern was dein Kind beim Abendessen gesagt hat. Konkretheit lenkt das Denken weg vom Bedrohungs-Scan. Bei Erwachsenen, die das 2 Wochen üben, sinkt die Einschlafzeit.",
+    },
+    cognitive_shuffle: {
+      title: "Cognitive Shuffle: zufällige Wörter",
+      body: "Wähl ein Wort („Garage“). Stell dir jedes Wort vor, das mit G beginnt: Garten, Gespenst, Geld. Dann ein Wort mit A. Die lineare Erzählung des Gehirns bricht zusammen — das ist Schlaf.",
+    },
+    no_clock_watching: {
+      title: "Dreh die Uhr weg",
+      body: "Jeder Blick auf „03:47“ löst Stress-Rechnerei aus („nur noch 3 Stunden“). Das Cortisol schnellt hoch, der Schlaf löst sich auf. Versteck die Uhr — Wecker funktionieren trotzdem.",
+    },
+    sunglasses_commute: {
+      title: "Sonnenbrille auf dem Heimweg am Morgen",
+      body: "Nach einer Nachtschicht stellt helle Morgensonne deine innere Uhr auf „Tagmodus“ — genau dann, wenn du schlafen musst. Eine umschließende Sonnenbrille auf der Heimfahrt schützt dein Melatonin-Fenster.",
+    },
+    caffeine_pre_drive: {
+      title: "Kleiner Kaffee 30 Min. vor der Heimfahrt",
+      body: "Eine Dosis von 50–100 mg dämpft die Müdigkeit nach der Schicht GERADE lange genug, um sicher heimzukommen. Trink ihn vor der Abfahrt — die volle Wirkung setzt am Steuer ein. Danach nichts mehr, bis du geschlafen hast.",
+    },
+    no_screens_30min: {
+      title: "Kein Handy in den ersten 30 Min. zu Hause",
+      body: "Abschalten ist wichtig. Handy = Scrollen = Reizüberflutung = um 60+ Min. verzögertes Einschlafen. Dusch dich, iss eine Kleinigkeit, dann schlaf.",
+    },
+    wind_down_with_tea: {
+      title: "Ersetz den Wein nach der Schicht durch Kräutertee",
+      body: "Alkohol zerstückelt den Tagschlaf noch schlimmer als den Nachtschlaf — die zirkadiane Verschiebung verstärkt sich. Kamille + Melisse + ein ruhiges Ritual wirken genauso gut.",
+    },
+  },
+  history: {
+    eyebrow: "SCHLAFVERLAUF",
+    title: "Dein 30-Tage-Muster",
+    subtitle: "{{total}} Nächte erfasst. Der Trend zeigt nur die Richtung — keine Schuldzuweisung, nur ein Signal.",
+    empty_title: "Noch nichts erfasst",
+    empty_sub: "Tippe nach dem Schlafen auf Heute eine Bewertung an. Nach zwei Tagen siehst du dein Muster.",
+    trend_label: "WOCHE ZU WOCHE",
+    trend_up: "Du passt dich besser an als letzte Woche",
+    trend_down: "Härtere Woche als die letzte",
+    trend_flat: "Stabil — etwa wie letzte Woche",
+    trend_sub: "Vergleicht die letzten 7 Tage mit den 7 davor. Nur die Richtung.",
+    stat_great: "TOP",
+    stat_ok: "OK",
+    stat_rough: "HART",
+    calendar_label: "LETZTE 30 TAGE · NACH WOCHE",
+    week_n: "W{{n}}",
+    footnote: "Kein Score, kein Serien-Druck — nur ein Spiegel.",
+  },
   welcome: {
     eyebrow: 'SHIFTREST',
     hero: 'Schlaf kehrt zurück, sanft.',
@@ -678,6 +823,8 @@ const deDE = {
     caffeine: { title: 'Koffein hält mich wach', sub: 'Ich brauche es, aber es ruiniert meinen Schlaf' },
   },
   paywall: {
+    products_unavailable_title: "Pläne nicht geladen",
+    products_unavailable_body: "Wir konnten den App Store nicht erreichen. Prüfe deine Verbindung und versuch es erneut, oder tippe auf Vielleicht später, um weiterzumachen.",
     eyebrow_plain: 'DEIN PLAN IST FERTIG',
     eyebrow_with_name: '{{name}}, DEIN PLAN IST FERTIG',
     hero: '{{days}} Tage. Dann entscheidest du.',
@@ -829,6 +976,16 @@ const deDE = {
       later: 'Vielleicht später',
     },
     loading: {
+      s1_t: "Wir lesen deinen Dienstplan",
+      s1_d: "Deine Schichten, deine Rotation und was als Nächstes kommt",
+      s2_t: "Wir kartieren deine innere Uhr",
+      s2_d: "Chronotyp und zirkadianes Timing",
+      s3_t: "Wir stimmen Licht & Koffein ab",
+      s3_d: "Wann Licht suchen, wann den Kaffee stoppen",
+      s4_t: "Wir bauen deine Schlaffenster",
+      s4_d: "Genaue Schlaf- und Wachzeiten je Schicht",
+      s5_t: "Wir finalisieren deinen Plan",
+      s5_d: "Wir personalisieren jede Empfehlung für dich",
       eyebrow: 'WIRD ANALYSIERT',
     },
     social_proof_2: {

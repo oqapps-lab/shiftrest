@@ -1,4 +1,149 @@
 const sv = {
+  tips: {
+    screen_eyebrow: "SÖMNBIBLIOTEK",
+    screen_hero: "Små saker som gör skillnad.",
+    screen_sub: "Forskningsbaserade idéer du kan prova i kväll. Tryck på ett kort för att läsa mer.",
+    category_environment: "Miljö",
+    category_nutrition: "Kost",
+    category_pre_sleep: "Ritual före sömn",
+    category_mental: "Mentalt",
+    category_post_shift: "Efter ditt pass",
+    category_all: "Alla",
+    open_a11y: "Öppna tips",
+    citation_label: "KÄLLA",
+    today_eyebrow: "KVÄLLENS TIPS",
+    today_cta: "Visa alla",
+    warm_socks: {
+      title: "Ha varma strumpor i sängen",
+      body: "Att värma fötterna vidgar blodkärlen vid huden — värmen lämnar kroppskärnan snabbare, samma temperaturfall som signalerar till hjärnan att frigöra melatonin. 30 % snabbare insomning kalla nätter.",
+    },
+    weighted_blanket: {
+      title: "Prova ett tyngdtäcke på 7–10 kg",
+      body: "Djup tryckstimulering sänker kortisol och höjer serotonin. Studier visar ~50 % färre uppvaknanden hos personer med sömnlöshet efter 4 veckor.",
+    },
+    blackout_curtains: {
+      title: "Mörkläggningsgardiner, inga lysdioder",
+      body: "Redan 5 lux ljus i sovrummet (en brandvarnar-LED) sänker melatoninet med ~50 %. För dagsovare är mörkläggning ett måste. Tejpa över lysdioder du inte kan dra ur.",
+    },
+    cool_room: {
+      title: "Ställ rummet på 16–19 °C",
+      body: "Din kroppstemperatur sjunker 1 °C under natten. Ett sovrum på 21 °C+ blockerar det fallet och splittrar sömnen. 16–19 är guldläget för de flesta vuxna.",
+    },
+    phone_charger_outside: {
+      title: "Ladda telefonen i ett annat rum",
+      body: "Du scrollar inte om den inte finns där. Det där \"jag kollar bara tiden\" tänder upp näthinnan och nollställer 30 minuters nedvarvning på 4 sekunder.",
+    },
+    white_noise: {
+      title: "Brunt eller rosa brus > tystnad",
+      body: "Tystnad är dåligt — hjärnan reagerar på varje litet ljud. Ett jämnt golv av brunt brus på 50 dB maskerar sirener, smällande dörrar och liv i huset. Rosa brus har gett djupare djupsömn i EEG-studier.",
+    },
+    eye_mask_earplugs: {
+      title: "Sovmask + öronproppar i skum",
+      body: "För återhämtningssömn på dagen blockerar masken 100 % av ljuset till näthinnan. Skumproppar dämpar ~30 dB. Gratis och mer effektivt än de flesta appar.",
+    },
+    no_caffeine_after_2pm: {
+      title: "Inget koffein 6 h före sömn",
+      body: "Halveringstiden är ~5 h. En espresso kl. 14 lämnar en kännbar dos kvar kl. 20. Adenosinreceptorerna förblir blockerade även om du inte känner dig uppvarvad — sömnen blir ändå ytligare.",
+    },
+    tart_cherry_juice: {
+      title: "Surkörsbärsjuice 1 h före sömn",
+      body: "Naturlig källa till melatonin plus tryptofan. Två koppar dagligen gav ~85 minuter längre total sömn i en liten randomiserad studie. Billigare än piller.",
+    },
+    magnesium_glycinate: {
+      title: "Magnesiumglycinat, 200–400 mg",
+      body: "Magnesium binder till GABA-receptorer och sänker kortisol. Glycinatformen är skonsammast för magen. Ta inte citrat — laxerande effekt mitt i sömnen är precis vad du inte vill ha.",
+    },
+    valerian_root: {
+      title: "Vänderot, 300–600 mg",
+      body: "Mild GABA-agonist. Effekten byggs upp över 2–4 veckors nattligt bruk, inte av enstaka doser. Luktar hemskt — välj kapslar framför te.",
+    },
+    chamomile_tea: {
+      title: "Kamomillte funkar på riktigt, inte bara som meme",
+      body: "Apigeninet i kamomill binder svagt till samma receptorer som bensodiazepiner. Effekten är liten men verklig, och själva ritualen att brygga och smutta förankrar nedvarvningen.",
+    },
+    protein_breakfast: {
+      title: "Proteinrik första måltid",
+      body: "Tryptofanet från morgonens ägg blir serotonin framåt eftermiddagen och melatonin till kvällen. Kolhydratrika frukostar spikar och kraschar insulinet — energidippen blir större.",
+    },
+    no_alcohol_pre_sleep: {
+      title: "Alkohol splittrar din sömn",
+      body: "En sängfösare gör att du somnar snabbare men skär bort REM och utlöser mikrouppvaknanden runt kl. 3 när den bryts ned. Du känner dig utvilad, men är det inte. Sluta 3 h före sömn.",
+    },
+    walk_10min: {
+      title: "10 minuters promenad efter middagen",
+      body: "Lätt konditionsrörelse sänker blodsockret, drar ner kortisol och ger en mjuk temperaturhöjning som sedan vänder till det sömngivande fallet. Ingen intensitet behövs.",
+    },
+    warm_shower: {
+      title: "Varm dusch 90 min före sömn",
+      body: "Bakvänt nog KYLER en 10-minuters varm dusch dig. Vidgade kärl = snabbare värmeavgivning efteråt. Studier visar 36 % snabbare insomning.",
+    },
+    breathing_478: {
+      title: "4-7-8-andning i 4 omgångar",
+      body: "Andas in 4 s, håll 7 s, andas ut 8 s. Aktiverar det parasympatiska systemet. Liggande i sängen flyttar det dig från uppvarvad vakenhet på under en minut. Gratis och direkt.",
+    },
+    dim_lights_1hr: {
+      title: "Dämpa allt ljus 1 timme före sömn",
+      body: "Starkt takljus fördröjer melatoninet med 90+ minuter. Saltlampor, dämpade vägglampor, levande ljus. Har du bara starka lampor — släck dem och använd telefonens ficklampa uppochner.",
+    },
+    read_paper_book: {
+      title: "Läs en pappersbok i sängen",
+      body: "Tryck avger inget blått ljus, ger inga notiser och slutar inte på en algoritmstyrd cliffhanger. 6 minuters läsning sänker stressen med 68 %. Tråkiga böcker hjälper mest.",
+    },
+    stretching_5min: {
+      title: "5 min stretch för höft och nacke",
+      body: "Skiftarbete + att stå hela dagen = låsta höftböjare och nacke. Mjuka stretchar släpper på spänningen innan den dyker upp som rastlösa ben.",
+    },
+    worry_journal: {
+      title: "Skriv av dig morgondagens uppgifter",
+      body: "Lägg 5 min på att skriva morgondagens att-göra-lista före sömn. Studier visar att det kortar insomningstiden med ~9 minuter. Att få ut tankesnurran på pränt räcker.",
+    },
+    gratitude_three: {
+      title: "Sätt ord på 3 specifika saker",
+      body: "Inte \"familjen\" — vad ditt barn sa vid middagen. Det specifika styr om hjärnan från hotsökande. Insomningstiden sjunker hos vuxna som övar i 2 veckor.",
+    },
+    cognitive_shuffle: {
+      title: "Tankeblandning: slumpade ord",
+      body: "Välj ett ord (\"garage\"). Visualisera varje ord som börjar på G: gräsmatta, gnista, glass. Sedan ett ord på A. Hjärnans linjära berättelse bryts ner — det är sömn.",
+    },
+    no_clock_watching: {
+      title: "Vänd klockan bort",
+      body: "Varje blick på \"03:47\" utlöser stress-räkning (\"bara 3 timmar kvar\"). Kortisolet spikar, sömnen avdunstar. Göm klockan — alarmet funkar ändå.",
+    },
+    sunglasses_commute: {
+      title: "Solglasögon på morgonens väg hem",
+      body: "Efter ett nattpass nollställer det starka morgonljuset din inre klocka till \"dagläge\" precis när du behöver sova. Heltäckande solglasögon på vägen hem skyddar ditt melatoninfönster.",
+    },
+    caffeine_pre_drive: {
+      title: "Liten kaffe 30 min före hemresan",
+      body: "En dos på 50–100 mg dämpar tröttheten efter passet precis tillräckligt länge för att du ska ta dig hem säkert. Drick den innan du går — toppeffekt vid ratten. Sedan inget mer förrän du sovit.",
+    },
+    no_screens_30min: {
+      title: "Ingen telefon de första 30 min hemma",
+      body: "Avkoppling spelar roll. Telefon = scrollande = stimulans = 60+ min senare insomning. Duscha, ät något litet, sov sedan.",
+    },
+    wind_down_with_tea: {
+      title: "Byt vinet efter passet mot örtte",
+      body: "Alkohol splittrar dagsömnen ännu värre än nattsömnen — den cirkadiska störningen förvärrar det. Kamomill + citronmeliss + en lugn ritual gör samma nytta.",
+    },
+  },
+  history: {
+    eyebrow: "SÖMNHISTORIK",
+    title: "Ditt mönster över 30 dagar",
+    subtitle: "{{total}} nätter loggade. Trenden visar bara riktning — ingen skuld, bara en signal.",
+    empty_title: "Inget loggat ännu",
+    empty_sub: "Tryck på ett humör på Idag efter sömnen. Efter två dagar börjar du se ditt mönster.",
+    trend_label: "VECKA MOT VECKA",
+    trend_up: "Du anpassar dig bättre än förra veckan",
+    trend_down: "Tuffare vecka än den förra",
+    trend_flat: "Stabilt — ungefär som förra veckan",
+    trend_sub: "Jämför de senaste 7 dagarna med de 7 innan. Bara riktning.",
+    stat_great: "TOPPEN",
+    stat_ok: "OK",
+    stat_rough: "TUFFT",
+    calendar_label: "SENASTE 30 DAGARNA · PER VECKA",
+    week_n: "V{{n}}",
+    footnote: "Ingen poäng, ingen svit-press — bara en spegel.",
+  },
   welcome: {
     eyebrow: 'SHIFTREST',
     hero: 'Vilan kommer ikapp.',
@@ -649,6 +794,8 @@ const sv = {
     caffeine: { title: 'Koffein håller mig vaken', sub: 'Jag är beroende men det förstör sömnen' },
   },
   paywall: {
+    products_unavailable_title: "Planerna laddades inte",
+    products_unavailable_body: "Vi kunde inte nå App Store. Kontrollera din anslutning och försök igen, eller tryck Kanske senare för att fortsätta.",
     eyebrow_plain: 'DIN PLAN ÄR KLAR',
     eyebrow_with_name: '{{name}}, DIN PLAN ÄR KLAR',
     hero: '{{days}} dagar. Sedan bestämmer du.',
@@ -800,6 +947,16 @@ const sv = {
       later: 'Kanske senare',
     },
     loading: {
+      s1_t: "Läser av ditt schema",
+      s1_d: "Dina pass, din rotation och vad som väntar",
+      s2_t: "Kartlägger din kroppsklocka",
+      s2_d: "Kronotyp och cirkadisk tajming",
+      s3_t: "Finjusterar ljus och koffein",
+      s3_d: "När du ska söka ljus, när du ska sluta med kaffe",
+      s4_t: "Bygger dina sömnfönster",
+      s4_d: "Exakta tider att sova och vakna per pass",
+      s5_t: "Slutför din plan",
+      s5_d: "Personanpassar varje rekommendation för dig",
       eyebrow: 'ANALYSERAR',
     },
     social_proof_2: {
