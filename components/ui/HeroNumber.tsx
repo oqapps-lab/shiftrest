@@ -54,6 +54,11 @@ export function HeroNumber({
           align={align}
           accessibilityRole="text"
           accessibilityLabel={typeof value === 'number' ? `${value}${unit ?? ''}` : String(value)}
+          // R20-1: 3+ digit values (365-day streak, high journal counts)
+          // were wrapping mid-number inside narrow stat tiles. Force one
+          // line and auto-shrink instead.
+          numberOfLines={1}
+          adjustsFontSizeToFit
         >
           {value}
         </Text>

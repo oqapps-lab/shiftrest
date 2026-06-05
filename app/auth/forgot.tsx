@@ -20,6 +20,7 @@ import {
 } from '../../components/ui';
 import { colors, spacing } from '../../constants/tokens';
 import { useAuth } from '../../lib/auth/store';
+import { localizeAuthError } from '../../lib/auth/errors';
 import { safeBack } from '../../lib/nav';
 import { t } from '../../lib/i18n';
 
@@ -39,7 +40,7 @@ export default function Forgot() {
     const { error: err } = await resetPassword(email.trim());
     setLoading(false);
     if (err) {
-      setError(err.message);
+      setError(localizeAuthError(err.message));
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       return;
     }

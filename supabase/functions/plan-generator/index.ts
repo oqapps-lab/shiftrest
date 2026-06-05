@@ -200,9 +200,10 @@ serve(async (req) => {
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL');
   const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+  const anonKey = Deno.env.get('SUPABASE_ANON_KEY');
   const openaiKey = Deno.env.get('OPENAI_API_KEY');
 
-  if (!supabaseUrl || !serviceRoleKey || !openaiKey) {
+  if (!supabaseUrl || !serviceRoleKey || !anonKey || !openaiKey) {
     return new Response(JSON.stringify({ error: 'missing_env' }), {
       status: 500,
       headers: { ...corsHeaders(), 'content-type': 'application/json' },
@@ -210,7 +211,11 @@ serve(async (req) => {
   }
 
   // Two clients: one as user (JWT) for identity check, one as service (admin) for writes.
-  const userClient = createClient(supabaseUrl, serviceRoleKey, {
+  // R19/SR-1 FIX: the user client MUST use the ANON key — a service_role
+  // key ignores RLS regardless of the JWT header, so the per-user identity
+  // guarantee on reads was fake. Anon key + JWT header enforces RLS as the
+  // authenticated user. (matches the summarize-story pattern.)
+  const userClient = createClient(supabaseUrl, anonKey, {
     global: { headers: { Authorization: `Bearer ${userJwt}` } },
     auth: { persistSession: false, autoRefreshToken: false },
   });
@@ -415,6 +420,25 @@ serve(async (req) => {
     .maybeSingle();
 
   if (insertErr) {
+    // R19/R-1: delete+insert isn't atomic. Two concurrent invokes for the
+    // same (user_id, date) both miss cache and both insert → the partial
+    // unique index (WHERE deleted_at IS NULL) makes the loser throw 23505.
+    // Recover by returning the row the winner just wrote instead of 500.
+    if (insertErr.code === '23505') {
+      const { data: winner } = await adminClient
+        .from('sleep_plans')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('date', date)
+        .is('deleted_at', null)
+        .maybeSingle();
+      if (winner) {
+        return new Response(
+          JSON.stringify({ plan: winner, cached: true, generated_at: winner.created_at }),
+          { headers: { ...corsHeaders(), 'content-type': 'application/json' } },
+        );
+      }
+    }
     return new Response(
       JSON.stringify({ error: 'insert_failed', details: insertErr.message }),
       { status: 500, headers: { ...corsHeaders(), 'content-type': 'application/json' } },

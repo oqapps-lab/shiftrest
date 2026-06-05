@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { View, Pressable, StyleSheet, Linking, Alert } from 'react-native';
+import { View, Pressable, StyleSheet, Linking } from 'react-native';
 import Constants from 'expo-constants';
 import {
   Screen,
@@ -14,8 +14,10 @@ import {
   Text,
   GlassCard,
   Glyph,
+  showAppDialog,
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
+import { router } from 'expo-router';
 import { safeBack } from '../../lib/nav';
 import { t } from '../../lib/i18n';
 
@@ -30,7 +32,11 @@ interface Row {
 
 function openExternal(url: string) {
   Linking.openURL(url).catch(() =>
-    Alert.alert(t('settings_screens.about.link_open_error'), t('settings_screens.about.link_copy_hint', { url })),
+    showAppDialog({
+      title: t('settings_screens.about.link_open_error'),
+      message: t('settings_screens.about.link_copy_hint', { url }),
+      actions: [{ label: t('a11y.close'), style: 'cancel' }],
+    }),
   );
 }
 
@@ -63,12 +69,12 @@ export default function About() {
     {
       glyph: 'bell',
       label: t('settings_screens.about.privacy'),
-      onPress: () => openExternal('https://oqapps.pro/legal/shiftsleep/privacy'),
+      onPress: () => router.push('/legal/privacy'),
     },
     {
       glyph: 'bell',
       label: t('settings_screens.about.terms'),
-      onPress: () => openExternal('https://oqapps.pro/legal/shiftsleep/terms'),
+      onPress: () => router.push('/legal/terms'),
     },
   ];
 

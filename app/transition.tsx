@@ -209,9 +209,19 @@ export default function Transition() {
       </View>
 
       <Eyebrow>{t('transition.eyebrow_template', { from: fromShift.toUpperCase(), to: toShift.toUpperCase() })}</Eyebrow>
-      <View style={{ marginTop: spacing.lg, marginBottom: spacing.huge }}>
+      <View style={{ marginTop: spacing.lg }}>
         <SerifHero>{transitionHeadline(days)}</SerifHero>
       </View>
+      {/* D2: explicit start → end window so the plan reads as bounded, not open-ended. */}
+      {days.length >= 2 ? (
+        <View style={styles.windowPill}>
+          <Glyph name="calendar" size={14} color="primary" />
+          <Text variant="labelMd" weight="medium" color="primary" style={{ marginLeft: spacing.xs }}>
+            {`${days[0].label} → ${days[days.length - 1].label}`}
+          </Text>
+        </View>
+      ) : null}
+      <View style={{ height: spacing.huge }} />
 
       {days.map((d, dayIdx) => {
         const done = d.steps.filter((s) => s.done).length;
@@ -326,6 +336,16 @@ const styles = StyleSheet.create({
   closeRow: {
     alignItems: 'flex-end',
     marginBottom: spacing.md,
+  },
+  windowPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    marginTop: spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    backgroundColor: colors.primaryContainer,
+    borderRadius: radii.pill,
   },
   dayHeader: {
     flexDirection: 'row',

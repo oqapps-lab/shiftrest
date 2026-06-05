@@ -14,6 +14,7 @@ import {
   Text,
   PillCTA,
   ProgressDots,
+  OnboardingBack,
   Toggle,
   SegmentedControl,
   TextField,
@@ -48,6 +49,7 @@ export default function Family() {
         />
       }
     >
+      <OnboardingBack />
       <Eyebrow>{t('onboarding.step_template', { n: 10, total: 11 })}</Eyebrow>
       <ProgressDots
         count={11}

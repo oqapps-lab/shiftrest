@@ -22,6 +22,7 @@ import {
 } from '../../components/ui';
 import { colors, spacing } from '../../constants/tokens';
 import { useAuth } from '../../lib/auth/store';
+import { localizeAuthError } from '../../lib/auth/errors';
 import { safeBack } from '../../lib/nav';
 import { t } from '../../lib/i18n';
 
@@ -37,7 +38,7 @@ export default function Login() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     const { error: err } = await signInWithApple();
     if (err) {
-      setError(err.message);
+      setError(localizeAuthError(err.message));
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       return;
     }
@@ -54,7 +55,7 @@ export default function Login() {
     const { error: err } = await signInWithPassword(email.trim(), password);
     setLoading(false);
     if (err) {
-      setError(err.message);
+      setError(localizeAuthError(err.message));
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       return;
     }

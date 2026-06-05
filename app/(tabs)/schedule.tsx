@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, Pressable, Alert } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import {
   Screen,
@@ -17,6 +17,7 @@ import {
   Text,
   Glyph,
   PillCTA,
+  showAppDialog,
 } from '../../components/ui';
 import { router } from 'expo-router';
 import { colors, spacing } from '../../constants/tokens';
@@ -227,14 +228,14 @@ export default function Schedule() {
       return;
     }
 
-    // Already has a shift → confirm delete
-    Alert.alert(
-      t('schedule.cell_action_title'),
-      t('schedule.cell_action_body', { date: cell.iso }),
-      [
-        { text: t('schedule.cell_cancel'), style: 'cancel' },
+    // Already has a shift → confirm delete (A3: branded dialog)
+    showAppDialog({
+      title: t('schedule.cell_action_title'),
+      message: t('schedule.cell_action_body', { date: cell.iso }),
+      actions: [
+        { label: t('schedule.cell_cancel'), style: 'cancel' },
         {
-          text: t('schedule.cell_delete'),
+          label: t('schedule.cell_delete'),
           style: 'destructive',
           onPress: async () => {
             if (!isSupabaseConfigured || !supabase || !user?.id) {
@@ -247,14 +248,19 @@ export default function Schedule() {
               .eq('user_id', user.id)
               .eq('date', cell.iso!);
             if (error) {
-              Alert.alert(t('schedule.cell_delete_failed'), error.message);
+              if (__DEV__) console.warn('[schedule-delete]', error);
+              showAppDialog({
+                title: t('schedule.cell_delete_failed'),
+                message: t('schedule.cell_delete_failed_body'),
+                actions: [{ label: t('schedule.cell_cancel'), style: 'cancel' }],
+              });
               return;
             }
             emitChange(EVENTS.shiftsChanged);
           },
         },
       ],
-    );
+    });
   }, [user?.id]);
 
   return (

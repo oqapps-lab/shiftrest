@@ -28,6 +28,8 @@ interface Props {
   label?: string;
   centerLabel?: string;     // optional override for center ("4:32")
   style?: ViewStyle;
+  /** A11y: screen-reader summary of the ring's data (sleep/shift/now). */
+  accessibilityLabel?: string;
 }
 
 /**
@@ -63,6 +65,7 @@ export function TimelineRing({
   label,
   centerLabel,
   style,
+  accessibilityLabel,
 }: Props) {
   const cx = size / 2;
   const cy = size / 2;
@@ -76,7 +79,12 @@ export function TimelineRing({
   const displayedTime = centerLabel ?? `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
 
   return (
-    <View style={[{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }, style]}>
+    <View
+      style={[{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }, style]}
+      accessible={accessibilityLabel ? true : undefined}
+      accessibilityRole={accessibilityLabel ? 'image' : undefined}
+      accessibilityLabel={accessibilityLabel}
+    >
       <Svg width={size} height={size}>
         <Defs>
           <SvgLinearGradient id="sleepGrad" x1="0" y1="0" x2="1" y2="1">

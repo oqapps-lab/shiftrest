@@ -19,6 +19,20 @@ let activated = false;
 export const PAYWALL_PLACEMENT_ID =
   process.env.EXPO_PUBLIC_ADAPTY_PLACEMENT_ID ?? 'main';
 
+// G5: the #1 cause of a "dead" Start-trial button is a placement-id mismatch
+// between the dashboard and the app — `getPaywall('main')` throws (or returns
+// no products), products stay null, and the CTA silently does nothing. We don't
+// hard-code a single id: try the env-configured one first, then the ids this
+// project has used in the Adapty dashboard. Whichever returns products wins,
+// and we log it so a future mismatch is debuggable from the Metro console.
+const PLACEMENT_CANDIDATES: string[] = Array.from(
+  new Set(
+    [process.env.EXPO_PUBLIC_ADAPTY_PLACEMENT_ID, 'main', 'main_paywall'].filter(
+      Boolean,
+    ) as string[],
+  ),
+);
+
 // Single-flight cache so repeated useEffect renders don't refetch.
 let paywallCache: { paywall: AdaptyPaywall; products: AdaptyPaywallProduct[] } | null = null;
 
@@ -85,17 +99,89 @@ export async function loadPaywallProducts(): Promise<
     await ensureAdaptyActivated();
     if (!activated) return null;
   }
-  try {
-    const paywall = await adapty.getPaywall(PAYWALL_PLACEMENT_ID);
-    const products = await adapty.getPaywallProducts(paywall);
-    paywallCache = { paywall, products };
-    return paywallCache;
-  } catch (err) {
-    if (__DEV__) {
-      console.log('[adapty] loadPaywallProducts failed:', err);
+  let lastErr: unknown = null;
+  for (const placementId of PLACEMENT_CANDIDATES) {
+    try {
+      const paywall = await adapty.getPaywall(placementId);
+      const products = await adapty.getPaywallProducts(paywall);
+      if (products && products.length > 0) {
+        paywallCache = { paywall, products };
+        if (__DEV__) {
+          console.log(
+            `[adapty] paywall loaded from placement "${placementId}" (${products.length} products)`,
+          );
+        }
+        return paywallCache;
+      }
+      if (__DEV__) {
+        console.log(`[adapty] placement "${placementId}" returned 0 products — trying next`);
+      }
+    } catch (err) {
+      lastErr = err;
+      if (__DEV__) {
+        console.log(`[adapty] placement "${placementId}" failed:`, err);
+      }
     }
-    return null;
   }
+  if (__DEV__) {
+    console.log('[adapty] loadPaywallProducts: no placement yielded products', lastErr);
+  }
+  return null;
+}
+
+/**
+ * G5 — Trial intro-offer helpers.
+ *
+ * Adapty 3.15 (`@adapty/core`) models a subscription's introductory offer at
+ * `product.subscription?.offer`. The native SDK only POPULATES that `offer`
+ * (with `identifier.type === 'introductory'`) when StoreKit reports the user
+ * is ELIGIBLE for the group's introductory offer. Once a user has consumed the
+ * subscription group's one free trial, StoreKit (and therefore Adapty) omits
+ * the introductory offer — so its presence IS the eligibility signal. There is
+ * no separate `introductoryOfferEligibility` field in this SDK version.
+ *
+ * A free trial is the offer phase whose `paymentMode === 'free_trial'`; its
+ * length is `phase.subscriptionPeriod` (`numberOfUnits` + `unit`).
+ */
+
+/** Find the free-trial phase of a product's introductory offer, if any. */
+function introTrialPhase(product: AdaptyPaywallProduct | null | undefined) {
+  const offer = product?.subscription?.offer;
+  if (!offer || offer.identifier.type !== 'introductory') return null;
+  return offer.phases.find((ph) => ph.paymentMode === 'free_trial') ?? null;
+}
+
+/**
+ * Trial length in days for a product's introductory free-trial offer, or null
+ * when the product has no such offer (ineligible / not loaded / no trial).
+ * Converts the StoreKit period unit to days (week ×7, month ×30, year ×365).
+ */
+export function getIntroTrialDays(
+  product: AdaptyPaywallProduct | null | undefined,
+): number | null {
+  const phase = introTrialPhase(product);
+  if (!phase) return null;
+  const { numberOfUnits, unit } = phase.subscriptionPeriod;
+  if (!numberOfUnits || numberOfUnits <= 0) return null;
+  const perUnit =
+    unit === 'day' ? 1 : unit === 'week' ? 7 : unit === 'month' ? 30 : unit === 'year' ? 365 : 0;
+  if (perUnit === 0) return null;
+  return numberOfUnits * perUnit;
+}
+
+/**
+ * Eligibility for the introductory free trial:
+ *  - 'eligible'   — product loaded AND carries an introductory free-trial offer
+ *  - 'ineligible' — product loaded but no introductory free-trial offer
+ *                   (user already consumed the group's one offer)
+ *  - 'unknown'    — product not loaded (Expo Go / pre-load); StoreKit can't be
+ *                   queried, so callers should keep the trial marketing default.
+ */
+export function getTrialEligibility(
+  product: AdaptyPaywallProduct | null | undefined,
+): 'eligible' | 'ineligible' | 'unknown' {
+  if (!product) return 'unknown';
+  return introTrialPhase(product) ? 'eligible' : 'ineligible';
 }
 
 /**

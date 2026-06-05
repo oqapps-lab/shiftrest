@@ -3,7 +3,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Alert } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import {
   Screen,
@@ -15,6 +15,7 @@ import {
   Slider,
   GlassCard,
   PillCTA,
+  showAppDialog,
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
 import { mockScheduleTemplates } from '../../mock/user';
@@ -35,13 +36,13 @@ export default function WorkScheduleSettings() {
   const onAutoFill = () => {
     if (!state.scheduleId) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    Alert.alert(
-      t('settings_sub.schedule.autofill_alert_title', { weeks: 4 }),
-      t('settings_sub.schedule.autofill_alert_body', { weeks: 4 }),
-      [
-        { text: t('settings_sub.schedule.autofill_cancel'), style: 'cancel' },
+    showAppDialog({
+      title: t('settings_sub.schedule.autofill_alert_title', { weeks: 4 }),
+      message: t('settings_sub.schedule.autofill_alert_body', { weeks: 4 }),
+      actions: [
+        { label: t('settings_sub.schedule.autofill_cancel'), style: 'cancel' },
         {
-          text: t('settings_sub.schedule.autofill_confirm'),
+          label: t('settings_sub.schedule.autofill_confirm'),
           onPress: async () => {
             setApplying(true);
             try {
@@ -49,21 +50,21 @@ export default function WorkScheduleSettings() {
                 weeks: 4,
                 userId: user?.id ?? null,
               });
-              Alert.alert(
-                t('settings_sub.schedule.autofill_done_title'),
-                t('settings_sub.schedule.autofill_done_body', {
+              showAppDialog({
+                title: t('settings_sub.schedule.autofill_done_title'),
+                message: t('settings_sub.schedule.autofill_done_body', {
                   inserted: result.inserted,
                   skipped: result.skippedExisting,
                 }),
-                [{ text: t('settings_sub.schedule.autofill_ok') }],
-              );
+                actions: [{ label: t('settings_sub.schedule.autofill_ok') }],
+              });
             } finally {
               setApplying(false);
             }
           },
         },
       ],
-    );
+    });
   };
 
   return (
