@@ -673,6 +673,8 @@ const en = {
       autofill_cancel: 'Cancel',
       autofill_confirm: 'Apply',
       autofill_done_title: 'Done',
+      autofill_error_title: 'Couldn’t save your schedule',
+      autofill_error_body: 'Some shifts didn’t save. Check your connection and try again.',
       autofill_done_body: '{{inserted}} shifts added · {{skipped}} skipped (already had a shift).',
       autofill_ok: 'OK',
     },
@@ -901,6 +903,8 @@ const en = {
     caffeine: { title: 'Caffeine keeps me up', sub: 'I rely on it but it ruins my sleep' },
   },
   paywall: {
+    purchase_pending_title: 'Purchase processing',
+    purchase_pending_body: 'Your purchase is being completed — you’ll get access as soon as it’s approved.',
     products_unavailable_title: "Plans didn’t load",
     products_unavailable_body: "We couldn’t reach the App Store. Check your connection and try again, or tap Maybe later to keep going.",
     unlock_header: "WHAT YOU UNLOCK",

@@ -270,8 +270,14 @@ export default function Paywall() {
           setSubmitting(false);
           return;
         }
-        // 'pending' or other: treat as soft success (Apple sometimes delays)
+        // AUDIT-D: 'pending' (Ask-to-Buy / SCA) — tell the user it's processing
+        // instead of leaving them on an unresponsive CTA, then exit the paywall.
         logEvent('purchase_pending', { plan: planValue });
+        showAppDialog({
+          title: t('paywall.purchase_pending_title'),
+          message: t('paywall.purchase_pending_body'),
+          actions: [{ label: t('a11y.close'), style: 'cancel', onPress: () => leavePaywall() }],
+        });
       } catch (err) {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
         logEvent('purchase_failed', { plan: planValue, reason: String(err) });

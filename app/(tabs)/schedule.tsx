@@ -201,11 +201,26 @@ export default function Schedule() {
     setApplying(true);
     (async () => {
       try {
-        await applyScheduleTemplate(onboarding.scheduleId!, {
+        const result = await applyScheduleTemplate(onboarding.scheduleId!, {
           weeks: 4,
           userId: user?.id ?? null,
         });
         emitChange(EVENTS.shiftsChanged);
+        if (result.errored > 0 && result.inserted === 0) {
+          // AUDIT-F: don't swallow a failed apply — the CTA used to just flip
+          // the spinner and leave an empty calendar with zero feedback.
+          showAppDialog({
+            title: t('settings_sub.schedule.autofill_error_title'),
+            message: t('settings_sub.schedule.autofill_error_body'),
+            actions: [{ label: t('settings_sub.schedule.autofill_ok') }],
+          });
+        }
+      } catch {
+        showAppDialog({
+          title: t('settings_sub.schedule.autofill_error_title'),
+          message: t('settings_sub.schedule.autofill_error_body'),
+          actions: [{ label: t('settings_sub.schedule.autofill_ok') }],
+        });
       } finally {
         setApplying(false);
       }

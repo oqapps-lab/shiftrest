@@ -50,12 +50,27 @@ export default function WorkScheduleSettings() {
                 weeks: 4,
                 userId: user?.id ?? null,
               });
+              if (result.errored > 0 && result.inserted === 0) {
+                // AUDIT-H: was showing the success dialog even when every insert failed.
+                showAppDialog({
+                  title: t('settings_sub.schedule.autofill_error_title'),
+                  message: t('settings_sub.schedule.autofill_error_body'),
+                  actions: [{ label: t('settings_sub.schedule.autofill_ok') }],
+                });
+              } else {
+                showAppDialog({
+                  title: t('settings_sub.schedule.autofill_done_title'),
+                  message: t('settings_sub.schedule.autofill_done_body', {
+                    inserted: result.inserted,
+                    skipped: result.skippedExisting,
+                  }),
+                  actions: [{ label: t('settings_sub.schedule.autofill_ok') }],
+                });
+              }
+            } catch {
               showAppDialog({
-                title: t('settings_sub.schedule.autofill_done_title'),
-                message: t('settings_sub.schedule.autofill_done_body', {
-                  inserted: result.inserted,
-                  skipped: result.skippedExisting,
-                }),
+                title: t('settings_sub.schedule.autofill_error_title'),
+                message: t('settings_sub.schedule.autofill_error_body'),
                 actions: [{ label: t('settings_sub.schedule.autofill_ok') }],
               });
             } finally {
