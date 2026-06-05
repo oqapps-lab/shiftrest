@@ -19,7 +19,7 @@ import { Text } from './Text';
 import { Eyebrow } from './Eyebrow';
 
 interface Props {
-  nowHour: number;          // 0..23.99
+  nowHour?: number;         // 0..23.99 — omit to hide the now-marker (past/future days)
   sleepStart: number;       // hour (e.g. 23)
   sleepEnd: number;         // hour (e.g. 7) — can cross midnight
   shiftStart?: number;
@@ -73,9 +73,9 @@ export function TimelineRing({
   const r = cx - strokeWidth - 4; // padding for the marker dot
   const markerR = 8;
 
-  const nowPoint = polar(nowHour, cx, cy, r);
-  const hh = Math.floor(nowHour);
-  const mm = Math.floor((nowHour - hh) * 60);
+  const nowPoint = nowHour == null ? null : polar(nowHour, cx, cy, r);
+  const hh = nowHour == null ? 0 : Math.floor(nowHour);
+  const mm = nowHour == null ? 0 : Math.floor((nowHour - hh) * 60);
   const displayedTime = centerLabel ?? `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
 
   return (
@@ -128,11 +128,13 @@ export function TimelineRing({
           fill="none"
         />
 
-        {/* Now marker — filled sage circle on the ring */}
-        <G>
-          <Circle cx={nowPoint.x} cy={nowPoint.y} r={markerR + 4} fill={colors.canvas} />
-          <Circle cx={nowPoint.x} cy={nowPoint.y} r={markerR} fill={colors.primary} />
-        </G>
+        {/* Now marker — filled sage circle on the ring (only when nowHour given) */}
+        {nowPoint && (
+          <G>
+            <Circle cx={nowPoint.x} cy={nowPoint.y} r={markerR + 4} fill={colors.canvas} />
+            <Circle cx={nowPoint.x} cy={nowPoint.y} r={markerR} fill={colors.primary} />
+          </G>
+        )}
       </Svg>
 
       {/* Centre label */}

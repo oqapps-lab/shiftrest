@@ -31,7 +31,7 @@ import {
   anchorSleepWindow,
 } from '../../lib/derive';
 import { useGeneratedPlan, planHourAsFloat, type PlanRecommendation } from '../../lib/queries/plan';
-import { useSubscription } from '../../lib/queries';
+import { useSubscription, useShifts } from '../../lib/queries';
 import { useOnboarding, chronotypeBucket, computeChronotypeScore } from '../../lib/onboarding/store';
 import { useLocalShifts } from '../../lib/local-shifts/store';
 import type { GlyphName } from '../../components/ui';
@@ -334,17 +334,26 @@ export default function Plan() {
     subscription?.status === 'trial' ||
     subscription?.status === 'grace_period';
   const [whyOpen, setWhyOpen] = useState(false);
-  const { data: livePlan } = useGeneratedPlan();
+  // AUDIT-G: the plan must reflect the SELECTED day, not always today.
+  // Compute the offset date up-front and pass it to useGeneratedPlan so a
+  // signed-in user stepping to Yesterday/Tomorrow gets THAT day's plan
+  // (it was frozen to today while the header claimed the date changed).
+  const targetDate = new Date();
+  targetDate.setDate(targetDate.getDate() + offset);
+  const targetIso = `${targetDate.getFullYear()}-${String(targetDate.getMonth() + 1).padStart(2, '0')}-${String(targetDate.getDate()).padStart(2, '0')}`;
+  const { data: livePlan } = useGeneratedPlan(targetIso);
   const { state: onboarding } = useOnboarding();
 
   // K2/B1: per-day shift kind for the offset date. Plan derives entirely
   // from this date's shift kind + chronotype, so any date works.
   const localShiftsMap = useLocalShifts();
-  const targetDate = new Date();
-  targetDate.setDate(targetDate.getDate() + offset);
-  const targetIso = `${targetDate.getFullYear()}-${String(targetDate.getMonth() + 1).padStart(2, '0')}-${String(targetDate.getDate()).padStart(2, '0')}`;
+  // AUDIT-G: signed-in users keep shifts in Supabase, not the local cache —
+  // read this day's backend shift too, else every non-today day shows "Off".
+  const { data: dayShifts } = useShifts(targetIso, targetIso);
+  const backendShiftKind = dayShifts[0]?.shift_type;
   const dayShiftKind: 'day' | 'night' | 'off' =
     (localShiftsMap[targetIso] as 'day' | 'night' | 'off' | undefined)
+    ?? backendShiftKind
     ?? (offset === 0 ? onboarding.currentShift : 'off');
   // J1: hide melatonin card when user opted out in onboarding
   const showMelatonin = onboarding.takesMelatonin !== false;
@@ -473,7 +482,7 @@ export default function Plan() {
 
       <View style={{ alignItems: 'center', marginBottom: spacing.huge }}>
         <TimelineRing
-          nowHour={nowHour}
+          nowHour={offset === 0 ? nowHour : undefined}
           sleepStart={sleepStartHour}
           sleepEnd={sleepEndHour}
           shiftStart={suggested.shiftStart}
