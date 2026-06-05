@@ -1220,9 +1220,11 @@ const en = {
       sub: "Quiet, contextual nudges. Toggle anything you don't need.",
       local_only: "Reminders are scheduled locally and never leave the device.",
       scheduled_count: "{{count}} reminders scheduled",
+      open_settings_cta: "Open iOS Settings",
       master: {
         title: "All notifications",
         active: "Reminders fire on your plan",
+        blocked: "Off in iOS Settings — enable to get reminders",
         muted: "Everything is muted",
         a11y: "Master notifications",
       },

@@ -9,7 +9,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { View, Pressable, StyleSheet } from 'react-native';
+import { View, Pressable, StyleSheet, Linking } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -79,6 +79,7 @@ export default function NotificationsSettings() {
   const [state, setState] = useState<NotifState>(DEFAULTS);
   const [hydrated, setHydrated] = useState(false);
   const [scheduledCount, setScheduledCount] = useState<number | null>(null);
+  const [permBlocked, setPermBlocked] = useState(false);
   const { data: livePlan } = useGeneratedPlan();
   const { state: onboarding } = useOnboarding();
 
@@ -155,6 +156,8 @@ export default function NotificationsSettings() {
       });
       if (cancelled) return;
       setScheduledCount(res.scheduledCount);
+      // AUDIT-E: master ON but OS permission denied → reminders can't fire.
+      setPermBlocked(state.master && res.granted === false);
     })();
     return () => {
       cancelled = true;
@@ -223,10 +226,12 @@ export default function NotificationsSettings() {
             <Text variant="titleMd" family="display" weight="medium" color="ink">
               {t('settings_screens.notifications.master.title')}
             </Text>
-            <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
-              {state.master
-                ? t('settings_screens.notifications.master.active')
-                : t('settings_screens.notifications.master.muted')}
+            <Text variant="bodyMd" color={state.master && permBlocked ? 'coralDim' : 'inkSubtle'} style={{ marginTop: 2 }}>
+              {!state.master
+                ? t('settings_screens.notifications.master.muted')
+                : permBlocked
+                  ? t('settings_screens.notifications.master.blocked')
+                  : t('settings_screens.notifications.master.active')}
             </Text>
           </View>
           <Toggle
@@ -236,6 +241,22 @@ export default function NotificationsSettings() {
           />
         </View>
       </GlassCard>
+
+      {/* AUDIT-E: when iOS permission is denied the master toggle can't make
+          reminders fire — surface an honest, tappable Open-Settings affordance
+          instead of claiming "Reminders fire on your plan". */}
+      {state.master && permBlocked && (
+        <Pressable
+          onPress={() => Linking.openSettings()}
+          accessibilityRole="button"
+          style={{ marginTop: spacing.md, alignSelf: 'flex-start' }}
+          hitSlop={8}
+        >
+          <Text variant="labelMd" family="body" weight="medium" color="primary" uppercase>
+            {t('settings_screens.notifications.open_settings_cta')}
+          </Text>
+        </Pressable>
+      )}
 
       {/* Bed time reminder */}
       <View style={[styles.section, off && styles.sectionDimmed]} pointerEvents={off ? 'none' : 'auto'}>
