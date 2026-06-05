@@ -251,13 +251,20 @@ export default function Home() {
   // label FROZE at mount and only moved when some unrelated state changed.
   // `nowTick` is refreshed every 60s AND on tab focus, and `now`/`nowHour`
   // derive from it — so the whole screen tracks real wall-clock time.
+  // R26-7: declared above the clock ticker so the ticker can pause while the
+  // coachmark is open (a mid-tour tick shifts layout under the scroll loop).
+  const [coachVisible, setCoachVisible] = useState(false);
   const [nowTick, setNowTick] = useState<Date>(() => new Date());
   // 60s ticker. EMPTY deps + functional update — never depends on the value
   // it mutates (the render-loop trap fixed in store.tsx G1). Cleared on unmount.
   useEffect(() => {
+    // R26-7: pause the 60s clock tick while the coachmark is open — a tick
+    // mid-tour re-renders + shifts layout, which the coachmark's scroll-to-
+    // target loop then chases (the violent up/down jitter the owner saw).
+    if (coachVisible) return;
     const id = setInterval(() => setNowTick(new Date()), 60_000);
     return () => clearInterval(id);
-  }, []);
+  }, [coachVisible]);
   // Re-sync the clock when the user returns to this tab (a 60s tick could be
   // mid-cycle when they switch back from Plan/Profile).
   useFocusEffect(
@@ -619,7 +626,6 @@ export default function Home() {
   const journalRef = useRef<View>(null);
   const ringRef = useRef<View>(null);
   const nextRef = useRef<View>(null);
-  const [coachVisible, setCoachVisible] = useState(false);
   const coachArmedRef = useRef(false);
 
   const COACH_KEY = 'shiftrest:today-coach:v1';
