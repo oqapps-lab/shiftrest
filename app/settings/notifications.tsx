@@ -38,7 +38,7 @@ import {
   computeChronotypeScore,
   chronotypeBucket,
 } from '../../lib/onboarding/store';
-import { suggestedPlanFromOnboarding } from '../../lib/derive';
+import { suggestedPlanFromOnboarding, firstName } from '../../lib/derive';
 import { t } from '../../lib/i18n';
 
 const STORAGE_KEY = 'shiftrest:notification-settings:v1';
@@ -51,6 +51,9 @@ interface NotifState {
   bedReminderLead: LeadMinutes;
   caffeineReminder: boolean;
   melatoninReminder: boolean;
+  // TODAY-5
+  rateSleepReminder: boolean;
+  napNadirReminder: boolean;
 }
 
 const DEFAULTS: NotifState = {
@@ -59,6 +62,10 @@ const DEFAULTS: NotifState = {
   bedReminderLead: '30',
   caffeineReminder: true,
   melatoninReminder: true,
+  // TODAY-5 — on by default; both ride the live/suggested plan times and the
+  // nap one self-gates to night-shift days inside rescheduleNotifications.
+  rateSleepReminder: true,
+  napNadirReminder: true,
 };
 
 const LEAD_OPTIONS: SegmentOption<LeadMinutes>[] = [
@@ -117,6 +124,11 @@ export default function NotificationsSettings() {
     melatonin_at:
       formatPlanHour(livePlan?.melatonin_at) ||
       (onboarding.takesMelatonin ? suggested.melatoninTime : null),
+    // TODAY-5: end of the sleep window drives the rate-sleep morning nudge;
+    // current shift gates the night-nadir nap. Both come from the SAME
+    // live/suggested plan the Today cards read.
+    sleep_end: formatPlanHour(livePlan?.sleep_end) || fmtFromHour(suggested.sleepEnd),
+    current_shift: onboarding.currentShift,
   };
   // Respect substance opt-out: a melatonin notif would be nonsense if the
   // user toggled melatonin off in Settings → Melatonin.
@@ -134,7 +146,9 @@ export default function NotificationsSettings() {
       if (state.master) {
         await requestPermissions().catch(() => null);
       }
-      const res = await rescheduleNotifications(state as NotifPrefs, planTimes);
+      const res = await rescheduleNotifications(state as NotifPrefs, planTimes, {
+        firstName: firstName(onboarding.displayName),
+      });
       if (cancelled) return;
       setScheduledCount(res.scheduledCount);
     })();
@@ -149,9 +163,14 @@ export default function NotificationsSettings() {
     state.bedReminderLead,
     state.caffeineReminder,
     state.melatoninReminder,
+    state.rateSleepReminder,
+    state.napNadirReminder,
     planTimes.sleep_start,
     planTimes.caffeine_cutoff,
     planTimes.melatonin_at,
+    planTimes.sleep_end,
+    planTimes.current_shift,
+    onboarding.displayName,
   ]);
 
   const update = (patch: Partial<NotifState>) => {
@@ -286,6 +305,50 @@ export default function NotificationsSettings() {
             value={state.melatoninReminder}
             onChange={(v) => update({ melatoninReminder: v })}
             accessibilityLabel={t('a11y.melatonin_reminder')}
+          />
+        </View>
+      </View>
+
+      {/* TODAY-5: Rate last night's sleep — morning nudge → streak */}
+      <View style={[styles.section, off && styles.sectionDimmed]} pointerEvents={off ? 'none' : 'auto'}>
+        <View style={styles.row}>
+          <View style={[styles.iconWrap, { backgroundColor: colors.primaryContainer }]}>
+            <Glyph name="sparkle" size={20} color="primary" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text variant="titleMd" family="display" weight="medium" color="ink">
+              {t('settings_screens.notifications.rate_sleep.title')}
+            </Text>
+            <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
+              {t('settings_screens.notifications.rate_sleep.sub')}
+            </Text>
+          </View>
+          <Toggle
+            value={state.rateSleepReminder}
+            onChange={(v) => update({ rateSleepReminder: v })}
+            accessibilityLabel={t('a11y.rate_sleep_reminder')}
+          />
+        </View>
+      </View>
+
+      {/* TODAY-5: Night-nadir nap — only fires on night-shift days */}
+      <View style={[styles.section, off && styles.sectionDimmed]} pointerEvents={off ? 'none' : 'auto'}>
+        <View style={styles.row}>
+          <View style={[styles.iconWrap, { backgroundColor: colors.duskGlow }]}>
+            <Glyph name="moon" size={20} color="duskDim" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text variant="titleMd" family="display" weight="medium" color="ink">
+              {t('settings_screens.notifications.nap_nadir.title')}
+            </Text>
+            <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: 2 }}>
+              {t('settings_screens.notifications.nap_nadir.sub')}
+            </Text>
+          </View>
+          <Toggle
+            value={state.napNadirReminder}
+            onChange={(v) => update({ napNadirReminder: v })}
+            accessibilityLabel={t('a11y.nap_nadir_reminder')}
           />
         </View>
       </View>

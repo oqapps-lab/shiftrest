@@ -66,10 +66,18 @@ const i18n = new I18n({
 i18n.enableFallback = true;
 i18n.defaultLocale = 'en';
 
+// Base languages we actually ship a full translation for. Anything else
+// (kk/kz, uk, tr, pl, ar, ru, …) must render English rather than leaking
+// raw "[missing key]" / partial strings — owner feedback 2026-05-31.
+const SUPPORTED_BASE = new Set(['en', 'de', 'es', 'fr', 'it', 'ja', 'ko', 'nl', 'pt', 'sv', 'zh']);
+
 function deviceLocale(): string {
   try {
-    const locales = Localization.getLocales();
-    return locales[0]?.languageTag || 'en';
+    const tag = Localization.getLocales()[0]?.languageTag || 'en';
+    const base = tag.split('-')[0].toLowerCase();
+    // Supported language → use the device tag (i18n resolves tag→base→en).
+    // Unsupported → hard-fall to English so no screen shows broken keys.
+    return SUPPORTED_BASE.has(base) ? tag : 'en';
   } catch {
     return 'en';
   }

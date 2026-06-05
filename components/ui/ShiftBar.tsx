@@ -23,6 +23,8 @@ interface Props {
   height?: number;
   showHourTicks?: boolean;
   style?: ViewStyle;
+  /** A11y: screen-reader summary of the day's blocks. */
+  accessibilityLabel?: string;
 }
 
 const kindColor: Record<Kind, string> = {
@@ -63,11 +65,16 @@ function normaliseBlocks(blocks: ShiftBlock[]): { startPct: number; widthPct: nu
   return out;
 }
 
-export function ShiftBar({ blocks, height = 14, showHourTicks = true, style }: Props) {
+export function ShiftBar({ blocks, height = 14, showHourTicks = true, style, accessibilityLabel }: Props) {
   const segments = normaliseBlocks(blocks);
 
   return (
-    <View style={[{ width: '100%' }, style]}>
+    <View
+      style={[{ width: '100%' }, style]}
+      accessible={accessibilityLabel ? true : undefined}
+      accessibilityRole={accessibilityLabel ? 'image' : undefined}
+      accessibilityLabel={accessibilityLabel}
+    >
       <View
         style={[
           styles.track,

@@ -22,6 +22,7 @@ import {
   Text,
   PillCTA,
   ProgressDots,
+  OnboardingBack,
   SegmentedControl,
   Slider,
   DateTimePickerField,
@@ -67,6 +68,7 @@ export default function CurrentShift() {
         />
       }
     >
+      <OnboardingBack />
       <Eyebrow>{t('onboarding.step_template', { n: 3, total: 11 })}</Eyebrow>
       <ProgressDots
         count={11}

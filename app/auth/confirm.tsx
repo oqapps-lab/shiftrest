@@ -41,7 +41,10 @@ export default function AuthConfirm() {
       // GoTrue may bounce back errors as ?error=...&error_description=...
       if (params.error) {
         if (cancelled) return;
-        setErrorMsg(params.error_description ?? params.error ?? t('errors.link_unverified'));
+        // R19/i18n-6: was leaking English Supabase OAuth strings (params.error
+        // and params.error_description). Show localised generic fallback.
+        if (__DEV__) console.warn('[auth-confirm]', params.error, params.error_description);
+        setErrorMsg(t('errors.link_unverified'));
         setStatus('error');
         return;
       }
@@ -58,7 +61,9 @@ export default function AuthConfirm() {
       if (cancelled) return;
 
       if (error) {
-        setErrorMsg(error.message ?? t('errors.verification_failed'));
+        // R19/i18n-5: was leaking error.message (English Supabase auth string).
+        if (__DEV__) console.warn('[auth-confirm-exchange]', error);
+        setErrorMsg(t('errors.verification_failed'));
         setStatus('error');
         return;
       }

@@ -10,7 +10,17 @@
 import { t } from './i18n';
 import type { Translations } from './i18n/locales/en';
 
-export function getGreeting(nowHour: number): string {
+export function getGreeting(
+  nowHour: number,
+  shift?: 'day' | 'night' | 'off',
+): string {
+  // Persona fix (P2): a night worker who opens the app in the morning is
+  // winding DOWN, not starting their day — "Good morning" misreads their
+  // life. When they're on nights and it's the post-shift morning window,
+  // greet for rest instead of clock time.
+  if (shift === 'night' && nowHour >= 4 && nowHour < 12) {
+    return t('greetings.wind_down');
+  }
   if (nowHour < 5) return t('greetings.night');
   if (nowHour < 12) return t('greetings.morning');
   if (nowHour < 18) return t('greetings.afternoon');
@@ -50,6 +60,19 @@ export function formatTrialRemaining(trialEndsAt: string, today: Date = new Date
   if (days === 0) return t('trial.ends_today');
   if (days === 1) return t('trial.one_day');
   return t('trial.n_days', { n: days });
+}
+
+export function isTrialExpired(
+  trialEndsAt: string | null | undefined,
+  today: Date = new Date(),
+): boolean {
+  if (!trialEndsAt) return false;
+  const isoLike = trialEndsAt.includes('T') ? trialEndsAt : `${trialEndsAt}T00:00:00`;
+  const end = new Date(isoLike);
+  if (Number.isNaN(end.getTime())) return true;
+  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+  return days < 0;
 }
 
 function monthsFull(): readonly string[] {
@@ -302,4 +325,139 @@ export function mealTimingForShift(
     mainMealHour: 13,
     cutoffHour: Math.max(19, Math.floor(sleepStartHour) - 3),
   };
+}
+
+// ─── C4: rich-plan module helpers ──────────────────────────────────────────
+// Pure, shift-keyed windows for the new plan modules. Same pattern as the
+// nap/light/meal helpers above.
+
+export interface HourWindow {
+  startHour: number;
+  endHour: number;
+}
+
+/**
+ * C4 — exercise window. Exercise is a secondary zeitgeber that deepens
+ * slow-wave sleep, but vigorous work raises core temp for ~2h so it must
+ * sit well before the sleep block. Returns the recommended active window.
+ */
+export function movementWindowForShift(shift: 'day' | 'night' | 'off'): HourWindow {
+  if (shift === 'night') return { startHour: 15, endHour: 17 }; // before leaving for the night
+  if (shift === 'day') return { startHour: 17, endHour: 19 };   // after a day shift, hours before sleep
+  return { startHour: 9, endHour: 11 };                         // off day: morning outdoors (doubles as a light anchor)
+}
+
+/**
+ * C4 — protected social / family "connect" window. Names one realistic slot
+ * to be present with people without collapsing the sleep block on either
+ * side. Shifts to overlap kid-pickup when the user has children.
+ */
+export function socialWindowForDay(
+  shift: 'day' | 'night' | 'off',
+  hasChildren: boolean,
+  pickupHour: number | null,
+): HourWindow {
+  if (shift === 'night') return { startHour: 16, endHour: 18 }; // before the shift
+  if (shift === 'day') return { startHour: 18, endHour: 20 };   // evening after a day shift
+  // Off day: anchor to kid-pickup when present, else mid-afternoon.
+  const start = hasChildren && pickupHour != null ? pickupHour : 15;
+  return { startHour: start, endHour: Math.min(21, start + 4) };
+}
+
+/**
+ * C4 — true for fast-rotating schedules where the clock never fully adapts,
+ * so an anchor-sleep block (one fixed period every day) is the right tool.
+ */
+export function isFastRotatingSchedule(scheduleId: string | null | undefined): boolean {
+  if (!scheduleId) return false;
+  // Accept dash or slash separators (24-48 / 24/48 / 2448, etc.).
+  return /3x12|24[-/]?48|48[-/]?96|continental|custom/i.test(scheduleId);
+}
+
+/**
+ * C4 — anchor-sleep window: one fixed block guarded every day on a fast
+ * rotation. Anchored to the early-morning overlap of most shift types.
+ */
+export function anchorSleepWindow(): HourWindow {
+  return { startHour: 4, endHour: 8 };
+}
+
+// ─── G3: pre-paywall reveal (aha) personalisation ──────────────────────────
+// Pure key-builders so the rich reveal can be memoised in the component and
+// unit-tested without rendering. They never fabricate medical numbers — they
+// map the user's profession + schedule + chronotype onto a fixed set of
+// translation keys (full copy lives in lib/i18n/locales/*).
+
+export type RevealProfession = 'nurse' | 'firefighter' | 'factory' | 'other' | null | undefined;
+
+/**
+ * Persona hero — profession drives the title/physiology body, chronotype adds
+ * a circadian descriptor clause. All three degrade gracefully: a missing
+ * profession falls back to the generic shift-worker persona, a missing
+ * chronotype simply drops the descriptor clause.
+ *
+ * Returns translation KEYS + interpolation values; the caller resolves via t().
+ */
+export interface RevealPersona {
+  titleKey: string;
+  bodyKey: string;
+  /** Chronotype clause key, or null when chronotype is unknown. */
+  chronoKey: string | null;
+}
+
+export function personaForReveal(
+  profession: RevealProfession,
+  shift: 'day' | 'night' | 'off',
+  chronotype: 'lark' | 'intermediate' | 'owl' | null,
+): RevealPersona {
+  const prof: 'nurse' | 'firefighter' | 'factory' | 'generic' =
+    profession === 'nurse' || profession === 'firefighter' || profession === 'factory'
+      ? profession
+      : 'generic';
+  // Night vs day vs off picks which body sentence we lead with.
+  const phase = shift === 'night' ? 'night' : shift === 'off' ? 'off' : 'day';
+  return {
+    titleKey: `reveal.persona.title_${prof}_${phase}`,
+    bodyKey: `reveal.persona.body_${prof}`,
+    chronoKey: chronotype ? `reveal.persona.chrono_${chronotype}` : null,
+  };
+}
+
+/**
+ * Disruption read — 2-3 honest severity cards keyed off how hard the schedule
+ * fights the body clock. Fast rotations (3x12 mixing day+night, 24/48,
+ * continental) get the highest circadian-disruption rating; a steady day
+ * pattern the lowest. Severity is an ordinal label ('low' | 'moderate' |
+ * 'high'), NOT a fabricated percentage — the copy stays qualitative.
+ */
+export type Severity = 'low' | 'moderate' | 'high';
+
+export interface DisruptionRow {
+  /** Eyebrow/label key, e.g. reveal.disruption.circadian. */
+  labelKey: string;
+  severity: Severity;
+}
+
+export function disruptionReadForSchedule(
+  scheduleId: string | null | undefined,
+  shift: 'day' | 'night' | 'off',
+): DisruptionRow[] {
+  const fastRotating = isFastRotatingSchedule(scheduleId);
+  const worksNights = shift === 'night';
+
+  // Circadian disruption: high if the schedule rotates fast OR the user is on
+  // nights right now; moderate for a settled night/day with no rotation;
+  // low only for a plain day pattern with no fast rotation.
+  const circadian: Severity = fastRotating ? 'high' : worksNights ? 'moderate' : 'low';
+  // Sleep-debt risk tracks rotation + night work too, one notch gentler.
+  const sleepDebt: Severity = fastRotating ? 'high' : worksNights ? 'moderate' : 'low';
+  // Adaptation: a fast rotation never fully adapts (always "in progress");
+  // a steady pattern can reach "settling".
+  const adaptation: Severity = fastRotating ? 'moderate' : worksNights ? 'moderate' : 'low';
+
+  return [
+    { labelKey: 'reveal.disruption.circadian', severity: circadian },
+    { labelKey: 'reveal.disruption.sleep_debt', severity: sleepDebt },
+    { labelKey: 'reveal.disruption.adaptation', severity: adaptation },
+  ];
 }

@@ -1,7 +1,23 @@
-import React from 'react';
-import { Stack } from 'expo-router';
+import React, { useEffect } from 'react';
+import { Stack, usePathname } from 'expo-router';
+import { useOnboarding } from '../../lib/onboarding/store';
 
 export default function OnboardingLayout() {
+  // R13-1: persist the last onboarding route so Welcome can resume the
+  // user after an app kill / cold-launch. Read pathname on every nav.
+  const { update, state } = useOnboarding();
+  const pathname = usePathname();
+  useEffect(() => {
+    // R17/A1: guard against races on completion — markCompleted() clears
+    // lastOnboardingRoute and routes to (tabs); if the layout effect re-runs
+    // before unmount it would overwrite the cleared marker with the still-
+    // current /onboarding/notifications path. Skip when completed.
+    if (state.completed) return;
+    if (pathname?.startsWith('/onboarding/') && pathname !== state.lastOnboardingRoute) {
+      update({ lastOnboardingRoute: pathname });
+    }
+  }, [pathname, state.completed, state.lastOnboardingRoute, update]);
+
   return (
     <Stack
       screenOptions={{
@@ -25,6 +41,7 @@ export default function OnboardingLayout() {
       <Stack.Screen name="loading" />
       <Stack.Screen name="aha" />
       <Stack.Screen name="notifications" />
+      <Stack.Screen name="measurement" />
     </Stack>
   );
 }

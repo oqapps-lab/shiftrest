@@ -49,6 +49,13 @@ interface Props extends Omit<ScrollViewProps, 'style'> {
    * lifts above the keyboard. Enable on any screen with a TextField.
    */
   keyboardAvoiding?: boolean;
+  /**
+   * Optional ref to the inner ScrollView, so a caller can imperatively
+   * scrollTo (e.g. the Today coachmark scrolling a below-the-fold widget
+   * into view before measuring it). Only attached when `scroll` is true;
+   * harmless to pass when `scroll` is false (the View branch ignores it).
+   */
+  scrollRef?: React.RefObject<ScrollView | null>;
 }
 
 export function Screen({
@@ -64,6 +71,7 @@ export function Screen({
   footerClearance = 140,
   footerFade = true,
   keyboardAvoiding = false,
+  scrollRef,
   ...scrollProps
 }: Props) {
   const insets = useSafeAreaInsets();
@@ -94,6 +102,7 @@ export function Screen({
 
       {scroll ? (
         <ScrollView
+          ref={scrollRef}
           contentContainerStyle={[contentContainer, contentStyle]}
           showsVerticalScrollIndicator={false}
           {...scrollProps}

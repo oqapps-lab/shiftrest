@@ -8,7 +8,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Alert, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, StyleSheet, Pressable, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { router, Stack } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import {
@@ -19,6 +19,7 @@ import {
   PillCTA,
   GlassCard,
   Glyph,
+  showAppDialog,
 } from '../components/ui';
 import { colors, radii, spacing } from '../constants/tokens';
 import { useAuth } from '../lib/auth/store';
@@ -37,7 +38,11 @@ export default function ShareStoryScreen() {
 
   const submit = async () => {
     if (!user?.id) {
-      Alert.alert(t('share_story.signin_title'), t('share_story.signin_body'));
+      showAppDialog({
+        title: t('share_story.signin_title'),
+        message: t('share_story.signin_body'),
+        actions: [{ label: t('share_story.ok'), style: 'cancel' }],
+      });
       return;
     }
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -45,13 +50,25 @@ export default function ShareStoryScreen() {
     const res = await submitStory(text, state.profession, i18n.locale, user.id);
     setSubmitting(false);
     if (res.ok) {
-      Alert.alert(
-        t('share_story.thanks_title'),
-        t('share_story.thanks_body'),
-        [{ text: t('share_story.ok'), onPress: () => router.back() }],
-      );
+      showAppDialog({
+        title: t('share_story.thanks_title'),
+        message: t('share_story.thanks_body'),
+        actions: [{ label: t('share_story.ok'), onPress: () => router.back() }],
+      });
     } else {
-      Alert.alert(t('share_story.failed_title'), res.error);
+      // R12-1: map error codes to localized strings. Falls back to a
+      // generic "unknown" message for un-mapped Supabase errors so the
+      // user never sees raw error identifiers like "offline" / "too_long".
+      const localizedBody =
+        res.error === 'offline' ? t('share_story.error_offline')
+        : res.error === 'empty' ? t('share_story.error_empty')
+        : res.error === 'too_long' ? t('share_story.error_too_long')
+        : t('share_story.error_unknown');
+      showAppDialog({
+        title: t('share_story.failed_title'),
+        message: localizedBody,
+        actions: [{ label: t('share_story.ok'), style: 'cancel' }],
+      });
     }
   };
 
@@ -59,7 +76,13 @@ export default function ShareStoryScreen() {
     <Screen scroll orbs="subtle" keyboardAvoiding>
       <Stack.Screen options={{ headerShown: false }} />
 
-      <Pressable onPress={() => router.back()} hitSlop={12} style={{ marginBottom: spacing.md }}>
+      <Pressable
+        onPress={() => router.back()}
+        hitSlop={12}
+        style={{ marginBottom: spacing.md }}
+        accessibilityRole="button"
+        accessibilityLabel={t('a11y.back')}
+      >
         <Glyph name="chevronLeft" size={22} color="ink" />
       </Pressable>
 
@@ -82,8 +105,14 @@ export default function ShareStoryScreen() {
           placeholderTextColor={colors.inkGhost}
           style={styles.input}
         />
-        <Text variant="labelMd" color={remaining < 50 ? 'duskDim' : 'inkMuted'} style={{ marginTop: spacing.sm }}>
-          {t('share_story.remaining', { n: remaining })}
+        <Text
+          variant="labelMd"
+          color={text.trim().length > 0 && text.trim().length < 20 ? 'duskDim' : remaining < 50 ? 'duskDim' : 'inkMuted'}
+          style={{ marginTop: spacing.sm }}
+        >
+          {text.trim().length > 0 && text.trim().length < 20
+            ? t('share_story.min_chars', { n: 20 - text.trim().length })
+            : t('share_story.remaining', { n: remaining })}
         </Text>
       </GlassCard>
 

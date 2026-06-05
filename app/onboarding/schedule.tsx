@@ -12,6 +12,7 @@ import {
   Text,
   PillCTA,
   ProgressDots,
+  OnboardingBack,
   OptionCard,
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
@@ -28,6 +29,7 @@ export default function Schedule() {
       orbs="subtle"
       scroll
       tabBarClearance={false}
+      footerClearance={208}
       floatingFooter={
         <PillCTA
           variant="primary"
@@ -37,6 +39,7 @@ export default function Schedule() {
         />
       }
     >
+      <OnboardingBack />
       <Eyebrow>{t('onboarding.step_template', { n: 2, total: 11 })}</Eyebrow>
       <ProgressDots
         count={11}
@@ -53,7 +56,7 @@ export default function Schedule() {
       <Text
         variant="bodyLg"
         color="inkSubtle"
-        style={{ marginTop: spacing.md, marginBottom: spacing.xxxl }}
+        style={{ marginTop: spacing.md, marginBottom: spacing.lg }}
       >
         {t('onboarding_screens.schedule.sub')}
       </Text>
