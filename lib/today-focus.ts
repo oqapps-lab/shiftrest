@@ -180,7 +180,6 @@ export function computeTodaysFocus(args: FocusArgs): FocusResult {
     if (overNorm || lateCup) {
       return build('caffeine_load', 'coffee', {
         time: fmt(((recommendedCutoff % 24) + 24) % 24),
-        cups: String(args.cupsToday),
       });
     }
   }

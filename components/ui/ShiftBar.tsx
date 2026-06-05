@@ -42,6 +42,9 @@ const kindColor: Record<Kind, string> = {
 function normaliseBlocks(blocks: ShiftBlock[]): { startPct: number; widthPct: number; kind: Kind }[] {
   const out: { startPct: number; widthPct: number; kind: Kind }[] = [];
   for (const b of blocks) {
+    // AUDIT-J: a zero-length block (end === start) must not fall into the
+    // midnight-cross branch and paint a full 24h bar.
+    if (b.end === b.start) continue;
     if (b.end > b.start) {
       out.push({
         startPct: (b.start / 24) * 100,

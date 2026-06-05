@@ -131,13 +131,13 @@ export function WeekInSleepCard({ ratings, factors }: Props) {
         </View>
 
         {/* Honest correlate insight — only when bestCorrelate cleared its guards. */}
-        {insightText && (
+        {insightText && correlation && (
           <View style={styles.insightRow}>
             <View style={styles.insightIcon}>
               <Glyph
-                name={correlation!.direction === 'helps' ? 'sparkle' : 'moon'}
+                name={correlation.direction === 'helps' ? 'sparkle' : 'moon'}
                 size={14}
-                color={correlation!.direction === 'helps' ? 'primary' : 'duskDim'}
+                color={correlation.direction === 'helps' ? 'primary' : 'duskDim'}
               />
             </View>
             <Text variant="bodyMd" color="ink" weight="medium" style={styles.insightText}>
