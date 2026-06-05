@@ -133,7 +133,7 @@ export function SleepBankingCard({ state }: SleepBankingCardProps) {
       state.params.anchor.startHour,
       state.params.anchor.endHour,
     );
-    title = t('today.sleep_banking.recover_title');
+    title = t('today.sleep_banking.recover_title', { days: String(state.params.paceDays) });
     body = t('today.sleep_banking.recover_body', {
       window,
       days: String(state.params.paceDays),
