@@ -88,7 +88,10 @@ export function getMockTransition() {
   };
 }
 
-export const mockTransition = getMockTransition();
+// R22/H2: removed `export const mockTransition` — it called t() at
+// module load (wrong locale on cold start) AND no consumer actually
+// uses it; transition.tsx + (tabs)/index.tsx both call getMockTransition()
+// at render time. Drop the const to avoid stale-i18n leak.
 
 export function getMockProfessions() {
   return [
@@ -213,23 +216,10 @@ export const mockCaffeineSensitivities = getMockCaffeineSensitivities();
 
 export const mockMelatoninDoses = ['0.5', '1', '3', '5', '10'];
 
-export const mockSocialProofStats = {
-  percentUnderslept: 93,
-  appStoreRating: 4.8,
-  totalUsers: 12400,
-  totalReviews: 2400,
-};
-
-export function getMockTestimonials() {
-  return {
-    nurse: { quote: t('testimonials.nurse.quote'), author: t('testimonials.nurse.author'), rating: 5 },
-    fire: { quote: t('testimonials.fire.quote'), author: t('testimonials.fire.author'), rating: 5 },
-    factory: { quote: t('testimonials.factory.quote'), author: t('testimonials.factory.author'), rating: 5 },
-    other: { quote: t('testimonials.other.quote'), author: t('testimonials.other.author'), rating: 5 },
-  };
-}
-
-export const mockTestimonials = getMockTestimonials();
+// R19/arch-1: mockSocialProofStats, getMockTestimonials, mockTestimonials
+// removed — 0 external callers (verified grep), leftover from pre-Stage-6
+// when social-proof screens used these. Now use live data / hardcoded
+// copy.
 
 export function getMockNotificationTypes() {
   return [

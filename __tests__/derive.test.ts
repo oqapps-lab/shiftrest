@@ -20,6 +20,12 @@ import {
   lightWindowsForShift,
   napWindowForShift,
   mealTimingForShift,
+  movementWindowForShift,
+  socialWindowForDay,
+  isFastRotatingSchedule,
+  anchorSleepWindow,
+  personaForReveal,
+  disruptionReadForSchedule,
 } from '../lib/derive';
 
 // Mock t() so tests don't depend on i18n setup
@@ -48,6 +54,20 @@ describe('getGreeting', () => {
   test('evening (18-23:59)', () => {
     expect(getGreeting(18)).toBe('[greetings.evening]');
     expect(getGreeting(23.99)).toBe('[greetings.evening]');
+  });
+  // P2: shift-aware — night worker in the morning winds down, not "good morning"
+  test('night shift in morning window → wind_down', () => {
+    expect(getGreeting(7, 'night')).toBe('[greetings.wind_down]');
+    expect(getGreeting(4, 'night')).toBe('[greetings.wind_down]');
+    expect(getGreeting(11.99, 'night')).toBe('[greetings.wind_down]');
+  });
+  test('night shift outside morning window → clock-based', () => {
+    expect(getGreeting(20, 'night')).toBe('[greetings.evening]');
+    expect(getGreeting(2, 'night')).toBe('[greetings.night]');
+  });
+  test('day/off shift → unchanged clock-based greeting', () => {
+    expect(getGreeting(7, 'day')).toBe('[greetings.morning]');
+    expect(getGreeting(7, 'off')).toBe('[greetings.morning]');
   });
 });
 
@@ -326,5 +346,113 @@ describe('mealTimingForShift', () => {
     const m = mealTimingForShift('off', 23);
     expect(m.mainMealHour).toBe(13);
     expect(m.cutoffHour).toBe(20);
+  });
+});
+
+// C4: rich-plan module helpers
+describe('movementWindowForShift', () => {
+  test('night → pre-shift afternoon window', () => {
+    expect(movementWindowForShift('night')).toEqual({ startHour: 15, endHour: 17 });
+  });
+  test('day → after-shift evening window', () => {
+    expect(movementWindowForShift('day')).toEqual({ startHour: 17, endHour: 19 });
+  });
+  test('off → morning outdoor window', () => {
+    expect(movementWindowForShift('off')).toEqual({ startHour: 9, endHour: 11 });
+  });
+});
+
+describe('socialWindowForDay', () => {
+  test('night → before the shift', () => {
+    expect(socialWindowForDay('night', false, null)).toEqual({ startHour: 16, endHour: 18 });
+  });
+  test('off without kids → mid-afternoon default', () => {
+    expect(socialWindowForDay('off', false, null)).toEqual({ startHour: 15, endHour: 19 });
+  });
+  test('off with kids → anchored to pickup hour', () => {
+    expect(socialWindowForDay('off', true, 15)).toEqual({ startHour: 15, endHour: 19 });
+  });
+  test('off with late pickup → window clamps to 21:00', () => {
+    expect(socialWindowForDay('off', true, 19)).toEqual({ startHour: 19, endHour: 21 });
+  });
+});
+
+describe('isFastRotatingSchedule', () => {
+  test.each(['3x12-day-night', '24-48', '24/48', '48-96', 'continental-eu', 'custom-x'])(
+    'true for fast rotator %s',
+    (id) => expect(isFastRotatingSchedule(id)).toBe(true),
+  );
+  test('false for null / stable day', () => {
+    expect(isFastRotatingSchedule(null)).toBe(false);
+    expect(isFastRotatingSchedule('fixed-day')).toBe(false);
+  });
+});
+
+describe('anchorSleepWindow', () => {
+  test('fixed early-morning 4h block', () => {
+    expect(anchorSleepWindow()).toEqual({ startHour: 4, endHour: 8 });
+  });
+});
+
+// ─── G3: pre-paywall reveal personalisation ────────────────────────────────
+
+describe('personaForReveal', () => {
+  test('known profession + night → profession-night title key', () => {
+    expect(personaForReveal('nurse', 'night', 'owl')).toEqual({
+      titleKey: 'reveal.persona.title_nurse_night',
+      bodyKey: 'reveal.persona.body_nurse',
+      chronoKey: 'reveal.persona.chrono_owl',
+    });
+  });
+  test('firefighter day shift', () => {
+    expect(personaForReveal('firefighter', 'day', 'lark')).toEqual({
+      titleKey: 'reveal.persona.title_firefighter_day',
+      bodyKey: 'reveal.persona.body_firefighter',
+      chronoKey: 'reveal.persona.chrono_lark',
+    });
+  });
+  test('factory off day', () => {
+    expect(personaForReveal('factory', 'off', 'intermediate')).toEqual({
+      titleKey: 'reveal.persona.title_factory_off',
+      bodyKey: 'reveal.persona.body_factory',
+      chronoKey: 'reveal.persona.chrono_intermediate',
+    });
+  });
+  test('profession "other" falls back to generic persona', () => {
+    expect(personaForReveal('other', 'night', null)).toEqual({
+      titleKey: 'reveal.persona.title_generic_night',
+      bodyKey: 'reveal.persona.body_generic',
+      chronoKey: null,
+    });
+  });
+  test('null profession + null chronotype → fully generic, no chrono clause', () => {
+    expect(personaForReveal(null, 'day', null)).toEqual({
+      titleKey: 'reveal.persona.title_generic_day',
+      bodyKey: 'reveal.persona.body_generic',
+      chronoKey: null,
+    });
+  });
+});
+
+describe('disruptionReadForSchedule', () => {
+  test('fast rotator → high circadian + high sleep-debt', () => {
+    const rows = disruptionReadForSchedule('3x12-day-night', 'night');
+    expect(rows.map((r) => r.severity)).toEqual(['high', 'high', 'moderate']);
+    expect(rows.map((r) => r.labelKey)).toEqual([
+      'reveal.disruption.circadian',
+      'reveal.disruption.sleep_debt',
+      'reveal.disruption.adaptation',
+    ]);
+  });
+  test('steady night (no rotation) → moderate across the board', () => {
+    const rows = disruptionReadForSchedule('fixed-night', 'night');
+    expect(rows.map((r) => r.severity)).toEqual(['moderate', 'moderate', 'moderate']);
+  });
+  test('plain day pattern → low circadian + low sleep-debt', () => {
+    const rows = disruptionReadForSchedule(null, 'day');
+    expect(rows.map((r) => r.severity)).toEqual(['low', 'low', 'low']);
+  });
+  test('always returns exactly three rows', () => {
+    expect(disruptionReadForSchedule('continental', 'off')).toHaveLength(3);
   });
 });

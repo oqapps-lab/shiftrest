@@ -13,7 +13,7 @@
  */
 
 import React from 'react';
-import { View, StyleSheet, Pressable, Alert, Platform } from 'react-native';
+import { View, StyleSheet, Pressable, Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import {
   Screen,
@@ -22,6 +22,7 @@ import {
   GlassCard,
   Text,
   Glyph,
+  showAppDialog,
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
 import { safeBack } from '../../lib/nav';
@@ -30,11 +31,11 @@ import { t } from '../../lib/i18n';
 export default function HealthSettings() {
   const onConnectStub = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    Alert.alert(
-      t('settings_sub.health.coming_title'),
-      t('settings_sub.health.coming_body'),
-      [{ text: t('settings_sub.health.ok') }],
-    );
+    showAppDialog({
+      title: t('settings_sub.health.coming_title'),
+      message: t('settings_sub.health.coming_body'),
+      actions: [{ label: t('settings_sub.health.ok') }],
+    });
   };
 
   return (

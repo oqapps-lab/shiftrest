@@ -8,7 +8,7 @@
  */
 
 import React, { useState } from 'react';
-import { View, Pressable, StyleSheet, Alert } from 'react-native';
+import { View, Pressable, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import {
@@ -23,6 +23,7 @@ import {
   SegmentedControl,
   DateTimePickerField,
   type SegmentOption,
+  showAppDialog,
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
 import { safeDismiss } from '../../lib/nav';
@@ -30,7 +31,7 @@ import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth/store';
 import { emitChange, EVENTS } from '../../lib/queries';
 import { setLocalShift } from '../../lib/local-shifts/store';
-import { t } from '../../lib/i18n';
+import i18n, { t } from '../../lib/i18n';
 
 type Kind = 'day' | 'night' | 'off';
 
@@ -79,11 +80,14 @@ function durationLabel(startsAt: Date, endsAt: Date): string {
 
 function formatSummary(kind: Kind, startsAt: Date, endsAt: Date): string {
   if (kind === 'off') return t('add_shift.summary_off');
-  const fmt = (d: Date): string => {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return `${d.getDate()} ${months[d.getMonth()]} · ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-  };
-  return `${fmt(startsAt)} → ${fmt(endsAt)}`;
+  // R19/i18n-3: was hardcoded English month array. Use Intl.DateTimeFormat
+  // with the active i18n.locale so non-EN users see localised month names.
+  const dateFmt = new Intl.DateTimeFormat(i18n.locale, { day: 'numeric', month: 'short' });
+  const fmt = (d: Date): string =>
+    `${dateFmt.format(d)} · ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  const suffix =
+    localDateKey(endsAt) !== localDateKey(startsAt) ? ` ${t('add_shift.next_day_suffix')}` : '';
+  return `${fmt(startsAt)} → ${fmt(endsAt)}${suffix}`;
 }
 
 export default function AddShift() {
@@ -114,10 +118,14 @@ export default function AddShift() {
 
   const selectKind = (next: Kind) => {
     setKind(next);
-    // When switching to a work kind from off, ensure we have valid times.
-    if (next !== 'off' && endsAt <= startsAt) {
-      setEndsAt(new Date(startsAt.getTime() + 12 * 60 * 60 * 1000));
-    }
+    if (next === 'off') return;
+    // B14: re-anchor to the kind's default window (day 07:00->19:00, night
+    // 19:00->07:00 next day), preserving the picked calendar date — selecting
+    // Night must actually move the times, not just relabel.
+    const startHour = next === 'night' ? 19 : 7;
+    const newStart = snapToTopOfHour(startsAt, startHour);
+    setStartsAt(newStart);
+    setEndsAt(new Date(newStart.getTime() + 12 * 60 * 60 * 1000));
   };
 
   // Auto-fix when start gets pushed past end (cross-day shifts handled by
@@ -137,39 +145,59 @@ export default function AddShift() {
   const dur = isOff ? '' : durationLabel(startsAt, endsAt);
 
   const onSave = async () => {
+    if (submitting) return; // guard double-tap while a save is in flight
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
 
     if (kind === 'off' || !isSupabaseConfigured || !supabase || !user?.id) {
       const isoDate = localDateKey(startsAt);
       setLocalShift(isoDate, kind);
       emitChange(EVENTS.shiftsChanged);
-      Alert.alert(t('add_shift.saved_title'), summary, [
-        { text: t('add_shift.ok'), onPress: () => safeDismiss('/(tabs)/schedule') },
-      ]);
+      showAppDialog({
+        title: t('add_shift.saved_title'),
+        message: summary,
+        actions: [{ label: t('add_shift.ok'), onPress: () => safeDismiss('/(tabs)/schedule') }],
+      });
       return;
     }
 
     setSubmitting(true);
     const dateIso = localDateKey(startsAt);
-    const { error } = await supabase.from('shifts').insert({
-      user_id: user.id,
-      date: dateIso,
-      start_time: startsAt.toISOString(),
-      end_time: endsAt.toISOString(),
-      shift_type: kind,
-      is_manual: true,
-      notes: notes.trim() || null,
-    });
-    setSubmitting(false);
-
-    if (error) {
-      Alert.alert(t('add_shift.save_failed_title'), error.message, [{ text: t('add_shift.ok') }]);
+    try {
+      // G1/F2: the Supabase JS client has no fetch timeout. Without this
+      // race, a slow/dead request leaves the await parked forever —
+      // setSubmitting(false) + the success dialog never run, so the sheet
+      // is stuck and the app feels frozen. Time out after 12s.
+      const { error } = (await Promise.race([
+        supabase.from('shifts').insert({
+          user_id: user.id,
+          date: dateIso,
+          start_time: startsAt.toISOString(),
+          end_time: endsAt.toISOString(),
+          shift_type: kind,
+          is_manual: true,
+          notes: notes.trim() || null,
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 12000)),
+      ])) as { error: unknown };
+      if (error) throw error;
+    } catch (e) {
+      // R14-4: never leak the raw Supabase/error message into the dialog.
+      if (__DEV__) console.warn('[add-shift]', e);
+      setSubmitting(false);
+      showAppDialog({
+        title: t('add_shift.save_failed_title'),
+        message: t('add_shift.save_failed_body'),
+        actions: [{ label: t('add_shift.ok') }],
+      });
       return;
     }
+    setSubmitting(false);
     emitChange(EVENTS.shiftsChanged);
-    Alert.alert(t('add_shift.saved_title'), summary, [
-      { text: t('add_shift.ok'), onPress: () => safeDismiss('/(tabs)/schedule') },
-    ]);
+    showAppDialog({
+      title: t('add_shift.saved_title'),
+      message: summary,
+      actions: [{ label: t('add_shift.ok'), onPress: () => safeDismiss('/(tabs)/schedule') }],
+    });
   };
 
   return (

@@ -11,6 +11,7 @@ import {
   clearSleepRating,
   getSleepJournal,
   weeklyAdaptScore,
+  localCurrentStreak,
   type SleepRating,
 } from '../lib/sleep-journal/store';
 
@@ -223,5 +224,77 @@ describe('sleep-journal/store — clearSleepRating', () => {
     clearSleepRating(may15);
     expect(getSleepJournal().entries['2026-05-15']).toBeUndefined();
     expect(getSleepJournal().entries['2026-05-16']).toBe('ok');
+  });
+});
+
+describe('sleep-journal/store — setSleepRating future-date guard (R17/A2)', () => {
+  test('silently drops future-dated entries', () => {
+    const future = new Date();
+    future.setDate(future.getDate() + 1);
+    setSleepRating('good', future);
+    const key = `${future.getFullYear()}-${String(future.getMonth()+1).padStart(2,'0')}-${String(future.getDate()).padStart(2,'0')}`;
+    expect(getSleepJournal().entries[key]).toBeUndefined();
+  });
+  test('today still accepted', () => {
+    setSleepRating('good');
+    expect(ratingForToday()).toBe('good');
+  });
+  test('past date accepted', () => {
+    const past = new Date();
+    past.setDate(past.getDate() - 3);
+    setSleepRating('ok', past);
+    expect(journaledDayCount()).toBe(1);
+  });
+});
+
+describe('sleep-journal/store — localCurrentStreak (R7-1)', () => {
+  test('0 when empty', () => {
+    expect(localCurrentStreak()).toBe(0);
+  });
+  test('1 when today logged', () => {
+    setSleepRating('good');
+    expect(localCurrentStreak()).toBe(1);
+  });
+  test('counts consecutive past days ending today', () => {
+    const today = new Date();
+    for (let i = 0; i < 5; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      setSleepRating('good', d);
+    }
+    expect(localCurrentStreak()).toBe(5);
+  });
+  test('breaks streak on gap', () => {
+    const today = new Date();
+    setSleepRating('good', today);
+    const d3 = new Date(today);
+    d3.setDate(today.getDate() - 3);
+    setSleepRating('good', d3);
+    // Today + gap → streak is 1 (just today, day-1 missing)
+    expect(localCurrentStreak()).toBe(1);
+  });
+  test('yesterday-only counts (user not yet logged today)', () => {
+    const yest = new Date();
+    yest.setDate(yest.getDate() - 1);
+    setSleepRating('good', yest);
+    expect(localCurrentStreak()).toBe(1);
+  });
+  test('yesterday + day before = 2 (no today)', () => {
+    const today = new Date();
+    const yest = new Date(today); yest.setDate(today.getDate() - 1);
+    const dayB = new Date(today); dayB.setDate(today.getDate() - 2);
+    setSleepRating('good', yest);
+    setSleepRating('ok', dayB);
+    expect(localCurrentStreak()).toBe(2);
+  });
+  test('returns 0 if neither today nor yesterday logged', () => {
+    const dayB = new Date();
+    dayB.setDate(dayB.getDate() - 3);
+    setSleepRating('good', dayB);
+    expect(localCurrentStreak()).toBe(0);
+  });
+  test('bad ratings count for streak (any logged day)', () => {
+    setSleepRating('bad');
+    expect(localCurrentStreak()).toBe(1);
   });
 });

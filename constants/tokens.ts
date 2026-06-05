@@ -41,12 +41,17 @@ export const colors = {
   duskGlow: '#D6C4D5',
   coral: '#E8A09B',
   coralDim: '#CF7F7A',
+  coralGlow: '#F7D9D6',
 
   // Text
   ink: '#32332F',
   inkSubtle: '#5F5F5B',
   inkMuted: '#6B6B65',
-  inkGhost: '#B3B2AD',
+  // R22/A11y: was #B3B2AD (~1.9:1 contrast on surface) — failed WCAG even
+  // for large text. Tightened to #8E8D88 (~3.5:1) so the "past dates" text
+  // on Schedule + future text uses are AA-compliant for large text. Still
+  // works as a subtle border tone — borders aren't bound by text contrast.
+  inkGhost: '#8E8D88',
 
   // Utility
   transparent: 'transparent',
@@ -233,18 +238,6 @@ export const motion = {
   orbPulse: { duration: 4000 },
 } as const;
 
-// ─── EXPORT AGGREGATE ───────────────────────────────────────────────────────
-
-export const tokens = {
-  colors,
-  gradients,
-  radii,
-  spacing,
-  fonts,
-  typeScale,
-  tracking,
-  shadows,
-  motion,
-} as const;
-
-export default tokens;
+// R19/arch-1: removed `export const tokens` aggregate + `export default
+// tokens` — 0 callers, all consumers use named imports
+// `import { colors, spacing } from '../constants/tokens'`.

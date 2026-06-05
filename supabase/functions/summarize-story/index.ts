@@ -88,13 +88,37 @@ serve(async (req: Request) => {
     return Response.json({ ok: false, error: 'missing_fields' }, { status: 400, headers: corsHeaders(req) });
   }
 
+  // R19/S-1 FIX: verify caller owns the story id before mutating it.
+  // Without this, any signed-in user could pass another user's story id
+  // + arbitrary raw_text → call OpenAI on attacker text and overwrite
+  // the victim's ai_summary. Use the caller's JWT to look up auth.uid()
+  // and gate the UPDATE on user_id = uid.
+  const authHeader = req.headers.get('authorization') ?? '';
+  const jwt = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  if (!jwt) {
+    return Response.json({ ok: false, error: 'unauthorized' }, { status: 401, headers: corsHeaders(req) });
+  }
+  const userClient = createClient(SUPABASE_URL, Deno.env.get('SUPABASE_ANON_KEY')!, {
+    global: { headers: { Authorization: authHeader } },
+  });
+  const { data: userData, error: userErr } = await userClient.auth.getUser(jwt);
+  if (userErr || !userData?.user) {
+    return Response.json({ ok: false, error: 'unauthorized' }, { status: 401, headers: corsHeaders(req) });
+  }
+  const callerUid = userData.user.id;
+
   try {
     const summary = await summarize(raw_text, locale);
     const supa = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
     const patch: Record<string, unknown> = { ai_summary: summary, updated_at: new Date().toISOString() };
     // If the moderator flagged SKIP / off-topic, soft-delete by leaving
     // ai_summary null AND approved=false — caller won't render it.
-    const { error } = await supa.from('community_stories').update(patch).eq('id', id);
+    // R19/S-1: scope the UPDATE to the caller's own rows.
+    const { error } = await supa
+      .from('community_stories')
+      .update(patch)
+      .eq('id', id)
+      .eq('user_id', callerUid);
     if (error) {
       console.error('db update error', error);
       return Response.json({ ok: false, error: error.message }, { status: 500, headers: corsHeaders(req) });

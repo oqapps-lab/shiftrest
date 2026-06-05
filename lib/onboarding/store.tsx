@@ -88,12 +88,20 @@ export interface OnboardingState {
   // S11 name
   displayName: string;
 
+  // B3: local avatar photo URI (profile + story authorship). Local-only
+  // for now; a future build uploads to Supabase storage for the public feed.
+  avatarUri: string | null;
+
   // Settings-only: bright-light therapy opt-in (Plan tab shows light cards
   // when true). Not yet persisted to profiles table; local-only.
   usesLightTherapy: boolean;
 
   // Funnel completion marker (true after notifications screen exits)
   completed: boolean;
+
+  // R13-1: last onboarding route visited so Welcome can resume the
+  // user after an app kill instead of restarting from S01.
+  lastOnboardingRoute: string | null;
 }
 
 const INITIAL: OnboardingState = {
@@ -116,11 +124,13 @@ const INITIAL: OnboardingState = {
   pickupTime: '15',
   otherCommitments: '',
   displayName: '',
+  avatarUri: null,
   // Default ON for new users — bright light therapy is the strongest
   // evidence-based intervention for shift adaptation and costs nothing to
   // display. Users can turn it off from Settings → Light therapy.
   usesLightTherapy: true,
   completed: false,
+  lastOnboardingRoute: null,
 };
 
 // ─── Profile-row mapping ────────────────────────────────────────────────────
@@ -335,10 +345,19 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  // Persist on every change after hydration.
+  // Persist on every change after hydration. R19/H1: debounced 300ms so
+  // keystroke-rate typing in displayName / otherCommitments doesn't disk-
+  // write on every character. Trailing flush via timeout ref.
+  const persistTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     if (!hydrated) return;
-    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => null);
+    if (persistTimeoutRef.current) clearTimeout(persistTimeoutRef.current);
+    persistTimeoutRef.current = setTimeout(() => {
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => null);
+    }, 300);
+    return () => {
+      if (persistTimeoutRef.current) clearTimeout(persistTimeoutRef.current);
+    };
   }, [state, hydrated]);
 
   const update = useCallback((patch: Partial<OnboardingState>) => {
@@ -346,7 +365,9 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const markCompleted = useCallback(() => {
-    setState((prev) => ({ ...prev, completed: true }));
+    // R13-1: clear the resume marker so a future re-open with a stale
+    // route doesn't bounce a completed user back into /onboarding.
+    setState((prev) => ({ ...prev, completed: true, lastOnboardingRoute: null }));
   }, []);
 
   const reset = useCallback(() => {
@@ -368,13 +389,27 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       return { error: null, skipped: 'no_user' as const };
     }
     const row = mapToProfileRow(state, auth.user.id);
-    const fingerprint = JSON.stringify(row);
+    // G1 (CRITICAL freeze fix): exclude the always-changing `updated_at`
+    // timestamp from the dedupe fingerprint. It was stamped with
+    // `new Date()` on every call, so the fingerprint was ALWAYS new — the
+    // guard below never short-circuited, and the auto-sync effect (which
+    // depends on `state`) turned every state change into an upsert +
+    // emitPlanChanged() → plan refetch → re-render → state churn → upsert…
+    // an app-wide freezing loop for signed-in users. Hash only the real
+    // fields; the timestamp still goes to the DB, just not to the guard.
+    const { updated_at: _ignoredTs, ...stableRow } = row;
+    const fingerprint = JSON.stringify(stableRow);
     if (fingerprint === lastSyncedRef.current) {
-      return { error: null }; // already up-to-date
+      return { error: null }; // already up-to-date — nothing meaningful changed
     }
+    // Optimistically claim this fingerprint BEFORE the await so rapid
+    // back-to-back calls (e.g. while a toggle re-renders) dedupe instead of
+    // stacking upserts. Reset on failure so a real change can retry.
+    lastSyncedRef.current = fingerprint;
     const { error } = await supabase.from('profiles').upsert(row);
-    if (!error) {
-      lastSyncedRef.current = fingerprint;
+    if (error) {
+      lastSyncedRef.current = '';
+    } else {
       // M9 — tell the plan query its cache is stale. Without this, edits in
       // Settings → Sleep preferences silently update profiles but the Plan
       // tab keeps showing the pre-edit generated plan until app restart.

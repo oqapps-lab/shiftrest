@@ -1,9 +1,9 @@
 /**
  * S13 — Loading / Analysis. Builds perceived value before Aha.
- * USER-BUG-3: was a static screen with a cycling label that felt
- * inert. Now: breathing orb (pulses) + giant 0→100% counter that
- * fills smoothly across the analysis window so the user sees
- * progress and feels work is happening before the plan reveal.
+ * F7: multi-stage "creating your plan" sequence (5 stages, each with a
+ * headline + detail line) like the Vitaminico flow, so it reads as real,
+ * staged work — not one inert label. Keeps the breathing gradient orb +
+ * 0→100% counter (owner liked those) and adds step dots that fill per stage.
  */
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -15,15 +15,18 @@ import {
   Eyebrow,
   Text,
   HeroNumber,
+  ProgressDots,
 } from '../../components/ui';
 import { spacing } from '../../constants/tokens';
 import { t } from '../../lib/i18n';
 
-const getMessages = (): string[] => t('onboarding_screens.loading_steps') as unknown as string[];
-const MESSAGES_LEN = 4;
-const TICK_MS = 40; // 25fps counter
-const TOTAL_MS = 4200; // 4 messages × ~1s + ~200ms tail
-const STEP_MS = TOTAL_MS / MESSAGES_LEN;
+const STAGES = 5;
+const TICK_MS = 40; // ~25fps counter
+// ~9s across 5 stages (~1.8s each) — substantial without dragging.
+const TOTAL_MS = 9000;
+
+const stageText = (i: number): string => t(`onboarding_screens.loading.s${i + 1}_t`);
+const stageDetail = (i: number): string => t(`onboarding_screens.loading.s${i + 1}_d`);
 
 export default function Loading() {
   const [pct, setPct] = useState(0);
@@ -43,8 +46,7 @@ export default function Loading() {
     return () => clearInterval(id);
   }, []);
 
-  const messageIdx = Math.min(MESSAGES_LEN - 1, Math.floor((pct / 100) * MESSAGES_LEN));
-  const currentMessage = getMessages()[messageIdx];
+  const stageIdx = Math.min(STAGES - 1, Math.floor((pct / 100) * STAGES));
 
   return (
     <Screen scroll={false} tabBarClearance={false} orbs="strong">
@@ -52,15 +54,37 @@ export default function Loading() {
         <Eyebrow>{t('onboarding_screens.loading.eyebrow')}</Eyebrow>
 
         <View style={styles.orbWrap}>
-          <BreathingOrb size={300} pulse />
+          <BreathingOrb size={300} pulse shimmer />
           <View style={styles.pctOverlay} pointerEvents="none">
-            <HeroNumber value={`${pct}%`} size="lg" align="center" />
+            <HeroNumber value={`${pct}%`} size="xl" align="center" />
           </View>
         </View>
 
-        <Text variant="bodyLg" color="inkSubtle" align="center" style={{ marginTop: spacing.xl }}>
-          {currentMessage}
+        {/* stage caption — re-keyed per stage so it cross-fades on change */}
+        <Text
+          key={`t${stageIdx}`}
+          variant="titleMd"
+          family="display"
+          weight="medium"
+          color="ink"
+          align="center"
+          style={{ marginTop: spacing.xl }}
+        >
+          {stageText(stageIdx)}
         </Text>
+        <Text
+          key={`d${stageIdx}`}
+          variant="bodyMd"
+          color="inkSubtle"
+          align="center"
+          style={{ marginTop: spacing.xs, paddingHorizontal: spacing.xl }}
+        >
+          {stageDetail(stageIdx)}
+        </Text>
+
+        <View style={{ marginTop: spacing.xxl }}>
+          <ProgressDots count={STAGES} active={stageIdx} />
+        </View>
       </View>
     </Screen>
   );
@@ -74,7 +98,7 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   orbWrap: {
-    marginVertical: 48,
+    marginVertical: 40,
     alignItems: 'center',
     justifyContent: 'center',
   },

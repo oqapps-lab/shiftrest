@@ -19,6 +19,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logEvent } from './events';
 
 const TRACKED_IDS_KEY = 'shiftrest:notif-scheduled-ids:v1';
+// G5: the trial-ending reminder is tracked separately from the recurring
+// bed/caffeine/melatonin set so rescheduleNotifications() (which cancels and
+// rebuilds the recurring set on every prefs/plan change) never wipes it.
+const TRIAL_REMINDER_ID_KEY = 'shiftrest:notif-trial-reminder-id:v1';
+// G5: when a trial starts BEFORE notifications are granted (the paywall
+// precedes the permission screen in onboarding), stash the intended reminder
+// here and flush it once permission is granted — see flushPendingTrialReminder.
+const PENDING_TRIAL_KEY = 'shiftrest:notif-pending-trial:v1';
 
 export type LeadMinutes = '15' | '30' | '60';
 
@@ -28,6 +36,11 @@ export interface NotifPrefs {
   bedReminderLead: LeadMinutes;
   caffeineReminder: boolean;
   melatoninReminder: boolean;
+  // TODAY-5: two new plan-timed re-engagement reminders.
+  /** Morning nudge after the sleep window ends → rate last night → streak. */
+  rateSleepReminder: boolean;
+  /** Tactical nap ~30 min before the night-shift circadian nadir (02:30). */
+  napNadirReminder: boolean;
 }
 
 export interface PlanTimes {
@@ -35,6 +48,21 @@ export interface PlanTimes {
   sleep_start: string | null;
   caffeine_cutoff: string | null;
   melatonin_at: string | null;
+  // TODAY-5 additions — sourced from the SAME live/suggested plan the Today
+  // cards use, so the new reminders fire at the user's real moments.
+  /** "HH:MM" — end of the sleep window; the rate-sleep nudge fires after it. */
+  sleep_end?: string | null;
+  /** Current shift type — gates the night-nadir nap to night-shift days. */
+  current_shift?: 'day' | 'night' | 'off';
+}
+
+/**
+ * Optional personalization. When a display name is present the rate-sleep
+ * body greets the user by first name; otherwise it falls back to the generic
+ * copy. Kept separate from PlanTimes so callers may omit it entirely.
+ */
+export interface NotifPersonalization {
+  firstName?: string | null;
 }
 
 // ─── Permission ─────────────────────────────────────────────────────────────
@@ -121,6 +149,38 @@ function shiftMinutes(time: { hour: number; minute: number }, deltaMin: number):
   return { hour: Math.floor(wrapped / 60), minute: wrapped % 60 };
 }
 
+/**
+ * TODAY-5 — fire time for the night-shift circadian nadir nap reminder.
+ *
+ * The nadir (peak error-risk / lowest alertness) is 02:30–05:00 on a night
+ * shift — the same window today-phase.ts surfaces as `night_nadir`. We nudge
+ * the user `leadMin` minutes BEFORE the nadir's 02:30 onset so a 20-minute
+ * power nap lands before alertness bottoms out, ahead of the drive home.
+ *
+ * Pure + deterministic (no I/O) so it can be unit-tested. Returns
+ * { hour, minute } in 24h local time; lead can wrap past midnight.
+ */
+export const NADIR_ONSET = { hour: 2, minute: 30 } as const;
+
+export function nadirNapFireTime(leadMin = 30): { hour: number; minute: number } {
+  return shiftMinutes(NADIR_ONSET, leadMin);
+}
+
+/**
+ * TODAY-5 — fire time for the "rate last night's sleep" morning nudge.
+ *
+ * Fires `delayMin` minutes AFTER the user's sleep window ends, so the prompt
+ * reaches them once they're actually up (a day worker waking 07:00, a night
+ * worker waking 17:00). Pure; wraps across midnight.
+ */
+export function rateSleepFireTime(
+  sleepEnd: { hour: number; minute: number },
+  delayMin = 15,
+): { hour: number; minute: number } {
+  // shiftMinutes SUBTRACTS its delta; pass a negative to push later.
+  return shiftMinutes(sleepEnd, -delayMin);
+}
+
 // ─── Schedule ──────────────────────────────────────────────────────────────
 
 export interface ScheduleResult {
@@ -136,6 +196,7 @@ export interface ScheduleResult {
 export async function rescheduleNotifications(
   prefs: NotifPrefs,
   plan: PlanTimes,
+  personal: NotifPersonalization = {},
 ): Promise<ScheduleResult> {
   ensureHandler();
 
@@ -219,9 +280,165 @@ export async function rescheduleNotifications(
     }
   }
 
+  // ── TODAY-5: "Rate last night's sleep" morning nudge ──────────────────
+  // Fires shortly AFTER the sleep window ends, prompting the user to log
+  // good/ok/rough → feeds the streak. Personalised with the first name when
+  // we have one. Runs on every day type (the sleep window always ends).
+  if (prefs.rateSleepReminder && plan.sleep_end) {
+    const endTime = parseHourMinute(plan.sleep_end);
+    if (endTime) {
+      const fireTime = rateSleepFireTime(endTime);
+      const name = personal.firstName?.trim();
+      const id = await Notifications.scheduleNotificationAsync({
+        content: {
+          title: t('push_notif.rate_sleep_title'),
+          body: name
+            ? t('push_notif.rate_sleep_body_named', { name })
+            : t('push_notif.rate_sleep_body'),
+          sound: 'default',
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.DAILY,
+          hour: fireTime.hour,
+          minute: fireTime.minute,
+        },
+      });
+      newIds.push(id);
+    }
+  }
+
+  // ── TODAY-5: Night-nadir tactical nap ─────────────────────────────────
+  // ONLY on night-shift days: fires ~30 min before the 02:30 circadian
+  // nadir so a 20-min power nap lands before alertness bottoms out, ahead
+  // of the drive home. (DAILY trigger; the night-shift gate is re-applied
+  // on every plan/shift change via rescheduleNotifications, which cancels
+  // and rebuilds — so off-day/day-shift never carries a stale nap push.)
+  if (prefs.napNadirReminder && plan.current_shift === 'night') {
+    const fireTime = nadirNapFireTime();
+    const id = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: t('push_notif.nap_nadir_title'),
+        body: t('push_notif.nap_nadir_body'),
+        sound: 'default',
+      },
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.DAILY,
+        hour: fireTime.hour,
+        minute: fireTime.minute,
+      },
+    });
+    newIds.push(id);
+  }
+
   await saveTrackedIds(newIds);
   logEvent('notifs_scheduled', { count: newIds.length });
   return { granted: true, scheduledCount: newIds.length };
+}
+
+// ─── Trial-ending reminder (G5) ──────────────────────────────────────────────
+
+export interface TrialReminderResult {
+  scheduled: boolean;
+  reason?: 'permission_denied' | 'invalid_days' | 'fire_in_past';
+  fireAt?: string;
+}
+
+/**
+ * Schedule a SINGLE local notification reminding the user their free trial
+ * ends tomorrow, fired at (trial start + (trialDays - 1) days). Call this from
+ * the paywall on a successful trial start.
+ *
+ * Does NOT request permission — only schedules when notifications are ALREADY
+ * granted (the paywall happens before the notification-permission onboarding
+ * screen, so a silent no-op is correct there; the reminder will simply not be
+ * scheduled if the user hasn't granted yet). Idempotent: cancels any previously
+ * scheduled trial reminder before scheduling a fresh one, so re-entering the
+ * trial-start path never stacks duplicates.
+ */
+export async function scheduleTrialEndingReminder(
+  trialDays: number,
+  startAt: Date = new Date(),
+): Promise<TrialReminderResult> {
+  ensureHandler();
+
+  // Always clear any prior trial reminder first (idempotent).
+  try {
+    const prev = await AsyncStorage.getItem(TRIAL_REMINDER_ID_KEY);
+    if (prev) {
+      await Notifications.cancelScheduledNotificationAsync(prev).catch(() => null);
+      await AsyncStorage.removeItem(TRIAL_REMINDER_ID_KEY);
+    }
+  } catch {
+    // ignore — best-effort cleanup
+  }
+
+  if (!Number.isFinite(trialDays) || trialDays < 1) {
+    await AsyncStorage.removeItem(PENDING_TRIAL_KEY).catch(() => null);
+    return { scheduled: false, reason: 'invalid_days' };
+  }
+
+  // Permission must already be granted — we never prompt here. If it isn't yet
+  // (the paywall precedes the onboarding permission screen), stash the intended
+  // reminder so flushPendingTrialReminder() can schedule it once granted.
+  const { status } = await Notifications.getPermissionsAsync();
+  if (status !== 'granted') {
+    await AsyncStorage.setItem(
+      PENDING_TRIAL_KEY,
+      JSON.stringify({ trialDays, startAt: startAt.toISOString() }),
+    ).catch(() => null);
+    return { scheduled: false, reason: 'permission_denied' };
+  }
+
+  // Fire one day before the trial ends: start + (trialDays - 1) days.
+  const fireAt = new Date(startAt.getTime());
+  fireAt.setDate(fireAt.getDate() + (trialDays - 1));
+
+  // A 1-day trial would fire "yesterday" — skip rather than schedule a past
+  // date (iOS would drop it anyway).
+  if (fireAt.getTime() <= Date.now()) {
+    await AsyncStorage.removeItem(PENDING_TRIAL_KEY).catch(() => null);
+    return { scheduled: false, reason: 'fire_in_past' };
+  }
+
+  const id = await Notifications.scheduleNotificationAsync({
+    content: {
+      title: t('notifications.trial_ending_title'),
+      body: t('notifications.trial_ending_body'),
+      sound: 'default',
+    },
+    trigger: {
+      type: Notifications.SchedulableTriggerInputTypes.DATE,
+      date: fireAt,
+    },
+  });
+  await AsyncStorage.setItem(TRIAL_REMINDER_ID_KEY, id);
+  await AsyncStorage.removeItem(PENDING_TRIAL_KEY).catch(() => null);
+  logEvent('trial_reminder_scheduled', { trialDays, fireAt: fireAt.toISOString() });
+  return { scheduled: true, fireAt: fireAt.toISOString() };
+}
+
+/**
+ * Flush a trial reminder that was stashed by scheduleTrialEndingReminder when
+ * notifications weren't yet granted (trial started on the paywall, which comes
+ * before the onboarding permission screen). Call right after the user grants
+ * notification permission. No-op when nothing is pending. Re-scheduling reuses
+ * the ORIGINAL trial start, so a now-past fire date is correctly dropped.
+ */
+export async function flushPendingTrialReminder(): Promise<TrialReminderResult> {
+  let raw: string | null = null;
+  try {
+    raw = await AsyncStorage.getItem(PENDING_TRIAL_KEY);
+  } catch {
+    return { scheduled: false };
+  }
+  if (!raw) return { scheduled: false };
+  try {
+    const { trialDays, startAt } = JSON.parse(raw) as { trialDays: number; startAt: string };
+    return await scheduleTrialEndingReminder(trialDays, new Date(startAt));
+  } catch {
+    await AsyncStorage.removeItem(PENDING_TRIAL_KEY).catch(() => null);
+    return { scheduled: false };
+  }
 }
 
 /** Convenience for tests — list everything we've scheduled. */

@@ -46,6 +46,15 @@ function tallyRange(days: { rating: SleepRating | null }[]): RatingTally {
   );
 }
 
+// R22/M5: pre-styled heatmap dot variants — was building a fresh
+// `{backgroundColor}` object literal per cell every render. With 30+
+// cells (95+ per R15) this churned allocations on every state update.
+const DOT_STYLE_BY_RATING = {
+  good: { backgroundColor: colors.primary },
+  ok: { backgroundColor: colors.sunriseDim },
+  bad: { backgroundColor: colors.duskDim },
+} as const;
+
 function ratingColor(r: SleepRating | null): string | null {
   if (r === 'good') return colors.primary;
   if (r === 'ok') return colors.sunriseDim;
@@ -168,16 +177,14 @@ export default function History() {
                   <View style={styles.weekDots}>
                     {week.map((d, di) => {
                       const isLatest = wi === weeks.length - 1 && di === week.length - 1;
-                      const color = ratingColor(d.rating);
+                      const ratedStyle = d.rating ? DOT_STYLE_BY_RATING[d.rating] : null;
                       return (
                         <View
                           key={d.iso}
                           style={[
                             styles.dot,
-                            color
-                              ? { backgroundColor: color }
-                              : styles.dotEmpty,
-                            color && isLatest && styles.dotLatest,
+                            ratedStyle ?? styles.dotEmpty,
+                            ratedStyle && isLatest && styles.dotLatest,
                           ]}
                         />
                       );

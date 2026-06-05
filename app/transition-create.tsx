@@ -5,8 +5,8 @@
  * Home transition card still appears for demo.
  */
 
-import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Alert } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { View, StyleSheet, Pressable } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import {
@@ -20,8 +20,9 @@ import {
   SegmentedControl,
   DateTimePickerField,
   type SegmentOption,
+  showAppDialog,
 } from '../components/ui';
-import { spacing, colors } from '../constants/tokens';
+import { spacing, colors, radii } from '../constants/tokens';
 import { safeDismiss } from '../lib/nav';
 import { useAuth } from '../lib/auth/store';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
@@ -36,7 +37,21 @@ import {
 } from '../lib/transition/generate';
 import { setLocalTransitionPlan } from '../lib/local-transition/store';
 import { emitChange, EVENTS } from '../lib/queries';
+import { formatDayMonth } from '../lib/derive';
 import { t } from '../lib/i18n';
+
+// F2: never let a Supabase call hang forever — a stuck await left the
+// "Generate" button spinning indefinitely, which reads as a frozen app.
+// Reject after `ms` so the catch can surface a friendly retry dialog and
+// the finally{} re-enables the button.
+function withTimeout<T>(work: PromiseLike<T>, ms = 12000): Promise<T> {
+  return Promise.race([
+    Promise.resolve(work),
+    new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('timeout')), ms),
+    ),
+  ]);
+}
 
 const getTypeOptions = (): SegmentOption<TransitionType>[] => [
   { value: 'night_to_day', label: t('transition_create.night_to_day') },
@@ -54,7 +69,19 @@ export default function TransitionCreate() {
   });
   const [submitting, setSubmitting] = useState(false);
 
+  // D2: live start→end window so the user sees the transition has a finish,
+  // not just a start. The protocol spans 2 days (end = start + 1).
+  const windowText = useMemo(() => {
+    const end = new Date(startsAt);
+    end.setDate(startsAt.getDate() + 1);
+    return `${formatDayMonth(startsAt)} → ${formatDayMonth(end)}`;
+  }, [startsAt]);
+
   const onSave = async () => {
+    // F2: guard against the double/triple tap that happens when a slow save
+    // makes it look like "nothing happened" — re-entrancy could fire multiple
+    // inserts + navigations and wedge the app.
+    if (submitting) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     const plan = generateTransitionPlan(type, startsAt, {
       takesMelatonin: onboarding.takesMelatonin,
@@ -86,31 +113,37 @@ export default function TransitionCreate() {
         })),
       });
       emitChange(EVENTS.plansChanged);
-      Alert.alert(t('transition_create.saved_title'), t('transition_create.saved_body'), [
-        { text: t('transition_create.ok'), onPress: () => {
-          safeDismiss('/(tabs)');
-          setTimeout(() => router.push('/transition'), 200);
-        }},
-      ]);
+      showAppDialog({
+        title: t('transition_create.saved_title'),
+        message: t('transition_create.saved_body'),
+        actions: [
+          { label: t('transition_create.ok'), onPress: () => {
+            safeDismiss('/(tabs)');
+            setTimeout(() => router.push('/transition'), 200);
+          }},
+        ],
+      });
       return;
     }
 
     setSubmitting(true);
     try {
-      const { data: planRow, error: planErr } = await supabase
-        .from('transition_plans')
-        .insert({
-          user_id: user.id,
-          transition_type: plan.transition_type,
-          start_date: plan.start_date,
-          end_date: plan.end_date,
-          total_days: plan.total_days,
-          total_steps: plan.total_steps,
-          completed_steps: 0,
-          status: 'active',
-        })
-        .select('id')
-        .single();
+      const { data: planRow, error: planErr } = await withTimeout(
+        supabase
+          .from('transition_plans')
+          .insert({
+            user_id: user.id,
+            transition_type: plan.transition_type,
+            start_date: plan.start_date,
+            end_date: plan.end_date,
+            total_days: plan.total_days,
+            total_steps: plan.total_steps,
+            completed_steps: 0,
+            status: 'active',
+          })
+          .select('id')
+          .single(),
+      );
 
       if (planErr || !planRow) {
         throw planErr ?? new Error('No plan id returned');
@@ -127,19 +160,36 @@ export default function TransitionCreate() {
         description: s.description,
         is_completed: false,
       }));
-      const { error: stepErr } = await supabase.from('transition_steps').insert(stepRows);
+      const { error: stepErr } = await withTimeout(
+        supabase.from('transition_steps').insert(stepRows),
+      );
       if (stepErr) throw stepErr;
 
       emitChange(EVENTS.plansChanged);
-      Alert.alert(t('transition_create.saved_title'), t('transition_create.saved_body'), [
-        { text: t('transition_create.ok'), onPress: () => {
-          safeDismiss('/(tabs)');
-          setTimeout(() => router.push('/transition'), 200);
-        }},
-      ]);
+      showAppDialog({
+        title: t('transition_create.saved_title'),
+        message: t('transition_create.saved_body'),
+        actions: [
+          { label: t('transition_create.ok'), onPress: () => {
+            safeDismiss('/(tabs)');
+            setTimeout(() => router.push('/transition'), 200);
+          }},
+        ],
+      });
     } catch (e: unknown) {
+      // R12-2: was showing raw e.message (often English Supabase code) —
+      // localise by error-shape. Network failures get a friendly retry
+      // message; everything else falls back to "unknown" generic.
       const msg = e instanceof Error ? e.message : String(e);
-      Alert.alert(t('transition_create.failed_title'), msg, [{ text: t('transition_create.ok') }]);
+      const isNetwork = /network request failed|fetch|TypeError|timeout/i.test(msg);
+      const body = isNetwork
+        ? t('transition_create.failed_offline')
+        : t('transition_create.failed_unknown');
+      showAppDialog({
+        title: t('transition_create.failed_title'),
+        message: body,
+        actions: [{ label: t('transition_create.ok') }],
+      });
     } finally {
       setSubmitting(false);
     }
@@ -206,6 +256,13 @@ export default function TransitionCreate() {
         >
           {t('transition_create.preview_template', { days: 2 })}
         </Text>
+        {/* D2: explicit start → end window */}
+        <View style={styles.windowPill}>
+          <Glyph name="calendar" size={14} color="primary" />
+          <Text variant="labelMd" weight="medium" color="primary" style={{ marginLeft: spacing.xs }}>
+            {windowText}
+          </Text>
+        </View>
         <Text variant="bodyMd" color="inkSubtle" style={{ marginTop: spacing.sm }}>
           {t('transition_create.preview_body')}
         </Text>
@@ -222,5 +279,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: spacing.md,
+  },
+  windowPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    marginTop: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    backgroundColor: colors.primaryContainer,
+    borderRadius: radii.pill,
   },
 });

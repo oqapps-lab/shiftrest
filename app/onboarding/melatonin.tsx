@@ -17,6 +17,7 @@ import {
   Text,
   PillCTA,
   ProgressDots,
+  OnboardingBack,
   Toggle,
 } from '../../components/ui';
 import { colors, radii, spacing } from '../../constants/tokens';
@@ -98,6 +99,7 @@ export default function Melatonin() {
         />
       }
     >
+      <OnboardingBack />
       <Eyebrow>{t('onboarding.step_template', { n: 9, total: 11 })}</Eyebrow>
       <ProgressDots
         count={11}
