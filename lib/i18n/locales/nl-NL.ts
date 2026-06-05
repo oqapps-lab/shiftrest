@@ -2,7 +2,7 @@ const nlNL = {
   tips: {
     screen_eyebrow: "SLAAPBIBLIOTHEEK",
     screen_hero: "Kleine dingen die het verschil maken.",
-    screen_sub: "Wetenschappelijk onderbouwde ideeën die je vanavond kunt proberen. Tik op een kaart om meer te lezen.",
+    screen_sub: "Wetenschappelijk onderbouwde ideeën die je vanavond kunt proberen.",
     category_environment: "Omgeving",
     category_nutrition: "Voeding",
     category_pre_sleep: "Ritueel voor het slapen",
@@ -1083,7 +1083,7 @@ const nlNL = {
         cancelled_until: 'Premium tot {{date}}',
         cancelled_no_date: 'Opgezegd — je houdt premium tot het einde van de periode',
         expired: 'Sluit je opnieuw aan om je inzichten te behouden',
-        free: 'Ontgrendel het volledige plan met een proefperiode van 3 dagen',
+        free: 'Ontgrendel het volledige plan met een proefperiode van 7 dagen',
         renews_auto: 'Wordt automatisch verlengd',
       },
     },

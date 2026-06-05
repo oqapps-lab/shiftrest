@@ -2,7 +2,7 @@ const deDE = {
   tips: {
     screen_eyebrow: "SCHLAF-BIBLIOTHEK",
     screen_hero: "Kleine Dinge, die etwas bewegen.",
-    screen_sub: "Forschungsbasierte Ideen, die du heute Nacht ausprobieren kannst. Tippe eine Karte an, um mehr zu lesen.",
+    screen_sub: "Forschungsbasierte Ideen, die du heute Nacht ausprobieren kannst.",
     category_environment: "Umgebung",
     category_nutrition: "Ernährung",
     category_pre_sleep: "Einschlafritual",
@@ -1111,7 +1111,7 @@ const deDE = {
         cancelled_until: 'Premium bis {{date}}',
         cancelled_no_date: 'Gekündigt – Premium bleibt bis zum Ende des Zeitraums',
         expired: 'Verlängere, um deine Insights zu behalten',
-        free: 'Schalte den vollen Plan mit einer 3-tägigen Testphase frei',
+        free: 'Schalte den vollen Plan mit einer 7-tägigen Testphase frei',
         renews_auto: 'Verlängert sich automatisch',
       },
     },

@@ -2,7 +2,7 @@ const zhHant = {
   tips: {
     screen_eyebrow: "睡眠知識庫",
     screen_hero: "撥動關鍵的小事。",
-    screen_sub: "以研究為依據、今晚就能試的點子。點卡片閱讀更多。",
+    screen_sub: "以研究為依據、今晚就能試的點子。",
     category_environment: "環境",
     category_nutrition: "營養",
     category_pre_sleep: "睡前儀式",
@@ -1081,7 +1081,7 @@ const zhHant = {
         cancelled_until: 'Premium 至 {{date}}',
         cancelled_no_date: '已取消 — 你會保留 Premium 直到本期結束',
         expired: '重新訂閱以保留你的洞察',
-        free: '透過 3 天試用解鎖完整方案',
+        free: '透過 7 天試用解鎖完整方案',
         renews_auto: '自動續訂',
       },
     },

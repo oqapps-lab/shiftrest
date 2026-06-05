@@ -2,7 +2,7 @@ const sv = {
   tips: {
     screen_eyebrow: "SÖMNBIBLIOTEK",
     screen_hero: "Små saker som gör skillnad.",
-    screen_sub: "Forskningsbaserade idéer du kan prova i kväll. Tryck på ett kort för att läsa mer.",
+    screen_sub: "Forskningsbaserade idéer du kan prova i kväll.",
     category_environment: "Miljö",
     category_nutrition: "Kost",
     category_pre_sleep: "Ritual före sömn",
@@ -1082,7 +1082,7 @@ const sv = {
         cancelled_until: 'Premium till {{date}}',
         cancelled_no_date: 'Avslutad — du behåller premium tills perioden tar slut',
         expired: 'Prenumerera igen för att behålla dina insikter',
-        free: 'Lås upp hela planen med en 3-dagars provperiod',
+        free: 'Lås upp hela planen med en 7-dagars provperiod',
         renews_auto: 'Förnyas automatiskt',
       },
     },

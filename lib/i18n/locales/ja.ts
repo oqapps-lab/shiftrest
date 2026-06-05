@@ -2,7 +2,7 @@ const ja = {
   tips: {
     screen_eyebrow: "睡眠ライブラリ",
     screen_hero: "効きめを動かす、小さな工夫。",
-    screen_sub: "今夜から試せる、研究に基づくアイデア。カードをタップで詳しく読めます。",
+    screen_sub: "今夜から試せる、研究に基づくアイデア。",
     category_environment: "環境",
     category_nutrition: "栄養",
     category_pre_sleep: "就寝前のルーティン",
@@ -1082,7 +1082,7 @@ const ja = {
         cancelled_until: '{{date}} までプレミアム',
         cancelled_no_date: 'キャンセル済み — 期間終了までプレミアムをご利用いただけます',
         expired: '再登録してインサイトを継続しましょう',
-        free: '3日間の無料トライアルですべてのプランをアンロック',
+        free: '7日間の無料トライアルですべてのプランをアンロック',
         renews_auto: '自動更新されます',
       },
     },

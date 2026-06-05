@@ -2,7 +2,7 @@ const esES = {
   tips: {
     screen_eyebrow: "BIBLIOTECA DEL SUEÑO",
     screen_hero: "Pequeñas cosas que mueven la aguja.",
-    screen_sub: "Ideas avaladas por estudios que puedes probar esta noche. Toca una tarjeta para leer más.",
+    screen_sub: "Ideas avaladas por estudios que puedes probar esta noche.",
     category_environment: "Entorno",
     category_nutrition: "Nutrición",
     category_pre_sleep: "Ritual antes de dormir",
@@ -1083,7 +1083,7 @@ const esES = {
         cancelled_until: 'Premium hasta {{date}}',
         cancelled_no_date: 'Cancelado — mantienes premium hasta el fin del periodo',
         expired: 'Vuelve a suscribirte para conservar tus insights',
-        free: 'Desbloquea el plan completo con una prueba de 3 días',
+        free: 'Desbloquea el plan completo con una prueba de 7 días',
         renews_auto: 'Se renueva automáticamente',
       },
     },

@@ -2,7 +2,7 @@ const itIT = {
   tips: {
     screen_eyebrow: "LIBRERIA DEL SONNO",
     screen_hero: "Piccole cose che spostano l’ago.",
-    screen_sub: "Idee basate sulla ricerca da provare stanotte. Tocca una card per saperne di più.",
+    screen_sub: "Idee basate sulla ricerca da provare stanotte.",
     category_environment: "Ambiente",
     category_nutrition: "Alimentazione",
     category_pre_sleep: "Rituale pre-sonno",
@@ -1082,7 +1082,7 @@ const itIT = {
         cancelled_until: 'Premium fino al {{date}}',
         cancelled_no_date: 'Annullato — mantieni premium fino alla fine del periodo',
         expired: 'Riabbonati per non perdere gli insight',
-        free: 'Sblocca il piano completo con una prova di 3 giorni',
+        free: 'Sblocca il piano completo con una prova di 7 giorni',
         renews_auto: 'Si rinnova automaticamente',
       },
     },

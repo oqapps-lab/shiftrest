@@ -1264,7 +1264,7 @@ const en = {
         cancelled_until: 'Premium until {{date}}',
         cancelled_no_date: 'Cancelled — you keep premium until period end',
         expired: 'Resubscribe to keep your insights',
-        free: 'Unlock the full plan with a 3-day trial',
+        free: 'Unlock the full plan with a 7-day trial',
         renews_auto: 'Renews automatically',
       },
     },
@@ -1334,7 +1334,7 @@ const en = {
   tips: {
     screen_eyebrow: 'SLEEP LIBRARY',
     screen_hero: 'Small things that move the dial.',
-    screen_sub: 'Research-backed ideas you can try tonight. Tap a card to read more.',
+    screen_sub: 'Research-backed ideas you can try tonight.',
     category_environment: 'Environment',
     category_nutrition: 'Nutrition',
     category_pre_sleep: 'Pre-sleep ritual',

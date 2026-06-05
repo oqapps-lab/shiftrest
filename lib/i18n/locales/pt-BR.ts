@@ -2,7 +2,7 @@ const ptBR = {
   tips: {
     screen_eyebrow: "BIBLIOTECA DO SONO",
     screen_hero: "Pequenas coisas que fazem diferença.",
-    screen_sub: "Ideias baseadas em pesquisa que você pode testar hoje à noite. Toque num card para ler mais.",
+    screen_sub: "Ideias baseadas em pesquisa que você pode testar hoje à noite.",
     category_environment: "Ambiente",
     category_nutrition: "Alimentação",
     category_pre_sleep: "Ritual antes de dormir",
@@ -1082,7 +1082,7 @@ const ptBR = {
         cancelled_until: 'Premium até {{date}}',
         cancelled_no_date: 'Cancelado — você mantém o premium até o fim do período',
         expired: 'Assine de novo para manter seus insights',
-        free: 'Desbloqueie o plano completo com um teste de 3 dias',
+        free: 'Desbloqueie o plano completo com um teste de 7 dias',
         renews_auto: 'Renova automaticamente',
       },
     },

@@ -2,7 +2,7 @@ const ko = {
   tips: {
     screen_eyebrow: "수면 라이브러리",
     screen_hero: "작은 변화가 흐름을 바꿔요.",
-    screen_sub: "오늘 밤 바로 시도할 수 있는 연구 기반 아이디어. 카드를 탭해 더 읽어보세요.",
+    screen_sub: "오늘 밤 바로 시도할 수 있는 연구 기반 아이디어.",
     category_environment: "환경",
     category_nutrition: "영양",
     category_pre_sleep: "취침 전 루틴",
@@ -1082,7 +1082,7 @@ const ko = {
         cancelled_until: '{{date}}까지 프리미엄',
         cancelled_no_date: '취소됨 — 기간 종료까지 프리미엄을 그대로 이용해요',
         expired: '다시 구독해 인사이트를 이어가세요',
-        free: '3일 체험으로 전체 플랜을 열어 보세요',
+        free: '7일 체험으로 전체 플랜을 열어 보세요',
         renews_auto: '자동으로 갱신돼요',
       },
     },
