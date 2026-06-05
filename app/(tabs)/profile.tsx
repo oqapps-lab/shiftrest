@@ -387,8 +387,8 @@ export default function Profile() {
       >
         <GlassCard variant="paper" padding="xxl">
           <View style={styles.adaptRow}>
-            <View style={[styles.adaptScoreWrap, { backgroundColor: colors.primaryContainer }]}>
-              <Glyph name="book" size={26} color="primary" />
+            <View style={styles.libraryIcon}>
+              <Glyph name="book" size={26} color="onPrimary" />
             </View>
             <View style={{ flex: 1 }}>
               <Eyebrow>{t('profile.tips_eyebrow')}</Eyebrow>
@@ -520,6 +520,15 @@ const styles = StyleSheet.create({
   },
   adaptScoreWrap: {
     width: 88,
+    marginRight: spacing.lg,
+  },
+  libraryIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
     marginRight: spacing.lg,
   },
   stat: {
