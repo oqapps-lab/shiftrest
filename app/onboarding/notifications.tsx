@@ -39,7 +39,11 @@ export default function Notifications() {
     if (busy) return;
     setBusy(true);
     try {
-      await requestPermissions();
+      // R26-6: never let a hung permission call freeze the screen.
+      await Promise.race([
+        requestPermissions(),
+        new Promise((resolve) => setTimeout(resolve, 6000)),
+      ]);
       await flushPendingTrialReminder();
     } catch {
       // permission flow failed / unavailable — proceed regardless.

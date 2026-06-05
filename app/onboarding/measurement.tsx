@@ -29,7 +29,12 @@ export default function Measurement() {
     if (Platform.OS === 'ios') {
       // The system ATT sheet now appears with the priming context above it.
       try {
-        await requestTrackingPermissionsAsync();
+        // R26-6: a hung ATT call left busy=true forever → frozen screen.
+        // Race a 6s timeout so we always proceed (resolve, not reject).
+        await Promise.race([
+          requestTrackingPermissionsAsync(),
+          new Promise((resolve) => setTimeout(resolve, 6000)),
+        ]);
       } catch {
         // denied / unavailable — fine, attribution falls back to IDFV.
       }
