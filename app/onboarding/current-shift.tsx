@@ -58,7 +58,10 @@ export default function CurrentShift() {
   return (
     <Screen
       orbs="subtle"
-      scroll
+      // R26-1: scroll={false} ON PURPOSE — a ScrollView intermittently captures
+      // the tap gesture on the day/night SegmentedControl + time pickers, so the
+      // toggle "breaks every other tap". Reliable touch beats theoretical overflow.
+      scroll={false}
       tabBarClearance={false}
       floatingFooter={
         <PillCTA
