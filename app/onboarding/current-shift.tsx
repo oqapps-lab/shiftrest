@@ -54,6 +54,11 @@ export default function CurrentShift() {
   const { state, update } = useOnboarding();
   const shift = state.currentShift;
   const isOff = shift === 'off';
+  // R26-2: a night shift whose end time-of-day is <= start crosses midnight
+  // (e.g. 19:00 -> 07:00). The time wheels are time-of-day only, so make the
+  // overnight span explicit instead of showing bare same-looking times.
+  const crossMidnight =
+    !isOff && parseHHMM(state.currentShiftEnd) <= parseHHMM(state.currentShiftStart);
 
   return (
     <Screen
@@ -132,6 +137,11 @@ export default function CurrentShift() {
               onChange={(d) => update({ currentShiftEnd: formatHHMM(d) })}
               accessibilityLabel={t('onboarding_screens.current_shift.end')}
             />
+            {crossMidnight && (
+              <Text variant="bodyMd" color="inkMuted" style={{ marginTop: spacing.sm }}>
+                {t('onboarding_screens.current_shift.ends_next_day')}
+              </Text>
+            )}
           </View>
 
           <View style={{ marginTop: spacing.xl }}>

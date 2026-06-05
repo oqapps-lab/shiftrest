@@ -1082,6 +1082,7 @@ const en = {
       sub: "We tune sleep windows to your rotation's rhythm.",
     },
     current_shift: {
+    ends_next_day: 'Ends the next morning (overnight shift)',
       hero: "Where are you right now?",
       sub: "So we can anchor your first plan.",
       commute_label: "COMMUTE TIME",
