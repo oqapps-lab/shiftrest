@@ -131,6 +131,17 @@ const zhHant = {
       locked_title: '你的睡眠負債',
       locked_cta: '升級 Premium 解鎖睡眠負債追蹤',
     },
+    sleep_banking: {
+      eyebrow: '睡眠儲蓄',
+      bank_title_today: '為今晚儲存睡眠',
+      bank_title_tomorrow: '明天有硬仗——先儲存睡眠',
+      bank_body: '在 {{nap}} 左右小睡 {{min}} 分鐘，或把今晚的睡眠提前，讓你開工時不那麼透支。',
+      recover_title: '你剛結束一輪連班——用 {{days}} 天慢慢恢復',
+      recover_body: '別一口氣睡 12 小時。固定守住一段 {{window}} 的睡眠，並在 {{days}} 天內溫和地重新校準，讓生理時鐘安定下來而不是劇烈擺盪。',
+      locked_title_bank: '上班前先儲存睡眠',
+      locked_title_recover: '連班後好好恢復',
+      locked_cta: '以 Premium 解鎖班前睡眠儲蓄與恢復',
+    },
     insight: {
       eyebrow: '每日洞察',
       tune_hint: '評價昨晚，調整今天的洞察。',

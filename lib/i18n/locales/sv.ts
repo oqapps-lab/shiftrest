@@ -131,6 +131,17 @@ const sv = {
       locked_title: 'Din sömnskuld',
       locked_cta: 'Lås upp sömnskuldsspårning med Premium',
     },
+    sleep_banking: {
+      eyebrow: 'SÖMNSPARANDE',
+      bank_title_today: 'Spara sömn till i natt',
+      bank_title_tomorrow: 'Tufft pass i morgon — spara sömn',
+      bank_body: 'Ta en {{min}}-minuters tupplur runt {{nap}}, eller tidigarelägg nattens sömn så att du startar mindre utmattad.',
+      recover_title: 'Du har just avslutat en svit — återhämta dig över {{days}} dagar',
+      recover_body: 'Sov inte 12 timmar i ett svep. Förankra ett stabilt {{window}}-block och justera om dig lugnt över {{days}} dagar så att din klocka lägger sig till ro i stället för att svänga.',
+      locked_title_bank: 'Spara sömn före ditt pass',
+      locked_title_recover: 'Återhämta dig efter din svit',
+      locked_cta: 'Lås upp sömnsparande före passet och återhämtning med Premium',
+    },
     insight: {
       eyebrow: 'DAGENS INSIKT',
       tune_hint: 'Betygsätt i natt för att finjustera dagens insikt.',

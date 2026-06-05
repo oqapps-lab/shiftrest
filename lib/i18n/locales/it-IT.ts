@@ -131,6 +131,17 @@ const itIT = {
       locked_title: 'Il tuo debito di sonno',
       locked_cta: 'Sblocca il monitoraggio del debito di sonno con Premium',
     },
+    sleep_banking: {
+      eyebrow: 'RISERVA DI SONNO',
+      bank_title_today: 'Metti da parte sonno per stanotte',
+      bank_title_tomorrow: 'Turno pesante domani — fai scorta di sonno',
+      bank_body: 'Fai un pisolino di {{min}} min verso le {{nap}}, oppure anticipa il sonno di stanotte per partire meno svuotato.',
+      recover_title: 'Hai appena finito un ciclo — recupera in {{days}} giorni',
+      recover_body: 'Non dormire 12 ore di fila. Fissa un blocco stabile di {{window}} e riallineati con calma in {{days}} giorni, così il tuo orologio si assesta invece di oscillare.',
+      locked_title_bank: 'Fai scorta di sonno prima del turno',
+      locked_title_recover: 'Recupera dopo il tuo ciclo',
+      locked_cta: 'Sblocca la riserva di sonno pre-turno e il recupero con Premium',
+    },
     insight: {
       eyebrow: 'CONSIGLIO DEL GIORNO',
       tune_hint: 'Valuta la notte scorsa per adattare il consiglio di oggi.',

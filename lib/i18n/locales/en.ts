@@ -152,6 +152,17 @@ const en = {
       locked_title: 'Your sleep debt',
       locked_cta: 'Unlock sleep-debt tracking with Premium',
     },
+    sleep_banking: {
+      eyebrow: 'SLEEP BANKING',
+      bank_title_today: 'Bank sleep for tonight',
+      bank_title_tomorrow: 'Big shift tomorrow — bank sleep',
+      bank_body: "Take a {{min}}-min nap around {{nap}}, or move tonight’s sleep earlier so you start less depleted.",
+      recover_title: 'You just finished a run — recover over {{days}} days',
+      recover_body: "Don’t crash 12h. Anchor a steady {{window}} block and re-anchor gently over {{days}} days so your clock settles instead of swinging.",
+      locked_title_bank: 'Bank sleep before your shift',
+      locked_title_recover: 'Recover after your run',
+      locked_cta: 'Unlock pre-shift banking and recovery with Premium',
+    },
     insight: {
       eyebrow: 'INSIGHT OF THE DAY',
       tune_hint: 'Rate last night to tune today’s insight.',

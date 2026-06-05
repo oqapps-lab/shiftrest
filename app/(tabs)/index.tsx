@@ -89,8 +89,10 @@ import { TodaysFocusCard } from '../../components/today/TodaysFocusCard';
 import { AnchorSleepCard } from '../../components/today/AnchorSleepCard';
 import { SleepDebtCard } from '../../components/today/SleepDebtCard';
 import { WeekInSleepCard } from '../../components/today/WeekInSleepCard';
+import { SleepBankingCard } from '../../components/today/SleepBankingCard';
 import type { FocusArgs } from '../../lib/today-focus';
 import { detectTransitionOpportunity } from '../../lib/transition/generate';
+import { sleepBankingState } from '../../lib/sleep-banking';
 import * as Haptics from 'expo-haptics';
 import { t } from '../../lib/i18n';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -493,6 +495,26 @@ export default function Home() {
     return detectTransitionOpportunity(shiftByIsoForDetect, todayIsoForDetect);
   }, [localShiftsMap, todayIsoForDetect, livePlan?.transition_type]);
 
+  // TODAY-11: sleep-banking (pre-hard-shift) + post-block recovery. Reuses the
+  // SAME local-shifts calendar the transition scan above reads, plus the
+  // onboarding nextShift/scheduleId/currentShift signals. Returns 'none' unless
+  // a real condition is live, so the card stays contextual (anti-bloat). Kept
+  // ORTHOGONAL to the transition card: that one fires on a day↔night PIVOT and
+  // produces a multi-step plan; this fires on an upcoming HARD shift to bank
+  // for, or an OFF day that closes a work RUN to recover from. Memoised on the
+  // same inputs so an unrelated tick (journal/caffeine) doesn't re-scan.
+  const bankingState = useMemo(
+    () =>
+      sleepBankingState({
+        localShifts: localShiftsMap,
+        today: now,
+        nextShift: onboarding.nextShift,
+        scheduleId: onboarding.scheduleId,
+        currentShift: onboarding.currentShift,
+      }),
+    [localShiftsMap, now, onboarding.nextShift, onboarding.scheduleId, onboarding.currentShift],
+  );
+
   // today-2: the 24h "YOUR 24 HOURS" bar is built from the user's REAL data,
   // never the mockShiftBlocks demo fixture (which showed a 07:45–19:00 nurse
   // day-shift to everyone). Two real blocks:
@@ -779,6 +801,14 @@ export default function Home() {
           nothing for a steady day/night worker. Grouped with the sleep-window
           glance above so the one fixed block to protect sits with sleep. */}
       <AnchorSleepCard scheduleId={onboarding.scheduleId} />
+
+      {/* TODAY-11: Sleep-banking (a hard night/24h shift is today or tomorrow →
+          bank a nap / move sleep earlier) + post-block recovery (today is OFF
+          after a ≥2-day work run → paced re-anchor). PREMIUM, condition-gated:
+          renders ONE card ONLY when bankingState.mode !== 'none', so it's
+          contextual, not always-on. Orthogonal to the transition CTA below
+          (pivot plan), so the two never restate the same idea. */}
+      {bankingState.mode !== 'none' && <SleepBankingCard state={bankingState} />}
 
       {/* A9: Where you are today — daily state card, moved out of Settings */}
       <View ref={shiftRef} collapsable={false}>

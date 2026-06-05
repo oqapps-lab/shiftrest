@@ -132,6 +132,17 @@ const frFR = {
       locked_title: 'Votre dette de sommeil',
       locked_cta: 'Débloquez le suivi de la dette de sommeil avec Premium',
     },
+    sleep_banking: {
+      eyebrow: 'ÉPARGNE DE SOMMEIL',
+      bank_title_today: 'Mettez du sommeil de côté pour ce soir',
+      bank_title_tomorrow: 'Gros poste demain — épargnez du sommeil',
+      bank_body: 'Faites une sieste de {{min}} min vers {{nap}}, ou avancez votre sommeil de ce soir pour démarrer moins épuisé.',
+      recover_title: 'Vous venez de finir une série — récupérez sur {{days}} jours',
+      recover_body: "Ne dormez pas 12 h d’affilée. Ancrez un bloc stable de {{window}} et réajustez-vous en douceur sur {{days}} jours pour que votre horloge se pose au lieu d’osciller.",
+      locked_title_bank: 'Épargnez du sommeil avant votre poste',
+      locked_title_recover: 'Récupérez après votre série',
+      locked_cta: "Débloquez l’épargne de sommeil avant poste et la récupération avec Premium",
+    },
     insight: {
       eyebrow: 'CONSEIL DU JOUR',
       tune_hint: 'Évaluez la nuit dernière pour ajuster le conseil du jour.',

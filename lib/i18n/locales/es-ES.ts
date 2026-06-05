@@ -132,6 +132,17 @@ const esES = {
       locked_title: 'Tu deuda de sueño',
       locked_cta: 'Desbloquea el control de la deuda de sueño con Premium',
     },
+    sleep_banking: {
+      eyebrow: 'AHORRAR SUEÑO',
+      bank_title_today: 'Ahorra sueño para esta noche',
+      bank_title_tomorrow: 'Turno duro mañana — ahorra sueño',
+      bank_body: 'Échate una siesta de {{min}} min hacia las {{nap}}, o adelanta el sueño de esta noche para empezar menos agotado.',
+      recover_title: 'Acabas de terminar una racha — recupérate en {{days}} días',
+      recover_body: 'No duermas 12 h de golpe. Fija un bloque estable de {{window}} y reajústate poco a poco durante {{days}} días para que tu reloj se calme en vez de oscilar.',
+      locked_title_bank: 'Ahorra sueño antes de tu turno',
+      locked_title_recover: 'Recupérate tras tu racha',
+      locked_cta: 'Desbloquea el ahorro de sueño previo al turno y la recuperación con Premium',
+    },
     insight: {
       eyebrow: 'IDEA DEL DÍA',
       tune_hint: 'Valora anoche para ajustar la idea de hoy.',

@@ -131,6 +131,17 @@ const ja = {
       locked_title: 'あなたの睡眠負債',
       locked_cta: 'プレミアムで睡眠負債トラッキングを解放',
     },
+    sleep_banking: {
+      eyebrow: '睡眠の貯金',
+      bank_title_today: '今夜のために睡眠を貯める',
+      bank_title_tomorrow: '明日はきついシフト — 睡眠を貯めよう',
+      bank_body: '{{nap}}ごろに{{min}}分の仮眠を取るか、今夜の睡眠を早めて、消耗を抑えてスタートしましょう。',
+      recover_title: '連勤が終わったところ — {{days}}日かけて回復を',
+      recover_body: '12時間まとめて寝込まないこと。{{window}}の固定ブロックを軸に、{{days}}日かけてゆるやかに調整すれば、体内時計は揺れずに落ち着きます。',
+      locked_title_bank: 'シフト前に睡眠を貯める',
+      locked_title_recover: '連勤明けに回復する',
+      locked_cta: 'シフト前の睡眠貯金と回復をプレミアムで解放',
+    },
     insight: {
       eyebrow: '今日のヒント',
       tune_hint: '昨夜を評価すると、今日のヒントが最適化されます。',

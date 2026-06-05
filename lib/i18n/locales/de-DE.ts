@@ -145,6 +145,17 @@ const deDE = {
       locked_title: 'Deine Schlafschuld',
       locked_cta: 'Schlafschuld-Tracking mit Premium freischalten',
     },
+    sleep_banking: {
+      eyebrow: 'SCHLAF ANSPAREN',
+      bank_title_today: 'Schlaf für heute Nacht ansparen',
+      bank_title_tomorrow: 'Harte Schicht morgen — Schlaf ansparen',
+      bank_body: 'Mach gegen {{nap}} ein {{min}}-Minuten-Nickerchen oder leg deinen Schlaf heute Nacht früher, damit du weniger erschöpft startest.',
+      recover_title: 'Du hast gerade einen Block beendet — erhol dich über {{days}} Tage',
+      recover_body: 'Schlaf nicht 12 Stunden am Stück. Verankere einen festen {{window}}-Block und richte dich über {{days}} Tage sanft neu aus, damit deine innere Uhr zur Ruhe kommt statt zu schwanken.',
+      locked_title_bank: 'Schlaf vor deiner Schicht ansparen',
+      locked_title_recover: 'Erhol dich nach deinem Block',
+      locked_cta: 'Schlaf-Ansparen vor der Schicht und Erholung mit Premium freischalten',
+    },
     insight: {
       eyebrow: 'TIPP DES TAGES',
       tune_hint: 'Bewerte die letzte Nacht, um den heutigen Tipp anzupassen.',

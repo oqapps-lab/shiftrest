@@ -131,6 +131,17 @@ const ptBR = {
       locked_title: 'Sua dívida de sono',
       locked_cta: 'Desbloqueie o acompanhamento da dívida de sono com o Premium',
     },
+    sleep_banking: {
+      eyebrow: 'POUPANÇA DE SONO',
+      bank_title_today: 'Junte sono para esta noite',
+      bank_title_tomorrow: 'Plantão pesado amanhã — junte sono',
+      bank_body: 'Tire uma soneca de {{min}} min por volta das {{nap}}, ou adiante o sono desta noite para começar menos esgotado.',
+      recover_title: 'Você acabou de fechar uma sequência — recupere-se em {{days}} dias',
+      recover_body: 'Não durma 12 h de uma vez. Fixe um bloco estável de {{window}} e reajuste com calma ao longo de {{days}} dias, para o seu relógio assentar em vez de oscilar.',
+      locked_title_bank: 'Junte sono antes do seu plantão',
+      locked_title_recover: 'Recupere-se após a sequência',
+      locked_cta: 'Desbloqueie a poupança de sono pré-plantão e a recuperação com o Premium',
+    },
     insight: {
       eyebrow: 'DICA DO DIA',
       tune_hint: 'Avalie a noite passada para ajustar a dica de hoje.',

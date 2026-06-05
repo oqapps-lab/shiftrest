@@ -132,6 +132,17 @@ const nlNL = {
       locked_title: 'Je slaapschuld',
       locked_cta: 'Ontgrendel slaapschuld-tracking met Premium',
     },
+    sleep_banking: {
+      eyebrow: 'SLAAP SPAREN',
+      bank_title_today: 'Spaar slaap voor vannacht',
+      bank_title_tomorrow: 'Zware dienst morgen — spaar slaap',
+      bank_body: 'Doe rond {{nap}} een dutje van {{min}} min, of vervroeg je slaap vannacht zodat je minder uitgeput begint.',
+      recover_title: 'Je hebt net een reeks afgerond — herstel over {{days}} dagen',
+      recover_body: 'Slaap geen 12 uur in één keer. Veranker een vast blok van {{window}} en herstel rustig over {{days}} dagen, zodat je klok tot rust komt in plaats van te schommelen.',
+      locked_title_bank: 'Spaar slaap voor je dienst',
+      locked_title_recover: 'Herstel na je reeks',
+      locked_cta: 'Ontgrendel slaap sparen voor je dienst en herstel met Premium',
+    },
     insight: {
       eyebrow: 'INZICHT VAN DE DAG',
       tune_hint: 'Beoordeel afgelopen nacht om het inzicht van vandaag af te stemmen.',

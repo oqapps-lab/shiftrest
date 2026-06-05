@@ -131,6 +131,17 @@ const ko = {
       locked_title: '나의 수면 부채',
       locked_cta: '프리미엄으로 수면 부채 추적 잠금 해제',
     },
+    sleep_banking: {
+      eyebrow: '수면 저축',
+      bank_title_today: '오늘 밤을 위해 잠을 저축하세요',
+      bank_title_tomorrow: '내일 힘든 근무 — 잠을 저축하세요',
+      bank_body: '{{nap}}쯤 {{min}}분 낮잠을 자거나 오늘 밤 수면을 앞당겨, 덜 지친 상태로 시작하세요.',
+      recover_title: '연속 근무를 막 끝냈어요 — {{days}}일에 걸쳐 회복하세요',
+      recover_body: '12시간을 몰아서 자지 마세요. {{window}} 고정 블록을 기준으로 {{days}}일에 걸쳐 천천히 재정렬하면, 생체 시계가 출렁이지 않고 자리를 잡습니다.',
+      locked_title_bank: '근무 전에 잠을 저축하세요',
+      locked_title_recover: '연속 근무 후 회복하세요',
+      locked_cta: '근무 전 수면 저축과 회복을 프리미엄으로 잠금 해제',
+    },
     insight: {
       eyebrow: '오늘의 인사이트',
       tune_hint: '어젯밤을 평가하면 오늘의 인사이트가 맞춰집니다.',
