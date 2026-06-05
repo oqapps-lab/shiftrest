@@ -34,7 +34,10 @@ export default function ShareStoryScreen() {
   const [submitting, setSubmitting] = useState(false);
 
   const remaining = 1000 - text.length;
-  const canSubmit = text.trim().length >= 20 && !submitting && !!user?.id;
+  // AUDIT-K: do NOT gate the button on a user id — an anonymous tap must
+  // reach submit(), which shows the sign-in prompt. Gating it left anon
+  // users with a dead, unexplained button.
+  const canSubmit = text.trim().length >= 20 && !submitting;
 
   const submit = async () => {
     if (!user?.id) {
