@@ -198,7 +198,7 @@ export default function Aha() {
         <PillCTA
           variant="primary"
           label={t('aha.cta')}
-          onPress={() => router.push('/paywall')}
+          onPress={() => router.push('/paywall?from=onboarding')}
         />
       }
     >

@@ -14,7 +14,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { View, Pressable, StyleSheet } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import {
   Screen,
@@ -206,6 +206,21 @@ export default function Paywall() {
 
   const { state: onboarding } = useOnboarding();
   const { user } = useAuth();
+
+  // AUDIT-D: the paywall is reached from onboarding (aha) AND from in-app
+  // teasers (Settings / Today). Only the onboarding entry should advance the
+  // funnel to the notifications step on exit; in-app entries must return to
+  // where they came from instead of dumping the user into onboarding.
+  const { from } = useLocalSearchParams<{ from?: string }>();
+  const leavePaywall = () => {
+    if (from === 'onboarding') {
+      router.replace('/onboarding/notifications');
+    } else if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace('/(tabs)');
+    }
+  };
   // Only show the user's name in the eyebrow when we have a real one — never
   // leak mockUser.name in cold-start, which felt like demo-data on App Store
   // Review screenshots.
@@ -247,7 +262,7 @@ export default function Paywall() {
             scheduleTrialEndingReminder(trialDays).catch(() => null);
           }
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-          router.replace('/onboarding/notifications');
+          leavePaywall();
           return;
         }
         if (result.type === 'user_cancelled') {
@@ -274,7 +289,7 @@ export default function Paywall() {
     // 2) Expo Go fallback path: no native StoreKit. Honour the existing
     //    anon-flow → skip DB write, just continue onboarding.
     if (!user) {
-      router.replace('/onboarding/notifications');
+      leavePaywall();
       return;
     }
 
@@ -296,7 +311,7 @@ export default function Paywall() {
       }
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
-    router.replace('/onboarding/notifications');
+    leavePaywall();
   };
 
   const renderPlanCard = (p: Plan, isAnnual: boolean) => {
@@ -409,7 +424,7 @@ export default function Paywall() {
             {ctaSubtext}
           </Text>
           <Pressable
-            onPress={() => router.replace('/onboarding/notifications')}
+            onPress={() => leavePaywall()}
             hitSlop={12}
             style={{ alignSelf: 'center', marginTop: spacing.md }}
           >
@@ -422,7 +437,7 @@ export default function Paywall() {
     >
       <View style={styles.closeRow}>
         <Pressable
-          onPress={() => router.replace('/onboarding/notifications')}
+          onPress={() => leavePaywall()}
           hitSlop={12}
           accessibilityRole="button"
           accessibilityLabel={t('a11y.close_paywall')}
