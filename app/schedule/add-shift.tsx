@@ -109,7 +109,7 @@ export default function AddShift() {
 
   const applyPreset = (p: Preset) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    const start = snapToTopOfHour(new Date(), p.startHour);
+    const start = snapToTopOfHour(startsAt, p.startHour);
     const end = new Date(start.getTime() + p.durationH * 60 * 60 * 1000);
     setKind(p.kind);
     setStartsAt(start);
@@ -167,19 +167,40 @@ export default function AddShift() {
       // race, a slow/dead request leaves the await parked forever —
       // setSubmitting(false) + the success dialog never run, so the sheet
       // is stuck and the app feels frozen. Time out after 12s.
+      const payload = {
+        start_time: startsAt.toISOString(),
+        end_time: endsAt.toISOString(),
+        shift_type: kind,
+        is_manual: true,
+        notes: notes.trim() || null,
+      };
+      const timeout = () =>
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 12000));
       const { error } = (await Promise.race([
-        supabase.from('shifts').insert({
-          user_id: user.id,
-          date: dateIso,
-          start_time: startsAt.toISOString(),
-          end_time: endsAt.toISOString(),
-          shift_type: kind,
-          is_manual: true,
-          notes: notes.trim() || null,
-        }),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 12000)),
+        supabase.from('shifts').insert({ user_id: user.id, date: dateIso, ...payload }),
+        timeout(),
       ])) as { error: unknown };
-      if (error) throw error;
+      if (error) {
+        // AUDIT-F: a live shift already exists for this date (unique
+        // violation); the plain insert can never succeed, so overwrite the
+        // existing row instead of telling the user to retry forever. Uses
+        // UPDATE, not .upsert(onConflict): the (user_id,date) unique index
+        // migration is not guaranteed applied in prod yet.
+        if ((error as { code?: string }).code === '23505') {
+          const { error: upErr } = (await Promise.race([
+            supabase
+              .from('shifts')
+              .update(payload)
+              .eq('user_id', user.id)
+              .eq('date', dateIso)
+              .is('deleted_at', null),
+            timeout(),
+          ])) as { error: unknown };
+          if (upErr) throw upErr;
+        } else {
+          throw error;
+        }
+      }
     } catch (e) {
       // R14-4: never leak the raw Supabase/error message into the dialog.
       if (__DEV__) console.warn('[add-shift]', e);
