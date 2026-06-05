@@ -487,7 +487,7 @@ const en = {
     },
     trust: {
       eyebrow: 'GROUNDED IN THE SCIENCE',
-      body: 'Built on CDC/NIOSH shift-work guidance, chronobiology, and behavioural sleep science — not fads.',
+      body: 'Built on CDC/NIOSH shift-work guidance, chronobiology, and behavioral sleep science — not fads.',
     },
   },
   transition: {
@@ -788,7 +788,7 @@ const en = {
       sub: "Designed using circadian research applied to rotating, night, and on-call schedules.",
       hero: "Sleep medicine, built for shift work.",
       research_title: "Research basis",
-      research_body: "Chronobiology, shift-work sleep medicine, and behavioural sleep science — adapted to the realities of nurses, firefighters, EMTs, factory workers, and rotating teams.",
+      research_body: "Chronobiology, shift-work sleep medicine, and behavioral sleep science — adapted to the realities of nurses, firefighters, EMTs, factory workers, and rotating teams.",
     },
   },
   schedule: {
@@ -825,7 +825,7 @@ const en = {
   },
   caffeine_sensitivity: {
     normal: { label: 'Normal', sub: "Doesn't affect my sleep much" },
-    slow: { label: 'Slow metaboliser', sub: 'Even afternoon coffee keeps me up' },
+    slow: { label: 'Slow metabolizer', sub: 'Even afternoon coffee keeps me up' },
     unknown: { label: 'Not sure', sub: "We'll start with a safe default" },
   },
   chronotype_q: {
@@ -928,7 +928,7 @@ const en = {
     f_melatonin_s: "Exact dose and timing if you use it — and never shown if you don’t.",
     f_reminders_t: "Smart reminders",
     f_reminders_s: "Nudges at the right moment for your rotation — caffeine cutoff, wind-down, sleep.",
-    trust: "Grounded in CDC/NIOSH shift-work sleep guidance, chronobiology, and behavioural sleep science — built for rotating schedules, not 9-to-5.",
+    trust: "Grounded in CDC/NIOSH shift-work sleep guidance, chronobiology, and behavioral sleep science — built for rotating schedules, not 9-to-5.",
     eyebrow_plain: "YOUR PLAN IS READY",
     eyebrow_with_name: "{{name}}, YOUR PLAN IS READY",
     hero: "{{days}} days. Then you decide.",
@@ -1105,7 +1105,7 @@ const en = {
     },
     problem: {
       hero: "What bothers you most?",
-      sub: "We'll prioritise it in your plan.",
+      sub: "We'll prioritize it in your plan.",
     },
     family: {
       hero: "Any family commitments?",
