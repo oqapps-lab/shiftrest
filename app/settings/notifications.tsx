@@ -363,7 +363,7 @@ export default function NotificationsSettings() {
 
       {scheduledCount !== null && state.master && scheduledCount > 0 && (
         <Text variant="bodyMd" color="primary" weight="medium" style={{ marginTop: spacing.sm }}>
-          {`${scheduledCount} reminder${scheduledCount === 1 ? '' : 's'} scheduled`}
+          {t('settings_screens.notifications.scheduled_count', { count: scheduledCount })}
         </Text>
       )}
     </Screen>
