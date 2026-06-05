@@ -1,10 +1,29 @@
 /**
- * <Slider> — horizontal slider with sage filled track and primary knob.
- * Light haptic on value change.
+ * <Slider> — horizontal slider with sage filled track + primary knob.
+ *
+ * Rebuilt (2026-06-05) on the SAME proven pattern as DeskCare's SeveritySlider
+ * (react-native-gesture-handler Gesture.Pan + react-native-reanimated shared
+ * values), because the old PanResponder version lagged "every other touch":
+ *   - onChange is an inline arrow at the call site → the panResponder useMemo
+ *     was recreated on the re-render that the drag's OWN onChange triggered →
+ *     the active touch's responder went stale mid-gesture → that drag dropped.
+ *   - children received the touch so evt.locationX was relative to the wrong
+ *     view → erratic jumps.
+ * Here the knob position lives on the UI thread (shared value `x`); only a
+ * throttled, step-SNAPPED value crosses to JS via onChange — so a JS re-render
+ * can never tear down the live drag. See docs/INTENSITY_SLIDER.md (DeskCare)
+ * for the full rationale; the non-obvious bits are mirrored below.
  */
 
 import React from 'react';
-import { StyleSheet, View, ViewStyle, StyleProp, PanResponder, LayoutChangeEvent } from 'react-native';
+import { StyleSheet, View, ViewStyle, StyleProp, LayoutChangeEvent } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  useAnimatedReaction,
+  runOnJS,
+} from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { colors } from '../../constants/tokens';
 
@@ -30,80 +49,95 @@ export function Slider({
   accessibilityLabel,
   style,
 }: Props) {
-  const [width, setWidth] = React.useState(0);
-  const lastStepRef = React.useRef(value);
+  const trackW = useSharedValue(0);
+  const x = useSharedValue(0); // knob translateX, px (UI thread)
+  const lastReported = useSharedValue(NaN); // last SNAPPED value emitted (dedup)
+  const dragging = useSharedValue(false); // true while a drag is live
 
-  const clamp = (v: number) => Math.min(max, Math.max(min, v));
-  const fraction = (v: number) => (max === min ? 0 : (clamp(v) - min) / (max - min));
+  const fracOf = (v: number) =>
+    max === min ? 0 : Math.min(1, Math.max(0, (v - min) / (max - min)));
 
-  const panResponder = React.useMemo(
-    () => {
-      const clampLocal = (v: number) => Math.min(max, Math.max(min, v));
-      const snap = (v: number) => {
-        const snapped = Math.round((v - min) / step) * step + min;
-        return clampLocal(snapped);
-      };
-      return PanResponder.create({
-        onStartShouldSetPanResponder: () => true,
-        onMoveShouldSetPanResponder: () => true,
-        // C2 fix: capture variants ensure the slider claims the gesture
-        // BEFORE a parent ScrollView's gesture handler claims it. Without
-        // these, ScrollView's vertical-pan handler swallows touches as
-        // soon as the user moves > a few px, so the knob feels unresponsive
-        // and "lags" because input events fire intermittently.
-        onStartShouldSetPanResponderCapture: () => true,
-        onMoveShouldSetPanResponderCapture: () => true,
-        onPanResponderTerminationRequest: () => false,
-        onPanResponderGrant: (evt) => {
-          if (width === 0) return;
-          const x = evt.nativeEvent.locationX;
-          const v = snap(min + (x / width) * (max - min));
-          lastStepRef.current = v;
-          onChange(v);
-        },
-        onPanResponderMove: (evt) => {
-          if (width === 0) return;
-          // C1 fix: locationX on iOS PanResponder is already the touch
-          // position relative to this View, updated as the touch moves. The
-          // previous code added gesture.dx on top → double-count → erratic
-          // snapping back and forth.
-          const x = Math.min(width, Math.max(0, evt.nativeEvent.locationX));
-          const v = snap(min + (x / width) * (max - min));
-          if (v !== lastStepRef.current) {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            lastStepRef.current = v;
-            onChange(v);
-          }
-        },
-      });
+  const onLayout = (e: LayoutChangeEvent) => {
+    const w = e.nativeEvent.layout.width;
+    trackW.value = w;
+    x.value = fracOf(value) * (w - KNOB);
+  };
+
+  // External value prop → knob position. GATED on `dragging`: never sync while
+  // a gesture is live, or the controlled value echo (onChange → parent state →
+  // value prop) tugs the knob back to the snapped grid pixel mid-drag = stutter.
+  useAnimatedReaction(
+    () => ({ v: value, w: trackW.value, d: dragging.value }),
+    ({ v, w, d }) => {
+      if (d) return;
+      if (w <= KNOB) return;
+      const f = max === min ? 0 : Math.min(1, Math.max(0, (v - min) / (max - min)));
+      const target = f * (w - KNOB);
+      if (Math.abs(target - x.value) > 0.5) {
+        x.value = target;
+      }
     },
-    [width, min, max, step, onChange],
+    [value],
   );
 
-  const onLayout = (e: LayoutChangeEvent) => setWidth(e.nativeEvent.layout.width);
+  const emit = (v: number) => {
+    onChange(v);
+    void Haptics.selectionAsync();
+  };
 
-  const pct = fraction(value) * 100;
+  // Worklet: px → step-snapped value, emit only when the step changes.
+  const report = (px: number) => {
+    'worklet';
+    const w = trackW.value;
+    if (w <= KNOB) return;
+    const f = Math.min(1, Math.max(0, px / (w - KNOB)));
+    const raw = min + f * (max - min);
+    const snapped = Math.min(max, Math.max(min, Math.round((raw - min) / step) * step + min));
+    if (snapped !== lastReported.value) {
+      lastReported.value = snapped;
+      runOnJS(emit)(snapped);
+    }
+  };
+
+  const pan = Gesture.Pan()
+    .minDistance(0) // activate on touch — tap-to-snap, no swipe threshold
+    .failOffsetY([-12, 12]) // let a vertical parent ScrollView win
+    .onBegin((e) => {
+      dragging.value = true;
+      const next = Math.min(Math.max(0, e.x - KNOB / 2), trackW.value - KNOB);
+      x.value = next;
+      report(next);
+    })
+    .onUpdate((e) => {
+      const next = Math.min(Math.max(0, e.x - KNOB / 2), trackW.value - KNOB);
+      x.value = next;
+      report(next);
+    })
+    // onFinalize fires on end AND on fail/cancel (vertical scroll) — clear here
+    // so `dragging` can never stick true and freeze the prop→position sync.
+    .onFinalize(() => {
+      dragging.value = false;
+    });
+
+  const knobStyle = useAnimatedStyle(() => ({ transform: [{ translateX: x.value }] }));
+  const fillStyle = useAnimatedStyle(() => ({ width: x.value + KNOB / 2 }));
 
   return (
-    <View
-      {...panResponder.panHandlers}
-      onLayout={onLayout}
-      style={[styles.hit, style]}
-      accessibilityRole="adjustable"
-      accessibilityLabel={accessibilityLabel}
-      accessibilityValue={{ min, max, now: value }}
-      hitSlop={8}
-    >
-      <View style={styles.track}>
-        <View style={[styles.fill, { width: `${pct}%` }]} />
-      </View>
+    <GestureDetector gesture={pan}>
       <View
-        style={[
-          styles.knob,
-          { left: `${pct}%`, marginLeft: -KNOB / 2 },
-        ]}
-      />
-    </View>
+        onLayout={onLayout}
+        style={[styles.hit, style]}
+        accessibilityRole="adjustable"
+        accessibilityLabel={accessibilityLabel}
+        accessibilityValue={{ min, max, now: value }}
+        hitSlop={8}
+      >
+        <View style={styles.track} pointerEvents="none">
+          <Animated.View style={[styles.fill, fillStyle]} />
+        </View>
+        <Animated.View style={[styles.knob, knobStyle]} pointerEvents="none" />
+      </View>
+    </GestureDetector>
   );
 }
 
@@ -125,12 +159,12 @@ const styles = StyleSheet.create({
   },
   knob: {
     position: 'absolute',
-    top: 11,
+    top: 11, // (44 - 22) / 2
+    left: 0,
     width: KNOB,
     height: KNOB,
     borderRadius: KNOB / 2,
     backgroundColor: colors.primary,
-    // Subtle sage halo — not a dead grey shadow
     shadowColor: colors.primary,
     shadowOpacity: 0.28,
     shadowRadius: 10,
