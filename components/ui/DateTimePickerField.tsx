@@ -187,7 +187,7 @@ export function DateTimePickerField({
           <View style={styles.headerRow}>
             <Pressable onPress={cancel} hitSlop={12} accessibilityRole="button">
               <Text variant="labelMd" weight="medium" color="inkMuted" uppercase>
-                Cancel
+                {i18n.t('add_shift.cancel')}
               </Text>
             </Pressable>
             <Text variant="labelMd" weight="medium" color="ink" uppercase>
@@ -195,7 +195,7 @@ export function DateTimePickerField({
             </Text>
             <Pressable onPress={done} hitSlop={12} accessibilityRole="button">
               <Text variant="labelMd" weight="medium" color="primary" uppercase>
-                Done
+                {i18n.t('add_shift.done')}
               </Text>
             </Pressable>
           </View>
