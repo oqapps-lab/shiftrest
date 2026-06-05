@@ -29,6 +29,7 @@ import { safeBack } from '../../lib/nav';
 import {
   rescheduleNotifications,
   requestPermissions,
+  flushPendingTrialReminder,
   type NotifPrefs,
   type PlanTimes,
 } from '../../lib/notifications';
@@ -145,6 +146,9 @@ export default function NotificationsSettings() {
     (async () => {
       if (state.master) {
         await requestPermissions().catch(() => null);
+        // AUDIT-E: flush a paywall-stashed trial reminder now that
+        // permission may have just been granted from Settings.
+        await flushPendingTrialReminder().catch(() => null);
       }
       const res = await rescheduleNotifications(state as NotifPrefs, planTimes, {
         firstName: firstName(onboarding.displayName),

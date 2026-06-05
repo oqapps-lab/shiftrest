@@ -21,6 +21,7 @@ import { AuthProvider } from '../lib/auth/store';
 import { OnboardingProvider } from '../lib/onboarding/store';
 import { ensureAdaptyActivated } from '../lib/adapty';
 import { ensureAppsFlyerInit } from '../lib/appsflyer';
+import { NotificationSync } from '../lib/notification-sync';
 
 if (__DEV__) {
   LogBox.ignoreLogs([
@@ -64,6 +65,7 @@ export default function RootLayout() {
         <AuthProvider>
           <OnboardingProvider>
           <StatusBar style="dark" />
+          <NotificationSync />
           <Stack
             screenOptions={{
               headerShown: false,
