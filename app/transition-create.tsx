@@ -53,6 +53,21 @@ function withTimeout<T>(work: PromiseLike<T>, ms = 12000): Promise<T> {
   ]);
 }
 
+// AUDIT-I: transition_steps.action_type has a DB CHECK constraint that only
+// allows this enum. Our generator uses richer semantic types (light/caffeine/
+// wind_down) for the UI + tests; map them onto the allowed set ONLY here at
+// the Supabase write boundary (the UI renders title/description, not
+// action_type, so this is purely to satisfy the constraint).
+const DB_ACTION_TYPE: Record<string, string> = {
+  light: 'light_seek',
+  caffeine: 'custom',
+  wind_down: 'custom',
+  melatonin: 'melatonin',
+  sleep: 'sleep',
+  wake: 'wake',
+};
+const toDbActionType = (a: string): string => DB_ACTION_TYPE[a] ?? 'custom';
+
 const getTypeOptions = (): SegmentOption<TransitionType>[] => [
   { value: 'night_to_day', label: t('transition_create.night_to_day') },
   { value: 'day_to_night', label: t('transition_create.day_to_night') },
@@ -152,10 +167,11 @@ export default function TransitionCreate() {
 
       const stepRows = plan.steps.map((s) => ({
         plan_id: planId,
+        user_id: user.id,
         day_number: s.day_number,
         step_order: s.step_order,
         scheduled_time: s.scheduled_time,
-        action_type: s.action_type,
+        action_type: toDbActionType(s.action_type),
         title: s.title,
         description: s.description,
         is_completed: false,

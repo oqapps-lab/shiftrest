@@ -128,7 +128,7 @@ export default function Transition() {
           time: s.time,
           action: s.action,
           tip: s.tip,
-          done: s.done,
+          done: false,
         })),
       };
     });
@@ -165,6 +165,11 @@ export default function Transition() {
           : d,
       ),
     );
+
+    // AUDIT-I: mock fallback steps (id 'mock-*') are demo-only — never
+    // persist them; a signed-in user would otherwise fire an invalid-UUID
+    // update against transition_steps.
+    if (stepRef.id.startsWith('mock-')) return;
 
     // …then persist to whichever backend the live plan came from. Without
     // this, the next time the modal mounts useActiveTransitionPlan re-reads
