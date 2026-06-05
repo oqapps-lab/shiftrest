@@ -1036,6 +1036,7 @@ const en = {
     empty_title: 'Nothing logged yet',
     empty_sub: 'Tap a mood on Today after sleep. Two days in, you’ll start seeing your pattern.',
     trend_label: 'WEEK-OVER-WEEK',
+    trend_first: 'Your first week — keep logging to see the trend.',
     trend_up: 'You’re adapting better than last week',
     trend_down: 'Tougher week than the last',
     trend_flat: 'Steady — about the same as last week',

@@ -80,11 +80,16 @@ export default function History() {
   // Score = good*2 + ok*1 - bad*1 (max 14 per week). Direction-only
   // comparison so we don't surface raw numbers.
   const score = (s: RatingTally) => s.good * 2 + s.ok * 1 - s.bad * 1;
+  // AUDIT-J: don't claim a week-over-week direction when there's no prior
+  // week of data — show a neutral first-week line instead.
+  const prev7HasData = prev7.some((d) => d.rating !== null);
   const trendDiff = score(last7Score) - score(prev7Score);
-  const trendKey =
-    trendDiff > 0 ? 'history.trend_up' : trendDiff < 0 ? 'history.trend_down' : 'history.trend_flat';
-  const trendGlyph: 'sparkle' | 'leaf' | 'moon' =
-    trendDiff > 0 ? 'sparkle' : trendDiff < 0 ? 'moon' : 'leaf';
+  const trendKey = !prev7HasData
+    ? 'history.trend_first'
+    : trendDiff > 0 ? 'history.trend_up' : trendDiff < 0 ? 'history.trend_down' : 'history.trend_flat';
+  const trendGlyph: 'sparkle' | 'leaf' | 'moon' = !prev7HasData
+    ? 'leaf'
+    : trendDiff > 0 ? 'sparkle' : trendDiff < 0 ? 'moon' : 'leaf';
 
   // Group into weeks for the bar visualisation. Recent = right-most.
   const weeks: { iso: string; rating: SleepRating | null }[][] = [];

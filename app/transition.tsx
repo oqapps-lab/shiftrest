@@ -63,6 +63,12 @@ function transitionHeadline(days: UiDay[]): string {
 }
 
 function formatHourMinute(iso: string): string {
+  // AUDIT-I(tz): scheduled_time is stored as a local wall-clock string
+  // ('2026-05-28T06:00:00'); read back from the timestamptz column it gains a
+  // +00:00 offset, so new Date(...).getHours() would shift it by the device
+  // UTC offset. Read the HH:MM straight from the ISO string instead.
+  const m = /T(\d{2}):(\d{2})/.exec(iso);
+  if (m) return `${m[1]}:${m[2]}`;
   const d = new Date(iso);
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
 }
