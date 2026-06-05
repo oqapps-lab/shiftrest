@@ -127,7 +127,13 @@ export default function Melatonin() {
         </Text>
         <Toggle
           value={takes}
-          onChange={(v) => update({ takesMelatonin: v })}
+          onChange={(v) =>
+            update(
+              v && !state.melatoninDoseMg
+                ? { takesMelatonin: v, melatoninDoseMg: '0.5' }
+                : { takesMelatonin: v },
+            )
+          }
           accessibilityLabel={t('onboarding.melatonin.toggle_a11y')}
         />
       </View>
